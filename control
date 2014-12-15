@@ -1,0 +1,9 @@
+Package: com.joshuaseltzer.sleeper
+Name: Sleeper
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Joshua Seltzer
+Author: Joshua Seltzer
+Section: Tweaks
