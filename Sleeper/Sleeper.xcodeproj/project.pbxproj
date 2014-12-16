@@ -389,6 +389,7 @@
 				F871AFF01A3F8A3800B6475A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F871AFF11A3F8A3800B6475A /* Build configuration list for PBXNativeTarget "SleeperTests" */ = {
 			isa = XCConfigurationList;
@@ -397,6 +398,7 @@
 				F871AFF31A3F8A3800B6475A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

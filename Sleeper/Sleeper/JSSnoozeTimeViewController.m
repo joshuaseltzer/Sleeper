@@ -10,8 +10,12 @@
 #import "JSPrefsManager.h"
 
 // define constants for the view dictionary when creating constraints
-static NSString const *kJSSnoozePickerKey = @"snoozePicker";
-static NSString const *kJSOptionTableKey =  @"optionsTableView";
+static NSString const *kJSSnoozePickerKey =         @"snoozePicker";
+static NSString const *kJSOptionTableKey =          @"optionsTableView";
+static NSString const *kJSLabelContainerViewKey =   @"labelContainerView";
+static NSString const *kJSHourLabelKey =            @"hourLabelView";
+static NSString const *kJSMinuteLabelKey =          @"minuteLabelView";
+static NSString const *kJSSecondLabelKey =          @"secondLabelView";
 
 // Constants for the snooze picker per orientation.  These numbers are locked by Apple
 static CGFloat const kJSSnoozePickerHeightPortrait = 216.0;
@@ -20,7 +24,7 @@ static CGFloat const kJSSnoozePickerHeightLandscape = 162.0;
 // constants the define the size of the labels
 static CGFloat const kJSSnoozePickerLabelWidth = 45.0;
 static CGFloat const kJSSnoozePickerLabelHeight = 60.0;
-static CGFloat const KJSSnoozePickerLabelSpaceBetween = kJSSnoozePickerLabelWidth + 10.0;
+static CGFloat const kJSSnoozePickerLabelSpaceBetween = kJSSnoozePickerLabelWidth + 10.0;
 
 // constants that define the location of the valued components in our picker
 static NSInteger const kJSHourComponent =   0;
@@ -40,6 +44,9 @@ static NSInteger sJSInitialSeconds;
 // the options table which will take up the rest of the view
 @property (nonatomic, strong) UITableView *optionsTableView;
 
+// the view which contains the different labels for the snooze picker
+@property (nonatomic, strong) UIView *labelContainerView;
+
 // the hour label for the snooze picker
 @property (nonatomic, strong) UILabel *hourLabel;
 
@@ -52,26 +59,23 @@ static NSInteger sJSInitialSeconds;
 // height constraint that defines the height of the date picker
 @property (nonatomic, strong) NSLayoutConstraint *snoozePickerHeightConstraint;
 
-// top space constraint that defines the hour label
-@property (nonatomic, strong) NSLayoutConstraint *hourLabelTopConstraint;
+// top space constraint that defines the Y position of the label container view
+@property (nonatomic, strong) NSLayoutConstraint *labelContainerViewTopConstraint;
 
-// left space constraint that defines the hour label
-@property (nonatomic, strong) NSLayoutConstraint *hourLabelLeftConstraint;
+// creates the auto layout constraints that will depend on the orientation given
+- (void)createViewConstraintsForInitialOrientation:(UIDeviceOrientation)orientiation;
 
-// creates the auto layout constraints that apply to the given view and orientation
-- (void)createViewConstraintsForView:(UIView *)view orientation:(UIDeviceOrientation)orientiation;
-
-// adjusts the constraints for the snooze picker and labels depending on the given device orientation and size
-- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation size:(CGSize)size;
+// adjusts the constraints for the snooze picker and label view depending on the given device orientation
+- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation;
 
 // returns the snooze picker
-- (UIPickerView *)snoozePickerViewWithDelegate:(id)delegate;
+- (UIPickerView *)createSnoozePickerViewWithDelegate:(id)delegate;
 
 // returns the options table
-- (UITableView *)optionsTableViewWithDelegate:(id)delegate;
+- (UITableView *)createOptionsTableViewWithDelegate:(id)delegate;
 
-// create the labels that define the different components in the picker view
-- (void)createSnoozePickerLabels;
+// returns the view that contains all of the labels for the snooze picker
+- (UIView *)createLabelContainerView;
 
 // move the snooze time picker to the given hour, minute, and second values
 - (void)changePickerTimeWithHours:(NSInteger)hours
@@ -114,7 +118,7 @@ static NSInteger sJSInitialSeconds;
                            animated:NO];
     
     // set up the auto layout constraints
-    [self createViewConstraintsForView:self.view orientation:[[UIDevice currentDevice] orientation]];
+    [self createViewConstraintsForInitialOrientation:[[UIDevice currentDevice] orientation]];
 }
 
 // override to create a custom view
@@ -124,17 +128,20 @@ static NSInteger sJSInitialSeconds;
     UIView *containerView = [[UIView alloc] init];
     
     // create the snooze picker
-    self.snoozePickerView = [self snoozePickerViewWithDelegate:self];
+    self.snoozePickerView = [self createSnoozePickerViewWithDelegate:self];
     
     // create the table view
-    self.optionsTableView = [self optionsTableViewWithDelegate:self];
+    self.optionsTableView = [self createOptionsTableViewWithDelegate:self];
     
     // add the views to our container view
     [containerView addSubview:self.snoozePickerView];
     [containerView addSubview:self.optionsTableView];
     
     // create the labels that are used to describe the snooze picker wheels
-    [self createSnoozePickerLabels];
+    self.labelContainerView = [self createLabelContainerView];
+    
+    // add the label container view to the snooze picker
+    [self.snoozePickerView addSubview:self.labelContainerView];
     
     // set the view of this controller to the container view
     self.view = containerView;
@@ -157,36 +164,41 @@ static NSInteger sJSInitialSeconds;
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    // adjust the snooze picker constraints for the orientation that we changed to
-    [self adjustSnoozePickerConstraintsForOrientation:[[UIDevice currentDevice] orientation] size:size];
+    // animate the view changes
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        // adjust the snooze picker constraints for the orientation that we changed to
+        [self adjustSnoozePickerConstraintsForOrientation:[[UIDevice currentDevice] orientation]];
+    } completion:nil];
 }
 
-// creates the auto layout constraints that apply to the given view and orientation
-- (void)createViewConstraintsForView:(UIView *)view orientation:(UIDeviceOrientation)orientiation
+// creates the auto layout constraints that will depend on the orientation given
+- (void)createViewConstraintsForInitialOrientation:(UIDeviceOrientation)orientiation
 {
-    // create a views dictionary for our constraints
-    NSDictionary *viewsDictionary = @{kJSSnoozePickerKey:self.snoozePickerView, kJSOptionTableKey:self.optionsTableView};
+    // create view dictionaries for our constraints
+    NSDictionary *mainViewDictionary = @{kJSSnoozePickerKey:self.snoozePickerView, kJSOptionTableKey:self.optionsTableView};
+    NSDictionary *labelViewDictionary = @{kJSLabelContainerViewKey:self.labelContainerView, kJSHourLabelKey:self.hourLabel,
+                                          kJSMinuteLabelKey:self.minuteLabel, kJSSecondLabelKey:self.secondLabel};
     
     // set up the horizontal layout constraints for the snooze picker
     NSString *snoozeLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kJSSnoozePickerKey];
     NSArray *snoozeConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:snoozeLayoutStringH
                                                                           options:0
                                                                           metrics:nil
-                                                                            views:viewsDictionary];
+                                                                            views:mainViewDictionary];
     
     // set up the horizontal layout constraints for the options table
     NSString *optionsLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kJSOptionTableKey];
     NSArray *optionsConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:optionsLayoutStringH
                                                                            options:0
                                                                            metrics:nil
-                                                                             views:viewsDictionary];
+                                                                             views:mainViewDictionary];
     
     // set up the vertical layout constraints for the entire view
     NSString *layoutStringV = [NSString stringWithFormat:@"V:|-0-[%@]-0-[%@]-0-|", kJSSnoozePickerKey, kJSOptionTableKey];
     NSArray *constraintsV = [NSLayoutConstraint constraintsWithVisualFormat:layoutStringV
                                                                     options:0
                                                                     metrics:nil
-                                                                      views:viewsDictionary];
+                                                                      views:mainViewDictionary];
     
     // create a height constraint on the date picker view that will be set on orientation change
     self.snoozePickerHeightConstraint = [NSLayoutConstraint constraintWithItem:self.snoozePickerView
@@ -197,128 +209,119 @@ static NSInteger sJSInitialSeconds;
                                                                     multiplier:1.0
                                                                       constant:0.0];
     
-    // create the constraint for the top space for the hour label that is set on orientation change
-    self.hourLabelTopConstraint = [NSLayoutConstraint constraintWithItem:self.hourLabel
-                                                                  attribute:NSLayoutAttributeTop
-                                                                  relatedBy:NSLayoutRelationEqual
-                                                                     toItem:self.snoozePickerView
-                                                                  attribute:NSLayoutAttributeTop
-                                                                 multiplier:1.0
-                                                                   constant:0.0];
+    // set up the horizontal layout for all of the snooze picker labels
+    NSString *labelLayoutStringH = [NSString stringWithFormat:@"H:|-%f-[%@(%f)]-%f-[%@(%f)]-%f-[%@(%f)]-0-|",
+                                    kJSSnoozePickerLabelSpaceBetween, kJSHourLabelKey, kJSSnoozePickerLabelWidth,
+                                    kJSSnoozePickerLabelSpaceBetween, kJSMinuteLabelKey, kJSSnoozePickerLabelWidth,
+                                    kJSSnoozePickerLabelSpaceBetween, kJSSecondLabelKey, kJSSnoozePickerLabelWidth];
+    NSArray *labelConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:labelLayoutStringH
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:labelViewDictionary];
     
-    // create the constraint for the left space for the hour label that is set on orientation change
-    self.hourLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.hourLabel
-                                                                attribute:NSLayoutAttributeLeft
-                                                                relatedBy:NSLayoutRelationEqual
-                                                                   toItem:self.snoozePickerView
-                                                                attribute:NSLayoutAttributeLeft
-                                                               multiplier:1.0
-                                                                 constant:0.0];
+    // create the Y position constraints for each label
+    NSLayoutConstraint *hourLabelYConstraint = [NSLayoutConstraint constraintWithItem:self.hourLabel
+                                                                            attribute:NSLayoutAttributeCenterY
+                                                                            relatedBy:NSLayoutRelationEqual
+                                                                               toItem:self.labelContainerView
+                                                                            attribute:NSLayoutAttributeCenterY
+                                                                           multiplier:1.0
+                                                                             constant:0.0];
+    NSLayoutConstraint *minuteLabelYConstraint = [NSLayoutConstraint constraintWithItem:self.minuteLabel
+                                                                              attribute:NSLayoutAttributeCenterY
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:self.labelContainerView
+                                                                              attribute:NSLayoutAttributeCenterY
+                                                                             multiplier:1.0
+                                                                               constant:0.0];
+    NSLayoutConstraint *secondLabelYConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel
+                                                                              attribute:NSLayoutAttributeCenterY
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:self.labelContainerView
+                                                                              attribute:NSLayoutAttributeCenterY
+                                                                             multiplier:1.0
+                                                                               constant:0.0];
     
-    // align the bottoms of the minute and second labels to the hour label
-    NSLayoutConstraint *minuteLabelBottomAlignment = [NSLayoutConstraint constraintWithItem:self.minuteLabel
-                                                                                  attribute:NSLayoutAttributeBottom
-                                                                                  relatedBy:NSLayoutRelationEqual
-                                                                                     toItem:self.hourLabel
-                                                                                  attribute:NSLayoutAttributeBottom
-                                                                                 multiplier:1.0
-                                                                                   constant:0.0];
-    NSLayoutConstraint *secondLabelBottomAlignment = [NSLayoutConstraint constraintWithItem:self.secondLabel
-                                                                                  attribute:NSLayoutAttributeBottom
-                                                                                  relatedBy:NSLayoutRelationEqual
-                                                                                     toItem:self.hourLabel
-                                                                                  attribute:NSLayoutAttributeBottom
-                                                                                 multiplier:1.0
-                                                                                   constant:0.0];
-    
-    // align the left sides of the minute and second label to the label right next to it
-    NSLayoutConstraint *minuteLabelLeftAlignment = [NSLayoutConstraint constraintWithItem:self.minuteLabel
-                                                                                attribute:NSLayoutAttributeLeft
-                                                                                relatedBy:NSLayoutRelationEqual
-                                                                                   toItem:self.hourLabel
-                                                                                attribute:NSLayoutAttributeRight
-                                                                               multiplier:1.0
-                                                                                 constant:KJSSnoozePickerLabelSpaceBetween];
-    NSLayoutConstraint *secondLabelLeftAlignment = [NSLayoutConstraint constraintWithItem:self.secondLabel
-                                                                                attribute:NSLayoutAttributeLeft
-                                                                                relatedBy:NSLayoutRelationEqual
-                                                                                   toItem:self.minuteLabel
-                                                                                attribute:NSLayoutAttributeRight
-                                                                               multiplier:1.0
-                                                                                 constant:KJSSnoozePickerLabelSpaceBetween];
-    
-    // create height constraints for all 3 labels
+    // create the height constraints for each label
     NSLayoutConstraint *hourLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.hourLabel
                                                                                  attribute:NSLayoutAttributeHeight
                                                                                  relatedBy:NSLayoutRelationEqual
-                                                                                    toItem:nil
+                                                                                    toItem:0
                                                                                  attribute:0
                                                                                 multiplier:1.0
                                                                                   constant:kJSSnoozePickerLabelHeight];
     NSLayoutConstraint *minuteLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.minuteLabel
                                                                                    attribute:NSLayoutAttributeHeight
                                                                                    relatedBy:NSLayoutRelationEqual
-                                                                                      toItem:nil
+                                                                                      toItem:0
                                                                                    attribute:0
                                                                                   multiplier:1.0
                                                                                     constant:kJSSnoozePickerLabelHeight];
     NSLayoutConstraint *secondLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel
                                                                                    attribute:NSLayoutAttributeHeight
                                                                                    relatedBy:NSLayoutRelationEqual
-                                                                                      toItem:nil
+                                                                                      toItem:0
                                                                                    attribute:0
                                                                                   multiplier:1.0
                                                                                     constant:kJSSnoozePickerLabelHeight];
     
-    // create width constraints for all 3 labels
-    NSLayoutConstraint *hourLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.hourLabel
-                                                                                attribute:NSLayoutAttributeWidth
-                                                                                relatedBy:NSLayoutRelationEqual
-                                                                                   toItem:nil
-                                                                                attribute:0
-                                                                               multiplier:1.0
-                                                                                 constant:kJSSnoozePickerLabelWidth];
-    NSLayoutConstraint *minuteLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.minuteLabel
-                                                                                  attribute:NSLayoutAttributeWidth
-                                                                                  relatedBy:NSLayoutRelationEqual
-                                                                                     toItem:nil
-                                                                                  attribute:0
-                                                                                 multiplier:1.0
-                                                                                   constant:kJSSnoozePickerLabelWidth];
-    NSLayoutConstraint *secondLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel
-                                                                                  attribute:NSLayoutAttributeWidth
-                                                                                  relatedBy:NSLayoutRelationEqual
-                                                                                     toItem:nil
-                                                                                  attribute:0
-                                                                                 multiplier:1.0
-                                                                                   constant:kJSSnoozePickerLabelWidth];
+    // create the contraints that define the label container view
+    self.labelContainerViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
+                                                                        attribute:NSLayoutAttributeTop
+                                                                        relatedBy:NSLayoutRelationEqual
+                                                                           toItem:self.snoozePickerView
+                                                                        attribute:NSLayoutAttributeTop
+                                                                       multiplier:1.0
+                                                                         constant:0.0];
+    NSLayoutConstraint *labelContainerViewXConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
+                                                                                     attribute:NSLayoutAttributeCenterX
+                                                                                     relatedBy:NSLayoutRelationEqual
+                                                                                        toItem:self.snoozePickerView
+                                                                                     attribute:NSLayoutAttributeCenterX
+                                                                                    multiplier:1.0
+                                                                                      constant:0.0];
+    NSLayoutConstraint *labelContainerViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
+                                                                                         attribute:NSLayoutAttributeWidth
+                                                                                         relatedBy:NSLayoutRelationEqual
+                                                                                            toItem:nil
+                                                                                         attribute:0
+                                                                                        multiplier:1.0
+                                                                                          constant:kJSSnoozePickerLabelSpaceBetween * 3 + kJSSnoozePickerLabelWidth * 3];
+    NSLayoutConstraint *labelContainerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
+                                                                                          attribute:NSLayoutAttributeHeight
+                                                                                          relatedBy:NSLayoutRelationEqual
+                                                                                             toItem:nil
+                                                                                          attribute:0
+                                                                                         multiplier:1.0
+                                                                                           constant:kJSSnoozePickerLabelHeight];
     
     // set up the constraints for the snooze picker and labels depending on what orientation was given
-    [self adjustSnoozePickerConstraintsForOrientation:orientiation size:[UIScreen mainScreen].applicationFrame.size];
+    [self adjustSnoozePickerConstraintsForOrientation:orientiation];
     
-    // add the label constraints to the snooze picker
-    [self.snoozePickerView addConstraint:self.hourLabelTopConstraint];
-    [self.snoozePickerView addConstraint:minuteLabelBottomAlignment];
-    [self.snoozePickerView addConstraint:secondLabelBottomAlignment];
-    [self.snoozePickerView addConstraint:self.hourLabelLeftConstraint];
-    [self.snoozePickerView addConstraint:minuteLabelLeftAlignment];
-    [self.snoozePickerView addConstraint:secondLabelLeftAlignment];
-    [self.snoozePickerView addConstraint:hourLabelHeightConstraint];
-    [self.snoozePickerView addConstraint:minuteLabelHeightConstraint];
-    [self.snoozePickerView addConstraint:secondLabelHeightConstraint];
-    [self.snoozePickerView addConstraint:hourLabelWidthConstraint];
-    [self.snoozePickerView addConstraint:minuteLabelWidthConstraint];
-    [self.snoozePickerView addConstraint:secondLabelWidthConstraint];
+    // add the individual label constraints to the label container
+    [self.labelContainerView addConstraints:labelConstraintsH];
+    [self.labelContainerView addConstraint:hourLabelYConstraint];
+    [self.labelContainerView addConstraint:minuteLabelYConstraint];
+    [self.labelContainerView addConstraint:secondLabelYConstraint];
+    [self.labelContainerView addConstraint:hourLabelHeightConstraint];
+    [self.labelContainerView addConstraint:minuteLabelHeightConstraint];
+    [self.labelContainerView addConstraint:secondLabelHeightConstraint];
     
-    // add our constraints to the view
-    [view addConstraints:snoozeConstraintsH];
-    [view addConstraints:optionsConstraintsH];
-    [view addConstraints:constraintsV];
-    [view addConstraint:self.snoozePickerHeightConstraint];
+    // add the label container constraints to the snooze picker view
+    [self.snoozePickerView addConstraint:self.labelContainerViewTopConstraint];
+    [self.snoozePickerView addConstraint:labelContainerViewXConstraint];
+    [self.snoozePickerView addConstraint:labelContainerViewWidthConstraint];
+    [self.snoozePickerView addConstraint:labelContainerViewHeightConstraint];
+    
+    // add our constraints to the parent view
+    [self.view addConstraints:snoozeConstraintsH];
+    [self.view addConstraints:optionsConstraintsH];
+    [self.view addConstraints:constraintsV];
+    [self.view addConstraint:self.snoozePickerHeightConstraint];
 }
 
-// adjusts the constraints for the snooze picker and labels depending on the given device orientation and size
-- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation size:(CGSize)size
+// adjusts the constraints for the snooze picker and label view depending on the given device orientation
+- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation
 {
     if (UIDeviceOrientationIsLandscape(orientation)) {
         // change the height of the snooze picker to the landscape height
@@ -329,14 +332,11 @@ static NSInteger sJSInitialSeconds;
     }
     
     // adjust the height of the leftmost label
-    self.hourLabelTopConstraint.constant = self.snoozePickerHeightConstraint.constant / 2 - kJSSnoozePickerLabelHeight / 2;
-    
-    // set the left space constraint for the hour label which is dependent on the components in the view
-    self.hourLabelLeftConstraint.constant = (size.width - 2 * KJSSnoozePickerLabelSpaceBetween - 2 * kJSSnoozePickerLabelWidth) / 2;
+    self.labelContainerViewTopConstraint.constant = self.snoozePickerHeightConstraint.constant / 2 - kJSSnoozePickerLabelHeight / 2;
 }
 
 // returns the snooze picker
-- (UIPickerView *)snoozePickerViewWithDelegate:(id)delegate
+- (UIPickerView *)createSnoozePickerViewWithDelegate:(id)delegate
 {
     // programatically create the snooze picker
     UIPickerView *snoozePickerView = [[UIPickerView alloc] init];
@@ -349,7 +349,7 @@ static NSInteger sJSInitialSeconds;
 }
 
 // returns the options table
-- (UITableView *)optionsTableViewWithDelegate:(id)delegate
+- (UITableView *)createOptionsTableViewWithDelegate:(id)delegate
 {
     // initialize a table view with the grouped style
     UITableView *optionsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)
@@ -361,26 +361,32 @@ static NSInteger sJSInitialSeconds;
     return optionsTableView;
 }
 
-// create the labels that define the different components in the picker view
-- (void)createSnoozePickerLabels
+// returns the view that contains all of the labels for the snooze picker
+- (UIView *)createLabelContainerView
 {
+    // create the container view which will contain the snooze picker labels
+    UIView *labelContainerView = [[UIView alloc] init];
+    labelContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    
     // create the hour label
     self.hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.hourLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.hourLabel.text = @"hours";
-    [self.snoozePickerView addSubview:self.hourLabel];
+    [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
     self.minuteLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.minuteLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.minuteLabel.text = @"min";
-    [self.snoozePickerView addSubview:self.minuteLabel];
+    [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
     self.secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.secondLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.secondLabel.text = @"sec";
-    [self.snoozePickerView addSubview:self.secondLabel];
+    [labelContainerView addSubview:self.secondLabel];
+    
+    return labelContainerView;
 }
 
 // move the snooze time picker to the given hour, minute, and second values
