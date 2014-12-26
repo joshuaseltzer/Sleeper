@@ -10,12 +10,12 @@
 #import "JSPrefsManager.h"
 
 // define constants for the view dictionary when creating constraints
-static NSString const *kJSSnoozePickerKey =         @"snoozePicker";
-static NSString const *kJSOptionTableKey =          @"optionsTableView";
-static NSString const *kJSLabelContainerViewKey =   @"labelContainerView";
-static NSString const *kJSHourLabelKey =            @"hourLabelView";
-static NSString const *kJSMinuteLabelKey =          @"minuteLabelView";
-static NSString const *kJSSecondLabelKey =          @"secondLabelView";
+static NSString *const kJSSnoozePickerKey =         @"snoozePicker";
+static NSString *const kJSOptionTableKey =          @"optionsTableView";
+static NSString *const kJSLabelContainerViewKey =   @"labelContainerView";
+static NSString *const kJSHourLabelKey =            @"hourLabelView";
+static NSString *const kJSMinuteLabelKey =          @"minuteLabelView";
+static NSString *const kJSSecondLabelKey =          @"secondLabelView";
 
 // Constants for the snooze picker per orientation.  These numbers are locked by Apple
 static CGFloat const kJSSnoozePickerHeightPortrait = 216.0;
@@ -63,10 +63,10 @@ static NSInteger sJSInitialSeconds;
 @property (nonatomic, strong) NSLayoutConstraint *labelContainerViewTopConstraint;
 
 // creates the auto layout constraints that will depend on the orientation given
-- (void)createViewConstraintsForInitialOrientation:(UIDeviceOrientation)orientiation;
+- (void)createViewConstraintsForInitialOrientation:(UIInterfaceOrientation)orientiation;
 
-// adjusts the constraints for the snooze picker and label view depending on the given device orientation
-- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation;
+// adjusts the constraints for the snooze picker and label view depending on the given orientation
+- (void)adjustSnoozePickerConstraintsForOrientation:(UIInterfaceOrientation)orientation;
 
 // returns the snooze picker
 - (UIPickerView *)createSnoozePickerViewWithDelegate:(id)delegate;
@@ -117,8 +117,15 @@ static NSInteger sJSInitialSeconds;
                             seconds:sJSInitialSeconds
                            animated:NO];
     
-    // set up the auto layout constraints
-    [self createViewConstraintsForInitialOrientation:[[UIDevice currentDevice] orientation]];
+    // Set up the auto layout constraints depending on the current orientation.  On an iPad, we only
+    // display the app in a portrait orientation
+    UIInterfaceOrientation orientation;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    } else {
+        orientation = UIInterfaceOrientationPortrait;
+    }
+    [self createViewConstraintsForInitialOrientation:orientation];
 }
 
 // override to create a custom view
@@ -159,20 +166,25 @@ static NSInteger sJSInitialSeconds;
     }
 }
 
-// invoked when the size of the view changes (e.g. orientation change)
+// Invoked when the size of the view changes (e.g. orientation change).  This is an iOS8 only
+// implementation since the API has changed.  This is irrelevent to iOS7 since the iOS7 Clock app
+// does not support rotation.
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    // animate the view changes
-    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        // adjust the snooze picker constraints for the orientation that we changed to
-        [self adjustSnoozePickerConstraintsForOrientation:[[UIDevice currentDevice] orientation]];
-    } completion:nil];
+    // Animate the view changes if we are on an iPhone.  On the iPad, this orientation does not need
+    // to change since the popover view is the same size in either orientation.
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            // adjust the snooze picker constraints for the orientation that we changed to
+            [self adjustSnoozePickerConstraintsForOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+        } completion:nil];
+    }
 }
 
 // creates the auto layout constraints that will depend on the orientation given
-- (void)createViewConstraintsForInitialOrientation:(UIDeviceOrientation)orientiation
+- (void)createViewConstraintsForInitialOrientation:(UIInterfaceOrientation)orientiation
 {
     // create view dictionaries for our constraints
     NSDictionary *mainViewDictionary = @{kJSSnoozePickerKey:self.snoozePickerView, kJSOptionTableKey:self.optionsTableView};
@@ -321,9 +333,9 @@ static NSInteger sJSInitialSeconds;
 }
 
 // adjusts the constraints for the snooze picker and label view depending on the given device orientation
-- (void)adjustSnoozePickerConstraintsForOrientation:(UIDeviceOrientation)orientation
+- (void)adjustSnoozePickerConstraintsForOrientation:(UIInterfaceOrientation)orientation
 {
-    if (UIDeviceOrientationIsLandscape(orientation)) {
+    if (UIInterfaceOrientationIsLandscape(orientation)) {
         // change the height of the snooze picker to the landscape height
         self.snoozePickerHeightConstraint.constant = kJSSnoozePickerHeightLandscape;
     } else {

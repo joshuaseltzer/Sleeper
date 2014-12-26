@@ -9,20 +9,9 @@
 /* Begin PBXBuildFile section */
 		F871AFD11A3F8A3800B6475A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFD01A3F8A3800B6475A /* main.m */; };
 		F871AFD41A3F8A3800B6475A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFD31A3F8A3800B6475A /* AppDelegate.m */; };
-		F871AFEB1A3F8A3800B6475A /* SleeperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFEA1A3F8A3800B6475A /* SleeperTests.m */; };
 		F871AFF61A3F8A7800B6475A /* JSPrefsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */; };
 		F871AFF91A3F8ADF00B6475A /* JSSnoozeTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		F871AFE51A3F8A3800B6475A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F871AFC31A3F8A3800B6475A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F871AFCA1A3F8A3800B6475A;
-			remoteInfo = Sleeper;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		F871AFCB1A3F8A3800B6475A /* Sleeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sleeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,9 +19,6 @@
 		F871AFD01A3F8A3800B6475A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F871AFD21A3F8A3800B6475A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F871AFD31A3F8A3800B6475A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		F871AFE41A3F8A3800B6475A /* SleeperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SleeperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F871AFE91A3F8A3800B6475A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F871AFEA1A3F8A3800B6475A /* SleeperTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SleeperTests.m; sourceTree = "<group>"; };
 		F871AFF41A3F8A7800B6475A /* JSPrefsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSPrefsManager.h; sourceTree = "<group>"; };
 		F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSPrefsManager.m; sourceTree = "<group>"; };
 		F871AFF71A3F8ADF00B6475A /* JSSnoozeTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSSnoozeTimeViewController.h; sourceTree = "<group>"; };
@@ -47,13 +33,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F871AFE11A3F8A3800B6475A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -61,7 +40,6 @@
 			isa = PBXGroup;
 			children = (
 				F871AFCD1A3F8A3800B6475A /* Sleeper */,
-				F871AFE71A3F8A3800B6475A /* SleeperTests */,
 				F871AFCC1A3F8A3800B6475A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,7 +48,6 @@
 			isa = PBXGroup;
 			children = (
 				F871AFCB1A3F8A3800B6475A /* Sleeper.app */,
-				F871AFE41A3F8A3800B6475A /* SleeperTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,23 +75,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		F871AFE71A3F8A3800B6475A /* SleeperTests */ = {
-			isa = PBXGroup;
-			children = (
-				F871AFEA1A3F8A3800B6475A /* SleeperTests.m */,
-				F871AFE81A3F8A3800B6475A /* Supporting Files */,
-			);
-			path = SleeperTests;
-			sourceTree = "<group>";
-		};
-		F871AFE81A3F8A3800B6475A /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				F871AFE91A3F8A3800B6475A /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,24 +95,6 @@
 			productReference = F871AFCB1A3F8A3800B6475A /* Sleeper.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F871AFE31A3F8A3800B6475A /* SleeperTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F871AFF11A3F8A3800B6475A /* Build configuration list for PBXNativeTarget "SleeperTests" */;
-			buildPhases = (
-				F871AFE01A3F8A3800B6475A /* Sources */,
-				F871AFE11A3F8A3800B6475A /* Frameworks */,
-				F871AFE21A3F8A3800B6475A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F871AFE61A3F8A3800B6475A /* PBXTargetDependency */,
-			);
-			name = SleeperTests;
-			productName = SleeperTests;
-			productReference = F871AFE41A3F8A3800B6475A /* SleeperTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -164,10 +106,6 @@
 				TargetAttributes = {
 					F871AFCA1A3F8A3800B6475A = {
 						CreatedOnToolsVersion = 6.1.1;
-					};
-					F871AFE31A3F8A3800B6475A = {
-						CreatedOnToolsVersion = 6.1.1;
-						TestTargetID = F871AFCA1A3F8A3800B6475A;
 					};
 				};
 			};
@@ -185,20 +123,12 @@
 			projectRoot = "";
 			targets = (
 				F871AFCA1A3F8A3800B6475A /* Sleeper */,
-				F871AFE31A3F8A3800B6475A /* SleeperTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F871AFC91A3F8A3800B6475A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F871AFE21A3F8A3800B6475A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -219,23 +149,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F871AFE01A3F8A3800B6475A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F871AFEB1A3F8A3800B6475A /* SleeperTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		F871AFE61A3F8A3800B6475A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F871AFCA1A3F8A3800B6475A /* Sleeper */;
-			targetProxy = F871AFE51A3F8A3800B6475A /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F871AFEC1A3F8A3800B6475A /* Debug */ = {
@@ -336,40 +250,6 @@
 			};
 			name = Release;
 		};
-		F871AFF21A3F8A3800B6475A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = SleeperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sleeper.app/Sleeper";
-			};
-			name = Debug;
-		};
-		F871AFF31A3F8A3800B6475A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = SleeperTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sleeper.app/Sleeper";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -387,15 +267,6 @@
 			buildConfigurations = (
 				F871AFEF1A3F8A3800B6475A /* Debug */,
 				F871AFF01A3F8A3800B6475A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F871AFF11A3F8A3800B6475A /* Build configuration list for PBXNativeTarget "SleeperTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F871AFF21A3F8A3800B6475A /* Debug */,
-				F871AFF31A3F8A3800B6475A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

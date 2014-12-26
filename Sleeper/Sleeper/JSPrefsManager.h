@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 
 // constant keys for the values we are going to add to the preferences file
-static NSString const *kJSAlarmIdKey =  @"alarmId";
-static NSString const *kJSAlarmsKey =   @"Alarms";
-static NSString const *kJSHourKey =     @"snoozeTimeHour";
-static NSString const *kJSMinuteKey =   @"snoozeTimeMinute";
-static NSString const *kJSSecondKey =   @"snoozeTimeSecond";
+static NSString *const kJSAlarmIdKey =  @"alarmId";
+static NSString *const kJSAlarmsKey =   @"Alarms";
+static NSString *const kJSHourKey =     @"snoozeTimeHour";
+static NSString *const kJSMinuteKey =   @"snoozeTimeMinute";
+static NSString *const kJSSecondKey =   @"snoozeTimeSecond";
 
 // constants that define the default snooze time
 static NSInteger const kJSDefaultHour =   0;
