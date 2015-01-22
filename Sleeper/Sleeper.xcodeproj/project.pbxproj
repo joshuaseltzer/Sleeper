@@ -23,6 +23,7 @@
 		F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSPrefsManager.m; sourceTree = "<group>"; };
 		F871AFF71A3F8ADF00B6475A /* JSSnoozeTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSSnoozeTimeViewController.h; sourceTree = "<group>"; };
 		F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSSnoozeTimeViewController.m; sourceTree = "<group>"; };
+		F8E5F35C1A7078920044B928 /* JSLocalizedStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSLocalizedStrings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +62,7 @@
 				F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */,
 				F871AFF71A3F8ADF00B6475A /* JSSnoozeTimeViewController.h */,
 				F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */,
+				F8E5F35C1A7078920044B928 /* JSLocalizedStrings.h */,
 				F871AFCE1A3F8A3800B6475A /* Supporting Files */,
 			);
 			path = Sleeper;

@@ -9,7 +9,7 @@
 #import "JSPrefsManager.h"
 
 // the path of our settings that is used to store the alarm snooze times
-#define kJSSettingsPath    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
+#define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
 @implementation JSPrefsManager
 
@@ -17,7 +17,7 @@
 + (NSMutableDictionary *)snoozeTimeForId:(NSString *)alarmId
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kJSSettingsPath];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
     
     // if the clock preferences exist, attempt to get the alarms
     if (prefs) {
@@ -43,7 +43,7 @@
                          seconds:(NSInteger)seconds
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kJSSettingsPath];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
     
     // if the clock preferences don't exist, create a new mutable dictionary now
     if (!prefs) {
@@ -86,14 +86,14 @@
     [prefs setObject:alarms forKey:kJSAlarmsKey];
     
     // write the updated preferences
-    [prefs writeToFile:kJSSettingsPath atomically:YES];
+    [prefs writeToFile:SETTINGS_PATH atomically:YES];
 }
 
 // delete an alarm from our snooze time settings
 + (void)deleteSnoozeTimeForAlarmId:(NSString *)alarmId
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kJSSettingsPath];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
     
     // only continue trying to delete the alarm if our preferences exist
     if (prefs) {
@@ -123,7 +123,7 @@
                 [prefs setObject:alarms forKey:kJSAlarmsKey];
                 
                 // write the updated preferences
-                [prefs writeToFile:kJSSettingsPath atomically:YES];
+                [prefs writeToFile:SETTINGS_PATH atomically:YES];
             }
         }
     }

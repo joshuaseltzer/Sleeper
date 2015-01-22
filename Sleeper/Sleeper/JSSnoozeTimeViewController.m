@@ -8,6 +8,7 @@
 
 #import "JSSnoozeTimeViewController.h"
 #import "JSPrefsManager.h"
+#import "JSLocalizedStrings.h"
 
 // define constants for the view dictionary when creating constraints
 static NSString *const kJSSnoozePickerKey =         @"snoozePicker";
@@ -106,7 +107,7 @@ static NSInteger sJSInitialSeconds;
     [super viewDidLoad];
     
     // set the title of the view controller
-    self.title = @"Snooze Time";
+    self.title = LZ_SNOOZE_TIME;
     
     // added to account for the navigation bar at the top of the view
     self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -383,19 +384,19 @@ static NSInteger sJSInitialSeconds;
     // create the hour label
     self.hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.hourLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.hourLabel.text = @"hours";
+    self.hourLabel.text = LZ_HOURS;
     [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
     self.minuteLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.minuteLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.minuteLabel.text = @"min";
+    self.minuteLabel.text = LZ_MINUTES;
     [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
     self.secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.secondLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.secondLabel.text = @"sec";
+    self.secondLabel.text = LZ_SECONDS;
     [labelContainerView addSubview:self.secondLabel];
     
     return labelContainerView;
@@ -444,7 +445,7 @@ static NSInteger sJSInitialSeconds;
     }
     
     // customize the cell text and alignment
-    cell.textLabel.text = @"Reset Default";
+    cell.textLabel.text = LZ_RESET_DEFAULT;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     
     // set the color of the button to the red, destructive color as defined by Apple in other cells
@@ -461,7 +462,7 @@ static NSInteger sJSInitialSeconds;
 {
     // We only have one section which defines the default snooze button.  Display a message indicating
     // to the user what the default snooze time is
-    return [NSString stringWithFormat:@"The default snooze time is %02ld:%02ld:%02ld.", (long)kJSDefaultHour,
+    return [NSString stringWithFormat:@"%@ %02ld:%02ld:%02ld.", LZ_DEFAULT_SNOOZE_TIME, (long)kJSDefaultHour,
             (long)kJSDefaultMinute, (long)kJSDefaultSecond];
 }
 

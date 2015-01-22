@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+"SNOOZE_TIME" = "Snooze Time";
+"HOURS" = "hours";
+"MINUTES" = "min";
+"SECONDS" = "sec";
+"RESET_DEFAULT" = "Reset Default";
+"DEFAULT_SNOOZE_TIME" = "The default snooze time is";

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Sleeper/Sleeper/JSSnoozeTimeViewController.h"
 #import "Sleeper/Sleeper/JSPrefsManager.h"
+#import "Sleeper/Sleeper/JSLocalizedStrings.h"
 #import "AppleInterfaces.h"
 
 // define the constants that define where the snooze time row will be inserted
@@ -71,11 +72,12 @@ static NSInteger sJSSeconds;
     // insert our custom cell if it is the appropriate section and row
     if (indexPath.section == kJSSnoozeTimeTableSection && indexPath.row == kJSSnoozeTimeTableRow) {
         // customize the cell
-        cell.textLabel.text = @"Snooze Time";
+        cell.textLabel.text = LZ_SNOOZE_TIME;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         // format the cell of the text with the snooze time values
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSHours, (long)sJSMinutes, (long)sJSSeconds];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSHours,
+                                     (long)sJSMinutes, (long)sJSSeconds];
     }
     
     return cell;
