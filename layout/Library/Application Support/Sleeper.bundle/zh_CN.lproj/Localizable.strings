@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Simplified Chinese (translation provided by alanbchk)
+"SNOOZE_TIME" = "稍后提醒";
+"HOURS" = "时";
+"MINUTES" = "分";
+"SECONDS" = "秒";
+"RESET_DEFAULT" = "重置默认";
+"DEFAULT_SNOOZE_TIME" = "默认稍后提醒时间是";
