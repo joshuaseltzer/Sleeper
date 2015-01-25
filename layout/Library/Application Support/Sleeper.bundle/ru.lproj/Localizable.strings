@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Russian (translation provided by aeternii)
+"SNOOZE_TIME" = "Период отложения";
+"HOURS" = "ч";
+"MINUTES" = "мин";
+"SECONDS" = "сек";
+"RESET_DEFAULT" = "Сброс настроек";
+"DEFAULT_SNOOZE_TIME" = "Стандартный период отложения –";

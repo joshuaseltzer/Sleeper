@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Polish (translation provided by aaken)
+"SNOOZE_TIME" = "Czas drzemki";
+"HOURS" = "godz.";
+"MINUTES" = "min";
+"SECONDS" = "sek.";
+"RESET_DEFAULT" = "Przywróć ustawienia domyślne";
+"DEFAULT_SNOOZE_TIME" = "Standardowy czas drzemki to";

@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Greek (translation provided by TeamArrow)
+"SNOOZE_TIME" = "Ώρα υπνάκου";
+"HOURS" = "ώρες";
+"MINUTES" = "λεπτά";
+"SECONDS" = "δευτερόλεπτα";
+"RESET_DEFAULT" = "Επαναφορά στο κανονικό.";
+"DEFAULT_SNOOZE_TIME" = "Η κανονική ώρα \"υπνάκου\" είναι:";

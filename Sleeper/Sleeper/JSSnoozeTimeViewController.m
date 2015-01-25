@@ -18,14 +18,21 @@ static NSString *const kJSHourLabelKey =            @"hourLabelView";
 static NSString *const kJSMinuteLabelKey =          @"minuteLabelView";
 static NSString *const kJSSecondLabelKey =          @"secondLabelView";
 
-// Constants for the snooze picker per orientation.  These numbers are locked by Apple
+// Constants for the snooze picker height per orientation.  These numbers are locked by Apple
 static CGFloat const kJSSnoozePickerHeightPortrait = 216.0;
 static CGFloat const kJSSnoozePickerHeightLandscape = 162.0;
 
-// constants the define the size of the labels
-static CGFloat const kJSSnoozePickerLabelWidth = 45.0;
+// constants for the widths of the components in the snooze picker
+static CGFloat const kJSSnoozePickerWidth = 320;
+static CGFloat const kJSSnoozePickerLabelComponentWidth = 36.0;
+static CGFloat const kJSSnoozePickerHiddenComponentWidth = 59.0;
+
+// constants the define the size and layout of the labels
 static CGFloat const kJSSnoozePickerLabelHeight = 60.0;
-static CGFloat const kJSSnoozePickerLabelSpaceBetween = kJSSnoozePickerLabelWidth + 10.0;
+static CGFloat const kJSSnoozePickerLabelSpaceBetween = 40.0;
+static CGFloat const kJSSnoozePickerLabelLeadingSpace = 8.0;
+static CGFloat const kJSSnoozePickerLabelWidth = (kJSSnoozePickerWidth - kJSSnoozePickerLabelLeadingSpace
+                                                  - kJSSnoozePickerLabelSpaceBetween * 3) / 3;
 
 // constants that define the location of the valued components in our picker
 static NSInteger const kJSHourComponent =   0;
@@ -224,11 +231,12 @@ static NSInteger sJSInitialSeconds;
     
     // set up the horizontal layout for all of the snooze picker labels
     NSString *labelLayoutStringH = [NSString stringWithFormat:@"H:|-%f-[%@(%f)]-%f-[%@(%f)]-%f-[%@(%f)]-0-|",
-                                    kJSSnoozePickerLabelSpaceBetween, kJSHourLabelKey, kJSSnoozePickerLabelWidth,
-                                    kJSSnoozePickerLabelSpaceBetween, kJSMinuteLabelKey, kJSSnoozePickerLabelWidth,
-                                    kJSSnoozePickerLabelSpaceBetween, kJSSecondLabelKey, kJSSnoozePickerLabelWidth];
+                                    kJSSnoozePickerLabelSpaceBetween + kJSSnoozePickerLabelLeadingSpace,
+                                    kJSHourLabelKey, kJSSnoozePickerLabelWidth, kJSSnoozePickerLabelSpaceBetween,
+                                    kJSMinuteLabelKey, kJSSnoozePickerLabelWidth, kJSSnoozePickerLabelSpaceBetween,
+                                    kJSSecondLabelKey, kJSSnoozePickerLabelWidth];
     NSArray *labelConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:labelLayoutStringH
-                                                                         options:0
+                                                                         options:NSLayoutFormatDirectionLeftToRight
                                                                          metrics:nil
                                                                            views:labelViewDictionary];
     
@@ -299,7 +307,7 @@ static NSInteger sJSInitialSeconds;
                                                                                             toItem:nil
                                                                                          attribute:0
                                                                                         multiplier:1.0
-                                                                                          constant:kJSSnoozePickerLabelSpaceBetween * 3 + kJSSnoozePickerLabelWidth * 3];
+                                                                                          constant:kJSSnoozePickerWidth];
     NSLayoutConstraint *labelContainerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
                                                                                           attribute:NSLayoutAttributeHeight
                                                                                           relatedBy:NSLayoutRelationEqual
@@ -384,18 +392,27 @@ static NSInteger sJSInitialSeconds;
     // create the hour label
     self.hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.hourLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.hourLabel.textAlignment = NSTextAlignmentLeft;
+    self.hourLabel.adjustsFontSizeToFitWidth = YES;
+    self.hourLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.hourLabel.text = LZ_HOURS;
     [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
     self.minuteLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.minuteLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.minuteLabel.textAlignment = NSTextAlignmentLeft;
+    self.minuteLabel.adjustsFontSizeToFitWidth = YES;
+    self.minuteLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.minuteLabel.text = LZ_MINUTES;
     [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
     self.secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.secondLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.secondLabel.textAlignment = NSTextAlignmentLeft;
+    self.secondLabel.adjustsFontSizeToFitWidth = YES;
+    self.secondLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.secondLabel.text = LZ_SECONDS;
     [labelContainerView addSubview:self.secondLabel];
     
@@ -491,13 +508,16 @@ static NSInteger sJSInitialSeconds;
     return 6;
 }
 
+// return the number of rows for each component
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     switch (component) {
         case kJSHourComponent:
+            // ability to choose between 24 hours
             return 24;
         case kJSMinuteComponent:
         case kJSSecondComponent:
+            // ability to choose between 60 minutes/seconds
             return 60;
         default:
             // for the hidden rows, return nothing
@@ -510,8 +530,16 @@ static NSInteger sJSInitialSeconds;
 // return the width of a paritcular row in a component
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
-    // each component in the picker have the same width, enough to make space for the label
-    return kJSSnoozePickerLabelWidth;
+    switch (component) {
+        case kJSHourComponent:
+        case kJSMinuteComponent:
+        case kJSSecondComponent:
+            // the components which have options to show have a particular width
+            return kJSSnoozePickerLabelComponentWidth;
+        default:
+            // the hidden components have a width that is enough to make room for the labels
+            return kJSSnoozePickerHiddenComponentWidth;
+    }
 }
 
 // returns the title of a particular row for a particular component in the picker view

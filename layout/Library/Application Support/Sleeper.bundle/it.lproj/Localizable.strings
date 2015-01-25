@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Italian (translation provided by Not_My_Usrname)
+"SNOOZE_TIME" = "Tempo di Ritardo";
+"HOURS" = "ore";
+"MINUTES" = "min";
+"SECONDS" = "sec";
+"RESET_DEFAULT" = "Ripristina Valori Predefiniti";
+"DEFAULT_SNOOZE_TIME" = "Il tempo di ritardo predefinito è";

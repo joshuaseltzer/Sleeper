@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Czech (translation provided by Sh4rPEYE)
+"SNOOZE_TIME" = "Délka uspání";
+"HOURS" = "hod";
+"MINUTES" = "min";
+"SECONDS" = "sek";
+"RESET_DEFAULT" = "Obnovit na výchozí";
+"DEFAULT_SNOOZE_TIME" = "Výchozí délka uspání je";

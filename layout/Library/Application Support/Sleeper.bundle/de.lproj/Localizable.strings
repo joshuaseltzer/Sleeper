@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// German (translation provided by thapublicMAN)
+"SNOOZE_TIME" = "Schlummerzeit";
+"HOURS" = "Std.";
+"MINUTES" = "Min.";
+"SECONDS" = "Sek.";
+"RESET_DEFAULT" = "Zurücksetzen";
+"DEFAULT_SNOOZE_TIME" = "Die Standard-Schlummerzeit ist";

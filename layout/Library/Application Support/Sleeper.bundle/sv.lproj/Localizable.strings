@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Swedish (translation provided by andreashenriksson)
+"SNOOZE_TIME" = "Snooze-längd";
+"HOURS" = "tim";
+"MINUTES" = "min";
+"SECONDS" = "sek";
+"RESET_DEFAULT" = "Återställ till standard";
+"DEFAULT_SNOOZE_TIME" = "Standardtiden för snooze är";

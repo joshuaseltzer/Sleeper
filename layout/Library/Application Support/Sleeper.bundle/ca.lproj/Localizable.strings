@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Catalan (translation provided by q-quan)
+"SNOOZE_TIME" = "Temps d'Ajorn";
+"HOURS" = "hores";
+"MINUTES" = "minuts";
+"SECONDS" = "segons";
+"RESET_DEFAULT" = "Restaurar Predeterminat";
+"DEFAULT_SNOOZE_TIME" = "El temps d'ajorn predeterminat és de";

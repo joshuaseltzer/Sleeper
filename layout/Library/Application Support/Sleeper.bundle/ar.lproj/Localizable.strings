@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Arabic (translation provided by MiRO92)
+"SNOOZE_TIME" = "وقت الغفوة";
+"HOURS" = "الساعة";
+"MINUTES" = "الدقيقة";
+"SECONDS" = "الثانية";
+"RESET_DEFAULT" = "إعادة التعيين";
+"DEFAULT_SNOOZE_TIME" = "وقت الغفوة الإفتراضي هو";

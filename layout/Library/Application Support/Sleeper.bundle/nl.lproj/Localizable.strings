@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Dutch (translation provided by xdmaroc)
+"SNOOZE_TIME" = "Sluimer Tijd";
+"HOURS" = "u";
+"MINUTES" = "min";
+"SECONDS" = "sec";
+"RESET_DEFAULT" = "Reset";
+"DEFAULT_SNOOZE_TIME" = "De standaard sluimer tijd is";

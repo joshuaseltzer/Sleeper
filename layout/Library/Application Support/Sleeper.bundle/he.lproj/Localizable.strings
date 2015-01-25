@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Hebrew (translation provided by Aransh)
+"SNOOZE_TIME" = "זמן תנומה";
+"HOURS" = "שעות";
+"MINUTES" = "דקות";
+"SECONDS" = "שניות";
+"RESET_DEFAULT" = "אתחל לברירת מחדל";
+"DEFAULT_SNOOZE_TIME" = "זמן התנומה ברירת המחדל הוא";

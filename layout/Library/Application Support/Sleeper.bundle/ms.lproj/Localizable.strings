@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Malay (translation provided by redzrex)
+"SNOOZE_TIME" = "Tunda Masa";
+"HOURS" = "jam";
+"MINUTES" = "minit";
+"SECONDS" = "saat";
+"RESET_DEFAULT" = "Menetapkan Semula";
+"DEFAULT_SNOOZE_TIME" = "Tundaan masa yang asal ialah";

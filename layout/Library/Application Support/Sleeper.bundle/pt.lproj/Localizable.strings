@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Portuguese (translation provided by highasakite14)
+"SNOOZE_TIME" = "Tempo de soneca";
+"HOURS" = "hs";
+"MINUTES" = "min";
+"SECONDS" = "seg";
+"RESET_DEFAULT" = "Restaurar padrões";
+"DEFAULT_SNOOZE_TIME" = "O tempo padrão da soneca é";

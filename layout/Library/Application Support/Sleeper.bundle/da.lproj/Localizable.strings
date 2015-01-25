@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Danish (translation provided by Rasmushp)
+"SNOOZE_TIME" = "Snooze interval";
+"HOURS" = "Timer";
+"MINUTES" = "Min.";
+"SECONDS" = "Sek.";
+"RESET_DEFAULT" = "Gendan standardindstillinger";
+"DEFAULT_SNOOZE_TIME" = "Standard snooze interval er";

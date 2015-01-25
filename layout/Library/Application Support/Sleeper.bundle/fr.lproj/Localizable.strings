@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// French (translation provided by Ziph0n)
+"SNOOZE_TIME" = "Temporisation";
+"HOURS" = "heures";
+"MINUTES" = "min";
+"SECONDS" = "sec";
+"RESET_DEFAULT" = "Réinitialiser";
+"DEFAULT_SNOOZE_TIME" = "La temporisation par défaut est";

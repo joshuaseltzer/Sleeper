@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Japanese (translation provided by koh_kun)
+"SNOOZE_TIME" = "スヌーズ間隔";
+"HOURS" = "時間";
+"MINUTES" = "分";
+"SECONDS" = "秒";
+"RESET_DEFAULT" = "初期設定に戻す";
+"DEFAULT_SNOOZE_TIME" = "スヌーズ間隔の初期設定:";

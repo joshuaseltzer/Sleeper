@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Romanian (translation provided by blackdeath19)
+"SNOOZE_TIME" = "Timpul pentru ațipit";
+"HOURS" = "ore";
+"MINUTES" = "min";
+"SECONDS" = "seg";
+"RESET_DEFAULT" = "Resetează valorile implicite";
+"DEFAULT_SNOOZE_TIME" = "Timpul implicit pentru ațipit este";
