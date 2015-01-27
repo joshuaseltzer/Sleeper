@@ -425,7 +425,7 @@ static NSInteger sJSInitialSeconds;
                           seconds:(NSInteger)seconds
                          animated:(BOOL)animated
 {
-    // set the default values as defined by our constants
+    // set the values of the picker view to the specified values with or without animation
     [self.snoozePickerView selectRow:hours inComponent:kJSHourComponent animated:animated];
     [self.snoozePickerView selectRow:minutes inComponent:kJSMinuteComponent animated:animated];
     [self.snoozePickerView selectRow:seconds inComponent:kJSSecondComponent animated:animated];

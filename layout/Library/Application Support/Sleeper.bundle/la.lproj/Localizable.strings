@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Latin (translation provided by swaggity_swiggity)
+"SNOOZE_TIME" = "quam diu expectare";
+"HOURS" = "horis";
+"MINUTES" = "minutus";
+"SECONDS" = "secundus";
+"RESET_DEFAULT" = "mutare ad regularem";
+"DEFAULT_SNOOZE_TIME" = "in defectu est, snooze tempus";

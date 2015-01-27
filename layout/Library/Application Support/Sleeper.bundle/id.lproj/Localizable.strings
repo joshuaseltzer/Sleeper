@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Indonesian (translation provided by firaciaudia)
+"SNOOZE_TIME" = "Waktu Tunda Bangun";
+"HOURS" = "Jam";
+"MINUTES" = "Mnt";
+"SECONDS" = "Dtk";
+"RESET_DEFAULT" = "Setelan baku";
+"DEFAULT_SNOOZE_TIME" = "Setelan baku waktu tunda bangun adalah";

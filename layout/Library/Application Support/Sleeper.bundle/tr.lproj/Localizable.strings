@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Turkish (translation provided by Reinauld)
+"SNOOZE_TIME" = "Erteleme Süresi";
+"HOURS" = "Saat";
+"MINUTES" = "Dk";
+"SECONDS" = "Saniye";
+"RESET_DEFAULT" = "Sıfırlama";
+"DEFAULT_SNOOZE_TIME" = "Standart sıfırlama saati";

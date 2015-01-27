@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Vietnamese (translation provided by tuancuongit)
+"SNOOZE_TIME" = "Thời gian hoãn";
+"HOURS" = "Giờ";
+"MINUTES" = "Phút";
+"SECONDS" = "Giây";
+"RESET_DEFAULT" = "Trả về mặc định";
+"DEFAULT_SNOOZE_TIME" = "Thời gian hoãn mặc định là";
