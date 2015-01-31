@@ -1,9 +1,9 @@
 Package: com.joshuaseltzer.sleeper
 Name: Sleeper
 Depends: mobilesubstrate
-Version: 1.0.0
+Version: 1.0.1
 Architecture: iphoneos-arm
-Description: Change your alarm snooze time, the Apple way.  To use, simply navigate to your alarms in the Clock app and edit one.  You will be presented with a familiar screen where you can change the time of the alarm, label, etc.  If you have the snooze switch enabled, you will notice a new row: Snooze Time.  Clicking on this row will take you to a new screen where you can change the hours, minutes, and seconds of this alarm's snooze time.  You can also change it back to the default time set by Apple (9 minutes).  Just like the other settings when you are editing an alarm, the snooze time will only be saved or updated if you click the "Save" button in this view.  Clicking cancel will discard the changes.  This is a very detailed view that is meant to look through and through like an Apple designed screen.  Everything from the text colors, to the layout of the views have been carefully designed.  Is landscape supported?  You bet!  Sleeper works with all version of iOS 8 and works on both iPhone and iPad.
+Description: Change the snooze time for your alarms in the stock iOS Clock app (developer version).
 Maintainer: Joshua Seltzer
 Author: Joshua Seltzer
 Section: Tweaks
