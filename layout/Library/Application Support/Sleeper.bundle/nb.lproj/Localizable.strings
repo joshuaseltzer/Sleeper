@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 1/21/15.
+
+*/
+
+// Norwegian (translation provided by BaTmAn9785)
+"SNOOZE_TIME" = "Slumretid";
+"HOURS" = "t";
+"MINUTES" = "min";
+"SECONDS" = "sek";
+"RESET_DEFAULT" = "Nullstill";
+"DEFAULT_SNOOZE_TIME" = "Standard slumretid er";
