@@ -7,9 +7,9 @@
 */
 
 // Czech (translation provided by Sh4rPEYE)
-"SNOOZE_TIME" = "Délka uspání";
+"SNOOZE_TIME" = "Délka odložení";
 "HOURS" = "hod";
 "MINUTES" = "min";
 "SECONDS" = "sek";
 "RESET_DEFAULT" = "Obnovit na výchozí";
-"DEFAULT_SNOOZE_TIME" = "Výchozí délka uspání je";
+"DEFAULT_SNOOZE_TIME" = "Výchozí délka odložení je";
