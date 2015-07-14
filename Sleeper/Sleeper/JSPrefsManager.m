@@ -62,9 +62,9 @@
         for (alarm in alarms) {
             if ([[alarm objectForKey:kJSAlarmIdKey] isEqualToString:alarmId]) {
                 // update the alarm dictionary with the values given
-                [alarm setObject:[NSNumber numberWithInteger:hours] forKey:kJSHourKey];
-                [alarm setObject:[NSNumber numberWithInteger:minutes] forKey:kJSMinuteKey];
-                [alarm setObject:[NSNumber numberWithInteger:seconds] forKey:kJSSecondKey];
+                [alarm setObject:[NSNumber numberWithInteger:hours] forKey:kJSSnoozeHourKey];
+                [alarm setObject:[NSNumber numberWithInteger:minutes] forKey:kJSSnoozeMinuteKey];
+                [alarm setObject:[NSNumber numberWithInteger:seconds] forKey:kJSSnoozeSecondKey];
                 break;
             }
         }
@@ -74,9 +74,9 @@
     if (!alarm) {
         // create a new alarm with the snooze time information
         NSDictionary *newAlarm = [NSDictionary dictionaryWithObjectsAndKeys:alarmId, kJSAlarmIdKey,
-                                  [NSNumber numberWithInteger:hours], kJSHourKey,
-                                  [NSNumber numberWithInteger:minutes], kJSMinuteKey,
-                                  [NSNumber numberWithInteger:seconds], kJSSecondKey, nil];
+                                  [NSNumber numberWithInteger:hours], kJSSnoozeHourKey,
+                                  [NSNumber numberWithInteger:minutes], kJSSnoozeMinuteKey,
+                                  [NSNumber numberWithInteger:seconds], kJSSnoozeSecondKey, nil];
         
         // add the object to the array
         [alarms addObject:newAlarm];

@@ -16,3 +16,5 @@
 #define LZ_SECONDS              [LZ_BUNDLE_PATH localizedStringForKey:@"SECONDS" value:@"sec" table:@"Localizable"]
 #define LZ_RESET_DEFAULT        [LZ_BUNDLE_PATH localizedStringForKey:@"RESET_DEFAULT" value:@"Reset Default" table:@"Localizable"]
 #define LZ_DEFAULT_SNOOZE_TIME  [LZ_BUNDLE_PATH localizedStringForKey:@"DEFAULT_SNOOZE_TIME" value:@"The default snooze time is" table:@"Localizable"]
+#define LZ_SKIP                 [LZ_BUNDLE_PATH localizedStringForKey:@"SKIP" value:@"Skip" table:@"Localizable"]
+#define LZ_SKIP_TIME            [LZ_BUNDLE_PATH localizedStringForKey:@"SKIP_TIME" value:@"Skip Time" table:@"Localizable"]

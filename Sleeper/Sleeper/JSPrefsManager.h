@@ -9,16 +9,16 @@
 #import <Foundation/Foundation.h>
 
 // constant keys for the values we are going to add to the preferences file
-static NSString *const kJSAlarmIdKey =  @"alarmId";
-static NSString *const kJSAlarmsKey =   @"Alarms";
-static NSString *const kJSHourKey =     @"snoozeTimeHour";
-static NSString *const kJSMinuteKey =   @"snoozeTimeMinute";
-static NSString *const kJSSecondKey =   @"snoozeTimeSecond";
+static NSString *const kJSAlarmIdKey =          @"alarmId";
+static NSString *const kJSAlarmsKey =           @"Alarms";
+static NSString *const kJSSnoozeHourKey =       @"snoozeTimeHour";
+static NSString *const kJSSnoozeMinuteKey =     @"snoozeTimeMinute";
+static NSString *const kJSSnoozeSecondKey =     @"snoozeTimeSecond";
 
 // constants that define the default snooze time
-static NSInteger const kJSDefaultHour =   0;
-static NSInteger const kJSDefaultMinute = 9;
-static NSInteger const kJSDefaultSecond = 0;
+static NSInteger const kJSDefaultSnoozeHour =   0;
+static NSInteger const kJSDefaultSnoozeMinute = 9;
+static NSInteger const kJSDefaultSnoozeSecond = 0;
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface JSPrefsManager : NSObject
