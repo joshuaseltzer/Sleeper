@@ -11,6 +11,7 @@
 
 // the individual strings that are to be localized
 #define LZ_SNOOZE_TIME          [LZ_BUNDLE_PATH localizedStringForKey:@"SNOOZE_TIME" value:@"Snooze Time" table:@"Localizable"]
+#define LZ_HOUR                 [LZ_BUNDLE_PATH localizedStringForKey:@"HOUR" value:@"hour" table:@"Localizable"]
 #define LZ_HOURS                [LZ_BUNDLE_PATH localizedStringForKey:@"HOURS" value:@"hours" table:@"Localizable"]
 #define LZ_MINUTES              [LZ_BUNDLE_PATH localizedStringForKey:@"MINUTES" value:@"min" table:@"Localizable"]
 #define LZ_SECONDS              [LZ_BUNDLE_PATH localizedStringForKey:@"SECONDS" value:@"sec" table:@"Localizable"]

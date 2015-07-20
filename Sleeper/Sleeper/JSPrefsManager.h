@@ -14,25 +14,37 @@ static NSString *const kJSAlarmsKey =           @"Alarms";
 static NSString *const kJSSnoozeHourKey =       @"snoozeTimeHour";
 static NSString *const kJSSnoozeMinuteKey =     @"snoozeTimeMinute";
 static NSString *const kJSSnoozeSecondKey =     @"snoozeTimeSecond";
+static NSString *const kJSSkipEnabledKey =      @"skipEnabled";
+static NSString *const kJSSkipHoursKey =        @"skipHours";
 
-// constants that define the default snooze time
+// constants that define the default values
 static NSInteger const kJSDefaultSnoozeHour =   0;
 static NSInteger const kJSDefaultSnoozeMinute = 9;
 static NSInteger const kJSDefaultSnoozeSecond = 0;
+static NSInteger const kJSDefaultSkipHours =    3;
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface JSPrefsManager : NSObject
 
-// Return a dictionary with snooze information for a given alarm id.  Returns nil when no alarm is found
-+ (NSMutableDictionary *)snoozeTimeForId:(NSString *)alarmId;
+// Return a dictionary with alarm information for a given alarm Id.  Return nil if no alarm is found
++ (NSMutableDictionary *)alarmInfoForAlarmId:(NSString *)alarmId;
 
-// save custom snooze time for an alarm with the given alarm id and snooze time attributes
-+ (void)saveSnoozeTimeForAlarmId:(NSString *)alarmId
-                           hours:(NSInteger)hours
-                         minutes:(NSInteger)minutes
-                         seconds:(NSInteger)seconds;
+// Return a boolean that signifies whether or not skip is enabled for a given alarm Id.  Return NO
+// if no alarm is found
++ (BOOL)skipEnabledForAlarmId:(NSString *)alarmId;
 
-// delete an alarm from our snooze time settings
-+ (void)deleteSnoozeTimeForAlarmId:(NSString *)alarmId;
+// return the number of hours to skip the alarm for a given alarm Id
++ (NSInteger)skipHoursForAlarmId:(NSString *)alarmId;
+
+// save all attributes for an alarm given the alarm Id
++ (void)saveAlarmForAlarmId:(NSString *)alarmId
+                snoozeHours:(NSInteger)snoozeHours
+              snoozeMinutes:(NSInteger)snoozeMinutes
+              snoozeSeconds:(NSInteger)snoozeSeconds
+                skipEnabled:(BOOL)skipEnabled
+                  skipHours:(NSInteger)skipHours;
+
+// delete an alarm from our settings
++ (void)deleteAlarmForAlarmId:(NSString *)alarmId;
 
 @end

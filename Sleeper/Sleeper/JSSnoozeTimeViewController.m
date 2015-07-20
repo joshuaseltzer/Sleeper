@@ -168,9 +168,9 @@ static NSInteger sJSInitialSeconds;
     // if the parent is nil, we know we are popping this view controller
     if (!parent && self.delegate) {
         // tell the delegate about the updated snooze times
-        [self.delegate alarmDidUpdateWithHours:[self.snoozePickerView selectedRowInComponent:kJSHourComponent]
-                                       minutes:[self.snoozePickerView selectedRowInComponent:kJSMinuteComponent]
-                                       seconds:[self.snoozePickerView selectedRowInComponent:kJSSecondComponent]];
+        [self.delegate alarmDidUpdateWithSnoozeHours:[self.snoozePickerView selectedRowInComponent:kJSHourComponent]
+                                       snoozeMinutes:[self.snoozePickerView selectedRowInComponent:kJSMinuteComponent]
+                                       snoozeSeconds:[self.snoozePickerView selectedRowInComponent:kJSSecondComponent]];
     }
 }
 
@@ -479,8 +479,8 @@ static NSInteger sJSInitialSeconds;
 {
     // We only have one section which defines the default snooze button.  Display a message indicating
     // to the user what the default snooze time is
-    return [NSString stringWithFormat:@"%@ %02ld:%02ld:%02ld.", LZ_DEFAULT_SNOOZE_TIME, (long)kJSDefaultHour,
-            (long)kJSDefaultMinute, (long)kJSDefaultSecond];
+    return [NSString stringWithFormat:@"%@ %02ld:%02ld:%02ld.", LZ_DEFAULT_SNOOZE_TIME, (long)kJSDefaultSnoozeHour,
+            (long)kJSDefaultSnoozeMinute, (long)kJSDefaultSnoozeSecond];
 }
 
 #pragma mark - UITableViewDelegate
@@ -490,9 +490,9 @@ static NSInteger sJSInitialSeconds;
 {
     // for now, we only have one button so we can assume it is the one that resets the default snooze
     // picker values
-    [self changePickerTimeWithHours:kJSDefaultHour
-                            minutes:kJSDefaultMinute
-                            seconds:kJSDefaultSecond
+    [self changePickerTimeWithHours:kJSDefaultSnoozeHour
+                            minutes:kJSDefaultSnoozeMinute
+                            seconds:kJSDefaultSnoozeSecond
                            animated:YES];
     
     // deselect the row with animation

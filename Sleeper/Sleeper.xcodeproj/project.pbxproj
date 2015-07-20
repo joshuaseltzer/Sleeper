@@ -11,6 +11,7 @@
 		F871AFD41A3F8A3800B6475A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFD31A3F8A3800B6475A /* AppDelegate.m */; };
 		F871AFF61A3F8A7800B6475A /* JSPrefsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */; };
 		F871AFF91A3F8ADF00B6475A /* JSSnoozeTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */; };
+		F8A5EBE31B5C17E300F2D1F2 /* JSSkipTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F8A5EBE21B5C17E300F2D1F2 /* JSSkipTimeViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,8 @@
 		F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSPrefsManager.m; sourceTree = "<group>"; };
 		F871AFF71A3F8ADF00B6475A /* JSSnoozeTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSSnoozeTimeViewController.h; sourceTree = "<group>"; };
 		F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSSnoozeTimeViewController.m; sourceTree = "<group>"; };
+		F8A5EBE11B5C17E300F2D1F2 /* JSSkipTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSSkipTimeViewController.h; sourceTree = "<group>"; };
+		F8A5EBE21B5C17E300F2D1F2 /* JSSkipTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSSkipTimeViewController.m; sourceTree = "<group>"; };
 		F8E5F35C1A7078920044B928 /* JSLocalizedStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSLocalizedStrings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +65,8 @@
 				F871AFF51A3F8A7800B6475A /* JSPrefsManager.m */,
 				F871AFF71A3F8ADF00B6475A /* JSSnoozeTimeViewController.h */,
 				F871AFF81A3F8ADF00B6475A /* JSSnoozeTimeViewController.m */,
+				F8A5EBE11B5C17E300F2D1F2 /* JSSkipTimeViewController.h */,
+				F8A5EBE21B5C17E300F2D1F2 /* JSSkipTimeViewController.m */,
 				F8E5F35C1A7078920044B928 /* JSLocalizedStrings.h */,
 				F871AFCE1A3F8A3800B6475A /* Supporting Files */,
 			);
@@ -144,6 +149,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8A5EBE31B5C17E300F2D1F2 /* JSSkipTimeViewController.m in Sources */,
 				F871AFF91A3F8ADF00B6475A /* JSSnoozeTimeViewController.m in Sources */,
 				F871AFD41A3F8A3800B6475A /* AppDelegate.m in Sources */,
 				F871AFD11A3F8A3800B6475A /* main.m in Sources */,

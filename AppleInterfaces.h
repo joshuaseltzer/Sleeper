@@ -29,8 +29,9 @@
 @end
 
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
-// conforms to a custom delegate that is used to notify when snooze time changes
-@interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, JSSnoozeTimeDelegate> {
+// conforms to custom delegates that are used to notify when alarm attributes change
+@interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
+JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
     EditAlarmView* _editAlarmView;
 }
 

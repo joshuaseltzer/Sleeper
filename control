@@ -1,9 +1,9 @@
 Package: com.joshuaseltzer.sleeper
 Name: Sleeper
 Depends: mobilesubstrate
-Version: 1.0.1
+Version: 2.0.0
 Architecture: iphoneos-arm
-Description: Change the snooze time for your alarms in the stock iOS Clock app (developer version).
+Description: Sleeper tweak (developer version).
 Maintainer: Joshua Seltzer
 Author: Joshua Seltzer
 Section: Tweaks

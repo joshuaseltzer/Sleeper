@@ -12,15 +12,16 @@
 @protocol JSSnoozeTimeDelegate <NSObject>
 
 // passes the updated snooze time to the delegate
-- (void)alarmDidUpdateWithHours:(NSInteger)hours
-                        minutes:(NSInteger)minutes
-                        seconds:(NSInteger)seconds;
+- (void)alarmDidUpdateWithSnoozeHours:(NSInteger)snoozeHours
+                        snoozeMinutes:(NSInteger)snoozeMinutes
+                        snoozeSeconds:(NSInteger)snoozeSeconds;
 
 @end
 
 // custom view controller which presents the user with a time picker to pick the snooze time along with
 // a table view for additional options
-@interface JSSnoozeTimeViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDataSource, UITableViewDelegate>
+@interface JSSnoozeTimeViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource,
+UITableViewDataSource, UITableViewDelegate>
 
 // custom initialization method that sets the picker to the given times
 - (id)initWithHours:(NSInteger)hours
