@@ -31,7 +31,7 @@ static NSInteger sJSSelectedHours;
     [super viewDidLoad];
     
     // set the title of the view controller
-    self.title = LZ_SKIP_TIME;
+    self.title = LZ_ASK_TO_SKIP;
 }
 
 // invoked when the given view is moving to the parent view controller

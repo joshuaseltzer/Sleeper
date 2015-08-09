@@ -13,12 +13,22 @@
 #import "Sleeper/Sleeper/JSLocalizedStrings.h"
 #import "AppleInterfaces.h"
 
-// define the constants that define where the custom rows will be inserted
-static int const kJSAttributesTableSection =    0;
-static int const kJSSnoozeAlarmTableRow =       3;
-static int const kJSSnoozeTimeTableRow =        4;
-static int const kJSSkipAlarmTableRow =         5;
-static int const kJSSkipTimeTableRow =          6;
+// define an enum to reference the sections of the table view
+typedef enum JSEditAlarmViewSection : NSUInteger {
+    kJSEditAlarmViewSectionAttribute,
+    kJSEditAlarmViewSectionDelete
+} JSEditAlarmViewSection;
+
+// define an enum to reference the rows in the attributes section of the table view
+typedef enum JSEditAlarmViewAttributeSectionRow : NSUInteger {
+    kJSEditAlarmViewAttributeSectionRowRepeat,
+    kJSEditAlarmViewAttributeSectionRowLabel,
+    kJSEditAlarmViewAttributeSectionRowSound,
+    kJSEditAlarmViewAttributeSectionRowSnoozeToggle,
+    kJSEditAlarmViewAttributeSectionRowSnoozeTime,
+    kJSEditAlarmViewAttributeSectionRowSkipToggle,
+    kJSEditAlarmViewAttributeSectionRowSkipTime
+} JSEditAlarmViewAttributeSectionRow;
 
 // static variable that is set when the skip switch is enabled
 static BOOL sJSSkipSwitchOn;
@@ -68,7 +78,7 @@ static NSInteger sJSSkipHours;
     
     // add custom rows to allow the user to edit the snooze time and configure skipping
     // add a row to the section to allow the user to control the snooze time
-    if (section == kJSAttributesTableSection) {
+    if (section == kJSEditAlarmViewSectionAttribute) {
         numRows = numRows + 3;
     }
     
@@ -83,12 +93,14 @@ static NSInteger sJSSkipHours;
     
     // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
     // cell so that it is not reused on the wrong cell
-    if (indexPath.section == kJSAttributesTableSection && indexPath.row != kJSSnoozeAlarmTableRow) {
+    if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+        indexPath.row != kJSEditAlarmViewAttributeSectionRowSnoozeToggle) {
         cell.accessoryView = nil;
     }
     
     // insert our custom cell if it is the appropriate section and row
-    if (indexPath.section == kJSAttributesTableSection && indexPath.row == kJSSnoozeTimeTableRow) {
+    if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+        indexPath.row == kJSEditAlarmViewAttributeSectionRowSnoozeTime) {
         // customize the cell
         cell.textLabel.text = LZ_SNOOZE_TIME;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -96,7 +108,8 @@ static NSInteger sJSSkipHours;
         // format the cell of the text with the snooze time values
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSSnoozeHours,
                                      (long)sJSSnoozeMinutes, (long)sJSSnoozeSeconds];
-    } else if (indexPath.section == kJSAttributesTableSection && indexPath.row == kJSSkipAlarmTableRow) {
+    } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+               indexPath.row == kJSEditAlarmViewAttributeSectionRowSkipToggle) {
         // customize the cell
         cell.textLabel.text = LZ_SKIP;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -111,9 +124,10 @@ static NSInteger sJSSkipHours;
         
         // set the switch to the custom view in the cell
         cell.accessoryView = skipControl;
-    } else if (indexPath.section == kJSAttributesTableSection && indexPath.row == kJSSkipTimeTableRow) {
+    } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+               indexPath.row == kJSEditAlarmViewAttributeSectionRowSkipTime) {
         // customize the cell
-        cell.textLabel.text = LZ_SKIP_TIME;
+        cell.textLabel.text = LZ_ASK_TO_SKIP;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         // Format the cell with the skip hours.  Show "hour" or "hours" depending on how many we have
@@ -133,7 +147,8 @@ static NSInteger sJSSkipHours;
 - (void)tableView:(id)view didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // handle row selection for the custom cells
-    if (indexPath.section == kJSAttributesTableSection && indexPath.row == kJSSnoozeTimeTableRow) {
+    if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+        indexPath.row == kJSEditAlarmViewAttributeSectionRowSnoozeTime) {
         // create a custom view controller which will decide the snooze time
         JSSnoozeTimeViewController *snoozeController = [[JSSnoozeTimeViewController alloc] initWithHours:sJSSnoozeHours
                                                                                                  minutes:sJSSnoozeMinutes
@@ -145,7 +160,8 @@ static NSInteger sJSSkipHours;
         
         // push the controller to our stack
         [self.navigationController pushViewController:snoozeController animated:YES];
-    } else if (indexPath.section == kJSAttributesTableSection && indexPath.row == kJSSkipTimeTableRow) {
+    } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+               indexPath.row == kJSEditAlarmViewAttributeSectionRowSkipTime) {
         // create a custom view controller which will decide the skip time
         JSSkipTimeViewController *skipController = [[JSSkipTimeViewController alloc] initWithHours:sJSSkipHours];
         
@@ -155,7 +171,8 @@ static NSInteger sJSSkipHours;
         
         // push the controller to our stack
         [self.navigationController pushViewController:skipController animated:YES];
-    } else if (indexPath.section == kJSAttributesTableSection && indexPath.row != kJSSkipAlarmTableRow) {
+    } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
+               indexPath.row != kJSEditAlarmViewAttributeSectionRowSkipToggle) {
         // perform the original implementation for row selections
         %orig;
     }
@@ -265,3 +282,53 @@ static NSInteger sJSSkipHours;
 }
 
 %end
+
+// hook into the lock screen view controller to check to see if we need to prompt the user to skip
+// an alarm
+%hook SBLockScreenViewController
+
+// override to display a pop up allowing the user to skip an alarm
+- (void)finishUIUnlockFromSource:(int)source
+{
+    %orig(source);
+    
+    /*Class SBAlertItem64 = %c(SBAlertItem);
+    SBAlertItem *alert = [[SBAlertItem64 alloc] init];
+    
+    UIAlertView *alertView = MSHookIvar<UIAlertView *>(alert, "_alertSheet");
+    alertView = [[UIAlertView alloc] initWithTitle:@"Really reset?" message:@"Do you really want to reset this game?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    [SBAlertItem64 activateAlertItem:alert];*/
+}
+
+%end
+
+/*%subclass JSSkipAlarmAlertItem : SBAlertItem
+
+%new
+- (id)initWithAlarm:(Alarm *)alarm
+{
+    // perform the original initialization method
+    self = [self init];
+    
+    if (self) {
+        
+    }
+    
+    return self;
+}
+
+// override to configure the alert item
+- (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode
+{
+    // perform the original implementation
+    %orig;
+    
+    self.alertSheet.title = @"Test";
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(int)index
+{
+    
+}
+
+%end*/

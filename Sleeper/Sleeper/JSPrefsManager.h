@@ -16,6 +16,7 @@ static NSString *const kJSSnoozeMinuteKey =     @"snoozeTimeMinute";
 static NSString *const kJSSnoozeSecondKey =     @"snoozeTimeSecond";
 static NSString *const kJSSkipEnabledKey =      @"skipEnabled";
 static NSString *const kJSSkipHoursKey =        @"skipHours";
+static NSString *const kJSSkipActivatedKey =    @"skipActivated";
 
 // constants that define the default values
 static NSInteger const kJSDefaultSnoozeHour =   0;
@@ -43,6 +44,10 @@ static NSInteger const kJSDefaultSkipHours =    3;
               snoozeSeconds:(NSInteger)snoozeSeconds
                 skipEnabled:(BOOL)skipEnabled
                   skipHours:(NSInteger)skipHours;
+
+// save the skip activation status for a given alarm
++ (void)setSkipAlarmActivatedForAlarmId:(NSString *)alarmId
+                              activated:(BOOL)activated;
 
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;

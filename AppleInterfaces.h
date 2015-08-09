@@ -52,3 +52,22 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
 - (void)removeAlarm:(Alarm *)alarm;
 
 @end
+
+// the view controller that controls the lock screen
+@interface SBLockScreenViewController : UIViewController
+
+// override to display a pop up allowing the user to skip an alarm
+- (void)finishUIUnlockFromSource:(int)source;
+
+@end
+
+@interface SBAlertItem : NSObject <UIAlertViewDelegate> {
+    UIAlertView *_alertSheet;
+}
+
+- (id)init;
+- (id)alertSheet;
+- (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(int)index;
+
+@end
