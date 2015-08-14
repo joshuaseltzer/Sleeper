@@ -3,7 +3,7 @@ ARCHS = armv7 armv7s arm64
 include theos/makefiles/common.mk
 
 TWEAK_NAME = Sleeper
-Sleeper_FILES = Tweak.xm Sleeper/Sleeper/JSSnoozeTimeViewController.m Sleeper/Sleeper/JSPrefsManager.m Sleeper/Sleeper/JSSkipTimeViewController.m
+Sleeper_FILES = Tweak.xm JSSkipAlarmAlertItem.xm Sleeper/Sleeper/JSSnoozeTimeViewController.m Sleeper/Sleeper/JSPrefsManager.m Sleeper/Sleeper/JSSkipTimeViewController.m
 Sleeper_FRAMEWORKS = UIKit
 Sleeper_PRIVATE_FRAMEWORKS = MobileTimer
 ADDITIONAL_OBJCFLAGS = -fobjc-arc

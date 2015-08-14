@@ -90,6 +90,7 @@
               snoozeSeconds:(NSInteger)snoozeSeconds
                 skipEnabled:(BOOL)skipEnabled
                   skipHours:(NSInteger)skipHours
+                alarmActive:(BOOL)alarmActive
 {
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
@@ -116,6 +117,7 @@
                 [alarm setObject:[NSNumber numberWithInteger:snoozeSeconds] forKey:kJSSnoozeSecondKey];
                 [alarm setObject:[NSNumber numberWithBool:skipEnabled] forKey:kJSSkipEnabledKey];
                 [alarm setObject:[NSNumber numberWithInteger:skipHours] forKey:kJSSkipHoursKey];
+                [alarm setObject:[NSNumber numberWithBool:alarmActive] forKey:kJSAlarmActiveKey];
                 break;
             }
         }
@@ -129,7 +131,8 @@
                                   [NSNumber numberWithInteger:snoozeMinutes], kJSSnoozeMinuteKey,
                                   [NSNumber numberWithInteger:snoozeSeconds], kJSSnoozeSecondKey,
                                   [NSNumber numberWithBool:skipEnabled], kJSSkipEnabledKey,
-                                  [NSNumber numberWithInteger:skipHours], kJSSkipHoursKey, nil];
+                                  [NSNumber numberWithInteger:skipHours], kJSSkipHoursKey,
+                                  [NSNumber numberWithBool:alarmActive], kJSAlarmActiveKey, nil];
         
         // add the object to the array
         [alarms addObject:newAlarm];
@@ -144,7 +147,7 @@
 
 // save the skip activation status for a given alarm
 + (void)setSkipAlarmActivatedForAlarmId:(NSString *)alarmId
-                              activated:(BOOL)activated
+                          skipActivated:(BOOL)skipActivated
 {
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
@@ -166,7 +169,7 @@
         for (alarm in alarms) {
             if ([[alarm objectForKey:kJSAlarmIdKey] isEqualToString:alarmId]) {
                 // update the alarm dictionary with the values given
-                [alarm setObject:[NSNumber numberWithBool:activated] forKey:kJSSkipActivatedKey];
+                [alarm setObject:[NSNumber numberWithBool:skipActivated] forKey:kJSSkipActivatedKey];
                 break;
             }
         }
@@ -176,7 +179,54 @@
     if (!alarm) {
         // create a new alarm with the given attributes
         NSDictionary *newAlarm = [NSDictionary dictionaryWithObjectsAndKeys:alarmId, kJSAlarmIdKey,
-                                  [NSNumber numberWithBool:activated], kJSSkipActivatedKey, nil];
+                                  [NSNumber numberWithBool:skipActivated], kJSSkipActivatedKey, nil];
+        
+        // add the object to the array
+        [alarms addObject:newAlarm];
+    }
+    
+    // add the alarms array to the preferences dictionary
+    [prefs setObject:alarms forKey:kJSAlarmsKey];
+    
+    // write the updated preferences
+    [prefs writeToFile:SETTINGS_PATH atomically:YES];
+}
+
+// save the active state of a given alarm
++ (void)setAlarmActiveForAlarmId:(NSString *)alarmId
+                          active:(BOOL)active
+{
+    // grab the preferences plist
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
+    
+    // if the clock preferences don't exist, create a new mutable dictionary now
+    if (!prefs) {
+        prefs = [[NSMutableDictionary alloc] initWithCapacity:1];
+    }
+    
+    // array of dictionaries of all of the alarms
+    NSMutableArray *alarms = [prefs objectForKey:kJSAlarmsKey];
+    
+    // if the alarms do not exist in our preferences, create the alarms array now
+    NSMutableDictionary *alarm = nil;
+    if (!alarms) {
+        alarms = [[NSMutableArray alloc] initWithCapacity:1];
+    } else {
+        // otherwise attempt to find the desired alarm in the array
+        for (alarm in alarms) {
+            if ([[alarm objectForKey:kJSAlarmIdKey] isEqualToString:alarmId]) {
+                // update the alarm dictionary with the values given
+                [alarm setObject:[NSNumber numberWithBool:active] forKey:kJSAlarmActiveKey];
+                break;
+            }
+        }
+    }
+    
+    // check if the alarm was found, if so replace it
+    if (!alarm) {
+        // create a new alarm with the given attributes
+        NSDictionary *newAlarm = [NSDictionary dictionaryWithObjectsAndKeys:alarmId, kJSAlarmIdKey,
+                                  [NSNumber numberWithBool:active], kJSAlarmActiveKey, nil];
         
         // add the object to the array
         [alarms addObject:newAlarm];

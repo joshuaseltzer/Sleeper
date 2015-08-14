@@ -18,4 +18,4 @@
 #define LZ_DEFAULT_SNOOZE_TIME  [LZ_BUNDLE_PATH localizedStringForKey:@"DEFAULT_SNOOZE_TIME" value:@"The default snooze time is" table:@"Localizable"]
 #define LZ_SKIP                 [LZ_BUNDLE_PATH localizedStringForKey:@"SKIP" value:@"Skip" table:@"Localizable"]
 #define LZ_ASK_TO_SKIP          [LZ_BUNDLE_PATH localizedStringForKey:@"ASK_TO_SKIP" value:@"Ask to Skip" table:@"Localizable"]
-#define LZ_HOUR                 [LZ_BUNDLE_PATH localizedStringForKey:@"HOUR" value:@"Hour" table:@"Localizable"]
+#define LZ_HOUR                 [LZ_BUNDLE_PATH localizedStringForKey:@"HOUR" value:@"hour" table:@"Localizable"]

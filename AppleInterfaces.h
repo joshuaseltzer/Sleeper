@@ -6,11 +6,38 @@
 //
 //
 
+#import "Sleeper/Sleeper/JSSnoozeTimeViewController.h"
+#import "Sleeper/Sleeper/JSSkipTimeViewController.h"
+
+@interface AppController : UIApplication {
+    UIViewController *_alarmViewController;
+}
+@end
+
+@interface AlarmViewController : UIViewController
+@end
+
 // the alarm object that contains all of the information about the alarm
 @interface Alarm : NSObject
 
 @property BOOL allowsSnooze;
 @property (readonly) NSString *alarmId;
+@property(readonly, nonatomic, getter=isActive) BOOL active;
+@property(readonly, nonatomic) Alarm *editingProxy;
+@property(readonly, nonatomic) NSDictionary *settings;
+
+// returns the next date that this alarm will fire
+- (NSDate *)nextFireDate;
+
+- (void)refreshActiveState;
+- (void)prepareEditingProxy;
+- (BOOL)isActive;
+- (void)handleAlarmFired:(id)arg1;
+- (unsigned int)_notificationsCount;
+- (void)dropNotifications;
+- (void)cancelNotifications;
+- (void)scheduleNotifications;
+- (void)prepareNotifications;
 
 @end
 
@@ -40,16 +67,44 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
 @end
 
 // the notification that gets fired when the user decides to snooze an alarm
-@interface UIConcreteLocalNotification : UILocalNotification {
-    NSDate *fireDate;
-}
+@interface UIConcreteLocalNotification : UILocalNotification
+
+- (int)remainingRepeatCount;
 
 @end
 
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject
 
+@property(readonly, retain, nonatomic) NSArray *alarms;
+
+// invoked when an alarm is removed
 - (void)removeAlarm:(Alarm *)alarm;
+
+// loads the alarms on the system in the manager object
+- (void)loadAlarms;
+- (void)loadScheduledNotifications;
+- (void)setAlarm:(Alarm *)alarm active:(BOOL)active;
+- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active;
+- (Alarm *)nextAlarmForDate:(NSDate *)arg1 activeOnly:(BOOL)arg2 allowRepeating:(BOOL)arg3;
+- (void)handleNotificationFired:(id)arg1;
++ (BOOL)isAlarmNotification:(id)arg1;
+- (void)handleAnyNotificationChanges;
+
+- (id)alarmWithId:(id)arg1;
+
+// the shared alarm manager
++ (AlarmManager *)sharedManager;
+
+@end
+
+@interface ClockManager : NSObject
+
++ (id)sharedManager;
++ (void)loadUserPreferences;
+- (void)refreshScheduledLocalNotificationsCache;
+
+@property(readonly, nonatomic) NSArray *scheduledLocalNotificationsCache;
 
 @end
 
@@ -66,8 +121,30 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
 }
 
 - (id)init;
-- (id)alertSheet;
+- (UIAlertView *)alertSheet;
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(int)index;
+- (void)dismiss;
+
+@end
+
+@interface SBAlertItemsController : UIViewController
+
++ (id)sharedInstance;
+- (void)activateAlertItem:(id)item;
+
+@end
+
+@interface SBApplication : NSObject
+
+-(void)cancelLocalNotification:(id)notification;
+-(NSArray *)scheduledLocalNotifications;
+
+@end
+
+@interface SBApplicationController : NSObject
+
++(id)sharedInstance;
+-(SBApplication *)applicationWithBundleIdentifier:(id)bundleIdentifier;
 
 @end
