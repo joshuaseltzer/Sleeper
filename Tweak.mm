@@ -40,17 +40,35 @@ static NSInteger sJSSnoozeMinutes;
 static NSInteger sJSSnoozeSeconds;
 static NSInteger sJSSkipHours;
 
-// static variable to keep an instance of the shared AlarmManager
-static AlarmManager *alarmManager;
-
-static ClockManager *clockManager;
-
-// constructor
-%ctor
+// helper function that will investigate a notification and alarm to see if it is skippable
+static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, NSString *alarmId)
 {
-    // get the instance of the shared alarm manager
-    alarmManager = [AlarmManager sharedManager];
-    clockManager = [ClockManager sharedManager];
+    // grab the skip hours for the alarm
+    NSInteger skipHours = [JSPrefsManager skipHoursForAlarmId:alarmId];
+    
+    // check to see if the skip functionality has been enabled for the alarm
+    if (skipHours != NSNotFound && [JSPrefsManager skipEnabledForAlarmId:alarmId]) {
+        // create a date components object with the user's selected skip hours to see if we are within
+        // the threshold to ask the user to skip the alarm
+        NSDateComponents *components= [[NSDateComponents alloc] init];
+        [components setHour:skipHours];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        // create a date that is the amount of hours ahead of the current date
+        NSDate *thresholdDate = [calendar dateByAddingComponents:components
+                                                          toDate:[NSDate date]
+                                                         options:0];
+        
+        // get the fire date of the alarm we are checking
+        NSDate *alarmFireDate = [notification nextFireDateAfterDate:[NSDate date]
+                                                      localTimeZone:[NSTimeZone localTimeZone]];
+        
+        // compare the dates to see if this notification is skippable
+        return [alarmFireDate compare:thresholdDate] == NSOrderedAscending;
+    } else {
+        // skip is not even enabled, so we know it is not skippable
+        return NO;
+    }
 }
 
 // hook the view controller that allows the editing of alarms
@@ -64,6 +82,10 @@ static ClockManager *clockManager;
     
     // grab the skip hours that are saved for this given alarm
     sJSSkipHours = [JSPrefsManager skipHoursForAlarmId:self.alarm.alarmId];
+    if (sJSSkipHours == NSNotFound) {
+        // set the skip hours to the default if none were found
+        sJSSkipHours = kJSDefaultSkipHours;
+    }
     
     // get the alarm prefs for the given alarm Id that this view is responsible for
     NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:self.alarm.alarmId];
@@ -190,6 +212,21 @@ static ClockManager *clockManager;
     }
 }
 
+// override to handle when an alarm gets saved
+- (void)_doneButtonClicked:(id)arg1
+{
+    // perform the original save implementation
+    %orig(arg1);
+    
+    // save the alarm attributes to our preferences
+    [JSPrefsManager saveAlarmForAlarmId:self.alarm.alarmId
+                            snoozeHours:sJSSnoozeHours
+                          snoozeMinutes:sJSSnoozeMinutes
+                          snoozeSeconds:sJSSnoozeSeconds
+                            skipEnabled:sJSSkipSwitchOn
+                              skipHours:sJSSkipHours];
+}
+
 // handle when the skip switch is changed
 %new
 - (void)skipControlChanged:(UISwitch *)skipSwitch
@@ -223,7 +260,7 @@ static ClockManager *clockManager;
 %new
 - (void)alarmDidUpdateWithSkipHours:(NSInteger)skipHours
 {
-    // save the skip hour static variable
+    // save the updated skip hour static variable
     sJSSkipHours = skipHours;
 }
 
@@ -263,42 +300,6 @@ static ClockManager *clockManager;
     %orig;
 }
 
-- (void)_fireNotification:(UIConcreteLocalNotification *)notification
-{
-    %orig(notification);
-    /*
-    if ([AlarmManager isAlarmNotification:notification]) {
-        //[self cancelLocalNotification:notification];
-        
-        NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
-        
-        [alarmManager loadAlarms];
-        Alarm *alarm = [alarmManager alarmWithId:alarmId];
-        [alarm handleAlarmFired:notification];
-        [alarmManager handleNotificationFired:notification];
-    } else {
-        %orig(notification);
-    }*/
-    
-    // grab the alarm Id from the notification
-    /*NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
-    
-    [alarmManager loadAlarms];
-    Alarm *alarm = [alarmManager alarmWithId:alarmId];
-    [alarm handleAlarmFired:notification];
-    [alarmManager handleNotificationFired:notification];
-    
-    
-    // we know that if this alarm is not set to repeat that is will no longer be enabled
-    if ([notification remainingRepeatCount] == 0) {
-        [JSPrefsManager setAlarmActiveForAlarmId:alarmId
-                                          active:NO];
-    }*/
-    
-    %log;
-    NSLog(@"*** SELTZER - SBApplication: Notification Fired ***");
-}
-
 %end
 
 // hook into the alarm manager so that we can remove any saved snooze times when an alarm is deleted
@@ -314,166 +315,19 @@ static ClockManager *clockManager;
     [JSPrefsManager deleteAlarmForAlarmId:alarm.alarmId];
 }
 
+// override to make changes when the alarm is set
 - (void)setAlarm:(Alarm *)alarm active:(BOOL)active
 {
-    NSLog(@"*** SELTZER - AlarmManager: SET ALARM *** ");
-    
-    // perform the original set implementation
+    // perform the original implementation
     %orig(alarm, active);
     
-    // set the alarm's active state to our preferences
-    [JSPrefsManager setAlarmActiveForAlarmId:alarm.alarmId
-                                      active:active];
-}
-
-- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active
-{
-    NSLog(@"*** SELTZER - AlarmManager: UPDATE ALARM *** ");
-    
-    // perform the original update implementation
-    %orig(alarm, active);
-    
-    // save the alarm attributes to our preferences
-    [JSPrefsManager saveAlarmForAlarmId:alarm.alarmId
-                            snoozeHours:sJSSnoozeHours
-                          snoozeMinutes:sJSSnoozeMinutes
-                          snoozeSeconds:sJSSnoozeSeconds
-                            skipEnabled:sJSSkipSwitchOn
-                              skipHours:sJSSkipHours
-                            alarmActive:active];
-}
-
-- (void)addAlarm:(id)arg1 active:(BOOL)arg2
-{
-    NSLog(@"*** SELTZER - AlarmManager: ADD ALARM *** ");
-    %orig(arg1, arg2);
-    
-    %log;
-    
-    
-}
-
-- (void)handleNotificationFired:(id)arg1
-{
-    %orig(arg1);
-    
-    %log;
-    NSLog(@"*** SELTZER - AlarmManager: NOTIFICATION FIRED ***");
-}
-
-+ (id)copyReadAlarmsFromPreferences
-{
-    NSLog(@"*** SELTZER - AlarmManager: READ ALARMS FROM PREFS ***");
-    //CFPreferencesAppSynchronize(CFSTR("com.apple.mobiletimer"));
-    return %orig;
-}
-
-
-%end
-
-%hook Alarm
-
-/*- (void)refreshActiveState
-{
-    %orig();
-    
-    NSLog(@"*** REFRESH ACTIVE STATE ***");
-    %log;
-}*/
-
-- (void)dropNotifications
-{
-    %orig();
-    
-    NSLog(@"*** SELTZER - Alarm: NOTIFICATIONS DROPPED ***");
-    %log;
-}
-
-- (void)cancelNotifications
-{
-    %orig();
-    
-    NSLog(@"*** SELTZER - Alarm: NOTIFICATIONS Cancelled ***");
-    %log;
-}
-
-- (void)scheduleNotifications
-{
-    %orig();
-    
-    NSLog(@"*** SELTZER - Alarm: NOTIFICATIONS SCHEDULED ***");
-    %log;
-}
-
-- (void)prepareNotifications
-{
-    %orig();
-    
-    NSLog(@"*** SELTZER - Alarm: NOTIFICATIONS PREPARED ***");
-    %log;
-}
-
-- (void)handleNotificationSnoozed:(id)arg1 notifyDelegate:(BOOL)arg2
-{
-    %orig(arg1, arg2);
-    
-    %log;
-    NSLog(@"*** SELTZER - Alarm: NOTIFICATION SNOOZED ***");
-}
-
-- (void)handleAlarmFired:(id)arg1
-{
-    %orig(arg1);
-    
-    %log;
-    NSLog(@"*** SELTZER - Alarm: Alarm FIRED ***");
-}
-
-- (void)markModified
-{
-    %orig;
-    
-    NSLog(@"*** SELTZER - Alarm: MARKED MODIFIED ***");
-}
-          
-%end
-
-%hook ClockManager
-
-- (void)scheduleLocalNotification:(id)arg1
-{
-    %orig(arg1);
-    
-    %log;
-    NSLog(@"*** SELTZER - Clock Manager: scheduled ***");
-}
-
-- (void)cancelLocalNotification:(id)arg1
-{
-    %orig(arg1);
-    
-    %log;
-    NSLog(@"*** SELTZER - Clock Manager: canceled ***");
-}
-
-%end
-
-%hook AlarmViewController
-
-- (void)activeChangedForAlarm:(id)arg1 active:(_Bool)arg2
-{
-    %orig(arg1, arg2);
-    
-    %log;
-    NSLog(@"*** SELTZER - AlarmViewController: ACTIVE CHANGED ***");
-}
-
-- (void)alarmDidUpdate:(id)arg1
-{
-    %orig(arg1);
-    
-    %log;
-    NSLog(@"*** SELTZER - AlarmViewController: ALARM DID UPDATE ***");
+    // if the alarm is no longer active and the skip activation has already been decided for this
+    // alarm, disable the skip activation now
+    if ([JSPrefsManager skipActivatedStatusForAlarmId:alarm.alarmId] != kJSSkipActivatedStatusUnknown) {
+        // save the alarm's skip activation state to our preferences
+        [JSPrefsManager setSkipActivatedStatusForAlarmId:alarm.alarmId
+                                     skipActivatedStatus:kJSSkipActivatedStatusUnknown];
+    }
 }
 
 %end
@@ -488,61 +342,100 @@ static ClockManager *clockManager;
     // perform the original implementation
     %orig(source);
     
-    NSLog(@"*** SELTZER - UNLOCKED ***");
-    // reload the alarms from the shared alarm manager
+    // grab the shared instance of the clock data provider
+    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
     
-    //[ClockManager loadUserPreferences];
-    //[alarmManager loadAlarms];
-    //[alarmManager loadScheduledNotifications];
-    //[clockManager refreshScheduledLocalNotificationsCache];
+    // grab the next alarm for today
+    UIConcreteLocalNotification *nextAlarmNotification = MSHookIvar<UIConcreteLocalNotification *>(clockDataProvider, "_nextAlarmForToday");
+    NSString *alarmId = nil;
     
-    // iterate through the alarms on the device to see if we need to skip any
-    AlarmManager *alarmManager2 = [AlarmManager sharedManager];
-    [alarmManager2 loadAlarms];
-    
-    /*NSDateComponents *components= [[NSDateComponents alloc] init];
-    [components setHour:3];
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDate *myNewDate=[calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
-    NSLog(@"NEW DATE: %@", myNewDate.description);
-    Alarm *alarmWithDate = [alarmManager2 nextAlarmForDate:myNewDate activeOnly:YES allowRepeating:YES];
-    NSLog(@"Alarm: %@", alarmWithDate.description);
-    
-    NSMutableArray *scheduledLocalNotifications = MSHookIvar<NSMutableArray *>(clockManager, "_scheduledLocalNotifications");
-    NSLog(@"%@", scheduledLocalNotifications.description);*/
-    for (Alarm *alarm in [alarmManager2 alarms]) {
-        // grab the alarm information saved for this given alarm
-        NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarm.alarmId];
-        
-        /*[alarm cancelNotifications];
-        [alarm prepareNotifications];
-        [alarm scheduleNotifications];*/
-        [alarm refreshActiveState];
-        
-        //UILocalNotification *notification = MSHookIvar<UILocalNotification *>(alarm, "_notification");
-        NSLog(@"*** SELTZER - Next Fire Date: %@", [alarm nextFireDate].description);
-        //[alarm refreshActiveState];
-        NSLog(@"*** SELTZER - Alarm %@ is enabled: %d ***", [alarmInfo objectForKey:kJSAlarmIdKey], [alarm isActive]);
-        
-        /*if ([[alarmInfo objectForKey:kJSAlarmActiveKey] boolValue]) {
-            NSLog(@"Alarm Enabled!");
-        } else {
-            NSLog(@"Alarm disabled!");
-        }
-        
-        NSLog(@"Fire Date: %@", [alarm nextFireDate].description);
-        // if the skip is enabled for the given alarm, check to see if it is within the skip time
-        if ([[alarmInfo objectForKey:kJSSkipEnabledKey] boolValue]) {
-            NSLog(@"Skip Enabled!");
-        }*/
+    // check to see if a valid alarm was returned
+    if (nextAlarmNotification) {
+        // grab the alarm's Id
+        alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
     }
     
-    // after a slight delay, show
-    /*dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-        JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] init];
-        [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert];
-    });*/
+    // if there was no alarm for today or that alarm is not skippable, then check tomorrow
+    if (!nextAlarmNotification || (alarmId && !isNotificationSkippable(nextAlarmNotification, alarmId))) {
+        // grab the first alarm for tomorrow
+        nextAlarmNotification = MSHookIvar<UIConcreteLocalNotification *>(clockDataProvider, "_firstAlarmForTomorrow");
+        
+        // check to see if a valid alarm was returned
+        if (nextAlarmNotification) {
+            // grab the alarm's Id
+            alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
+            
+            // check to see if this alarm is skippable
+            if (!isNotificationSkippable(nextAlarmNotification, alarmId)) {
+                nextAlarmNotification = nil;
+            }
+        }
+    }
+    
+    // if we found a valid alarm, check to see if we should ask to skip it
+    if (nextAlarmNotification && alarmId) {
+        // if skip has not already been activated for this alarm, then present an alert to ask the
+        // user to skip it
+        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusUnknown) {
+            // grab the alarm that we are going to ask to skip from the shared alarm manager
+            AlarmManager *alarmManager = [AlarmManager sharedManager];
+            [alarmManager loadAlarms];
+            Alarm *alarm = [alarmManager alarmWithId:alarmId];
+            
+            // after a slight delay, show an alert that will ask the user to skip the alarm
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                // get the fire date of the alarm we are going to display
+                NSDate *alarmFireDate = [nextAlarmNotification nextFireDateAfterDate:[NSDate date]
+                                                                       localTimeZone:[NSTimeZone localTimeZone]];
+                
+                // create and display the custom alert item
+                JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithAlarm:alarm
+                                                                                 nextFireDate:alarmFireDate];
+                [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert];
+            });
+        }
+    }
+}
+
+%end
+
+// hook into the clock data provider to perform the skipping of an alarm
+%hook SBClockDataProvider
+
+// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+- (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification
+{
+    // grab the shared instance of the clock data provider
+    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    
+    // check to see if this notification is an alarm notification
+    if ([clockDataProvider _isAlarmNotification:notification]) {
+        // get the alarm Id from the notification
+        NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
+        
+        // check to see if skip is activated for this alarm
+        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusActivated) {
+            // grab the alarm that we are going to ask to skip from the shared alarm manager
+            AlarmManager *alarmManager = [AlarmManager sharedManager];
+            [alarmManager loadAlarms];
+            Alarm *alarm = [alarmManager alarmWithId:alarmId];
+            
+            // simulate the alarm going off
+            [alarm handleAlarmFired:notification];
+            [alarmManager handleNotificationFired:notification];
+            
+            // save the alarm's skip activation state to unknown for this alarm
+            [JSPrefsManager setSkipActivatedStatusForAlarmId:alarm.alarmId
+                                         skipActivatedStatus:kJSSkipActivatedStatusUnknown];
+        } else {
+            // if we did not activate skip for this alarm, perform the original implementation
+            %orig(notification);
+        }
+    } else {
+        // if it is not an alarm notification, perform the original implementation
+        %orig(notification);
+    }
 }
 
 %end

@@ -24,13 +24,13 @@ static CGFloat const kJSSnoozePickerHeightLandscape = 162.0;
 
 // constants for the widths of the components in the snooze picker
 static CGFloat const kJSSnoozePickerWidth = 320;
-static CGFloat const kJSSnoozePickerLabelComponentWidth = 36.0;
+static CGFloat const kJSSnoozePickerLabelComponentWidth = 38.0;
 static CGFloat const kJSSnoozePickerHiddenComponentWidth = 59.0;
 
 // constants the define the size and layout of the labels
 static CGFloat const kJSSnoozePickerLabelHeight = 60.0;
 static CGFloat const kJSSnoozePickerLabelSpaceBetween = 40.0;
-static CGFloat const kJSSnoozePickerLabelLeadingSpace = 8.0;
+static CGFloat const kJSSnoozePickerLabelLeadingSpace = 10.0;
 static CGFloat const kJSSnoozePickerLabelWidth = (kJSSnoozePickerWidth - kJSSnoozePickerLabelLeadingSpace
                                                   - kJSSnoozePickerLabelSpaceBetween * 3) / 3;
 

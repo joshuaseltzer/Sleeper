@@ -9,102 +9,62 @@
 #import "Sleeper/Sleeper/JSSnoozeTimeViewController.h"
 #import "Sleeper/Sleeper/JSSkipTimeViewController.h"
 
-@interface AppController : UIApplication {
-    UIViewController *_alarmViewController;
-}
-@end
+// the notification that gets fired when the user decides to snooze an alarm
+@interface UIConcreteLocalNotification : UILocalNotification
 
-@interface AlarmViewController : UIViewController
+// returns a date for a given notification that will happen after a date in a given time zone
+- (NSDate *)nextFireDateAfterDate:(NSDate *)date localTimeZone:(NSTimeZone *)timeZone;
+
 @end
 
 // the alarm object that contains all of the information about the alarm
 @interface Alarm : NSObject
 
-@property BOOL allowsSnooze;
+// the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
-@property(readonly, nonatomic, getter=isActive) BOOL active;
-@property(readonly, nonatomic) Alarm *editingProxy;
-@property(readonly, nonatomic) NSDictionary *settings;
+
+// the display title of the alarm
+@property (readonly, nonatomic) NSString *uiTitle;
 
 // returns the next date that this alarm will fire
 - (NSDate *)nextFireDate;
 
-- (void)refreshActiveState;
-- (void)prepareEditingProxy;
-- (BOOL)isActive;
-- (void)handleAlarmFired:(id)arg1;
-- (unsigned int)_notificationsCount;
-- (void)dropNotifications;
-- (void)cancelNotifications;
-- (void)scheduleNotifications;
-- (void)prepareNotifications;
+// simulates when an alarm gets fired
+- (void)handleAlarmFired:(UIConcreteLocalNotification *)notification;
 
 @end
 
 // the custom cell used to display information when editing an alarm
 @interface MoreInfoTableViewCell : UITableViewCell
-
-@property(retain, nonatomic) NSString* _contentString;
-
-@end
-
-// the custom view in the edit alarm view controller that contains the table of buttons
-@interface EditAlarmView : UIView
-
-@property(readonly, assign, nonatomic) UITableView* settingsTable;
-
 @end
 
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
-// conforms to custom delegates that are used to notify when alarm attributes change
+// conforms to custom delegates that are used to notify when alarm attributes change.
 @interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
-    EditAlarmView* _editAlarmView;
-}
+JSSnoozeTimeDelegate, JSSkipTimeDelegate>
 
-@property(readonly, assign, nonatomic) Alarm* alarm;
-
-@end
-
-// the notification that gets fired when the user decides to snooze an alarm
-@interface UIConcreteLocalNotification : UILocalNotification
-
-- (int)remainingRepeatCount;
+// the alarm object associated with the controller
+@property (readonly, assign, nonatomic) Alarm* alarm;
 
 @end
 
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject
 
-@property(readonly, retain, nonatomic) NSArray *alarms;
-
-// invoked when an alarm is removed
-- (void)removeAlarm:(Alarm *)alarm;
+// the shared alarm manager
++ (id)sharedManager;
 
 // loads the alarms on the system in the manager object
 - (void)loadAlarms;
-- (void)loadScheduledNotifications;
+
+// invoked when an alarm is set or unset with an active states
 - (void)setAlarm:(Alarm *)alarm active:(BOOL)active;
-- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active;
-- (Alarm *)nextAlarmForDate:(NSDate *)arg1 activeOnly:(BOOL)arg2 allowRepeating:(BOOL)arg3;
-- (void)handleNotificationFired:(id)arg1;
-+ (BOOL)isAlarmNotification:(id)arg1;
-- (void)handleAnyNotificationChanges;
 
-- (id)alarmWithId:(id)arg1;
+// simulates when an alarm gets fired
+- (void)handleNotificationFired:(UIConcreteLocalNotification *)notification;
 
-// the shared alarm manager
-+ (AlarmManager *)sharedManager;
-
-@end
-
-@interface ClockManager : NSObject
-
-+ (id)sharedManager;
-+ (void)loadUserPreferences;
-- (void)refreshScheduledLocalNotificationsCache;
-
-@property(readonly, nonatomic) NSArray *scheduledLocalNotificationsCache;
+// returns an alarm object from a given alarm Id
+- (Alarm *)alarmWithId:(NSString *)alarmId;
 
 @end
 
@@ -116,35 +76,51 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate> {
 
 @end
 
-@interface SBAlertItem : NSObject <UIAlertViewDelegate> {
-    UIAlertView *_alertSheet;
-}
+// a system alert item that we will subclass to create our own alert with
+@interface SBAlertItem : NSObject <UIAlertViewDelegate>
 
-- (id)init;
+// the alert view object that corresponds to this alert item
 - (UIAlertView *)alertSheet;
+
+// allows us to set up the alert view
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
+
+// delegate method that is invoked when a button is clicked from the alert
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(int)index;
+
+// dismisses the alert item
 - (void)dismiss;
 
 @end
 
+// the controller responsible for activating and displaying system alert items
 @interface SBAlertItemsController : UIViewController
 
+// the shared instance of this controller
 + (id)sharedInstance;
-- (void)activateAlertItem:(id)item;
+
+// activates (i.e. displays) an alert item to the user
+- (void)activateAlertItem:(SBAlertItem *)alertItem;
 
 @end
 
-@interface SBApplication : NSObject
+// data provider which lets us know which alarms have notifications scheduled
+@interface SBClockDataProvider : NSObject {
+    // next alarm notifications that we will use to see if an alarm is scheduled
+    UIConcreteLocalNotification* _nextAlarmForToday;
+    UIConcreteLocalNotification* _firstAlarmForTomorrow;
+}
 
--(void)cancelLocalNotification:(id)notification;
--(NSArray *)scheduledLocalNotifications;
+// the shared instance of the clock data provider
++ (id)sharedInstance;
 
-@end
+// returns an alarm Id for a given notifications
+- (NSString *)_alarmIDFromNotification:(UIConcreteLocalNotification *)notification;
 
-@interface SBApplicationController : NSObject
+// lets us know whether or not a given notification is an alarm notification
+- (BOOL)_isAlarmNotification:(UIConcreteLocalNotification *)notification;
 
-+(id)sharedInstance;
--(SBApplication *)applicationWithBundleIdentifier:(id)bundleIdentifier;
+// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+- (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
 
 @end
