@@ -219,8 +219,9 @@ static void getSavedAlarmPreferences(Alarm *alarm)
         
         // push the controller to our stack
         [self.navigationController pushViewController:skipController animated:YES];
-    } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
-               indexPath.row != kJSEditAlarmViewAttributeSectionRowSkipToggle) {
+    } else if ((indexPath.section == kJSEditAlarmViewSectionAttribute &&
+               indexPath.row != kJSEditAlarmViewAttributeSectionRowSkipToggle) ||
+               indexPath.section == kJSEditAlarmViewSectionDelete) {
         // perform the original implementation for row selections
         %orig;
     }

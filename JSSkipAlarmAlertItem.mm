@@ -16,6 +16,9 @@ static Alarm *alertAlarm;
 // the fire date for the alert that is being displayed
 static NSDate *alertFireDate;
 
+// keep a hold of the date formatter that will be used to display the time to the user
+static NSDateFormatter *alertDateFormatter;
+
 %subclass JSSkipAlarmAlertItem : SBAlertItem
 
 // enum to define the different options a user can select from the alert sheet
@@ -33,6 +36,13 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
         // set the alarm and date that we will present to the user
         alertAlarm = alarm;
         alertFireDate = nextFireDate;
+        
+        // Create the date formatter object once since date formatters are expensive
+        static dispatch_once_t once;
+        dispatch_once(&once, ^{
+            alertDateFormatter = [[NSDateFormatter alloc] init];
+            alertDateFormatter.dateFormat = @"h:mm a";
+        });
     }
     return self;
 }
@@ -43,14 +53,10 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     // perform the original implementation to configure this alert
     %orig;
     
-    // create a date formatter to determine the time that the alarm will go off
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"h:mm a";
-    
     // configure the alert sheet
     self.alertSheet.delegate = self;
     self.alertSheet.title = @"Skip Alarm";
-    self.alertSheet.message = [NSString stringWithFormat:@"Would you like to skip \"%@\" that is scheduled to go off at %@?", alertAlarm.uiTitle, [dateFormatter stringFromDate:alertFireDate]];
+    self.alertSheet.message = [NSString stringWithFormat:@"Would you like to skip \"%@\" that is scheduled to go off at %@?", alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]];
     
     // add alert sheet buttons
     [self.alertSheet addButtonWithTitle:@"Yes"];
