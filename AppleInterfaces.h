@@ -111,14 +111,13 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate>
 @end
 
 // data provider which lets us know which alarms have notifications scheduled
-@interface SBClockDataProvider : NSObject {
-    // next alarm notifications that we will use to see if an alarm is scheduled
-    UIConcreteLocalNotification* _nextAlarmForToday;
-    UIConcreteLocalNotification* _firstAlarmForTomorrow;
-}
+@interface SBClockDataProvider : NSObject
 
 // the shared instance of the clock data provider
 + (id)sharedInstance;
+
+// return all scheduled notifications that are held by the clock data provider
+- (NSArray *)_scheduledNotifications;
 
 // returns an alarm Id for a given notifications
 - (NSString *)_alarmIDFromNotification:(UIConcreteLocalNotification *)notification;

@@ -41,14 +41,15 @@ static NSInteger sJSSnoozeMinutes;
 static NSInteger sJSSnoozeSeconds;
 static NSInteger sJSSkipHours;
 
-// helper function that will investigate a notification and alarm to see if it is skippable
-static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, NSString *alarmId)
+// helper function that will investigate an alarm notification and alarm Id to see if it is skippable
+static BOOL isAlarmNotificationSkippable(UIConcreteLocalNotification *notification, NSString *alarmId)
 {
     // grab the skip hours for the alarm
     NSInteger skipHours = [JSPrefsManager skipHoursForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (skipHours != NSNotFound && [JSPrefsManager skipEnabledForAlarmId:alarmId]) {
+    if (skipHours != NSNotFound && [JSPrefsManager skipEnabledForAlarmId:alarmId] &&
+        [JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip hours to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
@@ -70,6 +71,46 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
         // skip is not even enabled, so we know it is not skippable
         return NO;
     }
+}
+
+// Helper function that will return the next skippable alarm notification from the given clock data
+// provider.  If no notification is found, return nil.
+static UIConcreteLocalNotification *nextSkippableAlarmNotification(SBClockDataProvider *clockDataProvider)
+{
+    // create a comparator block to sort the array of notifications
+    NSComparisonResult (^notificationComparator) (UIConcreteLocalNotification *, UIConcreteLocalNotification *) =
+    ^(UIConcreteLocalNotification *lhs, UIConcreteLocalNotification *rhs) {
+        // get the next fire date of the left hand side notification
+        NSDate *lhsNextFireDate = [lhs nextFireDateAfterDate:[NSDate date]
+                                               localTimeZone:[NSTimeZone localTimeZone]];
+        
+        // get the next fire date of the right hand side notification
+        NSDate *rhsNextFireDate = [rhs nextFireDateAfterDate:[NSDate date]
+                                               localTimeZone:[NSTimeZone localTimeZone]];
+        
+        return [lhsNextFireDate compare:rhsNextFireDate];
+    };
+    
+    // take the scheduled notifications from the clock data provider and sort them by earliest date
+    NSArray *sortedNotifications = [[clockDataProvider _scheduledNotifications] sortedArrayUsingComparator:notificationComparator];
+    
+    // iterate through all of the notifications that are scheduled
+    for (UIConcreteLocalNotification *notification in sortedNotifications) {
+        // only continue checking if the given notification is an alarm notification
+        if ([clockDataProvider _isAlarmNotification:notification]) {
+            // grab the alarm Id from the notification
+            NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
+            
+            // check to see if this notification is skippable
+            if (isAlarmNotificationSkippable(notification, alarmId)) {
+                // since the array is sorted we know that this is the earliest skippable notification
+                return notification;
+            }
+        }
+    }
+    
+    // if no skippable notification was found, return nil
+    return nil;
 }
 
 // helper function to save our static variables with the values from the preference manager
@@ -365,56 +406,31 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     // grab the shared instance of the clock data provider
     SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
     
-    // grab the next alarm for today
-    UIConcreteLocalNotification *nextAlarmNotification = MSHookIvar<UIConcreteLocalNotification *>(clockDataProvider, "_nextAlarmForToday");
-    NSString *alarmId = nil;
-    
-    // check to see if a valid alarm was returned
-    if (nextAlarmNotification) {
-        // grab the alarm's Id
-        alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
-    }
-    
-    // if there was no alarm for today or that alarm is not skippable, then check tomorrow
-    if (!nextAlarmNotification || (alarmId && !isNotificationSkippable(nextAlarmNotification, alarmId))) {
-        // grab the first alarm for tomorrow
-        nextAlarmNotification = MSHookIvar<UIConcreteLocalNotification *>(clockDataProvider, "_firstAlarmForTomorrow");
-        
-        // check to see if a valid alarm was returned
-        if (nextAlarmNotification) {
-            // grab the alarm's Id
-            alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
-            
-            // check to see if this alarm is skippable
-            if (!isNotificationSkippable(nextAlarmNotification, alarmId)) {
-                nextAlarmNotification = nil;
-            }
-        }
-    }
+    // attempt to get the next skippable alarm notification from the data provider
+    UIConcreteLocalNotification *nextAlarmNotification = nextSkippableAlarmNotification(clockDataProvider);
     
     // if we found a valid alarm, check to see if we should ask to skip it
-    if (nextAlarmNotification && alarmId) {
-        // if skip has not already been activated for this alarm, then present an alert to ask the
-        // user to skip it
-        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusUnknown) {
-            // grab the alarm that we are going to ask to skip from the shared alarm manager
-            AlarmManager *alarmManager = [AlarmManager sharedManager];
-            [alarmManager loadAlarms];
-            Alarm *alarm = [alarmManager alarmWithId:alarmId];
+    if (nextAlarmNotification) {
+        // grab the alarm Id for this notification
+        NSString *alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
+        
+        // grab the shared instance of the alarm manager and load the alarms
+        AlarmManager *alarmManager = [AlarmManager sharedManager];
+        [alarmManager loadAlarms];
+        Alarm *alarm = [alarmManager alarmWithId:alarmId];
+        
+        // after a slight delay, show an alert that will ask the user to skip the alarm
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            // get the fire date of the alarm we are going to display
+            NSDate *alarmFireDate = [nextAlarmNotification nextFireDateAfterDate:[NSDate date]
+                                                                   localTimeZone:[NSTimeZone localTimeZone]];
             
-            // after a slight delay, show an alert that will ask the user to skip the alarm
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-                // get the fire date of the alarm we are going to display
-                NSDate *alarmFireDate = [nextAlarmNotification nextFireDateAfterDate:[NSDate date]
-                                                                       localTimeZone:[NSTimeZone localTimeZone]];
-                
-                // create and display the custom alert item
-                JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithAlarm:alarm
-                                                                                 nextFireDate:alarmFireDate];
-                [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert];
-            });
-        }
+            // create and display the custom alert item
+            JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithAlarm:alarm
+                                                                             nextFireDate:alarmFireDate];
+            [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert];
+        });
     }
 }
 
