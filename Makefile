@@ -14,4 +14,4 @@ _THEOS_INTERNAL_PACKAGE_VERSION = 2.0.0
 include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::
-	install.exec "killall -9 SpringBoard; killall -9 MobileTimer"
+	install.exec "killall -9 MobileTimer; killall -9 SpringBoard"

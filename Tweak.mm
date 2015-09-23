@@ -35,6 +35,7 @@ static BOOL sJSSkipSwitchOn;
 // Static variables that define the alarm attributes of the current alarm.  Only one alarm can be
 // edited at a time, so we can get away with just single variables here that get overwritten as
 // alarms are edited and changed
+static NSString *sJSCurrentAlarmId;
 static NSInteger sJSSnoozeHours;
 static NSInteger sJSSnoozeMinutes;
 static NSInteger sJSSnoozeSeconds;
@@ -71,24 +72,24 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
     }
 }
 
-// hook the view controller that allows the editing of alarms
-%hook EditAlarmViewController
-
-// override to get values to define the snooze time for this particular alarm
-- (void)viewDidLoad
+// helper function to save our static variables with the values from the preference manager
+static void getSavedAlarmPreferences(Alarm *alarm)
 {
-    // check if the alarm for this view controller has skip enabled
-    sJSSkipSwitchOn = [JSPrefsManager skipEnabledForAlarmId:self.alarm.alarmId];
+    // save the current alarm Id so we know which alarm we just changed
+    sJSCurrentAlarmId = alarm.alarmId;
+    
+    // check if the alarm has skip enabled
+    sJSSkipSwitchOn = [JSPrefsManager skipEnabledForAlarmId:sJSCurrentAlarmId];
     
     // grab the skip hours that are saved for this given alarm
-    sJSSkipHours = [JSPrefsManager skipHoursForAlarmId:self.alarm.alarmId];
+    sJSSkipHours = [JSPrefsManager skipHoursForAlarmId:sJSCurrentAlarmId];
     if (sJSSkipHours == NSNotFound) {
         // set the skip hours to the default if none were found
         sJSSkipHours = kJSDefaultSkipHours;
     }
     
-    // get the alarm prefs for the given alarm Id that this view is responsible for
-    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:self.alarm.alarmId];
+    // get the alarm prefs for the given alarm Id
+    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:sJSCurrentAlarmId];
     if (alarmInfo) {
         // grab the attributes from the alarm info if we had some saved
         sJSSnoozeHours = [[alarmInfo objectForKey:kJSSnoozeHourKey] integerValue];
@@ -100,7 +101,20 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
         sJSSnoozeMinutes = kJSDefaultSnoozeMinute;
         sJSSnoozeSeconds = kJSDefaultSnoozeSecond;
     }
+}
+
+// hook the view controller that allows the editing of alarms
+%hook EditAlarmViewController
+
+// override to make sure that we have the correct properties for the alarm being shown in the controller
+- (void)viewWillAppear:(BOOL)animated
+{
+    // grab the saved preferences for the given alarm if we need to
+    if (!sJSCurrentAlarmId || ![self.alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
+        getSavedAlarmPreferences(self.alarm);
+    }
     
+    // perform the original implementation
     %orig;
 }
 
@@ -123,7 +137,7 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
 - (id)tableView:(id)view cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // grab the original cell that is defined for this table
-    MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig();
+    MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
     
     // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
     // cell so that it is not reused on the wrong cell
@@ -212,21 +226,6 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
     }
 }
 
-// override to handle when an alarm gets saved
-- (void)_doneButtonClicked:(id)arg1
-{
-    // perform the original save implementation
-    %orig(arg1);
-    
-    // save the alarm attributes to our preferences
-    [JSPrefsManager saveAlarmForAlarmId:self.alarm.alarmId
-                            snoozeHours:sJSSnoozeHours
-                          snoozeMinutes:sJSSnoozeMinutes
-                          snoozeSeconds:sJSSnoozeSeconds
-                            skipEnabled:sJSSkipSwitchOn
-                              skipHours:sJSSkipHours];
-}
-
 // handle when the skip switch is changed
 %new
 - (void)skipControlChanged:(UISwitch *)skipSwitch
@@ -297,7 +296,7 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
     }
     
     // perform the original implementation
-    %orig;
+    %orig(notification);
 }
 
 %end
@@ -319,7 +318,7 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
 - (void)setAlarm:(Alarm *)alarm active:(BOOL)active
 {
     // perform the original implementation
-    %orig(alarm, active);
+    %orig;
     
     // if the alarm is no longer active and the skip activation has already been decided for this
     // alarm, disable the skip activation now
@@ -328,6 +327,26 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
         [JSPrefsManager setSkipActivatedStatusForAlarmId:alarm.alarmId
                                      skipActivatedStatus:kJSSkipActivatedStatusUnknown];
     }
+}
+
+// override to save the properties for the given alarm
+- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active
+{
+    // perform the original implementation
+    %orig;
+    
+    // grab the saved preferences for the given alarm if we need to
+    if (!sJSCurrentAlarmId || ![alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
+        getSavedAlarmPreferences(alarm);
+    }
+    
+    // save the alarm attributes to our preferences
+    [JSPrefsManager saveAlarmForAlarmId:alarm.alarmId
+                            snoozeHours:sJSSnoozeHours
+                          snoozeMinutes:sJSSnoozeMinutes
+                          snoozeSeconds:sJSSnoozeSeconds
+                            skipEnabled:sJSSkipSwitchOn
+                              skipHours:sJSSkipHours];
 }
 
 %end
@@ -340,7 +359,7 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
 - (void)finishUIUnlockFromSource:(int)source
 {
     // perform the original implementation
-    %orig(source);
+    %orig;
     
     // grab the shared instance of the clock data provider
     SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
@@ -430,11 +449,11 @@ static BOOL isNotificationSkippable(UIConcreteLocalNotification *notification, N
                                          skipActivatedStatus:kJSSkipActivatedStatusUnknown];
         } else {
             // if we did not activate skip for this alarm, perform the original implementation
-            %orig(notification);
+            %orig;
         }
     } else {
         // if it is not an alarm notification, perform the original implementation
-        %orig(notification);
+        %orig;
     }
 }
 

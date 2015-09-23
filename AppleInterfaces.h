@@ -57,6 +57,12 @@ JSSnoozeTimeDelegate, JSSkipTimeDelegate>
 // loads the alarms on the system in the manager object
 - (void)loadAlarms;
 
+// override to save the properties for the given alarm
+- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active;
+
+// override to remove snooze times for the given alarm from our preferences
+- (void)removeAlarm:(Alarm *)alarm;
+
 // invoked when an alarm is set or unset with an active states
 - (void)setAlarm:(Alarm *)alarm active:(BOOL)active;
 

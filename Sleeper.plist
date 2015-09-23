@@ -3,6 +3,7 @@
 		Bundles = (
 			"com.apple.mobiletimer",
 			"com.apple.springboard",
+			"com.apple.AssistantServices",
 		);
 	};
 }
