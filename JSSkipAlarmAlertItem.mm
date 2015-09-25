@@ -6,9 +6,10 @@
 //
 //
 
+#import <UIKit/UIKit.h>
 #import "JSSkipAlarmAlertItem.h"
 #import "Sleeper/Sleeper/JSPrefsManager.h"
-#import <UIKit/UIKit.h>
+#import "Sleeper/Sleeper/JSLocalizedStrings.h"
 
 // the alarm object that is going to be alerted to the user
 static Alarm *alertAlarm;
@@ -37,7 +38,7 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
         alertAlarm = alarm;
         alertFireDate = nextFireDate;
         
-        // Create the date formatter object once since date formatters are expensive
+        // create the date formatter object once since date formatters are expensive
         static dispatch_once_t once;
         dispatch_once(&once, ^{
             alertDateFormatter = [[NSDateFormatter alloc] init];
@@ -55,12 +56,12 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     
     // configure the alert sheet
     self.alertSheet.delegate = self;
-    self.alertSheet.title = @"Skip Alarm";
-    self.alertSheet.message = [NSString stringWithFormat:@"Would you like to skip \"%@\" that is scheduled to go off at %@?", alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]];
+    self.alertSheet.title = LZ_SKIP_ALARM;
+    self.alertSheet.message = LZ_SKIP_QUESTION(alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]);
     
     // add alert sheet buttons
-    [self.alertSheet addButtonWithTitle:@"Yes"];
-    [self.alertSheet addButtonWithTitle:@"No"];
+    [self.alertSheet addButtonWithTitle:LZ_YES];
+    [self.alertSheet addButtonWithTitle:LZ_NO];
 }
 
 // invoked when a button of the alert is pressed

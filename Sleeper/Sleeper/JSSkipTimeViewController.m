@@ -48,7 +48,7 @@
 // return a footer view for each table view section
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return @"Choose the amount of time before the alarm is going to go off that you will be prompted to skip the alarm.";
+    return LZ_SKIP_EXPLANATION;
 }
 
 #pragma mark - UITableViewDelegate

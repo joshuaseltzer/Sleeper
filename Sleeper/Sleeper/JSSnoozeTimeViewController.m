@@ -69,8 +69,9 @@
 {
     // We only have one section which defines the default snooze button.  Display a message indicating
     // to the user what the default snooze time is
-    return [NSString stringWithFormat:@"%@ %02ld:%02ld:%02ld.", LZ_DEFAULT_SNOOZE_TIME,
-            (long)kJSDefaultSnoozeHour, (long)kJSDefaultSnoozeMinute, (long)kJSDefaultSnoozeSecond];
+    NSString *defaultSnoozeTime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)kJSDefaultSnoozeHour,
+                                   (long)kJSDefaultSnoozeMinute, (long)kJSDefaultSnoozeSecond];
+    return LZ_DEFAULT_SNOOZE_TIME(defaultSnoozeTime);
 }
 
 #pragma mark - UITableViewDelegate

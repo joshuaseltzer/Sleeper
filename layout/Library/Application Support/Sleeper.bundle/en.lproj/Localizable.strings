@@ -12,4 +12,8 @@
 "MINUTES" = "min";
 "SECONDS" = "sec";
 "RESET_DEFAULT" = "Reset Default";
-"DEFAULT_SNOOZE_TIME" = "The default snooze time is";
+"DEFAULT_SNOOZE_TIME" = "The default snooze time is %@.";
+"SKIP" = "Skip";
+"SKIP_ALARM" = "Skip Alarm";
+"SKIP_QUESTION" = "Would you like to skip \"%@\" which is scheduled to go off at %@?";
+"SKIP_EXPLANATION" = "Choose an amount of time that you will be prompted to skip the alarm before it fires.";
