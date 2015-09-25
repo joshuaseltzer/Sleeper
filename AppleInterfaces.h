@@ -20,6 +20,9 @@
 // the alarm object that contains all of the information about the alarm
 @interface Alarm : NSObject
 
+// tells us if the given notification object was generated from a snooze notification
++ (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
+
 // the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
 
@@ -41,7 +44,7 @@
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-JSSnoozeTimeDelegate, JSSkipTimeDelegate>
+JSPickerSelectionDelegate>
 
 // the alarm object associated with the controller
 @property (readonly, assign, nonatomic) Alarm* alarm;

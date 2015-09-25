@@ -6,23 +6,9 @@
 //  Copyright (c) 2015 Joshua Seltzer. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "JSPickerTableViewController.h"
 
-// delegate that tells the parent view controller to update the alarm with the skip time
-@protocol JSSkipTimeDelegate <NSObject>
-
-// passes the updated skip time to the delegate
-- (void)alarmDidUpdateWithSkipHours:(NSInteger)skipHours;
-
-@end
-
-// table view controller which presents the user with different options to select a skip time
-@interface JSSkipTimeViewController : UITableViewController
-
-// custom initialization method that sets the default hours
-- (id)initWithHours:(NSInteger)hours;
-
-// the delegate of this view controller
-@property (nonatomic, weak) id <JSSkipTimeDelegate> delegate;
+// view controller which will return the user's selected skip time
+@interface JSSkipTimeViewController : JSPickerTableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

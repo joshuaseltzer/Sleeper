@@ -40,23 +40,32 @@ static NSInteger sJSSnoozeHours;
 static NSInteger sJSSnoozeMinutes;
 static NSInteger sJSSnoozeSeconds;
 static NSInteger sJSSkipHours;
+static NSInteger sJSSkipMinutes;
+static NSInteger sJSSkipSeconds;
 
 // helper function that will investigate an alarm notification and alarm Id to see if it is skippable
 static BOOL isAlarmNotificationSkippable(UIConcreteLocalNotification *notification, NSString *alarmId)
 {
-    // grab the skip hours for the alarm
-    NSInteger skipHours = [JSPrefsManager skipHoursForAlarmId:alarmId];
+    // grab the attributes for the alarm
+    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (skipHours != NSNotFound && [JSPrefsManager skipEnabledForAlarmId:alarmId] &&
+    if (alarmInfo && [JSPrefsManager skipEnabledForAlarmId:alarmId] &&
         [JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusUnknown) {
-        // create a date components object with the user's selected skip hours to see if we are within
+        // grab the skip attributes for the alarm
+        NSInteger skipHours = [[alarmInfo objectForKey:kJSSkipHourKey] integerValue];
+        NSInteger skipMinutes = [[alarmInfo objectForKey:kJSSkipMinuteKey] integerValue];
+        NSInteger skipSeconds = [[alarmInfo objectForKey:kJSSkipSecondKey] integerValue];
+        
+        // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
         [components setHour:skipHours];
+        [components setMinute:skipMinutes];
+        [components setSecond:skipSeconds];
         NSCalendar *calendar = [NSCalendar currentCalendar];
         
-        // create a date that is the amount of hours ahead of the current date
+        // create a date that is the amount of time ahead of the current date
         NSDate *thresholdDate = [calendar dateByAddingComponents:components
                                                           toDate:[NSDate date]
                                                          options:0];
@@ -96,8 +105,9 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification(SBClockDataPr
     
     // iterate through all of the notifications that are scheduled
     for (UIConcreteLocalNotification *notification in sortedNotifications) {
-        // only continue checking if the given notification is an alarm notification
-        if ([clockDataProvider _isAlarmNotification:notification]) {
+        // only continue checking if the given notification is an alarm notification and did not
+        // originate from a snooze action
+        if ([clockDataProvider _isAlarmNotification:notification] && ![Alarm isSnoozeNotification:notification]) {
             // grab the alarm Id from the notification
             NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
             
@@ -122,13 +132,6 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     // check if the alarm has skip enabled
     sJSSkipSwitchOn = [JSPrefsManager skipEnabledForAlarmId:sJSCurrentAlarmId];
     
-    // grab the skip hours that are saved for this given alarm
-    sJSSkipHours = [JSPrefsManager skipHoursForAlarmId:sJSCurrentAlarmId];
-    if (sJSSkipHours == NSNotFound) {
-        // set the skip hours to the default if none were found
-        sJSSkipHours = kJSDefaultSkipHours;
-    }
-    
     // get the alarm prefs for the given alarm Id
     NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:sJSCurrentAlarmId];
     if (alarmInfo) {
@@ -136,11 +139,17 @@ static void getSavedAlarmPreferences(Alarm *alarm)
         sJSSnoozeHours = [[alarmInfo objectForKey:kJSSnoozeHourKey] integerValue];
         sJSSnoozeMinutes = [[alarmInfo objectForKey:kJSSnoozeMinuteKey] integerValue];
         sJSSnoozeSeconds = [[alarmInfo objectForKey:kJSSnoozeSecondKey] integerValue];
+        sJSSkipHours = [[alarmInfo objectForKey:kJSSkipHourKey] integerValue];
+        sJSSkipMinutes = [[alarmInfo objectForKey:kJSSkipMinuteKey] integerValue];
+        sJSSkipSeconds = [[alarmInfo objectForKey:kJSSkipSecondKey] integerValue];
     } else {
-        // if snooze info was not previously saved for this alarm, then use the default values
+        // if info was not previously saved for this alarm, then use the default values
         sJSSnoozeHours = kJSDefaultSnoozeHour;
         sJSSnoozeMinutes = kJSDefaultSnoozeMinute;
         sJSSnoozeSeconds = kJSDefaultSnoozeSecond;
+        sJSSkipHours = kJSDefaultSkipHour;
+        sJSSkipMinutes = kJSDefaultSkipMinute;
+        sJSSkipSeconds = kJSDefaultSkipSecond;
     }
 }
 
@@ -219,14 +228,9 @@ static void getSavedAlarmPreferences(Alarm *alarm)
         cell.textLabel.text = LZ_ASK_TO_SKIP;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
-        // Format the cell with the skip hours.  Show "hour" or "hours" depending on how many we have
-        NSString *hourString = nil;
-        if (sJSSkipHours == 1) {
-            hourString = LZ_HOUR;
-        } else {
-            hourString = LZ_HOURS;
-        }
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld %@", (long)sJSSkipHours, hourString];
+        // format the cell of the text with the skip time values
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSSkipHours,
+                                     (long)sJSSkipMinutes, (long)sJSSkipSeconds];
     }
     
     return cell;
@@ -252,7 +256,9 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
                indexPath.row == kJSEditAlarmViewAttributeSectionRowSkipTime) {
         // create a custom view controller which will decide the skip time
-        JSSkipTimeViewController *skipController = [[JSSkipTimeViewController alloc] initWithHours:sJSSkipHours];
+        JSSkipTimeViewController *skipController = [[JSSkipTimeViewController alloc] initWithHours:sJSSkipHours
+                                                                                           minutes:sJSSkipMinutes
+                                                                                           seconds:sJSSkipSeconds];
         
         // set the delegate of the custom controller to self so that we can monitor changes to the
         // skip time
@@ -276,33 +282,38 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     sJSSkipSwitchOn = skipSwitch.on;
 }
 
-#pragma mark - JSSnoozeTimeDelegate
+#pragma mark - JSPickerSelectionDelegate
 
-// create the new delegate method that tells the editing view controller what snooze time was selected
+// create the new delegate method that tells the editing view controller what picker time was selected
 %new
-- (void)alarmDidUpdateWithSnoozeHours:(NSInteger)snoozeHours snoozeMinutes:(NSInteger)snoozeMinutes snoozeSeconds:(NSInteger)snoozeSeconds
+- (void)pickerTableViewController:(JSPickerTableViewController *)pickerTableViewController didUpdateWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
 {
-    if (snoozeHours == 0 && snoozeMinutes == 0 && snoozeSeconds == 0) {
-        // if all values returned are 0, then reset them to the default
-        sJSSnoozeHours = kJSDefaultSnoozeHour;
-        sJSSnoozeMinutes = kJSDefaultSnoozeMinute;
-        sJSSnoozeSeconds = kJSDefaultSnoozeSecond;
-    } else {
-        // otherwise save our returned values
-        sJSSnoozeHours = snoozeHours;
-        sJSSnoozeMinutes = snoozeMinutes;
-        sJSSnoozeSeconds = snoozeSeconds;
+    // check to see if we are updating the snooze time or the skip time
+    if ([pickerTableViewController isMemberOfClass:[JSSnoozeTimeViewController class]]) {
+        if (hours == 0 && minutes == 0 && seconds == 0) {
+            // if all values returned are 0, then reset them to the default
+            sJSSnoozeHours = kJSDefaultSnoozeHour;
+            sJSSnoozeMinutes = kJSDefaultSnoozeMinute;
+            sJSSnoozeSeconds = kJSDefaultSnoozeSecond;
+        } else {
+            // otherwise save our returned values
+            sJSSnoozeHours = hours;
+            sJSSnoozeMinutes = minutes;
+            sJSSnoozeSeconds = seconds;
+        }
+    } else if ([pickerTableViewController isMemberOfClass:[JSSkipTimeViewController class]]) {
+        if (hours == 0 && minutes == 0 && seconds == 0) {
+            // if all values returned are 0, then reset them to the default
+            sJSSkipHours = kJSDefaultSkipHour;
+            sJSSkipMinutes = kJSDefaultSkipMinute;
+            sJSSkipSeconds = kJSDefaultSkipSecond;
+        } else {
+            // otherwise save our returned values
+            sJSSkipHours = hours;
+            sJSSkipMinutes = minutes;
+            sJSSkipSeconds = seconds;
+        }
     }
-}
-
-#pragma mark - JSSkipTimeDelegate
-
-// create the new delegate method that tells the editing view controller what skip time was selected
-%new
-- (void)alarmDidUpdateWithSkipHours:(NSInteger)skipHours
-{
-    // save the updated skip hour static variable
-    sJSSkipHours = skipHours;
 }
 
 %end
@@ -388,7 +399,9 @@ static void getSavedAlarmPreferences(Alarm *alarm)
                           snoozeMinutes:sJSSnoozeMinutes
                           snoozeSeconds:sJSSnoozeSeconds
                             skipEnabled:sJSSkipSwitchOn
-                              skipHours:sJSSkipHours];
+                              skipHours:sJSSkipHours
+                            skipMinutes:sJSSkipMinutes
+                            skipSeconds:sJSSkipSeconds];
 }
 
 %end

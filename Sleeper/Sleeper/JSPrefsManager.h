@@ -15,14 +15,18 @@ static NSString *const kJSSnoozeHourKey =           @"snoozeTimeHour";
 static NSString *const kJSSnoozeMinuteKey =         @"snoozeTimeMinute";
 static NSString *const kJSSnoozeSecondKey =         @"snoozeTimeSecond";
 static NSString *const kJSSkipEnabledKey =          @"skipEnabled";
-static NSString *const kJSSkipHoursKey =            @"skipHours";
+static NSString *const kJSSkipHourKey =             @"skipTimeHour";
+static NSString *const kJSSkipMinuteKey =           @"skipTimeMinute";
+static NSString *const kJSSkipSecondKey =           @"skipTimeSecond";
 static NSString *const kJSSkipActivatedStatusKey =  @"skipActivatedStatus";
 
 // constants that define the default values
 static NSInteger const kJSDefaultSnoozeHour =   0;
 static NSInteger const kJSDefaultSnoozeMinute = 9;
 static NSInteger const kJSDefaultSnoozeSecond = 0;
-static NSInteger const kJSDefaultSkipHours =    3;
+static NSInteger const kJSDefaultSkipHour =     0;
+static NSInteger const kJSDefaultSkipMinute =   30;
+static NSInteger const kJSDefaultSkipSecond =   0;
 
 // enum to define the different options that can be returned for the alarm's skip activation
 typedef enum JSPrefsSkipActivatedStatus : NSInteger {
@@ -41,17 +45,15 @@ typedef enum JSPrefsSkipActivatedStatus : NSInteger {
 // if no alarm is found.
 + (BOOL)skipEnabledForAlarmId:(NSString *)alarmId;
 
-// Return the number of hours to skip the alarm for a given alarm Id.  Return NSNotFound if no skip
-// hours were found.
-+ (NSInteger)skipHoursForAlarmId:(NSString *)alarmId;
-
 // save all attributes for an alarm given the alarm Id
 + (void)saveAlarmForAlarmId:(NSString *)alarmId
                 snoozeHours:(NSInteger)snoozeHours
               snoozeMinutes:(NSInteger)snoozeMinutes
               snoozeSeconds:(NSInteger)snoozeSeconds
                 skipEnabled:(BOOL)skipEnabled
-                  skipHours:(NSInteger)skipHours;
+                  skipHours:(NSInteger)skipHours
+                skipMinutes:(NSInteger)skipMinutes
+                skipSeconds:(NSInteger)skipSeconds;
 
 // save the skip activation status for a given alarm
 + (void)setSkipActivatedStatusForAlarmId:(NSString *)alarmId

@@ -60,30 +60,6 @@
     return NO;
 }
 
-// Return the number of hours to skip the alarm for a given alarm Id.  Return NSNotFound if no skip
-// hours were found.
-+ (NSInteger)skipHoursForAlarmId:(NSString *)alarmId
-{
-    // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
-    
-    // if the alarm preferences exist, attempt to get the alarms
-    if (prefs) {
-        // get the array of dictionaries of all of the alarms
-        NSMutableArray *alarms = [prefs objectForKey:kJSAlarmsKey];
-        
-        // iterate through the alarms until we the find the one with a matching id
-        for (NSMutableDictionary *alarm in alarms) {
-            if ([[alarm objectForKey:kJSAlarmIdKey] isEqualToString:alarmId]) {
-                return [[alarm objectForKey:kJSSkipHoursKey] integerValue];
-            }
-        }
-    }
-    
-    // return NSNotFound if no alarm is found
-    return NSNotFound;
-}
-
 // save all attributes for an alarm given the alarm Id
 + (void)saveAlarmForAlarmId:(NSString *)alarmId
                 snoozeHours:(NSInteger)snoozeHours
@@ -91,6 +67,8 @@
               snoozeSeconds:(NSInteger)snoozeSeconds
                 skipEnabled:(BOOL)skipEnabled
                   skipHours:(NSInteger)skipHours
+                skipMinutes:(NSInteger)skipMinutes
+                skipSeconds:(NSInteger)skipSeconds
 {
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
@@ -116,7 +94,9 @@
                 [alarm setObject:[NSNumber numberWithInteger:snoozeMinutes] forKey:kJSSnoozeMinuteKey];
                 [alarm setObject:[NSNumber numberWithInteger:snoozeSeconds] forKey:kJSSnoozeSecondKey];
                 [alarm setObject:[NSNumber numberWithBool:skipEnabled] forKey:kJSSkipEnabledKey];
-                [alarm setObject:[NSNumber numberWithInteger:skipHours] forKey:kJSSkipHoursKey];
+                [alarm setObject:[NSNumber numberWithInteger:skipHours] forKey:kJSSkipHourKey];
+                [alarm setObject:[NSNumber numberWithInteger:skipMinutes] forKey:kJSSkipMinuteKey];
+                [alarm setObject:[NSNumber numberWithInteger:skipSeconds] forKey:kJSSkipSecondKey];
                 [alarm setObject:[NSNumber numberWithInteger:kJSSkipActivatedStatusUnknown]
                           forKey:kJSSkipActivatedStatusKey];
                 break;
@@ -132,7 +112,9 @@
                                   [NSNumber numberWithInteger:snoozeMinutes], kJSSnoozeMinuteKey,
                                   [NSNumber numberWithInteger:snoozeSeconds], kJSSnoozeSecondKey,
                                   [NSNumber numberWithBool:skipEnabled], kJSSkipEnabledKey,
-                                  [NSNumber numberWithInteger:skipHours], kJSSkipHoursKey,
+                                  [NSNumber numberWithInteger:skipHours], kJSSkipHourKey,
+                                  [NSNumber numberWithInteger:skipMinutes], kJSSkipMinuteKey,
+                                  [NSNumber numberWithInteger:skipSeconds], kJSSkipSecondKey,
                                   [NSNumber numberWithInteger:kJSSkipActivatedStatusUnknown],
                                   kJSSkipActivatedStatusKey, nil];
         
