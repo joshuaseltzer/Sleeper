@@ -8,8 +8,13 @@
 
 // Arabic (translation provided by MiRO92)
 "SNOOZE_TIME" = "وقت الغفوة";
-"HOURS" = "الساعة";
-"MINUTES" = "الدقيقة";
-"SECONDS" = "الثانية";
-"RESET_DEFAULT" = "إعادة التعيين";
-"DEFAULT_SNOOZE_TIME" = "وقت الغفوة الإفتراضي هو";
+"HOURS" = "ساعة";
+"MINUTES" = "دقيقة";
+"SECONDS" = "ثانية";
+"RESET_DEFAULT" = "إعادة التعيين إلى الإفتراضي";
+"DEFAULT_SNOOZE_TIME" = "وقت الغفوة الإفتراضي هو %@.";
+"SKIP" = "تخطي رنين المنبه";
+"SKIP_TIME" = "اختر وقت لـ(تخطي رنين المنبه)";
+"SKIP_ALARM" = "تخطي المنبه";
+"SKIP_QUESTION" = "هل تريد تخطي \"%@\" المقرر له أن يرن في %@؟";
+"SKIP_EXPLANATION" = "إختر المدة التي سيتم فيها إظهار تنبيه لـ(تخطي رنين المنبه) قبل وقت رنين المنبه.";

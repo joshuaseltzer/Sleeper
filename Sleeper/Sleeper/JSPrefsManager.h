@@ -30,9 +30,9 @@ static NSInteger const kJSDefaultSkipSecond =   0;
 
 // enum to define the different options that can be returned for the alarm's skip activation
 typedef enum JSPrefsSkipActivatedStatus : NSInteger {
+    kJSSkipActivatedStatusUnknown,
     kJSSkipActivatedStatusActivated,
-    kJSSkipActivatedStatusDisabled,
-    kJSSkipActivatedStatusUnknown
+    kJSSkipActivatedStatusDisabled
 } JSPrefsSkipActivatedStatus;
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times

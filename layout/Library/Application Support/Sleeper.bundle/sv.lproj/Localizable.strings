@@ -8,8 +8,13 @@
 
 // Swedish (translation provided by andreashenriksson)
 "SNOOZE_TIME" = "Snooze-längd";
-"HOURS" = "tim";
+"HOURS" = "timmar";
 "MINUTES" = "min";
 "SECONDS" = "sek";
 "RESET_DEFAULT" = "Återställ till standard";
-"DEFAULT_SNOOZE_TIME" = "Standardtiden för snooze är";
+"DEFAULT_SNOOZE_TIME" = "Standardtiden för snooze är %@.";
+"SKIP" = "Hoppa över";
+"SKIP_TIME" = "Hoppa över tid";
+"SKIP_ALARM" = "Hoppa över alarm";
+"SKIP_QUESTION" = "Vill du hoppa över \"%@\" som är planerat att gå igång vid %@?";
+"SKIP_EXPLANATION" = "Välj en viss tid innan alarmet går igång som du ska bli frågad att hoppa över alarmet.";

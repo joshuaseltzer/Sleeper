@@ -12,4 +12,9 @@
 "MINUTES" = "min";
 "SECONDS" = "seg";
 "RESET_DEFAULT" = "Valores Predeterminados";
-"DEFAULT_SNOOZE_TIME" = "El tiempo predeterminado para posponer es";
+"DEFAULT_SNOOZE_TIME" = "El tiempo predeterminado para posponer es %@.";
+"SKIP" = "Omitir";
+"SKIP_TIME" = "Omitir tiempo";
+"SKIP_ALARM" = "Omitir alarma";
+"SKIP_QUESTION" = "¿Deseas omitir la alarma \"%@\" que está programada para que suene a las %@?";
+"SKIP_EXPLANATION" = "Define el tiempo en el que se te pedirá omitir la alarma antes de que salte.";

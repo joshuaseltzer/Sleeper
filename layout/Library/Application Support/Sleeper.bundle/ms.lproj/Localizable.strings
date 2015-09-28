@@ -9,7 +9,12 @@
 // Malay (translation provided by redzrex)
 "SNOOZE_TIME" = "Tunda Masa";
 "HOURS" = "jam";
-"MINUTES" = "minit";
+"MINUTES" = "min";
 "SECONDS" = "saat";
-"RESET_DEFAULT" = "Menetapkan Semula";
-"DEFAULT_SNOOZE_TIME" = "Tundaan masa yang asal ialah";
+"RESET_DEFAULT" = "Pulih Asal";
+"DEFAULT_SNOOZE_TIME" = "Masa tunda yang asal ialah %@.";
+"SKIP" = "Langkau";
+"SKIP_TIME" = "Langkau Masa";
+"SKIP_ALARM" = "Langkau Penggera";
+"SKIP_QUESTION" = "Adakah kamu ingin melangkau \"%@\" dimana ia telah dijadualkan untuk bunyi pada %@?";
+"SKIP_EXPLANATION" = "Pilih berapa kali kamu ingin didorong untuk melangkau penggera sebelum ia berbunyi.";

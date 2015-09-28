@@ -12,4 +12,9 @@
 "MINUTES" = "minutus";
 "SECONDS" = "secundus";
 "RESET_DEFAULT" = "mutare ad regularem";
-"DEFAULT_SNOOZE_TIME" = "in defectu est, snooze tempus";
+"DEFAULT_SNOOZE_TIME" = "in defectu est, snooze tempus %@.";
+"SKIP" = "Autem";
+"SKIP_TIME" = "Degero";
+"SKIP_ALARM" = "Autem Clangor";
+"SKIP_QUESTION" = "Vis omit \"%@\" in qua venturus est %@ abire?";
+"SKIP_EXPLANATION" = "Elige quam promptus spatium antequam trepidatione ignes omit";

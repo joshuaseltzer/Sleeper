@@ -12,4 +12,9 @@
 "MINUTES" = "min";
 "SECONDS" = "sek";
 "RESET_DEFAULT" = "Obnovit na výchozí";
-"DEFAULT_SNOOZE_TIME" = "Výchozí délka odložení je";
+"DEFAULT_SNOOZE_TIME" = "Výchozí délka odložení je %@.";
+"SKIP" = "Přeskočit";
+"SKIP_TIME" = "Čas přeskočení";
+"SKIP_ALARM" = "Přeskočit budík";
+"SKIP_QUESTION" = "Chcete přeskočit budík \"%@\", který má zazvonit v %@?";
+"SKIP_EXPLANATION" = "Vyberte si počet nabídek k přeskočení budíku před tím, než zazvoní.";

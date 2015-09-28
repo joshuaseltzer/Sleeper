@@ -24,7 +24,7 @@
 #define LZ_YES                              [LZ_PREFERENCES_BUNDLE localizedStringForKey:@"YES" value:@"Yes" table:@"Localizable"]
 #define LZ_NO                               [LZ_PREFERENCES_BUNDLE localizedStringForKey:@"NO" value:@"Yes" table:@"Localizable"]
 #define LZ_SKIP                             [LZ_SLEEPER_BUNDLE localizedStringForKey:@"SKIP" value:@"Skip" table:@"Localizable"]
-#define LZ_ASK_TO_SKIP                      [LZ_SLEEPER_BUNDLE localizedStringForKey:@"ASK_TO_SKIP" value:@"Ask to Skip" table:@"Localizable"]
+#define LZ_SKIP_TIME                        [LZ_SLEEPER_BUNDLE localizedStringForKey:@"SKIP_TIME" value:@"Skip Time" table:@"Localizable"]
 #define LZ_SKIP_ALARM                       [LZ_SLEEPER_BUNDLE localizedStringForKey:@"SKIP_ALARM" value:@"Skip Alarm" table:@"Localizable"]
 #define LZ_SKIP_QUESTION(alarmName, time)   [NSString stringWithFormat:[LZ_SLEEPER_BUNDLE localizedStringForKey:@"SKIP_QUESTION" value:@"Would you like to skip \"%@\" which is scheduled to go off at %@?" table:@"Localizable"], alarmName, time]
 #define LZ_SKIP_EXPLANATION                 [LZ_SLEEPER_BUNDLE localizedStringForKey:@"SKIP_EXPLANATION" value:@"Choose an amount of time that you will be prompted to skip the alarm before it fires." table:@"Localizable"]

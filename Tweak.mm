@@ -225,7 +225,7 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     } else if (indexPath.section == kJSEditAlarmViewSectionAttribute &&
                indexPath.row == kJSEditAlarmViewAttributeSectionRowSkipTime) {
         // customize the cell
-        cell.textLabel.text = LZ_ASK_TO_SKIP;
+        cell.textLabel.text = LZ_SKIP_TIME;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         // format the cell of the text with the skip time values

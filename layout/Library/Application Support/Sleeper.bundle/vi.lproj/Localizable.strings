@@ -12,4 +12,9 @@
 "MINUTES" = "Phút";
 "SECONDS" = "Giây";
 "RESET_DEFAULT" = "Trả về mặc định";
-"DEFAULT_SNOOZE_TIME" = "Thời gian hoãn mặc định là";
+"DEFAULT_SNOOZE_TIME" = "Thời gian hoãn mặc định là %@.";
+"SKIP" = "Bỏ qua";
+"SKIP_TIME" = "Bỏ qua thời gian";
+"SKIP_ALARM" = "Bỏ qua báo thức";
+"SKIP_QUESTION" = "Bạn có muốn bỏ qua \”%@\", nó sẽ được tắt vào lúc %@";
+"SKIP_EXPLANATION" = "Chọn khoảng thời gian mà bạn muốn được báo trước khi nó hú.";

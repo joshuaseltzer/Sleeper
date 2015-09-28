@@ -6,10 +6,15 @@
 
 */
 
-// Italian (translation provided by Not_My_Usrname)
-"SNOOZE_TIME" = "Tempo di Ritardo";
+// Italian (translation provided by Not_My_Usrname and Agru007)
+"SNOOZE_TIME" = "Ritarda di:";
 "HOURS" = "ore";
 "MINUTES" = "min";
 "SECONDS" = "sec";
-"RESET_DEFAULT" = "Ripristina Valori Predefiniti";
-"DEFAULT_SNOOZE_TIME" = "Il tempo di ritardo predefinito è";
+"RESET_DEFAULT" = "Ripristina valori predefiniti";
+"DEFAULT_SNOOZE_TIME" = "Il ritardo predefinito è %@.";
+"SKIP" = "Consenti salto";
+"SKIP_TIME" = "Orario del salto";
+"SKIP_ALARM" = "Salta Sveglia";
+"SKIP_QUESTION" = "Vuoi saltare \"%@,\" programmata per le %@?";
+"SKIP_EXPLANATION" = "Scegli il periodo di tempo prima della sveglia in cui ti verrà chiesto se saltarla.";

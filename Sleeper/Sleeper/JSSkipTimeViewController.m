@@ -17,7 +17,7 @@
     [super viewDidLoad];
     
     // set the title of the view controller
-    self.title = LZ_ASK_TO_SKIP;
+    self.title = LZ_SKIP_TIME;
     self.optionsTableView.scrollEnabled = NO;
 }
 

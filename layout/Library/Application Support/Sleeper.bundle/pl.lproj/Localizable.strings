@@ -12,4 +12,9 @@
 "MINUTES" = "min";
 "SECONDS" = "sek.";
 "RESET_DEFAULT" = "Przywróć ustawienia domyślne";
-"DEFAULT_SNOOZE_TIME" = "Standardowy czas drzemki to";
+"DEFAULT_SNOOZE_TIME" = "Standardowy czas drzemki to %@.";
+"SKIP" = "Pomiń";
+"SKIP_TIME" = "Czas pominięcia";
+"SKIP_ALARM" = "Pomiń alarm";
+"SKIP_QUESTION" = "Czy chciałbyś pominąć alarm \"%@\" który jest zaplanowany na %@?";
+"SKIP_EXPLANATION" = "Wybierz, po jakim czasie chcesz być zapytany o możliwość pominięcia alarmu, zanim zabrzmi.";

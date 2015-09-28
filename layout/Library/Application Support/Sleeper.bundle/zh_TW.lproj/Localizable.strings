@@ -12,4 +12,9 @@
 "MINUTES" = "分";
 "SECONDS" = "秒";
 "RESET_DEFAULT" = "重置默認";
-"DEFAULT_SNOOZE_TIME" = "默認稍後提醒時間是";
+"DEFAULT_SNOOZE_TIME" = "默認稍後提醒時間是 %@.";
+"SKIP" = "跳過";
+"SKIP_TIME" = "跳過時間";
+"SKIP_ALARM" = "跳過鬧鐘";
+"SKIP_QUESTION" = "預計啟動%@?你是否想要跳過  \"%@\"";
+"SKIP_EXPLANATION" = "選擇你會被提示跳過鬧鐘激發之前的時間量";
