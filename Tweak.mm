@@ -159,10 +159,8 @@ static void getSavedAlarmPreferences(Alarm *alarm)
 // override to make sure that we have the correct properties for the alarm being shown in the controller
 - (void)viewWillAppear:(BOOL)animated
 {
-    // grab the saved preferences for the given alarm if we need to
-    if (!sJSCurrentAlarmId || ![self.alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
-        getSavedAlarmPreferences(self.alarm);
-    }
+    // grab the saved preferences for the given alarm
+    getSavedAlarmPreferences(self.alarm);
     
     // perform the original implementation
     %orig;
