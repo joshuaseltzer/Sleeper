@@ -49,6 +49,12 @@ JSPickerSelectionDelegate>
 // the alarm object associated with the controller
 @property (readonly, assign, nonatomic) Alarm* alarm;
 
+// override to make sure we forget the saved alarm Id when the user leaves this view
+- (void)_cancelButtonClicked:(UIButton *)cancelButton;
+
+// override to make sure we forget the saved alarm Id when the user leaves this view
+- (void)_doneButtonClicked:(UIButton *)doneButton;
+
 @end
 
 // manager that governs all alarms on the system

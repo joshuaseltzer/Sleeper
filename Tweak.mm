@@ -160,10 +160,32 @@ static void getSavedAlarmPreferences(Alarm *alarm)
 - (void)viewWillAppear:(BOOL)animated
 {
     // grab the saved preferences for the given alarm
-    getSavedAlarmPreferences(self.alarm);
+    if (!sJSCurrentAlarmId || ![self.alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
+        getSavedAlarmPreferences(self.alarm);
+    }
     
     // perform the original implementation
     %orig;
+}
+
+// override to make sure we forget the saved alarm Id when the user leaves this view
+- (void)_doneButtonClicked:(UIButton *)doneButton
+{
+    // perform the original implementation
+    %orig;
+    
+    // clear the saved alarm Id
+    sJSCurrentAlarmId = nil;
+}
+
+// override to make sure we forget the saved alarm Id when the user leaves this view
+- (void)_cancelButtonClicked:(UIButton *)cancelButton
+{
+    // perform the original implementation
+    %orig;
+    
+    // clear the saved alarm Id
+    sJSCurrentAlarmId = nil;
 }
 
 // override to add rows to the table
