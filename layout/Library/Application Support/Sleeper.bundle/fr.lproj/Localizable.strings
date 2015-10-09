@@ -6,10 +6,15 @@
 
 */
 
-// French (translation provided by Ziph0n)
+// French (translation provided by Ziph0n & zazouboy)
 "SNOOZE_TIME" = "Temporisation";
 "HOURS" = "heures";
 "MINUTES" = "min";
 "SECONDS" = "sec";
 "RESET_DEFAULT" = "Réinitialiser";
-"DEFAULT_SNOOZE_TIME" = "La temporisation par défaut est";
+"DEFAULT_SNOOZE_TIME" = "La temporisation par défaut est %@.";
+"SKIP" = "Possibilité de l'ignorer";
+"SKIP_TIME" = "Durée";
+"SKIP_ALARM" = "Ignorer l'alarme";
+"SKIP_QUESTION" = "Voulez-vous ignorer \"%@\" qui doit se déclencher à %@?";
+"SKIP_EXPLANATION" = "Choisissez la durée pendant laquelle il vous sera demandé si vous souhaitez ignorer l'alarme avant qu'elle ne se déclenche.";

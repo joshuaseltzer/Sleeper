@@ -6,10 +6,15 @@
 
 */
 
-// Indonesian (translation provided by firaciaudia)
-"SNOOZE_TIME" = "Waktu Tunda Bangun";
+// Indonesian (translation provided by flyinggreenfish)
+"SNOOZE_TIME" = "Waktu Tunda Alarm";
 "HOURS" = "Jam";
-"MINUTES" = "Mnt";
-"SECONDS" = "Dtk";
-"RESET_DEFAULT" = "Setelan baku";
-"DEFAULT_SNOOZE_TIME" = "Setelan baku waktu tunda bangun adalah";
+"MINUTES" = "Menit";
+"SECONDS" = "Detik";
+"RESET_DEFAULT" = "Setelan Baku";
+"DEFAULT_SNOOZE_TIME" = "Setelan awal waktu tunda alarm adalah %@.";
+"SKIP" = "Lewati";
+"SKIP_TIME" = "Waktu yang dilewatkan";
+"SKIP_ALARM" = "Alarm yang dilewatkan";
+"SKIP_QUESTION" = "Apakah anda mau melewatkan \"%@\" yang dijadwalkan untuk %@?";
+"SKIP_EXPLANATION" = "Pilih waktu yang dibutuhkan untuk meminta anda melewatkan alarmnya sebelum alarmnya menyala.";

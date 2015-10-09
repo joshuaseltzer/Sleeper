@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Joshua Seltzer on 10/9/15.
+
+*/
+
+// Hungarian (translation provided by benciikee)
+"SNOOZE_TIME" = "Szundi idő";
+"HOURS" = "Óra";
+"MINUTES" = "Perc";
+"SECONDS" = "Másodperc";
+"RESET_DEFAULT" = "Eredeti Beállítások";
+"DEFAULT_SNOOZE_TIME" = "Az alapértelmezett szundi idő %@";
+"SKIP" = "Kihagyás";
+"SKIP_TIME" = "Időpont kihagyása";
+"SKIP_ALARM" = "Ébresztő kihagyása";
+"SKIP_QUESTION" = "Biztosan ki szeretnéd hagyni a \"%@\" nevű ébresztőt  ami %@ időben indul? ";
+"SKIP_EXPLANATION" = "Válassz egy időintervallumot amikor a program megkér, hogy átugord az ébresztőt mielőtt az indul";

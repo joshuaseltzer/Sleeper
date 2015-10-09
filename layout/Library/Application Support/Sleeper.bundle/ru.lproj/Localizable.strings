@@ -6,10 +6,15 @@
 
 */
 
-// Russian (translation provided by aeternii)
+// Russian (translation provided by aeternii & b3l1nsky)
 "SNOOZE_TIME" = "Период отложения";
 "HOURS" = "ч";
 "MINUTES" = "мин";
 "SECONDS" = "сек";
 "RESET_DEFAULT" = "Сброс настроек";
-"DEFAULT_SNOOZE_TIME" = "Стандартный период отложения –";
+"DEFAULT_SNOOZE_TIME" = "Стандартный период отложения – %@.";
+"SKIP" = "Отменяемый будильник";
+"SKIP_TIME" = "За сколько можно отменить";
+"SKIP_ALARM" = "Отменить будильник";
+"SKIP_QUESTION" = "Вы хотели бы отменить будильник  \"%@\", который прозвенит в  %@?";
+"SKIP_EXPLANATION" = "Выберите за сколько времени вам будет предложено отменить будильник, прежде чем он сработает";
