@@ -211,8 +211,17 @@ static NSInteger sJSInitialSeconds;
                                     kJSTimePickerLabelSpaceBetween, kJSMinuteLabelViewKey,
                                     kJSTimePickerLabelWidth, kJSTimePickerLabelSpaceBetween,
                                     kJSSecondLabelViewKey, kJSTimePickerLabelWidth];
+    
+    // if the device supports right to left orientation display, then use leading to trailing direction
+    NSLayoutFormatOptions formatOption = NSLayoutFormatDirectionLeftToRight;
+    if ([[UIView class] respondsToSelector:@selector(userInterfaceLayoutDirectionForSemanticContentAttribute:)] &&
+        [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.view.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft) {
+        formatOption = NSLayoutFormatDirectionLeadingToTrailing;
+    }
+    
+    // generate the array of horizontal constraints
     NSArray *labelConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:labelLayoutStringH
-                                                                         options:NSLayoutFormatDirectionLeftToRight
+                                                                         options:formatOption
                                                                          metrics:nil
                                                                            views:labelViewDictionary];
     
@@ -365,10 +374,17 @@ static NSInteger sJSInitialSeconds;
     UIView *labelContainerView = [[UIView alloc] init];
     labelContainerView.translatesAutoresizingMaskIntoConstraints = NO;
     
+    // if the device supports right to left display, then change the text alignment we use for the
+    // labels
+    NSTextAlignment labelTextAlignment = NSTextAlignmentLeft;
+    if ([[UIView class] respondsToSelector:@selector(userInterfaceLayoutDirectionForSemanticContentAttribute:)]) {
+        labelTextAlignment = NSTextAlignmentNatural;
+    }
+    
     // create the hour label
     self.hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.hourLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.hourLabel.textAlignment = NSTextAlignmentLeft;
+    self.hourLabel.textAlignment = labelTextAlignment;
     self.hourLabel.adjustsFontSizeToFitWidth = YES;
     self.hourLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.hourLabel.text = LZ_HOURS;
@@ -377,7 +393,7 @@ static NSInteger sJSInitialSeconds;
     // create the minute label
     self.minuteLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.minuteLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.minuteLabel.textAlignment = NSTextAlignmentLeft;
+    self.minuteLabel.textAlignment = labelTextAlignment;
     self.minuteLabel.adjustsFontSizeToFitWidth = YES;
     self.minuteLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.minuteLabel.text = LZ_MINUTES;
@@ -386,7 +402,7 @@ static NSInteger sJSInitialSeconds;
     // create the second label
     self.secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
     self.secondLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.secondLabel.textAlignment = NSTextAlignmentLeft;
+    self.secondLabel.textAlignment = labelTextAlignment;
     self.secondLabel.adjustsFontSizeToFitWidth = YES;
     self.secondLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.secondLabel.text = LZ_SECONDS;
