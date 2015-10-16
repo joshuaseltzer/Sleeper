@@ -23,8 +23,11 @@
 // tells us if the given notification object was generated from a snooze notification
 + (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
-// the alarm Id corresponding to the alarm object
+// iOS8: the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
+
+// iOS9: the alarm Id corresponding to the alarm object
+@property (nonatomic, retain) NSString *alarmID;
 
 // the display title of the alarm
 @property (readonly, nonatomic) NSString *uiTitle;
@@ -91,6 +94,10 @@ JSPickerSelectionDelegate>
 
 @end
 
+// ignore UIAlertView deprecations
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 // a system alert item that we will subclass to create our own alert with
 @interface SBAlertItem : NSObject <UIAlertViewDelegate>
 
@@ -107,6 +114,8 @@ JSPickerSelectionDelegate>
 - (void)dismiss;
 
 @end
+
+#pragma clang diagnostic pop
 
 // the controller responsible for activating and displaying system alert items
 @interface SBAlertItemsController : UIViewController
@@ -125,7 +134,7 @@ JSPickerSelectionDelegate>
 // the shared instance of the clock data provider
 + (id)sharedInstance;
 
-// return all scheduled notifications that are held by the clock data provider
+// iOS8: return all scheduled notifications that are held by the clock data provider
 - (NSArray *)_scheduledNotifications;
 
 // returns an alarm Id for a given notifications
@@ -136,5 +145,32 @@ JSPickerSelectionDelegate>
 
 // invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
+
+@end
+
+// iOS9: manages the notifications for clocks and alarms
+@interface SBClockNotificationManager : NSObject
+
+// the shared instance of the notification manager
++ (id)sharedInstance;
+
+// returns the array of scheduled local notifications
+- (NSArray *)scheduledLocalNotifications;
+
+@end
+
+// iOS8: handles the snoozing of local notifications (i.e. alarms)
+@interface SBApplication : NSObject
+
+// override to insert our custom snooze time if it was defined
+- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification;
+
+@end
+
+// iOS9: handles the snoozing of local notifications (i.e. alarms)
+@interface UNLocalNotificationClient : NSObject
+
+// invoked when the user snoozes a notification
+- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
 @end

@@ -12,4 +12,9 @@
 "MINUTES" = "分";
 "SECONDS" = "秒";
 "RESET_DEFAULT" = "初期設定に戻す";
-"DEFAULT_SNOOZE_TIME" = "スヌーズ間隔の初期設定:";
+"DEFAULT_SNOOZE_TIME" = "スヌーズ間隔の初期設定は%@です。";
+"SKIP" = "スキップ";
+"SKIP_TIME" = "スキップ間隔";
+"SKIP_ALARM" = "アラームをスキップ";
+"SKIP_QUESTION" = "%@に設定されているアラーム「\"%@\"」をスキップしますか？";
+"SKIP_EXPLANATION" = "何度スキップされればアラームが発射される回数を決めてください。";

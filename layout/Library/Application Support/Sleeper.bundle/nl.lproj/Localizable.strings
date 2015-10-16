@@ -6,10 +6,15 @@
 
 */
 
-// Dutch (translation provided by xdmaroc)
-"SNOOZE_TIME" = "Sluimer Tijd";
-"HOURS" = "u";
+// Dutch (translation provided by benjaminisdenaam)
+"SNOOZE_TIME" = "Snoozetijd";
+"HOURS" = "uren";
 "MINUTES" = "min";
 "SECONDS" = "sec";
-"RESET_DEFAULT" = "Reset";
-"DEFAULT_SNOOZE_TIME" = "De standaard sluimer tijd is";
+"RESET_DEFAULT" = "Herstel Standaardwaarden";
+"DEFAULT_SNOOZE_TIME" = "De standaard ingestelde snoozetijd is %@.";
+"SKIP" = "Overslaan";
+"SKIP_TIME" = "Tijd Overslaan";
+"SKIP_ALARM" = "Wekker Overslaan";
+"SKIP_QUESTION" = "Zou u graag \"%@\" overslaan, welke staat gepland om af te gaan binnen %@?";
+"SKIP_EXPLANATION" = "Hoeveel tijd voordat het alarm afgaat wilt u gevraagd worden om het alarm over te slaan?";

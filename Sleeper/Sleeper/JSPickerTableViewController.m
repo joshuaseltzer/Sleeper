@@ -23,12 +23,12 @@ static CGFloat const kJSTimePickerHeightLandscape = 162.0;
 
 // constants for the widths of the components in the time picker
 static CGFloat const kJSTimePickerWidth = 320;
-static CGFloat const kJSTimePickerLabelComponentWidth = 38.0;
-static CGFloat const kJSTimePickerHiddenComponentWidth = 59.0;
+static CGFloat const kJSTimePickerLabelComponentWidth = 42.0;
+static CGFloat const kJSTimePickerHiddenComponentWidth = 57.0;
 
 // constants the define the size and layout of the labels
 static CGFloat const kJSTimePickerLabelHeight = 60.0;
-static CGFloat const kJSTimePickerLabelSpaceBetween = 40.0;
+static CGFloat const kJSTimePickerLabelSpaceBetween = 45.0;
 static CGFloat const kJSTimePickerLabelLeadingSpace = 10.0;
 static CGFloat const kJSTimePickerLabelWidth = (kJSTimePickerWidth - kJSTimePickerLabelLeadingSpace
                                                   - kJSTimePickerLabelSpaceBetween * 3) / 3;

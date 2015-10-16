@@ -11,6 +11,7 @@
 #import "Sleeper/Sleeper/JSLocalizedStrings.h"
 #import "AppleInterfaces.h"
 #import "JSSkipAlarmAlertItem.h"
+#import "JSCompatibilityHelper.h"
 
 // define an enum to reference the sections of the table view
 typedef enum JSEditAlarmViewSection : NSUInteger {
@@ -82,9 +83,9 @@ static BOOL isAlarmNotificationSkippable(UIConcreteLocalNotification *notificati
     }
 }
 
-// Helper function that will return the next skippable alarm notification from the given clock data
-// provider.  If no notification is found, return nil.
-static UIConcreteLocalNotification *nextSkippableAlarmNotification(SBClockDataProvider *clockDataProvider)
+// Helper function that will return the next skippable alarm notification.  If no notification is
+// found, return nil.
+static UIConcreteLocalNotification *nextSkippableAlarmNotification()
 {
     // create a comparator block to sort the array of notifications
     NSComparisonResult (^notificationComparator) (UIConcreteLocalNotification *, UIConcreteLocalNotification *) =
@@ -100,8 +101,23 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification(SBClockDataPr
         return [lhsNextFireDate compare:rhsNextFireDate];
     };
     
-    // take the scheduled notifications from the clock data provider and sort them by earliest date
-    NSArray *sortedNotifications = [[clockDataProvider _scheduledNotifications] sortedArrayUsingComparator:notificationComparator];
+    // grab the shared instance of the clock data provider
+    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    
+    // get the scheduled notifications from the SBClockDataProvider (iOS8) or the
+    // SBClockNotificationManager (iOS9)
+    NSArray *scheduledNotifications = nil;
+    if (SYSTEM_VERSION_IOS9) {
+        // grab the shared instance of the clock notification manager for the scheduled notifications
+        SBClockNotificationManager *clockNotificationManager = [%c(SBClockNotificationManager) sharedInstance];
+        scheduledNotifications = [clockNotificationManager scheduledLocalNotifications];
+    } else {
+        // get the scheduled notifications from the clock data provider
+        scheduledNotifications = [clockDataProvider _scheduledNotifications];
+    }
+    
+    // take the scheduled notifications and sort them by earliest date
+    NSArray *sortedNotifications = [scheduledNotifications sortedArrayUsingComparator:notificationComparator];
     
     // iterate through all of the notifications that are scheduled
     for (UIConcreteLocalNotification *notification in sortedNotifications) {
@@ -127,7 +143,7 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification(SBClockDataPr
 static void getSavedAlarmPreferences(Alarm *alarm)
 {
     // save the current alarm Id so we know which alarm we just changed
-    sJSCurrentAlarmId = alarm.alarmId;
+    sJSCurrentAlarmId = [JSCompatibilityHelper alarmIdForAlarm:alarm];
     
     // check if the alarm has skip enabled
     sJSSkipSwitchOn = [JSPrefsManager skipEnabledForAlarmId:sJSCurrentAlarmId];
@@ -153,6 +169,38 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     }
 }
 
+// helper function that will modify a snoozed notification's fire date with the snooze time in the
+// corresponding alarm preferences
+static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNotification *notification)
+{
+    // grab the alarm Id from the notification
+    NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
+    
+    // check to see if we have an updated snooze time for this alarm
+    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarmId];
+    if (alarmInfo) {
+        // grab the saved values
+        NSInteger hours = [[alarmInfo objectForKey:kJSSnoozeHourKey] integerValue];
+        NSInteger minutes = [[alarmInfo objectForKey:kJSSnoozeMinuteKey] integerValue];
+        NSInteger seconds = [[alarmInfo objectForKey:kJSSnoozeSecondKey] integerValue];
+        
+        // subtract the default snooze time from these values since they have already been added to
+        // the fire date
+        hours = hours - kJSDefaultSnoozeHour;
+        minutes = minutes - kJSDefaultSnoozeMinute;
+        seconds = seconds - kJSDefaultSnoozeSecond;
+        
+        // convert the entire value into seconds
+        NSTimeInterval timeInterval = hours * 3600 + minutes * 60 + seconds;
+        
+        // modify the fire date of the notification
+        notification.fireDate = [notification.fireDate dateByAddingTimeInterval:timeInterval];
+    }
+    
+    // return the modified notification
+    return notification;
+}
+
 // hook the view controller that allows the editing of alarms
 %hook EditAlarmViewController
 
@@ -160,7 +208,7 @@ static void getSavedAlarmPreferences(Alarm *alarm)
 - (void)viewWillAppear:(BOOL)animated
 {
     // grab the saved preferences for the given alarm
-    if (!sJSCurrentAlarmId || ![self.alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
+    if (!sJSCurrentAlarmId || ![[JSCompatibilityHelper alarmIdForAlarm:self.alarm] isEqualToString:sJSCurrentAlarmId]) {
         getSavedAlarmPreferences(self.alarm);
     }
     
@@ -341,34 +389,28 @@ static void getSavedAlarmPreferences(Alarm *alarm)
 // hook the SpringBoard process which handles local notifications
 %hook SBApplication
 
-// override to insert our custom snooze time if it was defined
+// iOS 8: override to insert our custom snooze time if it was defined
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
 {
-    // grab the alarm Id from the notification
-    NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
+    // modify the notification with the updated snooze time
+    notification = modifySnoozeNotification(notification);
     
-    // check to see if we have an updated snooze time for this alarm
-    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarmId];
-    if (alarmInfo) {
-        // grab the saved values
-        NSInteger hours = [[alarmInfo objectForKey:kJSSnoozeHourKey] integerValue];
-        NSInteger minutes = [[alarmInfo objectForKey:kJSSnoozeMinuteKey] integerValue];
-        NSInteger seconds = [[alarmInfo objectForKey:kJSSnoozeSecondKey] integerValue];
-        
-        // subtract the default snooze time from these values since they have already been added to
-        // the fire date
-        hours = hours - kJSDefaultSnoozeHour;
-        minutes = minutes - kJSDefaultSnoozeMinute;
-        seconds = seconds - kJSDefaultSnoozeSecond;
-        
-        // convert the entire value into seconds
-        NSTimeInterval timeInterval = hours * 3600 + minutes * 60 + seconds;
-        
-        // modify the fire date of the notification
-        notification.fireDate = [notification.fireDate dateByAddingTimeInterval:timeInterval];
-    }
+    // perform the original implementation with the modified notification
+    %orig(notification);
+}
+
+%end
+
+// hook the local notification client for the system
+%hook UNLocalNotificationClient
+
+// iOS9: invoked when the user snoozes a notification
+- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
+{
+    // modify the notification with the updated snooze time
+    notification = modifySnoozeNotification(notification);
     
-    // perform the original implementation
+    // perform the original implementation with the modified notification
     %orig(notification);
 }
 
@@ -384,7 +426,7 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     %orig;
 
     // delete the attributes for this given alarm
-    [JSPrefsManager deleteAlarmForAlarmId:alarm.alarmId];
+    [JSPrefsManager deleteAlarmForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alarm]];
 }
 
 // override to make changes when the alarm is set
@@ -393,11 +435,14 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     // perform the original implementation
     %orig;
     
+    // get the alarm Id for the alarm
+    NSString *alarmId = [JSCompatibilityHelper alarmIdForAlarm:alarm];
+    
     // if the alarm is no longer active and the skip activation has already been decided for this
     // alarm, disable the skip activation now
-    if ([JSPrefsManager skipActivatedStatusForAlarmId:alarm.alarmId] != kJSSkipActivatedStatusUnknown) {
+    if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] != kJSSkipActivatedStatusUnknown) {
         // save the alarm's skip activation state to our preferences
-        [JSPrefsManager setSkipActivatedStatusForAlarmId:alarm.alarmId
+        [JSPrefsManager setSkipActivatedStatusForAlarmId:alarmId
                                      skipActivatedStatus:kJSSkipActivatedStatusUnknown];
     }
 }
@@ -408,13 +453,16 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     // perform the original implementation
     %orig;
     
+    // get the alarm Id for the alarm
+    NSString *alarmId = [JSCompatibilityHelper alarmIdForAlarm:alarm];
+    
     // grab the saved preferences for the given alarm if we need to
-    if (!sJSCurrentAlarmId || ![alarm.alarmId isEqualToString:sJSCurrentAlarmId]) {
+    if (!sJSCurrentAlarmId || ![alarmId isEqualToString:sJSCurrentAlarmId]) {
         getSavedAlarmPreferences(alarm);
     }
     
     // save the alarm attributes to our preferences
-    [JSPrefsManager saveAlarmForAlarmId:alarm.alarmId
+    [JSPrefsManager saveAlarmForAlarmId:alarmId
                             snoozeHours:sJSSnoozeHours
                           snoozeMinutes:sJSSnoozeMinutes
                           snoozeSeconds:sJSSnoozeSeconds
@@ -440,7 +488,7 @@ static void getSavedAlarmPreferences(Alarm *alarm)
     SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
     
     // attempt to get the next skippable alarm notification from the data provider
-    UIConcreteLocalNotification *nextAlarmNotification = nextSkippableAlarmNotification(clockDataProvider);
+    UIConcreteLocalNotification *nextAlarmNotification = nextSkippableAlarmNotification();
     
     // if we found a valid alarm, check to see if we should ask to skip it
     if (nextAlarmNotification) {
@@ -495,7 +543,7 @@ static void getSavedAlarmPreferences(Alarm *alarm)
             [alarmManager handleNotificationFired:notification];
             
             // save the alarm's skip activation state to unknown for this alarm
-            [JSPrefsManager setSkipActivatedStatusForAlarmId:alarm.alarmId
+            [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alarm]
                                          skipActivatedStatus:kJSSkipActivatedStatusUnknown];
         } else {
             // if we did not activate skip for this alarm, perform the original implementation

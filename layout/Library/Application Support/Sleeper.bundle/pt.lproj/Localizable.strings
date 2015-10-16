@@ -6,10 +6,15 @@
 
 */
 
-// Portuguese (translation provided by highasakite14)
+// Portuguese (Brazil) (translation provided by mtlyoshi9)
 "SNOOZE_TIME" = "Tempo de soneca";
-"HOURS" = "hs";
+"HOURS" = "horas";
 "MINUTES" = "min";
 "SECONDS" = "seg";
-"RESET_DEFAULT" = "Restaurar padrões";
-"DEFAULT_SNOOZE_TIME" = "O tempo padrão da soneca é";
+"RESET_DEFAULT" = "Voltar ao padrão";
+"DEFAULT_SNOOZE_TIME" = "O tempo padrão de soneca é %@.";
+"SKIP" = "Pular";
+"SKIP_TIME" = "Tempo de adiamento";
+"SKIP_ALARM" = "Pular alarme";
+"SKIP_QUESTION" = "Você gostaria de pular \”%@\” que esta marcado para disparar as %@?";
+"SKIP_EXPLANATION" = "Escolhe um um período de tempo que você pode esperar antes que o alarme dispara.";

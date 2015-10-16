@@ -10,6 +10,7 @@
 #import "JSSkipAlarmAlertItem.h"
 #import "Sleeper/Sleeper/JSPrefsManager.h"
 #import "Sleeper/Sleeper/JSLocalizedStrings.h"
+#import "JSCompatibilityHelper.h"
 
 // the alarm object that is going to be alerted to the user
 static Alarm *alertAlarm;
@@ -19,6 +20,10 @@ static NSDate *alertFireDate;
 
 // keep a hold of the date formatter that will be used to display the time to the user
 static NSDateFormatter *alertDateFormatter;
+
+// ignore UIAlertView deprecations
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 %subclass JSSkipAlarmAlertItem : SBAlertItem
 
@@ -76,12 +81,14 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     }
     
     // save the alarm's skip activation state to our preferences
-    [JSPrefsManager setSkipActivatedStatusForAlarmId:alertAlarm.alarmId
+    [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
                                  skipActivatedStatus:activatedStatus];
     
     // dismiss the alert regardless of the selection
     [self dismiss];
 }
+
+#pragma clang diagnostic pop
 
 // do not allow the alert to be shown on the lock screen
 - (BOOL)shouldShowInLockScreen
