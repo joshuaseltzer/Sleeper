@@ -6,10 +6,15 @@
 
 */
 
-// Danish (translation provided by Rasmushp)
+// Danish (translation provided by Rasmushp and qlimax5000)
 "SNOOZE_TIME" = "Snooze interval";
 "HOURS" = "Timer";
 "MINUTES" = "Min.";
 "SECONDS" = "Sek.";
 "RESET_DEFAULT" = "Gendan standardindstillinger";
-"DEFAULT_SNOOZE_TIME" = "Standard snooze interval er";
+"DEFAULT_SNOOZE_TIME" = "Standard snooze interval er %@.";
+"SKIP" = "Spring Over";
+"SKIP_TIME" = "Spring Time Over";
+"SKIP_ALARM" = "Spring Alarm Over";
+"SKIP_QUESTION" = "Vil du springe \"%@\" over? Den er sat til kl. \"%@\"";
+"SKIP_EXPLANATION" = "Vælg hvor lang tid før en alarm ringer at du vil spørges om du vil springe den fra.";

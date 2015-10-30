@@ -11,10 +11,10 @@
 "HOURS" = "horas";
 "MINUTES" = "min";
 "SECONDS" = "seg";
-"RESET_DEFAULT" = "restaurar valores padrão";
+"RESET_DEFAULT" = "Restaurar Valor Padrão";
 "DEFAULT_SNOOZE_TIME" = "O tempo padrão de snooze é %@.";
 "SKIP" = "Ignorar";
-"SKIP_TIME" = "Tempo a ignorar*";
-"SKIP_ALARM" = "Ignorar alarme";
-"SKIP_QUESTION" = "Gostaria de ignorar \”%@\” que está marcado para as %@?";
-"SKIP_EXPLANATION" = "Escolha o/um* período de tempo que gostaria de poder ignorar o alarme antes de o mesmo tocar.";
+"SKIP_TIME" = "Tempo para Ignorar";
+"SKIP_ALARM" = "Ignorar Alarme";
+"SKIP_QUESTION" = "Gostaria de ignorar o alarme \"%@\" que está marcado para as %@?";
+"SKIP_EXPLANATION" = "Escolha o período de tempo para  poder ignorar o alarme antes de o mesmo tocar.";

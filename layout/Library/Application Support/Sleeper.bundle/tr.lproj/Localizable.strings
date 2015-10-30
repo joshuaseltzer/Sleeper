@@ -6,10 +6,15 @@
 
 */
 
-// Turkish (translation provided by Reinauld)
+// Turkish (translation provided by keremy)
 "SNOOZE_TIME" = "Erteleme Süresi";
-"HOURS" = "Saat";
-"MINUTES" = "Dk";
-"SECONDS" = "Saniye";
-"RESET_DEFAULT" = "Sıfırlama";
-"DEFAULT_SNOOZE_TIME" = "Standart sıfırlama saati";
+"HOURS" = "saat";
+"MINUTES" = "dakika";
+"SECONDS" = "saniye";
+"RESET_DEFAULT" = "Varsayılana Sıfırla";
+"DEFAULT_SNOOZE_TIME" = "Varsayılan erteleme saati %@.";
+"SKIP" = "Atla";
+"SKIP_TIME" = "Atlama süresi";
+"SKIP_ALARM" = "Alarmı atla";
+"SKIP_QUESTION" = "%@ saatinde çalacak \"%@\"ı atlamak ister misiniz?";
+"SKIP_EXPLANATION" = "Alarm çalmaya başlamadan alarmı atlayabileceğiniz bir süre seçin";
