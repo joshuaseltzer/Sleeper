@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Atlama süresi";
 "SKIP_ALARM" = "Alarmı atla";
 "SKIP_QUESTION" = "%@ saatinde çalacak \"%@\"ı atlamak ister misiniz?";
-"SKIP_EXPLANATION" = "Alarm çalmaya başlamadan alarmı atlayabileceğiniz bir süre seçin";
+"SKIP_EXPLANATION" = "Alarm çalmaya başlamadan alarmı atlayabileceğiniz bir süre seçin.";

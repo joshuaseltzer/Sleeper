@@ -16,5 +16,5 @@
 "SKIP" = "Pular";
 "SKIP_TIME" = "Tempo de adiamento";
 "SKIP_ALARM" = "Pular alarme";
-"SKIP_QUESTION" = "Você gostaria de pular \”%@\” que esta marcado para disparar as %@?";
+"SKIP_QUESTION" = "Você gostaria de pular \"%@\" que esta marcado para disparar as %@?";
 "SKIP_EXPLANATION" = "Escolhe um um período de tempo que você pode esperar antes que o alarme dispara.";

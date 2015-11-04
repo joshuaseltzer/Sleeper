@@ -16,5 +16,5 @@
 "SKIP" = "Bỏ qua";
 "SKIP_TIME" = "Bỏ qua thời gian";
 "SKIP_ALARM" = "Bỏ qua báo thức";
-"SKIP_QUESTION" = "Bạn có muốn bỏ qua \”%@\", nó sẽ được tắt vào lúc %@";
+"SKIP_QUESTION" = "Bạn có muốn bỏ qua \"%@\", nó sẽ được tắt vào lúc %@";
 "SKIP_EXPLANATION" = "Chọn khoảng thời gian mà bạn muốn được báo trước khi nó hú.";

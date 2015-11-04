@@ -16,5 +16,5 @@
 "SKIP" = "Ometre";
 "SKIP_TIME" = "Temps d’omissió";
 "SKIP_ALARM" = "Alarma d’omissió";
-"SKIP_QUESTION" = "T’agradaria saltar-te \”%@\”, que està programat per les %@?";
+"SKIP_QUESTION" = "T’agradaria saltar-te \"%@\", que està programat per les %@?";
 "SKIP_EXPLANATION" = "Tria a quant de temps se’t demanarà per ometre l’alarma abans de que soni.";

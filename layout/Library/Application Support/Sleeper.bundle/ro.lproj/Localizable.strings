@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Sari peste Timp";
 "SKIP_ALARM" = "Sari peste Alarmă";
 "SKIP_QUESTION" = "Ai vrea să sari peste \"%@\" care este programată să fie declanșată la %@?";
-"SKIP_EXPLANATION" = "Alege cu cât timp înainte să sune alarma dorești să fi anunțat pentru a sări peste ea";
+"SKIP_EXPLANATION" = "Alege cu cât timp înainte să sune alarma dorești să fi anunțat pentru a sări peste ea.";
