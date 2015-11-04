@@ -6,10 +6,15 @@
 
 */
 
-// Norwegian (translation provided by BaTmAn9785)
+// Norwegian (translation provided by BaTmAn9785 and switchpwn)
 "SNOOZE_TIME" = "Slumretid";
-"HOURS" = "t";
+"HOURS" = "timer";
 "MINUTES" = "min";
 "SECONDS" = "sek";
-"RESET_DEFAULT" = "Nullstill";
-"DEFAULT_SNOOZE_TIME" = "Standard slumretid er";
+"RESET_DEFAULT" = "Nullstill til standard";
+"DEFAULT_SNOOZE_TIME" = "Standard slumretid er %@.";
+"SKIP" = "Hopp over";
+"SKIP_TIME" = "Hopp over tid";
+"SKIP_ALARM" = "Hopp over alarm";
+"SKIP_QUESTION" = "Vil du hoppe over spørsmålet \"%@\" som er planlagt til å kjøre %@?";
+"SKIP_EXPLANATION" = "Velg tid som du vil bli spørt om å hoppe over før den kjører.";
