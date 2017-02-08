@@ -58,20 +58,4 @@
     return color;
 }
 
-// returns the cell selection background color for the picker tables
-+ (UIColor *)pickerViewCellBackgroundColor
-{
-    // the color to return
-    UIColor *color = nil;
-
-    // check the version of iOS that the device is running to determine which color to pick
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
-        color = [UIColor whiteColor];
-    } else {
-        color = [UIColor blackColor];
-    }
-    
-    return color;
-}
-
 @end

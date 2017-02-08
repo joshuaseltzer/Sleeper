@@ -256,7 +256,6 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 {
     // grab the original cell that is defined for this table
     MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
-    NSLog(@"*** SLEEPER ***");
     
     // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
     // cell so that it is not reused on the wrong cell
@@ -271,6 +270,17 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
         // customize the cell
         cell.textLabel.text = LZ_SNOOZE_TIME;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        /*const CGFloat* components = CGColorGetComponents(cell.selectedBackgroundView.backgroundColor.CGColor);
+        NSString *colors = [NSString stringWithFormat:@"Red: %f\nGreen: %f\nBlue: %f\nAlpha: %f", components[0], components[1], components[2], CGColorGetAlpha(cell.selectedBackgroundView.backgroundColor.CGColor)];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"test"
+                                                                   message:colors
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *licenseAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
+                                                            style:UIAlertActionStyleCancel
+                                                          handler:nil];
+        [alert addAction:licenseAction];
+        [self presentViewController:alert animated:YES completion:nil];*/
         
         // format the cell of the text with the snooze time values
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSSnoozeHours,

@@ -55,15 +55,22 @@
     // customize the cell
     cell.textLabel.text = LZ_RESET_DEFAULT;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    UIView *backgroundView = [[UIView alloc] init];
-    backgroundView.backgroundColor = [UIColor lightGrayColor];
-    cell.selectedBackgroundView = backgroundView;
+
+    // on newer versions of iOS, we need to set the background view for the cell
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+        UIView *backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor colorWithRed:52.0 / 255.0
+                                                         green:52.0 / 255.0
+                                                          blue:52.0 / 255.0
+                                                         alpha:1.0];
+        cell.selectedBackgroundView = backgroundView;
+    }
     
     // set the color of the button to the red, destructive color as defined by Apple in other cells
-    cell.textLabel.textColor = [UIColor colorWithRed:1.0f
-                                               green:0.231373f
-                                                blue:0.188235f
-                                               alpha:1.0f];
+    cell.textLabel.textColor = [UIColor colorWithRed:1.0
+                                               green:0.231373
+                                                blue:0.188235
+                                               alpha:1.0];
     
     return cell;
 }

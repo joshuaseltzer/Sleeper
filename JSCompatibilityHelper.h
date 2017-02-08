@@ -20,7 +20,4 @@
 // returns the color of the labels in the picker view
 + (UIColor *)pickerViewLabelColor;
 
-// returns the cell selection background color for the picker tables
-+ (UIColor *)pickerViewCellBackgroundColor;
-
 @end
