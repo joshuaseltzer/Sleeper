@@ -9,6 +9,7 @@
 #import "JSSnoozeTimeViewController.h"
 #import "JSPrefsManager.h"
 #import "JSLocalizedStrings.h"
+#import "JSCompatibilityHelper.h"
 
 @implementation JSSnoozeTimeViewController
 
@@ -51,9 +52,12 @@
                                       reuseIdentifier:optionTableButtonCellIdentifier];
     }
     
-    // customize the cell text and alignment
+    // customize the cell
     cell.textLabel.text = LZ_RESET_DEFAULT;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    UIView *backgroundView = [[UIView alloc] init];
+    backgroundView.backgroundColor = [UIColor lightGrayColor];
+    cell.selectedBackgroundView = backgroundView;
     
     // set the color of the button to the red, destructive color as defined by Apple in other cells
     cell.textLabel.textColor = [UIColor colorWithRed:1.0f

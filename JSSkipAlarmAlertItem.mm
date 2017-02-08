@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "JSSkipAlarmAlertItem.h"
-#import "Sleeper/Sleeper/JSPrefsManager.h"
-#import "Sleeper/Sleeper/JSLocalizedStrings.h"
+#import "JSPrefsManager.h"
+#import "JSLocalizedStrings.h"
 #import "JSCompatibilityHelper.h"
 
 // the alarm object that is going to be alerted to the user

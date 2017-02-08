@@ -6,8 +6,8 @@
 //
 //
 
-#import "Sleeper/Sleeper/JSSnoozeTimeViewController.h"
-#import "Sleeper/Sleeper/JSSkipTimeViewController.h"
+#import "JSSnoozeTimeViewController.h"
+#import "JSSkipTimeViewController.h"
 
 // the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification

@@ -8,13 +8,19 @@
 
 #import "AppleInterfaces.h"
 
-// macro to determine which system software this device is running
-#define SYSTEM_VERSION_IOS9     [[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0
-
 // interface for version compatibility functions throughout the application
 @interface JSCompatibilityHelper : NSObject
 
 // returns a valid alarm Id for a given alarm
 + (NSString *)alarmIdForAlarm:(Alarm *)alarm;
+
+// returns the picker view's background color, which will depend on the iOS version
++ (UIColor *)pickerViewBackgroundColor;
+
+// returns the color of the labels in the picker view
++ (UIColor *)pickerViewLabelColor;
+
+// returns the cell selection background color for the picker tables
++ (UIColor *)pickerViewCellBackgroundColor;
 
 @end

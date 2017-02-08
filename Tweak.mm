@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Sleeper/Sleeper/JSPrefsManager.h"
-#import "Sleeper/Sleeper/JSLocalizedStrings.h"
+#import "JSPrefsManager.h"
+#import "JSLocalizedStrings.h"
 #import "AppleInterfaces.h"
 #import "JSSkipAlarmAlertItem.h"
 #import "JSCompatibilityHelper.h"
@@ -107,7 +107,7 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification()
     // get the scheduled notifications from the SBClockDataProvider (iOS8) or the
     // SBClockNotificationManager (iOS9)
     NSArray *scheduledNotifications = nil;
-    if (SYSTEM_VERSION_IOS9) {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
         // grab the shared instance of the clock notification manager for the scheduled notifications
         SBClockNotificationManager *clockNotificationManager = [%c(SBClockNotificationManager) sharedInstance];
         scheduledNotifications = [clockNotificationManager scheduledLocalNotifications];
@@ -256,6 +256,7 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 {
     // grab the original cell that is defined for this table
     MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
+    NSLog(@"*** SLEEPER ***");
     
     // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
     // cell so that it is not reused on the wrong cell

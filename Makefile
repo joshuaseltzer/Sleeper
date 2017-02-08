@@ -3,7 +3,7 @@ TARGET=iphone:clang:10.1:8.0
 include theos/makefiles/common.mk
 
 TWEAK_NAME = Sleeper
-Sleeper_FILES = Tweak.xm JSSkipAlarmAlertItem.xm JSCompatibilityHelper.m Sleeper/Sleeper/JSPickerTableViewController.m Sleeper/Sleeper/JSSnoozeTimeViewController.m Sleeper/Sleeper/JSPrefsManager.m Sleeper/Sleeper/JSSkipTimeViewController.m
+Sleeper_FILES = Tweak.xm JSSkipAlarmAlertItem.xm JSCompatibilityHelper.m JSPickerTableViewController.m JSSnoozeTimeViewController.m JSPrefsManager.m JSSkipTimeViewController.m
 Sleeper_FRAMEWORKS = UIKit
 Sleeper_PRIVATE_FRAMEWORKS = MobileTimer
 ADDITIONAL_OBJCFLAGS = -fobjc-arc

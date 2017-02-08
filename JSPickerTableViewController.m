@@ -8,6 +8,7 @@
 
 #import "JSPickerTableViewController.h"
 #import "JSLocalizedStrings.h"
+#import "JSCompatibilityHelper.h"
 
 // define constants for the view dictionary when creating constraints
 static NSString *const kJSTimePickerViewKey =       @"timePickerView";
@@ -347,7 +348,7 @@ static NSInteger sJSInitialSeconds;
     // programatically create the time picker
     UIPickerView *timePicker = [[UIPickerView alloc] init];
     timePicker.translatesAutoresizingMaskIntoConstraints = NO;
-    timePicker.backgroundColor = [UIColor whiteColor];
+    timePicker.backgroundColor = [JSCompatibilityHelper pickerViewBackgroundColor];
     timePicker.delegate = delegate;
     timePicker.dataSource = delegate;
     
@@ -388,6 +389,7 @@ static NSInteger sJSInitialSeconds;
     self.hourLabel.adjustsFontSizeToFitWidth = YES;
     self.hourLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.hourLabel.text = LZ_HOURS;
+    self.hourLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
@@ -397,6 +399,7 @@ static NSInteger sJSInitialSeconds;
     self.minuteLabel.adjustsFontSizeToFitWidth = YES;
     self.minuteLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.minuteLabel.text = LZ_MINUTES;
+    self.minuteLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
@@ -406,6 +409,7 @@ static NSInteger sJSInitialSeconds;
     self.secondLabel.adjustsFontSizeToFitWidth = YES;
     self.secondLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.secondLabel.text = LZ_SECONDS;
+    self.secondLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.secondLabel];
     
     return labelContainerView;
@@ -466,13 +470,6 @@ static NSInteger sJSInitialSeconds;
     }
 }
 
-// returns the title of a particular row for a particular component in the picker view
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    // the title returned is simply the number of the row
-    return [NSString stringWithFormat:@"%ld", (long)row];
-}
-
 // handled when a component's row changes
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
@@ -483,6 +480,16 @@ static NSInteger sJSInitialSeconds;
         // move the last selected component to the first position
         [pickerView selectRow:1 inComponent:component animated:YES];
     }
+}
+
+// handled for setting the text of the picker view
+- (NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    // update the text to include the correct color and the row text
+    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)row]
+                                                                     attributes:@{NSForegroundColorAttributeName:[JSCompatibilityHelper pickerViewLabelColor]}];
+
+    return attrString;
 }
 
 @end
