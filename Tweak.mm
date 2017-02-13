@@ -201,6 +201,9 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
     return notification;
 }
 
+// hooks that are common to all iOS versions
+%group iOS
+
 // hook the view controller that allows the editing of alarms
 %hook EditAlarmViewController
 
@@ -397,36 +400,6 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 
 %end
 
-// hook the SpringBoard process which handles local notifications
-%hook SBApplication
-
-// iOS 8: override to insert our custom snooze time if it was defined
-- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
-{
-    // modify the notification with the updated snooze time
-    notification = modifySnoozeNotification(notification);
-    
-    // perform the original implementation with the modified notification
-    %orig(notification);
-}
-
-%end
-
-// hook the local notification client for the system
-%hook UNLocalNotificationClient
-
-// iOS9: invoked when the user snoozes a notification
-- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
-{
-    // modify the notification with the updated snooze time
-    notification = modifySnoozeNotification(notification);
-    
-    // perform the original implementation with the modified notification
-    %orig(notification);
-}
-
-%end
-
 // hook into the alarm manager so that we can remove any saved snooze times when an alarm is deleted
 %hook AlarmManager
 
@@ -567,3 +540,59 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 }
 
 %end
+
+%end // %group iOS
+
+// hooks for iOS8
+%group iOS8
+
+// hook the SpringBoard process which handles local notifications
+%hook SBApplication
+
+// iOS 8: override to insert our custom snooze time if it was defined
+- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
+{
+    // modify the notification with the updated snooze time
+    notification = modifySnoozeNotification(notification);
+    
+    // perform the original implementation with the modified notification
+    %orig(notification);
+}
+
+%end
+
+%end // %group iOS8
+
+// hooks for iOS9
+%group iOS9
+
+// hook the local notification client for the system
+%hook UNLocalNotificationClient
+
+// iOS9: invoked when the user snoozes a notification
+- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
+{
+    // modify the notification with the updated snooze time
+    notification = modifySnoozeNotification(notification);
+    
+    // perform the original implementation with the modified notification
+    %orig(notification);
+}
+
+%end
+
+%end // %group iOS9
+
+// constructor which will decide which hooks to include depending which system software the device
+// is running
+%ctor {
+    // initialize the shared group
+    %init(iOS);
+    
+    // check the specific version
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
+        %init(iOS9);
+    } else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        %init(iOS8);
+    }
+}
