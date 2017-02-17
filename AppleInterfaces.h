@@ -9,7 +9,24 @@
 #import "JSSnoozeTimeViewController.h"
 #import "JSSkipTimeViewController.h"
 
-// the notification that gets fired when the user decides to snooze an alarm
+// the notification record object that gets fired when the user snoozes the alarm (iOS10)
+@interface UNSNotificationRecord : NSObject
+
+// user information attached to this notification record
+@property (nonatomic, copy) NSDictionary *userInfo;
+
+// the trigger date for the notification
+@property (nonatomic, copy) NSDate *triggerDate;
+
+// sets the trigger date for this notification
+- (void)setTriggerDate:(NSDate *)date;
+
+// returns whether or not this notification record is from a snooze action
+- (BOOL)isFromSnooze;
+
+@end
+
+// the notification that gets fired when the user decides to snooze an alarm (iOS8/iOS9)
 @interface UIConcreteLocalNotification : UILocalNotification
 
 // returns a date for a given notification that will happen after a date in a given time zone
@@ -94,28 +111,19 @@ JSPickerSelectionDelegate>
 
 @end
 
-// ignore UIAlertView deprecations
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
 // a system alert item that we will subclass to create our own alert with
-@interface SBAlertItem : NSObject <UIAlertViewDelegate>
+@interface SBAlertItem : NSObject
 
-// the alert view object that corresponds to this alert item
-- (UIAlertView *)alertSheet;
+// the alert controlelr object that corresponds to this alert item (>iOS10)
+- (UIAlertController *)alertController;
 
-// allows us to set up the alert view
+// allows us to set up the alert view or alert controller
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
-
-// delegate method that is invoked when a button is clicked from the alert
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(int)index;
 
 // dismisses the alert item
 - (void)dismiss;
 
 @end
-
-#pragma clang diagnostic pop
 
 // the controller responsible for activating and displaying system alert items
 @interface SBAlertItemsController : UIViewController

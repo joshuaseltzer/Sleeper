@@ -6,7 +6,6 @@
 //
 //
 
-#import <UIKit/UIKit.h>
 #import "JSSkipAlarmAlertItem.h"
 #import "JSPrefsManager.h"
 #import "JSLocalizedStrings.h"
@@ -21,17 +20,13 @@ static NSDate *alertFireDate;
 // keep a hold of the date formatter that will be used to display the time to the user
 static NSDateFormatter *alertDateFormatter;
 
-// ignore UIAlertView deprecations
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-%subclass JSSkipAlarmAlertItem : SBAlertItem
-
 // enum to define the different options a user can select from the alert sheet
 typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     kJSSkipAlarmAlertButtonIndexYes,
     kJSSkipAlarmAlertButtonIndexNo
 } JSSkipAlarmAlertButtonIndex;
+
+%subclass JSSkipAlarmAlertItem : SBAlertItem
 
 // create a new alert item with a given alarm and fire date
 %new
@@ -56,42 +51,53 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
 // configure the alert with the alarm properties
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode
 {
-    // perform the original implementation to configure this alert
     %orig;
+
+    // customize the alert controller
+    self.alertController.title = LZ_SKIP_ALARM;
+    self.alertController.message = LZ_SKIP_QUESTION(alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]);
+
+    // add yes and no actions to the alert controller
+    UIAlertAction *yesAction = [UIAlertAction actionWithTitle:LZ_YES
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                         // save the alarm's skip activation state to our preferences
+                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
+                                                                                      skipActivatedStatus:kJSSkipActivatedStatusActivated];
+                                                         
+                                                         // deactivate the alert
+                                                         [self dismiss];
+                                                     }];
+    UIAlertAction *noAction = [UIAlertAction actionWithTitle:LZ_NO
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                         // save the alarm's skip activation state to our preferences
+                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
+                                                                                      skipActivatedStatus:kJSSkipActivatedStatusDisabled];
+                                                         
+                                                         // deactivate the alert
+                                                         [self dismiss];
+                                                     }];
     
-    // configure the alert sheet
-    self.alertSheet.delegate = self;
-    self.alertSheet.title = LZ_SKIP_ALARM;
-    self.alertSheet.message = LZ_SKIP_QUESTION(alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]);
-    
-    // add alert sheet buttons
-    [self.alertSheet addButtonWithTitle:LZ_YES];
-    [self.alertSheet addButtonWithTitle:LZ_NO];
+    // add the actions to the alert controller
+    [self.alertController addAction:yesAction];
+    [self.alertController addAction:noAction];
 }
 
-// invoked when a button of the alert is pressed
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)index
+// do no allow the alert to be shown during an emergency call
+- (BOOL)shouldShowInEmergencyCall
 {
-    // determine the activation status depending on which button was pressed
-    JSPrefsSkipActivatedStatus activatedStatus = kJSSkipActivatedStatusUnknown;
-    if (index == kJSSkipAlarmAlertButtonIndexYes) {
-        activatedStatus = kJSSkipActivatedStatusActivated;
-    } else if (index == kJSSkipAlarmAlertButtonIndexNo) {
-        activatedStatus = kJSSkipActivatedStatusDisabled;
-    }
-    
-    // save the alarm's skip activation state to our preferences
-    [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
-                                 skipActivatedStatus:activatedStatus];
-    
-    // dismiss the alert regardless of the selection
-    [self dismiss];
+    return NO;
 }
-
-#pragma clang diagnostic pop
 
 // do not allow the alert to be shown on the lock screen
 - (BOOL)shouldShowInLockScreen
+{
+    return NO;
+}
+
+// do not allow the alert to be shown in Apple CarPlay
+- (BOOL)allowInCar
 {
     return NO;
 }

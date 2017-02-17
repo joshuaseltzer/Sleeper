@@ -6,7 +6,7 @@
 //
 //
 
-#import <UIKit/UIKit.h>
+@import UserNotifications;
 #import "JSPrefsManager.h"
 #import "JSLocalizedStrings.h"
 #import "AppleInterfaces.h"
@@ -44,7 +44,7 @@ static NSInteger sJSSkipHours;
 static NSInteger sJSSkipMinutes;
 static NSInteger sJSSkipSeconds;
 
-// helper function that will investigate an alarm notification and alarm Id to see if it is skippable
+// helper function that will investigate an alarm notification and alarm Id to see if it is skippable (iOS8/iOS9)
 static BOOL isAlarmNotificationSkippable(UIConcreteLocalNotification *notification, NSString *alarmId)
 {
     // grab the attributes for the alarm
@@ -83,8 +83,46 @@ static BOOL isAlarmNotificationSkippable(UIConcreteLocalNotification *notificati
     }
 }
 
-// Helper function that will return the next skippable alarm notification.  If no notification is
-// found, return nil.
+// helper function that will investigate an alarm notification request and alarm Id to see if it is skippable (iOS10)
+static BOOL isAlarmNotificationRequestSkippable(UNNotificationRequest *notificationRequest, NSString *alarmId)
+{
+    // grab the attributes for the alarm
+    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarmId];
+    
+    // check to see if the skip functionality has been enabled for the alarm
+    if (alarmInfo && [JSPrefsManager skipEnabledForAlarmId:alarmId] &&
+        [JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusUnknown) {
+        // grab the skip attributes for the alarm
+        NSInteger skipHours = [[alarmInfo objectForKey:kJSSkipHourKey] integerValue];
+        NSInteger skipMinutes = [[alarmInfo objectForKey:kJSSkipMinuteKey] integerValue];
+        NSInteger skipSeconds = [[alarmInfo objectForKey:kJSSkipSecondKey] integerValue];
+        
+        // create a date components object with the user's selected skip time to see if we are within
+        // the threshold to ask the user to skip the alarm
+        NSDateComponents *components= [[NSDateComponents alloc] init];
+        [components setHour:skipHours];
+        [components setMinute:skipMinutes];
+        [components setSecond:skipSeconds];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        // create a date that is the amount of time ahead of the current date
+        NSDate *thresholdDate = [calendar dateByAddingComponents:components
+                                                          toDate:[NSDate date]
+                                                         options:0];
+        
+        // get the fire date of the alarm we are checking
+        NSDate *nextTriggerDate = [((UNTimeIntervalNotificationTrigger *)notificationRequest.trigger) nextTriggerDate];
+        
+        // compare the dates to see if this notification is skippable
+        return [nextTriggerDate compare:thresholdDate] == NSOrderedAscending;
+    } else {
+        // skip is not even enabled, so we know it is not skippable
+        return NO;
+    }
+}
+
+// Helper function that will return the next skippable alarm notification (iOS8/iOS9).
+// If no notification is found, return nil.
 static UIConcreteLocalNotification *nextSkippableAlarmNotification()
 {
     // create a comparator block to sort the array of notifications
@@ -128,6 +166,7 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification()
             NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
             
             // check to see if this notification is skippable
+            isAlarmNotificationRequestSkippable(nil, nil);
             if (isAlarmNotificationSkippable(notification, alarmId)) {
                 // since the array is sorted we know that this is the earliest skippable notification
                 return notification;
@@ -170,8 +209,8 @@ static void getSavedAlarmPreferences(Alarm *alarm)
 }
 
 // helper function that will modify a snoozed notification's fire date with the snooze time in the
-// corresponding alarm preferences
-static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNotification *notification)
+// corresponding alarm preferences (iOS8/iOS9)
+static UIConcreteLocalNotification *modifySnoozeNotificationForLocalNotification(UIConcreteLocalNotification *notification)
 {
     // grab the alarm Id from the notification
     NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
@@ -195,6 +234,38 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
         
         // modify the fire date of the notification
         notification.fireDate = [notification.fireDate dateByAddingTimeInterval:timeInterval];
+    }
+    
+    // return the modified notification
+    return notification;
+}
+
+// helper function that will modify a snoozed notification's fire date with the snooze time in the
+// corresponding alarm preferences (iOS10)
+static UNSNotificationRecord *modifySnoozeNotificationForNotificationRecord(UNSNotificationRecord *notification)
+{
+    // grab the alarm Id from the notification
+    NSString *alarmId = [notification.userInfo objectForKey:kJSAlarmIdKey];
+
+    // check to see if we have an updated snooze time for this alarm
+    NSMutableDictionary *alarmInfo = [JSPrefsManager alarmInfoForAlarmId:alarmId];
+    if (alarmInfo) {
+        // grab the saved values
+        NSInteger hours = [[alarmInfo objectForKey:kJSSnoozeHourKey] integerValue];
+        NSInteger minutes = [[alarmInfo objectForKey:kJSSnoozeMinuteKey] integerValue];
+        NSInteger seconds = [[alarmInfo objectForKey:kJSSnoozeSecondKey] integerValue];
+        
+        // subtract the default snooze time from these values since they have already been added to
+        // the fire date
+        hours = hours - kJSDefaultSnoozeHour;
+        minutes = minutes - kJSDefaultSnoozeMinute;
+        seconds = seconds - kJSDefaultSnoozeSecond;
+        
+        // convert the entire value into seconds
+        NSTimeInterval timeInterval = hours * 3600 + minutes * 60 + seconds;
+        
+        // modify the trigger date of the notification
+        [notification setTriggerDate:[notification.triggerDate dateByAddingTimeInterval:timeInterval]];
     }
     
     // return the modified notification
@@ -553,7 +624,7 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
 {
     // modify the notification with the updated snooze time
-    notification = modifySnoozeNotification(notification);
+    notification = modifySnoozeNotificationForLocalNotification(notification);
     
     // perform the original implementation with the modified notification
     %orig(notification);
@@ -573,7 +644,7 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
 {
     // modify the notification with the updated snooze time
-    notification = modifySnoozeNotification(notification);
+    notification = modifySnoozeNotificationForLocalNotification(notification);
     
     // perform the original implementation with the modified notification
     %orig(notification);
@@ -583,6 +654,33 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
 
 %end // %group iOS9
 
+// hook for iOS10
+%group iOS10
+
+// hook the notification scheduler for the system
+%hook UNSNotificationSchedulingService
+
+- (void)addPendingNotificationRecords:(NSArray *)notificationRecords forBundleIdentifier:(NSString *)bundleId withCompletionHandler:(id)completionHandler
+{
+    // check to see if the notification is for the timer SBApplication
+    if ([bundleId isEqualToString:@"com.apple.mobiletimer"]) {
+        // iterate through the notification records
+        for (UNSNotificationRecord __strong *notification in notificationRecords) {
+            // check to see if the notification is a snooze notification
+            if ([notification isFromSnooze]) {
+                // modify the snooze notifications with the updated snooze times
+                notification = modifySnoozeNotificationForNotificationRecord(notification);
+            }
+        }
+    }
+
+    %orig;
+}
+
+%end
+
+%end // %group iOS10
+
 // constructor which will decide which hooks to include depending which system software the device
 // is running
 %ctor {
@@ -590,7 +688,9 @@ static UIConcreteLocalNotification *modifySnoozeNotification(UIConcreteLocalNoti
     %init(iOS);
     
     // check the specific version
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+        %init(iOS10);
+    } else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
         %init(iOS9);
     } else if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         %init(iOS8);

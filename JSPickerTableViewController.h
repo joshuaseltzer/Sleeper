@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Joshua Seltzer. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 // forward delcare the view controller class so that we can define it in the delegate
 @class JSPickerTableViewController;
 
