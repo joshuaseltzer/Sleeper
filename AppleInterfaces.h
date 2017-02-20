@@ -6,6 +6,7 @@
 //
 //
 
+@import UserNotifications;
 #import "JSSnoozeTimeViewController.h"
 #import "JSSkipTimeViewController.h"
 
@@ -132,7 +133,7 @@ JSPickerSelectionDelegate>
 + (id)sharedInstance;
 
 // activates (i.e. displays) an alert item to the user
-- (void)activateAlertItem:(SBAlertItem *)alertItem;
+- (void)activateAlertItem:(SBAlertItem *)alertItem animated:(BOOL)animated;
 
 @end
 
@@ -145,25 +146,37 @@ JSPickerSelectionDelegate>
 // iOS8: return all scheduled notifications that are held by the clock data provider
 - (NSArray *)_scheduledNotifications;
 
-// returns an alarm Id for a given notifications
+// iOS8/iOS9: returns an alarm Id for a given notification
 - (NSString *)_alarmIDFromNotification:(UIConcreteLocalNotification *)notification;
 
-// lets us know whether or not a given notification is an alarm notification
+// iOS10: returns an alarm Id for a given notification request
+- (NSString *)_alarmIDFromNotificationRequest:(UNNotificationRequest *)notificationRequest;
+
+// iOS8/iOS9: lets us know whether or not a given notification is an alarm notification
 - (BOOL)_isAlarmNotification:(UIConcreteLocalNotification *)notification;
 
-// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS10: lets us kow whether or not a given notification request is an alarm notification
+- (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
+
+// iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
+
+// iOS10: invoked when an alarm alert (i.e. bulletin) is about to be displayed
+- (void)_publishBulletinForNotification:(id)notification;
 
 @end
 
-// iOS9: manages the notifications for clocks and alarms
+// iOS9/iOS10: manages the notifications for clocks and alarms
 @interface SBClockNotificationManager : NSObject
 
 // the shared instance of the notification manager
 + (id)sharedInstance;
 
-// returns the array of scheduled local notifications
+// returns the array of scheduled local notifications (iOS8/iOS9)
 - (NSArray *)scheduledLocalNotifications;
+
+// returns pending notification request objects in the completion handler (iOS10)
+- (void)getPendingNotificationRequestsWithCompletionHandler:(void (^)(NSArray<UNNotificationRequest *> *requests))completionHandler;
 
 @end
 
@@ -182,3 +195,38 @@ JSPickerSelectionDelegate>
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
 @end
+
+@interface UNLegacyNotificationTrigger : UNNotificationTrigger
+
+- (id)nextTriggerDateAfterDate:(id)arg1 withRequestedDate:(id)arg2;
+
+- (id)_nextTriggerDateAfterDate:(id)arg1 withRequestedDate:(id)arg2 defaultTimeZone:(id)arg3;
+
+- (id)timeZone;
+
+@end
+
+@interface UNSNotificationSchedulingService : NSObject
+
+- (void)getPendingNotificationRecordsForBundleIdentifier:(id)arg1 withCompletionHandler:(id /* block */)arg2;
+- (id)_queue_pendingNotificationRecordsForBundleIdentifier:(id)arg1;
+- (void)getUndeliveredNotificationRecordsForBundleIdentifier:(id)arg1 withCompletionHandler:(id /* block */)arg2;
+
+@end
+
+@interface UNSUserNotificationServer : NSObject {
+    UNSNotificationSchedulingService * _notificationSchedulingService;
+}
+
++ (id)sharedInstance;
+
+@end
+
+@interface ClockManager : NSObject {
+    NSMutableArray * _scheduledLocalNotifications;
+
+}
+
++ (id)sharedManager;
+
+@end;

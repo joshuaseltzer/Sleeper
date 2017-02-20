@@ -12,13 +12,15 @@
 #import "JSCompatibilityHelper.h"
 
 // the alarm object that is going to be alerted to the user
-static Alarm *alertAlarm;
+static Alarm *sJSAlertAlarm;
 
 // the fire date for the alert that is being displayed
-static NSDate *alertFireDate;
+static NSDate *sJSAlertFireDate;
 
 // keep a hold of the date formatter that will be used to display the time to the user
-static NSDateFormatter *alertDateFormatter;
+static NSDateFormatter *sJSAlertDateFormatter;
+
+static NSString *sJSText;
 
 // enum to define the different options a user can select from the alert sheet
 typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
@@ -35,15 +37,24 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     self = [self init];
     if (self) {
         // set the alarm and date that we will present to the user
-        alertAlarm = alarm;
-        alertFireDate = nextFireDate;
+        sJSAlertAlarm = alarm;
+        sJSAlertFireDate = nextFireDate;
         
         // create the date formatter object once since date formatters are expensive
         static dispatch_once_t once;
         dispatch_once(&once, ^{
-            alertDateFormatter = [[NSDateFormatter alloc] init];
-            alertDateFormatter.dateFormat = @"h:mm a";
+            sJSAlertDateFormatter = [[NSDateFormatter alloc] init];
+            sJSAlertDateFormatter.dateFormat = @"h:mm a";
         });
+    }
+    return self;
+}
+%new
+- (id)initWithText:(NSString *)text
+{
+    self = [self init];
+    if (self) {
+        sJSText = text;
     }
     return self;
 }
@@ -55,14 +66,15 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
 
     // customize the alert controller
     self.alertController.title = LZ_SKIP_ALARM;
-    self.alertController.message = LZ_SKIP_QUESTION(alertAlarm.uiTitle, [alertDateFormatter stringFromDate:alertFireDate]);
+    self.alertController.message = LZ_SKIP_QUESTION(sJSAlertAlarm.uiTitle, [sJSAlertDateFormatter stringFromDate:sJSAlertFireDate]);
+    //self.alertController.message = sJSText;
 
     // add yes and no actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:LZ_YES
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
+                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
                                                                                       skipActivatedStatus:kJSSkipActivatedStatusActivated];
                                                          
                                                          // deactivate the alert
@@ -72,7 +84,7 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
                                                        style:UIAlertActionStyleCancel
                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alertAlarm]
+                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
                                                                                       skipActivatedStatus:kJSSkipActivatedStatusDisabled];
                                                          
                                                          // deactivate the alert
@@ -117,7 +129,7 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
 // make sure to automatically dismiss the alert before the alarm is going to be fired
 - (double)autoDismissInterval
 {
-    return [alertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f;
+    return [sJSAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f;
 }
 
 %end
