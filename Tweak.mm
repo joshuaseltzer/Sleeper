@@ -177,17 +177,6 @@ static UIConcreteLocalNotification *modifySnoozeNotificationForLocalNotification
         // customize the cell
         cell.textLabel.text = LZ_SNOOZE_TIME;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
-        /*const CGFloat* components = CGColorGetComponents(cell.selectedBackgroundView.backgroundColor.CGColor);
-        NSString *colors = [NSString stringWithFormat:@"Red: %f\nGreen: %f\nBlue: %f\nAlpha: %f", components[0], components[1], components[2], CGColorGetAlpha(cell.selectedBackgroundView.backgroundColor.CGColor)];
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"test"
-                                                                   message:colors
-                                                            preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *licenseAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                            style:UIAlertActionStyleCancel
-                                                          handler:nil];
-        [alert addAction:licenseAction];
-        [self presentViewController:alert animated:YES completion:nil];*/
         
         // format the cell of the text with the snooze time values
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)sJSSnoozeHours,
@@ -328,7 +317,8 @@ static UIConcreteLocalNotification *modifySnoozeNotificationForLocalNotification
     
     // if the alarm is no longer active and the skip activation has already been decided for this
     // alarm, disable the skip activation now
-    if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] != kJSSkipActivatedStatusUnknown) {
+    JSPrefsSkipActivatedStatus skipActivatedStatus = [JSPrefsManager skipActivatedStatusForAlarmId:alarmId];
+    if (skipActivatedStatus == kJSSkipActivatedStatusActivated || skipActivatedStatus == kJSSkipActivatedStatusDisabled) {
         // save the alarm's skip activation state to our preferences
         [JSPrefsManager setSkipActivatedStatusForAlarmId:alarmId
                                      skipActivatedStatus:kJSSkipActivatedStatusUnknown];
@@ -358,46 +348,6 @@ static UIConcreteLocalNotification *modifySnoozeNotificationForLocalNotification
                               skipHours:sJSSkipHours
                             skipMinutes:sJSSkipMinutes
                             skipSeconds:sJSSkipSeconds];
-}
-
-%end
-
-// hook into the clock data provider to perform the skipping of an alarm
-%hook SBClockDataProvider
-
-// invoked when an alarm alert (i.e. bulletin) is about to be displayed
-- (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification
-{
-    // grab the shared instance of the clock data provider
-    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
-    
-    // check to see if this notification is an alarm notification
-    if ([clockDataProvider _isAlarmNotification:notification]) {
-        // get the alarm Id from the notification
-        NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
-        
-        // check to see if skip is activated for this alarm
-        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusActivated) {
-            // grab the alarm that we are going to ask to skip from the shared alarm manager
-            AlarmManager *alarmManager = [AlarmManager sharedManager];
-            [alarmManager loadAlarms];
-            Alarm *alarm = [alarmManager alarmWithId:alarmId];
-            
-            // simulate the alarm going off
-            [alarm handleAlarmFired:notification];
-            [alarmManager handleNotificationFired:notification];
-            
-            // save the alarm's skip activation state to unknown for this alarm
-            [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:alarm]
-                                         skipActivatedStatus:kJSSkipActivatedStatusUnknown];
-        } else {
-            // if we did not activate skip for this alarm, perform the original implementation
-            %orig;
-        }
-    } else {
-        // if it is not an alarm notification, perform the original implementation
-        %orig;
-    }
 }
 
 %end
@@ -584,6 +534,46 @@ static UIConcreteLocalNotification *nextSkippableAlarmNotification()
 
 %end
 
+// iOS8/iOS9: hook into the clock data provider to perform the skipping of an alarm
+%hook SBClockDataProvider
+
+// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+- (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification
+{
+    // grab the shared instance of the clock data provider
+    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    
+    // check to see if this notification is an alarm notification
+    if ([clockDataProvider _isAlarmNotification:notification]) {
+        // get the alarm Id from the notification
+        NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
+        
+        // check to see if skip is activated for this alarm
+        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusActivated) {
+            // grab the alarm that we are going to ask to skip from the shared alarm manager
+            AlarmManager *alarmManager = [AlarmManager sharedManager];
+            [alarmManager loadAlarms];
+            Alarm *alarm = [alarmManager alarmWithId:alarmId];
+            
+            // simulate the alarm going off
+            [alarm handleAlarmFired:notification];
+            [alarmManager handleNotificationFired:notification];
+            
+            // save the alarm's skip activation state to unknown for this alarm
+            [JSPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                         skipActivatedStatus:kJSSkipActivatedStatusUnknown];
+        } else {
+            // if we did not activate skip for this alarm, perform the original implementation
+            %orig;
+        }
+    } else {
+        // if it is not an alarm notification, perform the original implementation
+        %orig;
+    }
+}
+
+%end
+
 %end // %group iOS8and9
 
 // hook for iOS10
@@ -691,7 +681,7 @@ static UNNotificationRequest *nextSkippableAlarmNotificationRequest(NSArray *not
     for (UNNotificationRequest *notificationRequest in sortedNotificationRequests) {
         // only continue checking if the given notification is an alarm notification and did not
         // originate from a snooze action
-        if ([clockDataProvider _isAlarmNotificationRequest:notificationRequest]/* && ![Alarm isSnoozeNotification:notificationRequest]*/) {
+        if ([clockDataProvider _isAlarmNotificationRequest:notificationRequest] && ![notificationRequest.content isFromSnooze]) {
             // grab the alarm Id from the notification request
             NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:notificationRequest];
 
@@ -722,10 +712,9 @@ static UNNotificationRequest *nextSkippableAlarmNotificationRequest(NSArray *not
         if (notificationRequests.count > 0) {
             // attempt to get the next skippable alarm notification request from the notification requests returned
             UNNotificationRequest *nextAlarmNotificationRequest = nextSkippableAlarmNotificationRequest(notificationRequests);
-            nextAlarmNotificationRequest = nil;
 
             // if we found a valid alarm, check to see if we should ask to skip it
-            /*if (nextAlarmNotificationRequest != nil) {
+            if (nextAlarmNotificationRequest != nil) {
                 // grab the shared instance of the clock data provider
                 SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
 
@@ -739,7 +728,7 @@ static UNNotificationRequest *nextSkippableAlarmNotificationRequest(NSArray *not
                 Alarm *alarm = [alarmManager alarmWithId:alarmId];
                 
                 // after a slight delay, show an alert that will ask the user to skip the alarm on the main thread
-                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC));
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC));
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                     // get the fire date of the alarm we are going to display
                     NSDate *nextTriggerDate = [((UNLegacyNotificationTrigger *)nextAlarmNotificationRequest.trigger) _nextTriggerDateAfterDate:[NSDate date]
@@ -751,27 +740,44 @@ static UNNotificationRequest *nextSkippableAlarmNotificationRequest(NSArray *not
                                                                                     nextFireDate:nextTriggerDate];
                     [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
                 });
-            }*/
+            }
         }
-
-        // create and display the custom alert item
-        /*dispatch_async(dispatch_get_main_queue(), ^{
-            UNNotificationRequest *request = [notificationRequests objectAtIndex:0];
-            UNLegacyNotificationTrigger *trigger = (UNLegacyNotificationTrigger *)request.trigger;
-            //JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithText:[NSString stringWithFormat:@"%@\n\n%@", request, [trigger _nextTriggerDateAfterDate:[NSDate date] withRequestedDate:nil defaultTimeZone:trigger.timeZone]]];
-            JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithAlarm:nil
-                                                                             nextFireDate:[trigger _nextTriggerDateAfterDate:[NSDate date] withRequestedDate:nil defaultTimeZone:[NSTimeZone localTimeZone]]];
-            [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
-
-            //UNSNotificationRecord *record = [notificationRequests objectAtIndex:0];
-            //JSSkipAlarmAlertItem *alert = [[%c(JSSkipAlarmAlertItem) alloc] initWithText:[NSString stringWithFormat:@"%@\n", notificationRequests]];
-            //[(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
-        });*/
     };
 
     // get the clock notification manager and get the notification requests
     SBClockNotificationManager *clockNotificationManager = [%c(SBClockNotificationManager) sharedInstance];
     [clockNotificationManager getPendingNotificationRequestsWithCompletionHandler:clockNotificationManagerNotificationRequests];
+}
+
+%end
+
+// iOS10: hook into the clock data provider to perform the skipping of an alarm
+%hook SBClockDataProvider
+
+// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+- (void)_publishBulletinForNotification:(UNNotification *)notification
+{
+    // grab the shared instance of the clock data provider
+    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    
+    // check to see if this notification is an alarm notification
+    if ([clockDataProvider _isAlarmNotification:notification]) {
+        // get the alarm Id from the notification
+        NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:notification.request];
+        
+        // check to see if skip is activated for this alarm
+        if ([JSPrefsManager skipActivatedStatusForAlarmId:alarmId] == kJSSkipActivatedStatusActivated) {
+            // save the alarm's skip activation state to unknown for this alarm
+            [JSPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                         skipActivatedStatus:kJSSkipActivatedStatusUnknown];
+        } else {
+            // if we did not activate skip for this alarm, perform the original implementation
+            %orig;
+        }
+    } else {
+        // if it is not an alarm notification, perform the original implementation
+        %orig;
+    }
 }
 
 %end

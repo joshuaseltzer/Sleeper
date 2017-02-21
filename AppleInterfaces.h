@@ -10,23 +10,6 @@
 #import "JSSnoozeTimeViewController.h"
 #import "JSSkipTimeViewController.h"
 
-// the notification record object that gets fired when the user snoozes the alarm (iOS10)
-@interface UNSNotificationRecord : NSObject
-
-// user information attached to this notification record
-@property (nonatomic, copy) NSDictionary *userInfo;
-
-// the trigger date for the notification
-@property (nonatomic, copy) NSDate *triggerDate;
-
-// sets the trigger date for this notification
-- (void)setTriggerDate:(NSDate *)date;
-
-// returns whether or not this notification record is from a snooze action
-- (BOOL)isFromSnooze;
-
-@end
-
 // the notification that gets fired when the user decides to snooze an alarm (iOS8/iOS9)
 @interface UIConcreteLocalNotification : UILocalNotification
 
@@ -146,14 +129,16 @@ JSPickerSelectionDelegate>
 // iOS8: return all scheduled notifications that are held by the clock data provider
 - (NSArray *)_scheduledNotifications;
 
-// iOS8/iOS9: returns an alarm Id for a given notification
+// returns an alarm Id for a given notification
 - (NSString *)_alarmIDFromNotification:(UIConcreteLocalNotification *)notification;
 
 // iOS10: returns an alarm Id for a given notification request
 - (NSString *)_alarmIDFromNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
-// iOS8/iOS9: lets us know whether or not a given notification is an alarm notification
-- (BOOL)_isAlarmNotification:(UIConcreteLocalNotification *)notification;
+// lets us know whether or not a given notification is an alarm notification
+// iOS8/iOS9: argument is a UIConcreteLocalNotification object
+// iOS10: argument is a UNNotification object
+- (BOOL)_isAlarmNotification:(id)notification;
 
 // iOS10: lets us kow whether or not a given notification request is an alarm notification
 - (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
@@ -196,37 +181,35 @@ JSPickerSelectionDelegate>
 
 @end
 
+// the notification record object that gets fired when the user snoozes the alarm (iOS10)
+@interface UNSNotificationRecord : NSObject
+
+// user information attached to this notification record
+@property (nonatomic, copy) NSDictionary *userInfo;
+
+// the trigger date for the notification
+@property (nonatomic, copy) NSDate *triggerDate;
+
+// sets the trigger date for this notification
+- (void)setTriggerDate:(NSDate *)date;
+
+// returns whether or not this notification record is from a snooze action
+- (BOOL)isFromSnooze;
+
+@end
+
+// iOS10: private legacy notification trigger object used for alarm notifications
 @interface UNLegacyNotificationTrigger : UNNotificationTrigger
 
-- (id)nextTriggerDateAfterDate:(id)arg1 withRequestedDate:(id)arg2;
-
-- (id)_nextTriggerDateAfterDate:(id)arg1 withRequestedDate:(id)arg2 defaultTimeZone:(id)arg3;
-
-- (id)timeZone;
+// returns the next trigger date after the specified date and default time zone
+- (NSDate *)_nextTriggerDateAfterDate:(NSDate *)afterDate withRequestedDate:(NSDate *)requestedDate defaultTimeZone:(NSTimeZone *)defaultTimeZone;
 
 @end
 
-@interface UNSNotificationSchedulingService : NSObject
+// iOS10: private implementation header for the notification content
+@interface UNNotificationContent (Private)
 
-- (void)getPendingNotificationRecordsForBundleIdentifier:(id)arg1 withCompletionHandler:(id /* block */)arg2;
-- (id)_queue_pendingNotificationRecordsForBundleIdentifier:(id)arg1;
-- (void)getUndeliveredNotificationRecordsForBundleIdentifier:(id)arg1 withCompletionHandler:(id /* block */)arg2;
-
-@end
-
-@interface UNSUserNotificationServer : NSObject {
-    UNSNotificationSchedulingService * _notificationSchedulingService;
-}
-
-+ (id)sharedInstance;
+// returns whether or not this notification content is from a snooze notification
+- (BOOL)isFromSnooze;
 
 @end
-
-@interface ClockManager : NSObject {
-    NSMutableArray * _scheduledLocalNotifications;
-
-}
-
-+ (id)sharedManager;
-
-@end;

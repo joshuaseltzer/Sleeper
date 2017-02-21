@@ -20,14 +20,6 @@ static NSDate *sJSAlertFireDate;
 // keep a hold of the date formatter that will be used to display the time to the user
 static NSDateFormatter *sJSAlertDateFormatter;
 
-static NSString *sJSText;
-
-// enum to define the different options a user can select from the alert sheet
-typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
-    kJSSkipAlarmAlertButtonIndexYes,
-    kJSSkipAlarmAlertButtonIndexNo
-} JSSkipAlarmAlertButtonIndex;
-
 %subclass JSSkipAlarmAlertItem : SBAlertItem
 
 // create a new alert item with a given alarm and fire date
@@ -49,15 +41,6 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     }
     return self;
 }
-%new
-- (id)initWithText:(NSString *)text
-{
-    self = [self init];
-    if (self) {
-        sJSText = text;
-    }
-    return self;
-}
 
 // configure the alert with the alarm properties
 - (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode
@@ -67,7 +50,6 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
     // customize the alert controller
     self.alertController.title = LZ_SKIP_ALARM;
     self.alertController.message = LZ_SKIP_QUESTION(sJSAlertAlarm.uiTitle, [sJSAlertDateFormatter stringFromDate:sJSAlertFireDate]);
-    //self.alertController.message = sJSText;
 
     // add yes and no actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:LZ_YES
@@ -76,8 +58,6 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
                                                          // save the alarm's skip activation state to our preferences
                                                          [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
                                                                                       skipActivatedStatus:kJSSkipActivatedStatusActivated];
-                                                         
-                                                         // deactivate the alert
                                                          [self dismiss];
                                                      }];
     UIAlertAction *noAction = [UIAlertAction actionWithTitle:LZ_NO
@@ -86,14 +66,22 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
                                                          // save the alarm's skip activation state to our preferences
                                                          [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
                                                                                       skipActivatedStatus:kJSSkipActivatedStatusDisabled];
-                                                         
-                                                         // deactivate the alert
                                                          [self dismiss];
                                                      }];
     
     // add the actions to the alert controller
     [self.alertController addAction:yesAction];
     [self.alertController addAction:noAction];
+
+    // if the alert still exists, be sure to dismiss the alert just before the alarm will fire
+    __weak typeof(self) weakSelf = self;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([sJSAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f) * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+        // if the alert still exists, then automatically                                                                                                                                     dismiss the alert
+        if (weakSelf) {
+            [weakSelf dismiss];
+        }
+    });
 }
 
 // do no allow the alert to be shown during an emergency call
@@ -118,18 +106,6 @@ typedef enum JSSkipAlarmAlertButtonIndex : NSInteger {
 - (BOOL)dismissOnLock
 {
     return YES;
-}
-
-// dismiss this alert automatically after a particular time interval (see below)
-- (BOOL)dismissesAutomatically
-{
-    return YES;
-}
-
-// make sure to automatically dismiss the alert before the alarm is going to be fired
-- (double)autoDismissInterval
-{
-    return [sJSAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f;
 }
 
 %end

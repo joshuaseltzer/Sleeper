@@ -13,6 +13,5 @@
 
 // create a new alert item with a given alarm and fire date
 - (id)initWithAlarm:(Alarm *)alarm nextFireDate:(NSDate *)nextFireDate;
-- (id)initWithText:(NSString *)text;
 
 @end
