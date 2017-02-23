@@ -1,26 +1,34 @@
 //
-//  JSSkipAlarmAlertItem.mm
+//  SLSkipAlarmAlertItem.xm
 //  Custom system alert item to ask the user if he or she would like to skip a given alarm.
 //
 //  Created by Joshua Seltzer on 8/9/15.
 //
 //
 
-#import "JSSkipAlarmAlertItem.h"
-#import "JSPrefsManager.h"
-#import "JSLocalizedStrings.h"
-#import "JSCompatibilityHelper.h"
+#import "SLSkipAlarmAlertItem.h"
+#import "SLPrefsManager.h"
+#import "SLLocalizedStrings.h"
+#import "SLCompatibilityHelper.h"
 
-// the alarm object that is going to be alerted to the user
-static Alarm *sJSAlertAlarm;
+// private interface definition to define some properties
+@interface SLSkipAlarmAlertItem (Sleeper)
 
-// the fire date for the alert that is being displayed
-static NSDate *sJSAlertFireDate;
+@property (nonatomic, retain) Alarm *SLAlertAlarm;
+@property (nonatomic, retain) NSDate *SLAlertFireDate;
 
-// keep a hold of the date formatter that will be used to display the time to the user
-static NSDateFormatter *sJSAlertDateFormatter;
+@end
 
-%subclass JSSkipAlarmAlertItem : SBAlertItem
+// keep a single static instance of the date formatter that will be used to display the time to the user
+static NSDateFormatter *sSLSAlertDateFormatter;
+
+%subclass SLSkipAlarmAlertItem : SBAlertItem
+
+// the alarm object associated with this alert
+%property (nonatomic, retain) Alarm *SLAlertAlarm;
+
+// the fire date for the alarm in this alert
+%property (nonatomic, retain) NSDate *SLAlertFireDate;
 
 // create a new alert item with a given alarm and fire date
 %new
@@ -29,17 +37,26 @@ static NSDateFormatter *sJSAlertDateFormatter;
     self = [self init];
     if (self) {
         // set the alarm and date that we will present to the user
-        sJSAlertAlarm = alarm;
-        sJSAlertFireDate = nextFireDate;
+        self.SLAlertAlarm = alarm;
+        self.SLAlertFireDate = nextFireDate;
         
         // create the date formatter object once since date formatters are expensive
         static dispatch_once_t once;
         dispatch_once(&once, ^{
-            sJSAlertDateFormatter = [[NSDateFormatter alloc] init];
-            sJSAlertDateFormatter.dateFormat = @"h:mm a";
+            sSLSAlertDateFormatter = [[NSDateFormatter alloc] init];
+            sSLSAlertDateFormatter.dateFormat = @"h:mm a";
         });
     }
     return self;
+}
+
+- (void)dealloc
+{
+    // clear out some properties associated with this alert
+    self.SLAlertAlarm = nil;
+    self.SLAlertFireDate = nil;
+
+    %orig;
 }
 
 // configure the alert with the alarm properties
@@ -48,24 +65,24 @@ static NSDateFormatter *sJSAlertDateFormatter;
     %orig;
 
     // customize the alert controller
-    self.alertController.title = LZ_SKIP_ALARM;
-    self.alertController.message = LZ_SKIP_QUESTION(sJSAlertAlarm.uiTitle, [sJSAlertDateFormatter stringFromDate:sJSAlertFireDate]);
+    self.alertController.title = kSLSkipAlarmString;
+    self.alertController.message = kSLSkipQuestionString(self.SLAlertAlarm.uiTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
 
     // add yes and no actions to the alert controller
-    UIAlertAction *yesAction = [UIAlertAction actionWithTitle:LZ_YES
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *yesAction = [UIAlertAction actionWithTitle:kSLYesString
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
-                                                                                      skipActivatedStatus:kJSSkipActivatedStatusActivated];
+                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:[SLCompatibilityHelper alarmIdForAlarm:self.SLAlertAlarm]
+                                                                                      skipActivatedStatus:kSLSkipActivatedStatusActivated];
                                                          [self dismiss];
-                                                     }];
-    UIAlertAction *noAction = [UIAlertAction actionWithTitle:LZ_NO
+                                                      }];
+    UIAlertAction *noAction = [UIAlertAction actionWithTitle:kSLNoString
                                                        style:UIAlertActionStyleCancel
                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [JSPrefsManager setSkipActivatedStatusForAlarmId:[JSCompatibilityHelper alarmIdForAlarm:sJSAlertAlarm]
-                                                                                      skipActivatedStatus:kJSSkipActivatedStatusDisabled];
+                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:[SLCompatibilityHelper alarmIdForAlarm:self.SLAlertAlarm]
+                                                                                      skipActivatedStatus:kSLSkipActivatedStatusDisabled];
                                                          [self dismiss];
                                                      }];
     
@@ -75,7 +92,7 @@ static NSDateFormatter *sJSAlertDateFormatter;
 
     // if the alert still exists, be sure to dismiss the alert just before the alarm will fire
     __weak typeof(self) weakSelf = self;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([sJSAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f) * NSEC_PER_SEC));
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([self.SLAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f) * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
         // if the alert still exists, then automatically                                                                                                                                     dismiss the alert
         if (weakSelf) {

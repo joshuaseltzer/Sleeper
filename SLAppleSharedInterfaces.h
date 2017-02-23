@@ -1,16 +1,14 @@
 //
-//  AppleInterfaces.h
-//  Contains all interfaces as defined by Apple that are utilized in the hooking code.
+//  SLAppleSharedInterfaces.h
+//  Contains all shared interfaces as defined by Apple that are utilized in the hooking code.
 //
 //  Created by Joshua Seltzer on 12/11/14.
 //
 //
 
 @import UserNotifications;
-#import "JSSnoozeTimeViewController.h"
-#import "JSSkipTimeViewController.h"
 
-// the notification that gets fired when the user decides to snooze an alarm (iOS8/iOS9)
+// iOS8/iOS9: the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification
 
 // returns a date for a given notification that will happen after a date in a given time zone
@@ -27,7 +25,7 @@
 // iOS8: the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
 
-// iOS9: the alarm Id corresponding to the alarm object
+// iOS9/iOS10: the alarm Id corresponding to the alarm object
 @property (nonatomic, retain) NSString *alarmID;
 
 // the display title of the alarm
@@ -41,26 +39,6 @@
 
 @end
 
-// the custom cell used to display information when editing an alarm
-@interface MoreInfoTableViewCell : UITableViewCell
-@end
-
-// The primary view controller which recieves the ability to edit the snooze time.  This view controller
-// conforms to custom delegates that are used to notify when alarm attributes change.
-@interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-JSPickerSelectionDelegate>
-
-// the alarm object associated with the controller
-@property (readonly, assign, nonatomic) Alarm* alarm;
-
-// override to make sure we forget the saved alarm Id when the user leaves this view
-- (void)_cancelButtonClicked:(UIButton *)cancelButton;
-
-// override to make sure we forget the saved alarm Id when the user leaves this view
-- (void)_doneButtonClicked:(UIButton *)doneButton;
-
-@end
-
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject
 
@@ -70,53 +48,11 @@ JSPickerSelectionDelegate>
 // loads the alarms on the system in the manager object
 - (void)loadAlarms;
 
-// override to save the properties for the given alarm
-- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active;
-
-// override to remove snooze times for the given alarm from our preferences
-- (void)removeAlarm:(Alarm *)alarm;
-
-// invoked when an alarm is set or unset with an active states
-- (void)setAlarm:(Alarm *)alarm active:(BOOL)active;
-
 // simulates when an alarm gets fired
 - (void)handleNotificationFired:(UIConcreteLocalNotification *)notification;
 
 // returns an alarm object from a given alarm Id
 - (Alarm *)alarmWithId:(NSString *)alarmId;
-
-@end
-
-// the view controller that controls the lock screen
-@interface SBLockScreenViewController : UIViewController
-
-// override to display a pop up allowing the user to skip an alarm
-- (void)finishUIUnlockFromSource:(int)source;
-
-@end
-
-// a system alert item that we will subclass to create our own alert with
-@interface SBAlertItem : NSObject
-
-// the alert controlelr object that corresponds to this alert item (>iOS10)
-- (UIAlertController *)alertController;
-
-// allows us to set up the alert view or alert controller
-- (void)configure:(BOOL)configure requirePasscodeForActions:(BOOL)requirePasscode;
-
-// dismisses the alert item
-- (void)dismiss;
-
-@end
-
-// the controller responsible for activating and displaying system alert items
-@interface SBAlertItemsController : UIViewController
-
-// the shared instance of this controller
-+ (id)sharedInstance;
-
-// activates (i.e. displays) an alert item to the user
-- (void)activateAlertItem:(SBAlertItem *)alertItem animated:(BOOL)animated;
 
 @end
 
@@ -143,7 +79,7 @@ JSPickerSelectionDelegate>
 // iOS10: lets us kow whether or not a given notification request is an alarm notification
 - (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
-// iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS8/iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
 
 // iOS10: invoked when an alarm alert (i.e. bulletin) is about to be displayed
@@ -157,31 +93,15 @@ JSPickerSelectionDelegate>
 // the shared instance of the notification manager
 + (id)sharedInstance;
 
-// returns the array of scheduled local notifications (iOS8/iOS9)
+// iOS9: returns the array of scheduled local notifications
 - (NSArray *)scheduledLocalNotifications;
 
-// returns pending notification request objects in the completion handler (iOS10)
+// iOS10: returns pending notification request objects in the completion handler
 - (void)getPendingNotificationRequestsWithCompletionHandler:(void (^)(NSArray<UNNotificationRequest *> *requests))completionHandler;
 
 @end
 
-// iOS8: handles the snoozing of local notifications (i.e. alarms)
-@interface SBApplication : NSObject
-
-// override to insert our custom snooze time if it was defined
-- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification;
-
-@end
-
-// iOS9: handles the snoozing of local notifications (i.e. alarms)
-@interface UNLocalNotificationClient : NSObject
-
-// invoked when the user snoozes a notification
-- (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification;
-
-@end
-
-// the notification record object that gets fired when the user snoozes the alarm (iOS10)
+// iOS10: the notification record object that gets fired when the user snoozes the alarm
 @interface UNSNotificationRecord : NSObject
 
 // user information attached to this notification record

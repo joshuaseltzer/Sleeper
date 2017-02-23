@@ -1,50 +1,45 @@
 //
-//  JSPickerTableViewController.m
-//  Sleeper
+//  SLPickerTableViewController.m
+//  Custom view controller with a time picker (hours, minutes, and seconds) on top with a table view on the bottom.
 //
 //  Created by Joshua Seltzer on 9/24/15.
 //  Copyright (c) 2015 Joshua Seltzer. All rights reserved.
 //
 
-#import "JSPickerTableViewController.h"
-#import "JSLocalizedStrings.h"
-#import "JSCompatibilityHelper.h"
+#import "SLPickerTableViewController.h"
+#import "SLLocalizedStrings.h"
+#import "SLCompatibilityHelper.h"
 
 // define constants for the view dictionary when creating constraints
-static NSString *const kJSTimePickerViewKey =       @"timePickerView";
-static NSString *const kJSOptionTableViewKey =      @"optionsTableView";
-static NSString *const kJSLabelContainerViewKey =   @"labelContainerView";
-static NSString *const kJSHourLabelViewKey =        @"hourLabelView";
-static NSString *const kJSMinuteLabelViewKey =      @"minuteLabelView";
-static NSString *const kJSSecondLabelViewKey =      @"secondLabelView";
+static NSString *const kSLTimePickerViewKey =       @"timePickerView";
+static NSString *const kSLOptionTableViewKey =      @"optionsTableView";
+static NSString *const kSLLabelContainerViewKey =   @"labelContainerView";
+static NSString *const kSLHourLabelViewKey =        @"hourLabelView";
+static NSString *const kSLMinuteLabelViewKey =      @"minuteLabelView";
+static NSString *const kSLSecondLabelViewKey =      @"secondLabelView";
 
 // Constants for the time picker height per orientation.  These numbers are locked by Apple.
-static CGFloat const kJSTimePickerHeightPortrait = 216.0;
-static CGFloat const kJSTimePickerHeightLandscape = 162.0;
+static CGFloat const kSLTimePickerHeightPortrait = 216.0;
+static CGFloat const kSLTimePickerHeightLandscape = 162.0;
 
 // constants for the widths of the components in the time picker
-static CGFloat const kJSTimePickerWidth = 320;
-static CGFloat const kJSTimePickerLabelComponentWidth = 42.0;
-static CGFloat const kJSTimePickerHiddenComponentWidth = 57.0;
+static CGFloat const kSLTimePickerWidth = 320;
+static CGFloat const kSLTimePickerLabelComponentWidth = 42.0;
+static CGFloat const kSLTimePickerHiddenComponentWidth = 57.0;
 
 // constants the define the size and layout of the labels
-static CGFloat const kJSTimePickerLabelHeight = 60.0;
-static CGFloat const kJSTimePickerLabelSpaceBetween = 45.0;
-static CGFloat const kJSTimePickerLabelLeadingSpace = 10.0;
-static CGFloat const kJSTimePickerLabelWidth = (kJSTimePickerWidth - kJSTimePickerLabelLeadingSpace
-                                                  - kJSTimePickerLabelSpaceBetween * 3) / 3;
+static CGFloat const kSLTimePickerLabelHeight = 60.0;
+static CGFloat const kSLTimePickerLabelSpaceBetween = 45.0;
+static CGFloat const kSLTimePickerLabelLeadingSpace = 10.0;
+static CGFloat const kSLTimePickerLabelWidth = (kSLTimePickerWidth - kSLTimePickerLabelLeadingSpace
+                                                  - kSLTimePickerLabelSpaceBetween * 3) / 3;
 
 // constants that define the location of the valued components in our time picker
-static NSInteger const kJSHourComponent =   0;
-static NSInteger const kJSMinuteComponent = 2;
-static NSInteger const kJSSecondComponent = 4;
+static NSInteger const kSLHourComponent =   0;
+static NSInteger const kSLMinuteComponent = 2;
+static NSInteger const kSLSecondComponent = 4;
 
-// static variables to define the initial values of the time picker
-static NSInteger sJSInitialHours;
-static NSInteger sJSInitialMinutes;
-static NSInteger sJSInitialSeconds;
-
-@interface JSPickerTableViewController ()
+@interface SLPickerTableViewController ()
 
 // the time picker view, which takes up the top part of the view
 @property (nonatomic, strong) UIPickerView *timePickerView;
@@ -67,6 +62,15 @@ static NSInteger sJSInitialSeconds;
 // top space constraint that defines the Y position of the label container view
 @property (nonatomic, strong) NSLayoutConstraint *labelContainerViewTopConstraint;
 
+// the initial hours for the picker view
+@property (nonatomic) NSInteger initialHours;
+
+// the initial minutes for the picker view
+@property (nonatomic) NSInteger initialMinutes;
+
+// the initial seconds for the picker view
+@property (nonatomic) NSInteger initialSeconds;
+
 // creates the auto layout constraints that will depend on the orientation given
 - (void)createViewConstraintsForInitialOrientation:(UIInterfaceOrientation)orientiation;
 
@@ -84,7 +88,7 @@ static NSInteger sJSInitialSeconds;
 
 @end
 
-@implementation JSPickerTableViewController
+@implementation SLPickerTableViewController
 
 // custom initialization method that sets the picker to the initial times given
 - (id)initWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
@@ -92,9 +96,9 @@ static NSInteger sJSInitialSeconds;
     self = [super init];
     if (self) {
         // save the initial times
-        sJSInitialHours = hours;
-        sJSInitialMinutes = minutes;
-        sJSInitialSeconds = seconds;
+        self.initialHours = hours;
+        self.initialMinutes = minutes;
+        self.initialSeconds = seconds;
     }
     return self;
 }
@@ -108,9 +112,9 @@ static NSInteger sJSInitialSeconds;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
     // set the default values of the time picker
-    [self changePickerTimeWithHours:sJSInitialHours
-                            minutes:sJSInitialMinutes
-                            seconds:sJSInitialSeconds
+    [self changePickerTimeWithHours:self.initialHours
+                            minutes:self.initialMinutes
+                            seconds:self.initialSeconds
                            animated:NO];
     
     // Set up the auto layout constraints depending on the current orientation.  On an iPad, we only
@@ -156,10 +160,10 @@ static NSInteger sJSInitialSeconds;
     // if the parent is nil, we know we are popping this view controller
     if (!parent && self.delegate) {
         // tell the delegate about the updated picker times
-        [self.delegate pickerTableViewController:self
-                              didUpdateWithHours:[self.timePickerView selectedRowInComponent:kJSHourComponent]
-                                         minutes:[self.timePickerView selectedRowInComponent:kJSMinuteComponent]
-                                         seconds:[self.timePickerView selectedRowInComponent:kJSSecondComponent]];
+        [self.delegate SLPickerTableViewController:self
+                                didUpdateWithHours:[self.timePickerView selectedRowInComponent:kSLHourComponent]
+                                           minutes:[self.timePickerView selectedRowInComponent:kSLMinuteComponent]
+                                           seconds:[self.timePickerView selectedRowInComponent:kSLSecondComponent]];
     }
 }
 
@@ -167,30 +171,30 @@ static NSInteger sJSInitialSeconds;
 - (void)createViewConstraintsForInitialOrientation:(UIInterfaceOrientation)orientiation
 {
     // create view dictionaries for our constraints
-    NSDictionary *mainViewDictionary = @{kJSTimePickerViewKey:self.timePickerView,
-                                         kJSOptionTableViewKey:self.optionsTableView};
-    NSDictionary *labelViewDictionary = @{kJSLabelContainerViewKey:self.labelContainerView,
-                                          kJSHourLabelViewKey:self.hourLabel,
-                                          kJSMinuteLabelViewKey:self.minuteLabel,
-                                          kJSSecondLabelViewKey:self.secondLabel};
+    NSDictionary *mainViewDictionary = @{kSLTimePickerViewKey:self.timePickerView,
+                                         kSLOptionTableViewKey:self.optionsTableView};
+    NSDictionary *labelViewDictionary = @{kSLLabelContainerViewKey:self.labelContainerView,
+                                          kSLHourLabelViewKey:self.hourLabel,
+                                          kSLMinuteLabelViewKey:self.minuteLabel,
+                                          kSLSecondLabelViewKey:self.secondLabel};
     
     // set up the horizontal layout constraints for the time picker
-    NSString *pickerLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kJSTimePickerViewKey];
+    NSString *pickerLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kSLTimePickerViewKey];
     NSArray *pickerConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:pickerLayoutStringH
                                                                           options:0
                                                                           metrics:nil
                                                                             views:mainViewDictionary];
     
     // set up the horizontal layout constraints for the options table
-    NSString *optionsLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kJSOptionTableViewKey];
+    NSString *optionsLayoutStringH = [NSString stringWithFormat:@"H:|-0-[%@]-0-|", kSLOptionTableViewKey];
     NSArray *optionsConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:optionsLayoutStringH
                                                                            options:0
                                                                            metrics:nil
                                                                              views:mainViewDictionary];
     
     // set up the vertical layout constraints for the entire view
-    NSString *layoutStringV = [NSString stringWithFormat:@"V:|-0-[%@]-0-[%@]-0-|", kJSTimePickerViewKey,
-                               kJSOptionTableViewKey];
+    NSString *layoutStringV = [NSString stringWithFormat:@"V:|-0-[%@]-0-[%@]-0-|", kSLTimePickerViewKey,
+                               kSLOptionTableViewKey];
     NSArray *constraintsV = [NSLayoutConstraint constraintsWithVisualFormat:layoutStringV
                                                                     options:0
                                                                     metrics:nil
@@ -207,11 +211,11 @@ static NSInteger sJSInitialSeconds;
     
     // set up the horizontal layout for all of the time picker labels
     NSString *labelLayoutStringH = [NSString stringWithFormat:@"H:|-%f-[%@(%f)]-%f-[%@(%f)]-%f-[%@(%f)]-0-|",
-                                    kJSTimePickerLabelSpaceBetween + kJSTimePickerLabelLeadingSpace,
-                                    kJSHourLabelViewKey, kJSTimePickerLabelWidth,
-                                    kJSTimePickerLabelSpaceBetween, kJSMinuteLabelViewKey,
-                                    kJSTimePickerLabelWidth, kJSTimePickerLabelSpaceBetween,
-                                    kJSSecondLabelViewKey, kJSTimePickerLabelWidth];
+                                    kSLTimePickerLabelSpaceBetween + kSLTimePickerLabelLeadingSpace,
+                                    kSLHourLabelViewKey, kSLTimePickerLabelWidth,
+                                    kSLTimePickerLabelSpaceBetween, kSLMinuteLabelViewKey,
+                                    kSLTimePickerLabelWidth, kSLTimePickerLabelSpaceBetween,
+                                    kSLSecondLabelViewKey, kSLTimePickerLabelWidth];
     
     // if the device supports right to left orientation display, then use leading to trailing direction
     NSLayoutFormatOptions formatOption = NSLayoutFormatDirectionLeftToRight;
@@ -256,21 +260,21 @@ static NSInteger sJSInitialSeconds;
                                                                                     toItem:0
                                                                                  attribute:0
                                                                                 multiplier:1.0
-                                                                                  constant:kJSTimePickerLabelHeight];
+                                                                                  constant:kSLTimePickerLabelHeight];
     NSLayoutConstraint *minuteLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.minuteLabel
                                                                                    attribute:NSLayoutAttributeHeight
                                                                                    relatedBy:NSLayoutRelationEqual
                                                                                       toItem:0
                                                                                    attribute:0
                                                                                   multiplier:1.0
-                                                                                    constant:kJSTimePickerLabelHeight];
+                                                                                    constant:kSLTimePickerLabelHeight];
     NSLayoutConstraint *secondLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel
                                                                                    attribute:NSLayoutAttributeHeight
                                                                                    relatedBy:NSLayoutRelationEqual
                                                                                       toItem:0
                                                                                    attribute:0
                                                                                   multiplier:1.0
-                                                                                    constant:kJSTimePickerLabelHeight];
+                                                                                    constant:kSLTimePickerLabelHeight];
     
     // create the contraints that define the label container view
     self.labelContainerViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
@@ -293,14 +297,14 @@ static NSInteger sJSInitialSeconds;
                                                                                             toItem:nil
                                                                                          attribute:0
                                                                                         multiplier:1.0
-                                                                                          constant:kJSTimePickerWidth];
+                                                                                          constant:kSLTimePickerWidth];
     NSLayoutConstraint *labelContainerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.labelContainerView
                                                                                           attribute:NSLayoutAttributeHeight
                                                                                           relatedBy:NSLayoutRelationEqual
                                                                                              toItem:nil
                                                                                           attribute:0
                                                                                          multiplier:1.0
-                                                                                           constant:kJSTimePickerLabelHeight];
+                                                                                           constant:kSLTimePickerLabelHeight];
     
     // set up the constraints for the time picker and labels depending on what orientation was given
     [self adjustTimePickerConstraintsForOrientation:orientiation];
@@ -332,14 +336,14 @@ static NSInteger sJSInitialSeconds;
 {
     if (UIInterfaceOrientationIsLandscape(orientation)) {
         // change the height of the time picker to the landscape height
-        self.timePickerHeightConstraint.constant = kJSTimePickerHeightLandscape;
+        self.timePickerHeightConstraint.constant = kSLTimePickerHeightLandscape;
     } else {
         // change the height of the time picker to the portrait height
-        self.timePickerHeightConstraint.constant = kJSTimePickerHeightPortrait;
+        self.timePickerHeightConstraint.constant = kSLTimePickerHeightPortrait;
     }
     
     // adjust the height of the leftmost label
-    self.labelContainerViewTopConstraint.constant = self.timePickerHeightConstraint.constant / 2 - kJSTimePickerLabelHeight / 2;
+    self.labelContainerViewTopConstraint.constant = self.timePickerHeightConstraint.constant / 2 - kSLTimePickerLabelHeight / 2;
 }
 
 // returns the time picker
@@ -348,7 +352,7 @@ static NSInteger sJSInitialSeconds;
     // programatically create the time picker
     UIPickerView *timePicker = [[UIPickerView alloc] init];
     timePicker.translatesAutoresizingMaskIntoConstraints = NO;
-    timePicker.backgroundColor = [JSCompatibilityHelper pickerViewBackgroundColor];
+    timePicker.backgroundColor = [SLCompatibilityHelper pickerViewBackgroundColor];
     timePicker.delegate = delegate;
     timePicker.dataSource = delegate;
     
@@ -388,8 +392,8 @@ static NSInteger sJSInitialSeconds;
     self.hourLabel.textAlignment = labelTextAlignment;
     self.hourLabel.adjustsFontSizeToFitWidth = YES;
     self.hourLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
-    self.hourLabel.text = LZ_HOURS;
-    self.hourLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
+    self.hourLabel.text = kSLHoursString;
+    self.hourLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
@@ -398,8 +402,8 @@ static NSInteger sJSInitialSeconds;
     self.minuteLabel.textAlignment = labelTextAlignment;
     self.minuteLabel.adjustsFontSizeToFitWidth = YES;
     self.minuteLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
-    self.minuteLabel.text = LZ_MINUTES;
-    self.minuteLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
+    self.minuteLabel.text = kSLMinutesString;
+    self.minuteLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
@@ -408,8 +412,8 @@ static NSInteger sJSInitialSeconds;
     self.secondLabel.textAlignment = labelTextAlignment;
     self.secondLabel.adjustsFontSizeToFitWidth = YES;
     self.secondLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
-    self.secondLabel.text = LZ_SECONDS;
-    self.secondLabel.textColor = [JSCompatibilityHelper pickerViewLabelColor];
+    self.secondLabel.text = kSLSecondsString;
+    self.secondLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
     [labelContainerView addSubview:self.secondLabel];
     
     return labelContainerView;
@@ -422,9 +426,9 @@ static NSInteger sJSInitialSeconds;
                          animated:(BOOL)animated
 {
     // set the values of the picker view to the specified values with or without animation
-    [self.timePickerView selectRow:hours inComponent:kJSHourComponent animated:animated];
-    [self.timePickerView selectRow:minutes inComponent:kJSMinuteComponent animated:animated];
-    [self.timePickerView selectRow:seconds inComponent:kJSSecondComponent animated:animated];
+    [self.timePickerView selectRow:hours inComponent:kSLHourComponent animated:animated];
+    [self.timePickerView selectRow:minutes inComponent:kSLMinuteComponent animated:animated];
+    [self.timePickerView selectRow:seconds inComponent:kSLSecondComponent animated:animated];
 }
 
 #pragma mark - UIPickerViewDataSource
@@ -440,11 +444,11 @@ static NSInteger sJSInitialSeconds;
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     switch (component) {
-        case kJSHourComponent:
+        case kSLHourComponent:
             // ability to choose between 24 hours
             return 24;
-        case kJSMinuteComponent:
-        case kJSSecondComponent:
+        case kSLMinuteComponent:
+        case kSLSecondComponent:
             // ability to choose between 60 minutes/seconds
             return 60;
         default:
@@ -459,14 +463,14 @@ static NSInteger sJSInitialSeconds;
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     switch (component) {
-        case kJSHourComponent:
-        case kJSMinuteComponent:
-        case kJSSecondComponent:
+        case kSLHourComponent:
+        case kSLMinuteComponent:
+        case kSLSecondComponent:
             // the components which have options to show have a particular width
-            return kJSTimePickerLabelComponentWidth;
+            return kSLTimePickerLabelComponentWidth;
         default:
             // the hidden components have a width that is enough to make room for the labels
-            return kJSTimePickerHiddenComponentWidth;
+            return kSLTimePickerHiddenComponentWidth;
     }
 }
 
@@ -474,9 +478,9 @@ static NSInteger sJSInitialSeconds;
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     // disallow a picker time of all zeroes
-    if ([pickerView selectedRowInComponent:kJSHourComponent] == 0 &&
-        [pickerView selectedRowInComponent:kJSMinuteComponent] == 0 &&
-        [pickerView selectedRowInComponent:kJSSecondComponent] == 0) {
+    if ([pickerView selectedRowInComponent:kSLHourComponent] == 0 &&
+        [pickerView selectedRowInComponent:kSLMinuteComponent] == 0 &&
+        [pickerView selectedRowInComponent:kSLSecondComponent] == 0) {
         // move the last selected component to the first position
         [pickerView selectRow:1 inComponent:component animated:YES];
     }
@@ -487,7 +491,7 @@ static NSInteger sJSInitialSeconds;
 {
     // update the text to include the correct color and the row text
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)row]
-                                                                     attributes:@{NSForegroundColorAttributeName:[JSCompatibilityHelper pickerViewLabelColor]}];
+                                                                     attributes:@{NSForegroundColorAttributeName:[SLCompatibilityHelper pickerViewLabelColor]}];
 
     return attrString;
 }

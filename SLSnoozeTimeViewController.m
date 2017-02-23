@@ -1,17 +1,17 @@
 //
-//  JSSnoozeTimeViewController.m
-//  Sleeper
+//  SLSnoozeTimeViewController.m
+//  Customized picker table view controller for selecting the snooze time.
 //
 //  Created by Joshua Seltzer on 10/12/14.
 //  Copyright (c) 2014 Joshua Seltzer. All rights reserved.
 //
 
-#import "JSSnoozeTimeViewController.h"
-#import "JSPrefsManager.h"
-#import "JSLocalizedStrings.h"
-#import "JSCompatibilityHelper.h"
+#import "SLSnoozeTimeViewController.h"
+#import "SLPrefsManager.h"
+#import "SLLocalizedStrings.h"
+#import "SLCompatibilityHelper.h"
 
-@implementation JSSnoozeTimeViewController
+@implementation SLSnoozeTimeViewController
 
 // override to customize the view upon load
 - (void)viewDidLoad
@@ -19,7 +19,7 @@
     [super viewDidLoad];
     
     // set the title of the view controller
-    self.title = LZ_SNOOZE_TIME;
+    self.title = kSLSnoozeTimeString;
 }
 
 #pragma mark - UITableViewDataSource
@@ -53,11 +53,11 @@
     }
     
     // customize the cell
-    cell.textLabel.text = LZ_RESET_DEFAULT;
+    cell.textLabel.text = kSLResetDefaultString;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
     // on newer versions of iOS, we need to set the background view for the cell
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0) {
+    if (kSLSystemVersioniOS10) {
         UIView *backgroundView = [[UIView alloc] init];
         backgroundView.backgroundColor = [UIColor colorWithRed:52.0 / 255.0
                                                          green:52.0 / 255.0
@@ -80,9 +80,9 @@
 {
     // We only have one section which defines the default snooze button.  Display a message indicating
     // to the user what the default snooze time is
-    NSString *defaultSnoozeTime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)kJSDefaultSnoozeHour,
-                                   (long)kJSDefaultSnoozeMinute, (long)kJSDefaultSnoozeSecond];
-    return LZ_DEFAULT_SNOOZE_TIME(defaultSnoozeTime);
+    NSString *defaultSnoozeTime = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)kSLDefaultSnoozeHour,
+                                   (long)kSLDefaultSnoozeMinute, (long)kSLDefaultSnoozeSecond];
+    return kSLDefaultSnoozeTimeString(defaultSnoozeTime);
 }
 
 #pragma mark - UITableViewDelegate
@@ -92,9 +92,9 @@
 {
     // for now, we only have one button so we can assume it is the one that resets the default snooze
     // picker values
-    [self changePickerTimeWithHours:kJSDefaultSnoozeHour
-                            minutes:kJSDefaultSnoozeMinute
-                            seconds:kJSDefaultSnoozeSecond
+    [self changePickerTimeWithHours:kSLDefaultSnoozeHour
+                            minutes:kSLDefaultSnoozeMinute
+                            seconds:kSLDefaultSnoozeSecond
                            animated:YES];
     
     // deselect the row with animation

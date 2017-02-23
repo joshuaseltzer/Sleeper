@@ -1,28 +1,26 @@
 //
-//  JSPickerTableViewController.h
-//  Sleeper
+//  SLPickerTableViewController.h
+//  Custom view controller with a time picker (hours, minutes, and seconds) on top with a table view on the bottom.
 //
 //  Created by Joshua Seltzer on 9/24/15.
 //  Copyright (c) 2015 Joshua Seltzer. All rights reserved.
 //
 
 // forward delcare the view controller class so that we can define it in the delegate
-@class JSPickerTableViewController;
+@class SLPickerTableViewController;
 
 // delegate that will notify the object that the picker times have been updated
-@protocol JSPickerSelectionDelegate <NSObject>
+@protocol SLPickerSelectionDelegate <NSObject>
 
 // passes the updated picker times to the delegate
-- (void)pickerTableViewController:(JSPickerTableViewController *)pickerTableViewController
-               didUpdateWithHours:(NSInteger)hours
-                          minutes:(NSInteger)minutes
-                          seconds:(NSInteger)seconds;
+- (void)SLPickerTableViewController:(SLPickerTableViewController *)pickerTableViewController
+                 didUpdateWithHours:(NSInteger)hours
+                            minutes:(NSInteger)minutes
+                            seconds:(NSInteger)seconds;
 
 @end
 
-// custom view controller which presents the user with a time picker to pick hours, minutes, and
-// seconds with a table view underneath
-@interface JSPickerTableViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
+@interface SLPickerTableViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
 
 // custom initialization method that sets the picker to the given times
 - (id)initWithHours:(NSInteger)hours
@@ -39,6 +37,6 @@
 @property (nonatomic, strong) UITableView *optionsTableView;
 
 // the delegate of this view controller
-@property (nonatomic, weak) id <JSPickerSelectionDelegate> delegate;
+@property (nonatomic, weak) id <SLPickerSelectionDelegate> delegate;
 
 @end
