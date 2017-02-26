@@ -61,8 +61,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 - (void)viewDidLoad
 {
     // get the alarm ID for the special sleep alarm
-    /*AlarmManager *alarmManager = [AlarmManager sharedManager];
-    [alarmManager loadAlarms];
+    AlarmManager *alarmManager = [AlarmManager sharedManager];
     NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
 
     // load the preferences for the sleep alarm
@@ -70,7 +69,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     if (self.SLAlarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
     }
-    self.SLAlarmPrefsChanged = NO;*/
+    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }

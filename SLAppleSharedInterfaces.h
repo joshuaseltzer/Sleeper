@@ -82,9 +82,6 @@
 // iOS10: whether or not a given notification request is an alarm notification
 - (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
-// iOS10: whether or not a given notification request is from the bedtime alarm
-- (BOOL)_isWakeNotificationRequest:(UNNotificationRequest *)notificationRequest;
-
 // iOS8/iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
 

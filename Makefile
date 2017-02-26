@@ -3,7 +3,7 @@ TARGET=iphone:clang:9.3:8.0
 include theos/makefiles/common.mk
 
 TWEAK_NAME = Sleeper
-Sleeper_FILES = SLCompatibilityHelper.m SLPrefsManager.m SLAlarmPrefs.m SLPickerTableViewController.m SLSkipTimeViewController.m SLSnoozeTimeViewController.m SLSkipAlarmAlertItem.xm SLAlarmManager.x SLEditAlarmViewController.x SLSBApplication.x SLUNLocalNotificationClient.x SLSBClockDataProvider.x SLSBLockScreenViewController.x SLUNSNotificationSchedulingService.x SLSBLockScreenManager.x SLMTSleepAlarmOptionsController.x
+Sleeper_FILES = SLCompatibilityHelper.m SLPrefsManager.m SLAlarmPrefs.m SLPickerTableViewController.m SLSkipTimeViewController.m SLSnoozeTimeViewController.m SLSkipAlarmAlertItem.xm SLAlarmManager.x SLEditAlarmViewController.x SLSBApplication.x SLUNLocalNotificationClient.x SLSBClockDataProvider.x SLSBLockScreenViewController.x SLUNSNotificationSchedulingService.x SLSBLockScreenManager.x SLMTSleepAlarmOptionsController.x SLMTSleepAlarmViewController.x
 Sleeper_PRIVATE_FRAMEWORKS = MobileTimer
 ADDITIONAL_OBJCFLAGS = -fobjc-arc
 
