@@ -21,8 +21,22 @@
     void (^clockNotificationManagerNotificationRequests) (NSArray *) = ^(NSArray *notificationRequests) {
         // only continue if valid notification requests were returned
         if (notificationRequests.count > 0) {
+            /*SBClockDataProvider *clockDataProvider = (SBClockDataProvider *)[objc_getClass("SBClockDataProvider") sharedInstance];
+
+            if ([clockDataProvider _isWakeNotificationRequest:notificationRequests[0]]) {
+                // create and display the custom alert item
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                    AlarmManager *alarmManager = [AlarmManager sharedManager];
+                    [alarmManager loadAlarms];
+                    SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithString:[NSString stringWithFormat:@"%@\n\n%@", alarmManager.sleepAlarm.alarmID, notificationRequests]];
+                    [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
+                });
+            }*/
+            
+
             // attempt to get the next skippable alarm notification request from the notification requests returned
-            UNNotificationRequest *nextAlarmNotificationRequest = [SLCompatibilityHelper nextSkippableAlarmNotificationRequestForNotificationRequests:notificationRequests];
+            /*UNNotificationRequest *nextAlarmNotificationRequest = [SLCompatibilityHelper nextSkippableAlarmNotificationRequestForNotificationRequests:notificationRequests];
 
             // if we found a valid alarm, check to see if we should ask to skip it
             if (nextAlarmNotificationRequest != nil) {
@@ -51,7 +65,7 @@
                                                                                      nextFireDate:nextTriggerDate];
                     [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
                 });
-            }
+            }*/
         }
     };
 

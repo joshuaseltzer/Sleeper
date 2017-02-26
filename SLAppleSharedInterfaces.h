@@ -54,6 +54,9 @@
 // returns an alarm object from a given alarm Id
 - (Alarm *)alarmWithId:(NSString *)alarmId;
 
+// iOS10: the special sleep alarm (i.e. Bedtime alarm)
+@property (nonatomic, readonly) Alarm *sleepAlarm;
+
 @end
 
 // data provider which lets us know which alarms have notifications scheduled
@@ -76,8 +79,11 @@
 // iOS10: argument is a UNNotification object
 - (BOOL)_isAlarmNotification:(id)notification;
 
-// iOS10: lets us kow whether or not a given notification request is an alarm notification
+// iOS10: whether or not a given notification request is an alarm notification
 - (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
+
+// iOS10: whether or not a given notification request is from the bedtime alarm
+- (BOOL)_isWakeNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
 // iOS8/iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;

@@ -51,4 +51,7 @@
 // returns the color of the labels in the picker view
 + (UIColor *)pickerViewLabelColor;
 
+// iOS10: returns the cell selection background color for cells
++ (UIColor *)tableViewCellSelectedBackgroundColor;
+
 @end

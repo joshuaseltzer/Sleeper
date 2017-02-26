@@ -31,36 +31,46 @@ typedef enum SLSleepAlarmOptionsSectionSleeperRow : NSUInteger {
     kSLSleepAlarmOptionsSectionSleeperNumRows
 } SLSleepAlarmOptionsSectionSleeperRow;
 
-// the custom cell used to display information when editing an alarm
-@interface MoreInfoTableViewCell : UITableViewCell
-@end
-
 // table view controller which configures the settings for the sleep alarm
 @interface MTSleepAlarmOptionsController : UITableViewController <SLPickerSelectionDelegate>
+
+// updates the status of the done button on the view controller
+- (void)updateDoneButtonEnabled;
+
 @end
 
 // custom interface for added properties
 @interface MTSleepAlarmOptionsController (Sleeper)
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
+@property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
 @end
 
-// define a constant that is used to identify the sleep alarm
-static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
+// define a constant for the reuse identifier for the custom cell we will create
+static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = @"SLSleepAlarmOptionsSectionSleeperCellReuseIdentifier";
 
 %hook MTSleepAlarmOptionsController
 
 // the Sleeper preferences for the special sleep alarm
 %property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 
+// boolean property to signify whether or not changes were made to the Sleeper preferences
+%property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
+
 - (void)viewDidLoad
 {
+    // get the alarm ID for the special sleep alarm
+    /*AlarmManager *alarmManager = [AlarmManager sharedManager];
+    [alarmManager loadAlarms];
+    NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+
     // load the preferences for the sleep alarm
-    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:kSLSleepAlarmId];
+    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (self.SLAlarmPrefs == nil) {
-        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:kSLSleepAlarmId];
+        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
     }
+    self.SLAlarmPrefsChanged = NO;*/
 
     %orig;
 }
@@ -69,6 +79,7 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
 {
     // clear out the alarm preferences
     self.SLAlarmPrefs = nil;
+    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -95,11 +106,27 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // grab the original cell that is defined for this table
-    MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
+    // forward declare the cell that will be returned
+    UITableViewCell *cell = nil;
     
     // configure the custom cells
     if (indexPath.section == kSLSleepAlarmOptionsSectionSleeper) {
+        // Dequeue the custom cell from the table.  Create a new one if it does not yet exist.
+        cell = [tableView dequeueReusableCellWithIdentifier:kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                          reuseIdentifier:kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier];
+
+            // set the background color of the cell
+            UIView *backgroundView = [[UIView alloc] init];
+            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+            cell.selectedBackgroundView = backgroundView;
+
+            // set the text color for the title label of the cell
+            cell.textLabel.textColor = [UIColor whiteColor];
+        }
+
+        // customize the cell based on the row
         switch (indexPath.row) {
             case kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime:
                 cell.textLabel.text = kSLSnoozeTimeString;
@@ -134,6 +161,8 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
                                             (long)self.SLAlarmPrefs.skipTimeMinute, (long)self.SLAlarmPrefs.skipTimeSecond];
                 break;
         }
+    } else {
+        cell = %orig;
     }
     
     return cell;
@@ -172,7 +201,7 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
     }
 }
 
-- (void)done:(UIButton *)doneButton
+- (void)done:(UIBarButtonItem *)doneButton
 {
     // save our preferences
     [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
@@ -180,11 +209,25 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
     %orig;
 }
 
+- (void)updateDoneButtonEnabled
+{
+    // check to see if any changes were made to the Sleeper preferences
+    if (self.SLAlarmPrefsChanged) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+        %orig;
+    }
+}
+
 // handle when the skip switch is changed
 %new
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch
 {
     self.SLAlarmPrefs.skipEnabled = skipSwitch.on;
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+    [self updateDoneButtonEnabled];
 }
 
 #pragma mark - SLPickerSelectionDelegate
@@ -193,6 +236,10 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
 %new
 - (void)SLPickerTableViewController:(SLPickerTableViewController *)pickerTableViewController didUpdateWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
 {
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+    [self updateDoneButtonEnabled];
+
     // check to see if we are updating the snooze time or the skip time
     if ([pickerTableViewController isMemberOfClass:[SLSnoozeTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
@@ -206,6 +253,10 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
             self.SLAlarmPrefs.snoozeTimeMinute = minutes;
             self.SLAlarmPrefs.snoozeTimeSecond = seconds;
         }
+
+        // reload the cell that contains the snooze time
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime inSection:kSLSleepAlarmOptionsSectionSleeper]]
+                              withRowAnimation:UITableViewRowAnimationNone];
     } else if ([pickerTableViewController isMemberOfClass:[SLSkipTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
             // if all values returned are 0, then reset them to the default
@@ -218,6 +269,10 @@ static NSString * const kSLSleepAlarmId = @"sleepAlarmId";
             self.SLAlarmPrefs.skipTimeMinute = minutes;
             self.SLAlarmPrefs.skipTimeSecond = seconds;
         }
+
+        // reload the cell that contains the snooze time
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepAlarmOptionsSectionSleeperRowSkipTime inSection:kSLSleepAlarmOptionsSectionSleeper]]
+                              withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 

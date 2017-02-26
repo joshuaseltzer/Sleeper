@@ -79,7 +79,7 @@ SLPickerSelectionDelegate>
     %orig;
 }
 
-- (void)_doneButtonClicked:(UIButton *)doneButton
+- (void)_doneButtonClicked:(id)doneButton
 {
     // save our preferences
     [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];

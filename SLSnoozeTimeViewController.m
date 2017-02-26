@@ -50,21 +50,18 @@
         // create a new default cell
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                       reuseIdentifier:optionTableButtonCellIdentifier];
+
+        // on newer versions of iOS, we need to set the background view for the cell
+        if (kSLSystemVersioniOS10) {
+            UIView *backgroundView = [[UIView alloc] init];
+            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+            cell.selectedBackgroundView = backgroundView;
+        }
     }
     
     // customize the cell
     cell.textLabel.text = kSLResetDefaultString;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-
-    // on newer versions of iOS, we need to set the background view for the cell
-    if (kSLSystemVersioniOS10) {
-        UIView *backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor colorWithRed:52.0 / 255.0
-                                                         green:52.0 / 255.0
-                                                          blue:52.0 / 255.0
-                                                         alpha:1.0];
-        cell.selectedBackgroundView = backgroundView;
-    }
     
     // set the color of the button to the red, destructive color as defined by Apple in other cells
     cell.textLabel.textColor = [UIColor colorWithRed:1.0

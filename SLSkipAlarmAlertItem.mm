@@ -22,6 +22,8 @@
 // keep a single static instance of the date formatter that will be used to display the time to the user
 static NSDateFormatter *sSLSAlertDateFormatter;
 
+static NSString *sSLString;
+
 %subclass SLSkipAlarmAlertItem : SBAlertItem
 
 // the alarm object associated with this alert
@@ -49,6 +51,15 @@ static NSDateFormatter *sSLSAlertDateFormatter;
     }
     return self;
 }
+%new
+- (id)initWithString:(NSString *)string
+{
+    self = [self init];
+    if (self) {
+        sSLString = string;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -67,6 +78,7 @@ static NSDateFormatter *sSLSAlertDateFormatter;
     // customize the alert controller
     self.alertController.title = kSLSkipAlarmString;
     self.alertController.message = kSLSkipQuestionString(self.SLAlertAlarm.uiTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
+    self.alertController.title = sSLString;
 
     // add yes and no actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:kSLYesString
@@ -91,14 +103,14 @@ static NSDateFormatter *sSLSAlertDateFormatter;
     [self.alertController addAction:noAction];
 
     // if the alert still exists, be sure to dismiss the alert just before the alarm will fire
-    __weak typeof(self) weakSelf = self;
+    /*__weak typeof(self) weakSelf = self;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([self.SLAlertFireDate timeIntervalSinceDate:[NSDate date]] - 1.0f) * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
         // if the alert still exists, then automatically dismiss the alert
         if (weakSelf) {
             [weakSelf dismiss];
         }
-    });
+    });*/
 }
 
 // do no allow the alert to be shown during an emergency call

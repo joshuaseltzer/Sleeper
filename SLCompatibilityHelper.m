@@ -212,6 +212,15 @@
     return color;
 }
 
+// iOS10: returns the cell selection background color for cells
++ (UIColor *)tableViewCellSelectedBackgroundColor
+{
+    return [UIColor colorWithRed:52.0 / 255.0
+                           green:52.0 / 255.0
+                            blue:52.0 / 255.0
+                           alpha:1.0];;
+}
+
 // iOS8/iOS9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable
 + (BOOL)isAlarmLocalNotificationSkippable:(UIConcreteLocalNotification *)localNotification
                                forAlarmId:(NSString *)alarmId
