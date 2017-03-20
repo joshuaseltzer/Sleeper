@@ -13,8 +13,10 @@
 // iOS9: override to insert our custom snooze time if it was defined
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
 {
-    // pass in the potentially modified notification object
-    %orig([SLCompatibilityHelper modifiedSnoozeNotificationForLocalNotification:notification]);
+    // attempt to modify the notification with a custom snooze time
+    [SLCompatibilityHelper modifySnoozeNotificationForLocalNotification:notification];
+
+    %orig;
 }
 
 %end

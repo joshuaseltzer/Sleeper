@@ -12,8 +12,8 @@
 
 @implementation SLCompatibilityHelper
 
-// iOS8/iOS9: returns a modified snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
-+ (UIConcreteLocalNotification *)modifiedSnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification
+// iOS8/iOS9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
++ (void)modifySnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification
 {
     // grab the alarm Id from the notification
     NSString *alarmId = [localNotification.userInfo objectForKey:kSLAlarmIdKey];
@@ -33,13 +33,10 @@
         // modify the fire date of the notification
         localNotification.fireDate = [localNotification.fireDate dateByAddingTimeInterval:timeInterval];
     }
-    
-    // return the modified notification
-    return localNotification;
 }
 
-// iOS10: returns a modified snooze UNSNotificationRecord object with the selected snooze time (if applicable)
-+ (UNSNotificationRecord *)modifiedSnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord
+// iOS10: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
++ (void)modifySnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord
 {
     // grab the alarm Id from the notification record
     NSString *alarmId = [notificationRecord.userInfo objectForKey:kSLAlarmIdKey];
@@ -59,9 +56,6 @@
         // modify the trigger date of the notification record
         [notificationRecord setTriggerDate:[notificationRecord.triggerDate dateByAddingTimeInterval:timeInterval]];
     }
-    
-    // return the modified notification record
-    return notificationRecord;
 }
 
 // iOS8/iOS9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
@@ -126,16 +120,20 @@
     NSComparisonResult (^notificationRequestComparator) (UNNotificationRequest *, UNNotificationRequest *) =
     ^(UNNotificationRequest *lhs, UNNotificationRequest *rhs) {
         // get the next trigger date of the left hand side notification request
-        NSDate *lhsTriggerDate = [((UNLegacyNotificationTrigger *)lhs.trigger) _nextTriggerDateAfterDate:[NSDate date]
-                                                                                       withRequestedDate:nil
-                                                                                         defaultTimeZone:[NSTimeZone localTimeZone]];
-        
-        // get the next trigger date of the right hand side notification request
-        NSDate *rhsTriggerDate = [((UNLegacyNotificationTrigger *)rhs.trigger) _nextTriggerDateAfterDate:[NSDate date]
-                                                                                       withRequestedDate:nil
-                                                                                         defaultTimeZone:[NSTimeZone localTimeZone]];
-        
-        return [lhsTriggerDate compare:rhsTriggerDate];
+        if ([lhs.trigger isKindOfClass:[UNLegacyNotificationTrigger class]] && [rhs.trigger isKindOfClass:[UNLegacyNotificationTrigger class]]) {
+            NSDate *lhsTriggerDate = [((UNLegacyNotificationTrigger *)lhs.trigger) _nextTriggerDateAfterDate:[NSDate date]
+                                                                                           withRequestedDate:nil
+                                                                                             defaultTimeZone:[NSTimeZone localTimeZone]];
+            
+            // get the next trigger date of the right hand side notification request
+            NSDate *rhsTriggerDate = [((UNLegacyNotificationTrigger *)rhs.trigger) _nextTriggerDateAfterDate:[NSDate date]
+                                                                                           withRequestedDate:nil
+                                                                                             defaultTimeZone:[NSTimeZone localTimeZone]];
+
+            return [lhsTriggerDate compare:rhsTriggerDate];
+        } else {
+            return NSOrderedSame;
+        }
     };
 
     // grab the shared instance of the clock data provider
@@ -218,7 +216,7 @@
     return [UIColor colorWithRed:52.0 / 255.0
                            green:52.0 / 255.0
                             blue:52.0 / 255.0
-                           alpha:1.0];;
+                           alpha:1.0];
 }
 
 // iOS8/iOS9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable
@@ -263,7 +261,7 @@
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (alarmPrefs && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
+    if (alarmPrefs != nil && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown && [notificationRequest.trigger isKindOfClass:[UNLegacyNotificationTrigger class]]) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];

@@ -16,11 +16,11 @@
     // check to see if the notification is for the timer application
     if ([bundleId isEqualToString:@"com.apple.mobiletimer"]) {
         // iterate through the notification records
-        for (UNSNotificationRecord __strong *notification in notificationRecords) {
+        for (UNSNotificationRecord *notification in notificationRecords) {
             // check to see if the notification is a snooze notification
             if ([notification isFromSnooze]) {
                 // modify the snooze notifications with the updated snooze times
-                notification = [SLCompatibilityHelper modifiedSnoozeNotificationForNotificationRecord:notification];
+                [SLCompatibilityHelper modifySnoozeNotificationForNotificationRecord:notification];
             }
         }
     }

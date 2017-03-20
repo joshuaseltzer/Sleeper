@@ -29,11 +29,11 @@
 // interface for version compatibility functions throughout the application
 @interface SLCompatibilityHelper : NSObject
 
-// iOS8/iOS9: returns a modified snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
-+ (UIConcreteLocalNotification *)modifiedSnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification;
+// iOS8/iOS9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
++ (void)modifySnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification;
 
-// iOS10: returns a modified snooze UNSNotificationRecord object with the selected snooze time (if applicable)
-+ (UNSNotificationRecord *)modifiedSnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord;
+// iOS10: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
++ (void)modifySnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord;
 
 // iOS8/iOS9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
 + (UIConcreteLocalNotification *)nextSkippableAlarmLocalNotification;
