@@ -120,7 +120,8 @@
     NSComparisonResult (^notificationRequestComparator) (UNNotificationRequest *, UNNotificationRequest *) =
     ^(UNNotificationRequest *lhs, UNNotificationRequest *rhs) {
         // get the next trigger date of the left hand side notification request
-        if ([lhs.trigger isKindOfClass:[UNLegacyNotificationTrigger class]] && [rhs.trigger isKindOfClass:[UNLegacyNotificationTrigger class]]) {
+        if (objc_getClass("UNLegacyNotificationTrigger") && [lhs.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")] &&
+            [rhs.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")]) {
             NSDate *lhsTriggerDate = [((UNLegacyNotificationTrigger *)lhs.trigger) _nextTriggerDateAfterDate:[NSDate date]
                                                                                            withRequestedDate:nil
                                                                                              defaultTimeZone:[NSTimeZone localTimeZone]];
@@ -261,7 +262,8 @@
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (alarmPrefs != nil && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown && [notificationRequest.trigger isKindOfClass:[UNLegacyNotificationTrigger class]]) {
+    if (alarmPrefs != nil && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown &&
+        objc_getClass("UNLegacyNotificationTrigger") && [notificationRequest.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")]) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
