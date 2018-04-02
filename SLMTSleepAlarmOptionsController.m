@@ -1,6 +1,6 @@
 //
 //  SLMTSleepAlarmOptionsController.x
-//  The view controller that allows the user to configure the options for the special Sleep alarm on iOS10.
+//  The view controller that allows the user to configure the options for the special Sleep alarm on iOS 10.
 //
 //  Created by Joshua Seltzer on 2/23/17.
 //
@@ -278,7 +278,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS10
+    // only initialize this file if we are on iOS 10
     if (kSLSystemVersioniOS10) {
         %init();
     }

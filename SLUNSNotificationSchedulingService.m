@@ -1,6 +1,6 @@
 //
 //  SLUNSNotificationSchedulingService.x
-//  Hook into the UNSNotificationSchedulingService class to modify the snooze notification on iOS10.
+//  Hook into the UNSNotificationSchedulingService class to modify the snooze notification on iOS 10 and iOS 11.
 //
 //  Created by Joshua Seltzer on 2/23/17.
 //
@@ -10,7 +10,7 @@
 
 %hook UNSNotificationSchedulingService
 
-// iOS10: function that adds new notification records to the scheduling service
+// iOS 10 / iOS 11: function that adds new notification records to the scheduling service
 - (void)addPendingNotificationRecords:(NSArray *)notificationRecords forBundleIdentifier:(NSString *)bundleId withCompletionHandler:(id)completionHandler
 {
     // check to see if the notification is for the timer application
@@ -31,8 +31,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS10
-    if (kSLSystemVersioniOS10) {
+    // only initialize this file if we are on iOS 10 or iOS 11
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         %init();
     }
 }

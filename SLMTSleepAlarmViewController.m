@@ -1,6 +1,6 @@
 //
 //  SLMTSleepAlarmViewController.x
-//  The view controller that lets a user configure the sleep alarm on iOS10.
+//  The view controller that lets a user configure the sleep alarm on iOS 10.
 //
 //  Created by Joshua Seltzer on 2/26/17.
 //
@@ -56,7 +56,7 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS10
+    // only initialize this file if we are on iOS 10
     if (kSLSystemVersioniOS10) {
         %init();
     }

@@ -64,9 +64,17 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 {
     %orig;
 
+    // determine the title of the alarm
+    NSString *alarmTitle = nil;
+    if ([self.SLAlertAlarm isSleepAlarm]) {
+        alarmTitle = kSLSleepAlarmString;
+    } else {
+        alarmTitle = self.SLAlertAlarm.uiTitle;
+    }
+
     // customize the alert controller
     self.alertController.title = kSLSkipAlarmString;
-    self.alertController.message = kSLSkipQuestionString(self.SLAlertAlarm.uiTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
+    self.alertController.message = kSLSkipQuestionString(alarmTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
 
     // add yes and no actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:kSLYesString

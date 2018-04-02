@@ -19,8 +19,13 @@
 #define kCFCoreFoundationVersionNumber_iOS_10_0 1348.00
 #endif
 
+#ifndef kCFCoreFoundationVersionNumber_iOS_11_0
+#define kCFCoreFoundationVersionNumber_iOS_11_0 1443.00
+#endif
+
 // create definitions for the different versions of iOS that are supported by Sleeper
-#define kSLSystemVersioniOS10 kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0
+#define kSLSystemVersioniOS11 kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0
+#define kSLSystemVersioniOS10 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
 #define kSLSystemVersioniOS9 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 #define kSLSystemVersioniOS8 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
 
@@ -29,16 +34,16 @@
 // interface for version compatibility functions throughout the application
 @interface SLCompatibilityHelper : NSObject
 
-// iOS8/iOS9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
+// iOS 8 / iOS 9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
 + (void)modifySnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification;
 
-// iOS10: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
+// iOS 10 / iOS 11: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
 + (void)modifySnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord;
 
-// iOS8/iOS9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
+// iOS 8 / iOS 9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
 + (UIConcreteLocalNotification *)nextSkippableAlarmLocalNotification;
 
-// iOS10: Returns the next skippable alarm notification request given an array of notification requests.
+// iOS 10 / iOS 11: Returns the next skippable alarm notification request given an array of notification requests.
 // If there is no skippable notification found, return nil.
 + (UNNotificationRequest *)nextSkippableAlarmNotificationRequestForNotificationRequests:(NSArray *)notificationRequests;
 
@@ -51,7 +56,7 @@
 // returns the color of the labels in the picker view
 + (UIColor *)pickerViewLabelColor;
 
-// iOS10: returns the cell selection background color for cells
+// iOS 10 / iOS 11: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor;
 
 @end

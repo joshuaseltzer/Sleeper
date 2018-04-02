@@ -12,7 +12,7 @@
 
 @implementation SLCompatibilityHelper
 
-// iOS8/iOS9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
+// iOS 8 / iOS 9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
 + (void)modifySnoozeNotificationForLocalNotification:(UIConcreteLocalNotification *)localNotification
 {
     // grab the alarm Id from the notification
@@ -35,7 +35,7 @@
     }
 }
 
-// iOS10: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
+// iOS 10 / iOS 11: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
 + (void)modifySnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord
 {
     // grab the alarm Id from the notification record
@@ -58,7 +58,7 @@
     }
 }
 
-// iOS8/iOS9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
+// iOS 8 / iOS 9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
 + (UIConcreteLocalNotification *)nextSkippableAlarmLocalNotification
 {
     // create a comparator block to sort the array of notifications
@@ -78,7 +78,7 @@
     // grab the shared instance of the clock data provider
     SBClockDataProvider *clockDataProvider = (SBClockDataProvider *)[objc_getClass("SBClockDataProvider") sharedInstance];
     
-    // get the scheduled notifications from the SBClockDataProvider (iOS8) or the SBClockNotificationManager (iOS9)
+    // get the scheduled notifications from the SBClockDataProvider (iOS 8) or the SBClockNotificationManager (iOS 9)
     NSArray *scheduledNotifications = nil;
     if (kSLSystemVersioniOS9) {
         // grab the shared instance of the clock notification manager for the scheduled notifications
@@ -112,7 +112,7 @@
     return nil;
 }
 
-// iOS10: Returns the next skippable alarm notification request given an array of notification requests.
+// iOS 10 / iOS 11: Returns the next skippable alarm notification request given an array of notification requests.
 // If there is no skippable notification found, return nil.
 + (UNNotificationRequest *)nextSkippableAlarmNotificationRequestForNotificationRequests:(NSArray *)notificationRequests
 {
@@ -169,7 +169,7 @@
     NSString *alarmId = nil;
     
     // check the version of iOS that the device is running to determine where to get the alarm Id
-    if (kSLSystemVersioniOS9 || kSLSystemVersioniOS10) {
+    if (kSLSystemVersioniOS9 || kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         alarmId = alarm.alarmID;
     } else {
         alarmId = alarm.alarmId;
@@ -185,7 +185,7 @@
     UIColor *color = nil;
 
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10) {
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         color = [UIColor blackColor];
     } else {
         color = [UIColor whiteColor];
@@ -201,7 +201,7 @@
     UIColor *color = nil;
 
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10) {
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         color = [UIColor whiteColor];
     } else {
         color = [UIColor blackColor];
@@ -210,7 +210,7 @@
     return color;
 }
 
-// iOS10: returns the cell selection background color for cells
+// iOS 10 / iOS 11: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor
 {
     return [UIColor colorWithRed:52.0 / 255.0
@@ -219,7 +219,7 @@
                            alpha:1.0];
 }
 
-// iOS8/iOS9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable
+// iOS 8 / iOS 9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable
 + (BOOL)isAlarmLocalNotificationSkippable:(UIConcreteLocalNotification *)localNotification
                                forAlarmId:(NSString *)alarmId
 {
@@ -253,7 +253,7 @@
     }
 }
 
-// iOS10: helper function that will investigate an alarm notification request and alarm Id to see if it is skippable
+// iOS 10 / iOS 11: helper function that will investigate an alarm notification request and alarm Id to see if it is skippable
 + (BOOL)isAlarmNotificationRequestSkippable:(UNNotificationRequest *)notificationRequest
                                  forAlarmId:(NSString *)alarmId
 {

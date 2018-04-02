@@ -52,7 +52,7 @@
                                       reuseIdentifier:optionTableButtonCellIdentifier];
 
         // on newer versions of iOS, we need to set the background view for the cell
-        if (kSLSystemVersioniOS10) {
+        if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
             UIView *backgroundView = [[UIView alloc] init];
             backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
             cell.selectedBackgroundView = backgroundView;

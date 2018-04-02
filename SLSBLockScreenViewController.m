@@ -1,6 +1,6 @@
 //
 //  SLSBLockScreenViewController.x
-//  Hook into the SBLockScreenViewController class to potentially show an alert after unlocking the device for iOS8 or iOS9.
+//  Hook into the SBLockScreenViewController class to potentially show an alert after unlocking the device for iOS 8 or iOS 9.
 //
 //  Created by Joshua Seltzer on 2/23/17.
 //
@@ -12,7 +12,7 @@
 
 %hook SBLockScreenViewController
 
-// iOS8/iOS9: override to display a pop up allowing the user to skip an alarm
+// iOS 8 / iOS 9: override to display a pop up allowing the user to skip an alarm
 - (void)finishUIUnlockFromSource:(int)source
 {
     // perform the original implementation
@@ -52,7 +52,7 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS8 or iOS9
+    // only initialize this file if we are on iOS 8 or iOS 9
     if (kSLSystemVersioniOS8 || kSLSystemVersioniOS9) {
         %init();
     }

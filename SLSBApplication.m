@@ -1,6 +1,6 @@
 //
 //  SLSBApplication.x
-//  Hook into the SBApplication class to modify the snooze notification on iOS8.
+//  Hook into the SBApplication class to modify the snooze notification on iOS 8.
 //
 //  Created by Joshua Seltzer on 2/23/17.
 //
@@ -10,7 +10,7 @@
 
 %hook SBApplication
 
-// iOS8: override to insert our custom snooze time if it was defined
+// iOS 8: override to insert our custom snooze time if it was defined
 - (void)scheduleSnoozeNotification:(UIConcreteLocalNotification *)notification
 {
     // attempt to modify the notification with a custom snooze time
@@ -22,7 +22,7 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS8
+    // only initialize this file if we are on iOS 8
     if (kSLSystemVersioniOS8) {
         %init();
     }

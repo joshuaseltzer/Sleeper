@@ -12,7 +12,7 @@
 
 %hook SBLockScreenManager
 
-// iOS10: override to display a pop up allowing the user to skip an alarm
+// iOS 10 / iOS 11: override to display a pop up allowing the user to skip an alarm
 - (void)_finishUIUnlockFromSource:(int)source withOptions:(id)options
 {
     %orig;
@@ -63,8 +63,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS10
-    if (kSLSystemVersioniOS10) {
+    // only initialize this file if we are on iOS 10 or iOS 11
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         %init();
     }
 }

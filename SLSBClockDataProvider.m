@@ -10,7 +10,7 @@
 #import "SLPrefsManager.h"
 #import "SLAppleSharedInterfaces.h"
 
-%group iOS10
+%group iOS10iOS11
 
 %hook SBClockDataProvider
 
@@ -42,13 +42,13 @@
 
 %end
 
-%end // %group iOS10
+%end // %group iOS10iOS11
 
 %group iOS8iOS9
 
 %hook SBClockDataProvider
 
-// iOS8/iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS 8 / iOS 9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification
 {
     // grab the shared instance of the clock data provider
@@ -89,8 +89,8 @@
 
 %ctor {
     // check which version we are running to determine which group to initialize
-    if (kSLSystemVersioniOS10) {
-        %init(iOS10);
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+        %init(iOS10iOS11);
     } else {
         %init(iOS8iOS9);
     }

@@ -8,7 +8,7 @@
 
 @import UserNotifications;
 
-// iOS8/iOS9: the notification that gets fired when the user decides to snooze an alarm
+// iOS 8/ iOS 9: the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification
 
 // returns a date for a given notification that will happen after a date in a given time zone
@@ -22,10 +22,10 @@
 // tells us if the given notification object was generated from a snooze notification
 + (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
-// iOS8: the alarm Id corresponding to the alarm object
+// iOS 8: the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
 
-// iOS9/iOS10: the alarm Id corresponding to the alarm object
+// iOS 9 / iOS 10 / iOS 11: the alarm Id corresponding to the alarm object
 @property (nonatomic, retain) NSString *alarmID;
 
 // the display title of the alarm
@@ -36,6 +36,9 @@
 
 // simulates when an alarm gets fired
 - (void)handleAlarmFired:(UIConcreteLocalNotification *)notification;
+
+// iOS 10 / iOS 11: determines whether or not the alarm is the sleep/bedtime alarm
+- (BOOL)isSleepAlarm;
 
 @end
 
@@ -54,7 +57,7 @@
 // returns an alarm object from a given alarm Id
 - (Alarm *)alarmWithId:(NSString *)alarmId;
 
-// iOS10: the special sleep alarm (i.e. Bedtime alarm)
+// iOS 10 / iOS 11: the special sleep alarm (i.e. Bedtime alarm)
 @property (nonatomic, readonly) Alarm *sleepAlarm;
 
 @end
@@ -65,46 +68,46 @@
 // the shared instance of the clock data provider
 + (id)sharedInstance;
 
-// iOS8: return all scheduled notifications that are held by the clock data provider
+// iOS 8: return all scheduled notifications that are held by the clock data provider
 - (NSArray *)_scheduledNotifications;
 
 // returns an alarm Id for a given notification
 - (NSString *)_alarmIDFromNotification:(UIConcreteLocalNotification *)notification;
 
-// iOS10: returns an alarm Id for a given notification request
+// iOS 10 / iOS 11: returns an alarm Id for a given notification request
 - (NSString *)_alarmIDFromNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
 // lets us know whether or not a given notification is an alarm notification
-// iOS8/iOS9: argument is a UIConcreteLocalNotification object
-// iOS10: argument is a UNNotification object
+// iOS 8 / iOS 9: argument is a UIConcreteLocalNotification object
+// iOS 10 / iOS 11: argument is a UNNotification object
 - (BOOL)_isAlarmNotification:(id)notification;
 
-// iOS10: whether or not a given notification request is an alarm notification
+// iOS 10 / iOS 11: whether or not a given notification request is an alarm notification
 - (BOOL)_isAlarmNotificationRequest:(UNNotificationRequest *)notificationRequest;
 
-// iOS8/iOS9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS 8 / iOS 9: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification;
 
-// iOS10: invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS 10 / iOS 11: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForNotification:(id)notification;
 
 @end
 
-// iOS9/iOS10: manages the notifications for clocks and alarms
+// iOS 9 / iOS 10 / iOS 11: manages the notifications for clocks and alarms
 @interface SBClockNotificationManager : NSObject
 
 // the shared instance of the notification manager
 + (id)sharedInstance;
 
-// iOS9: returns the array of scheduled local notifications
+// iOS 9: returns the array of scheduled local notifications
 - (NSArray *)scheduledLocalNotifications;
 
-// iOS10: returns pending notification request objects in the completion handler
+// iOS 10 / iOS 11: returns pending notification request objects in the completion handler
 - (void)getPendingNotificationRequestsWithCompletionHandler:(void (^)(NSArray<UNNotificationRequest *> *requests))completionHandler;
 
 @end
 
-// iOS10: the notification record object that gets fired when the user snoozes the alarm
+// iOS 10 / iOS 11: the notification record object that gets fired when the user snoozes the alarm
 @interface UNSNotificationRecord : NSObject
 
 // user information attached to this notification record
@@ -121,7 +124,7 @@
 
 @end
 
-// iOS10: private legacy notification trigger object used for alarm notifications
+// iOS 10 / iOS 11: private legacy notification trigger object used for alarm notifications
 @interface UNLegacyNotificationTrigger : UNNotificationTrigger
 
 // returns the next trigger date after the specified date and default time zone
@@ -129,7 +132,7 @@
 
 @end
 
-// iOS10: private implementation header for the notification content
+// iOS 10 / iOS 11: private implementation header for the notification content
 @interface UNNotificationContent (Private)
 
 // returns whether or not this notification content is from a snooze notification
