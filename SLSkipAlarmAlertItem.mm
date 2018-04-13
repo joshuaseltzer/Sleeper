@@ -66,7 +66,7 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 
     // determine the title of the alarm
     NSString *alarmTitle = nil;
-    if ([self.SLAlertAlarm isSleepAlarm]) {
+    if ((kSLSystemVersioniOS10 || kSLSystemVersioniOS11) && [self.SLAlertAlarm isSleepAlarm]) {
         alarmTitle = kSLSleepAlarmString;
     } else {
         alarmTitle = self.SLAlertAlarm.uiTitle;
