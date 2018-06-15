@@ -26,7 +26,7 @@
         NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:notification.request];
         
         // check to see if skip is activated for this alarm
-        if (![SLPrefsManager skipActivatedStatusForAlarmId:alarmId] == kSLSkipActivatedStatusActivated) {
+        if ([SLPrefsManager skipActivatedStatusForAlarmId:alarmId] != kSLSkipActivatedStatusActivated) {
             // if we did not activate skip for this alarm, perform the original implementation
             %orig;
         }
