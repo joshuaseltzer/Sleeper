@@ -26,14 +26,14 @@
         NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:notification.request];
         
         // check to see if skip is activated for this alarm
-        if ([SLPrefsManager skipActivatedStatusForAlarmId:alarmId] == kSLSkipActivatedStatusActivated) {
-            // save the alarm's skip activation state to unknown for this alarm
-            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
-        } else {
+        if (![SLPrefsManager skipActivatedStatusForAlarmId:alarmId] == kSLSkipActivatedStatusActivated) {
             // if we did not activate skip for this alarm, perform the original implementation
             %orig;
         }
+
+        // save the alarm's skip activation state to unknown for this alarm
+        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
     } else {
         // if it is not an alarm notification, perform the original implementation
         %orig;
@@ -69,14 +69,14 @@
             // simulate the alarm going off
             [alarm handleAlarmFired:notification];
             [alarmManager handleNotificationFired:notification];
-            
-            // save the alarm's skip activation state to unknown for this alarm
-            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
         } else {
             // if we did not activate skip for this alarm, perform the original implementation
             %orig;
         }
+
+        // save the alarm's skip activation state to unknown for this alarm
+        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
     } else {
         // if it is not an alarm notification, perform the original implementation
         %orig;

@@ -1,7 +1,7 @@
 Package: com.joshuaseltzer.sleeper
 Name: Sleeper
 Depends: mobilesubstrate
-Version: 4.0.0
+Version: 4.0.1
 Architecture: iphoneos-arm
 Description: Sleeper (developer version).
 Maintainer: Joshua Seltzer
