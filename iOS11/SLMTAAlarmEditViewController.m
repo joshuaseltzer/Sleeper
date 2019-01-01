@@ -1,35 +1,37 @@
 //
-//  SLEditAlarmViewController.x
-//  The view controller responsible for editing an iOS alarm.
+//  SLMTAAlarmEditViewController.x
+//  The view controller responsible for editing an iOS alarm (introduced in iOS 11).
 //
-//  Created by Joshua Seltzer on 2/21/17.
+//  Created by Joshua Seltzer on 4/1/18.
 //
 //
 
-#import "SLAppleSharedInterfaces.h"
-#import "SLPrefsManager.h"
-#import "SLLocalizedStrings.h"
-#import "SLCompatibilityHelper.h"
-#import "SLPickerTableViewController.h"
-#import "SLSnoozeTimeViewController.h"
-#import "SLSkipTimeViewController.h"
+#import "../SLAppleSharedInterfaces.h"
+#import "../SLPrefsManager.h"
+#import "../SLLocalizedStrings.h"
+#import "../SLCompatibilityHelper.h"
+#import "../SLPickerTableViewController.h"
+#import "../SLSnoozeTimeViewController.h"
+#import "../SLSkipTimeViewController.h"
 
 // define an enum to reference the sections of the table view
-typedef enum SLEditAlarmViewSection : NSUInteger {
-    kSLEditAlarmViewSectionAttribute,
-    kSLEditAlarmViewSectionDelete
-} SLEditAlarmViewSection;
+typedef enum SLMTAAlarmEditViewControllerSection : NSUInteger {
+    kSLMTAAlarmEditViewControllerSectionAttribute,
+    kSLMTAAlarmEditViewControllerSectionDelete,
+    kSLMTAAlarmEditViewControllerNumSections
+} SLMTAAlarmEditViewControllerSection;
 
-// define an enum to reference the rows in the attributes section of the table view
-typedef enum SLEditAlarmViewSectionAttributeRow : NSUInteger {
-    kSLEditAlarmViewSectionAttributeRowRepeat,
-    kSLEditAlarmViewSectionAttributeRowLabel,
-    kSLEditAlarmViewSectionAttributeRowSound,
-    kSLEditAlarmViewSectionAttributeRowSnoozeToggle,
-    kSLEditAlarmViewSectionAttributeRowSnoozeTime,
-    kSLEditAlarmViewSectionAttributeRowSkipToggle,
-    kSLEditAlarmViewSectionAttributeRowSkipTime
-} SLEditAlarmViewSectionAttributeRow;
+// define an enum to reference the rows in SLMTAAlarmEditViewControllerSection
+typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
+    kSLMTAAlarmEditViewControllerAttributeSectionRowRepeat,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowLabel,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSound,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeToggle,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeTime,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime,
+    kSLMTAAlarmEditViewControllerAttributeSectionNumRows
+} SLMTAAlarmEditViewControllerAttributeSectionRow;
 
 // the custom cell used to display information when editing an alarm
 @interface MoreInfoTableViewCell : UITableViewCell
@@ -37,22 +39,22 @@ typedef enum SLEditAlarmViewSectionAttributeRow : NSUInteger {
 
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
-@interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
+@interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
 SLPickerSelectionDelegate>
 
 // the alarm object associated with the controller
-@property (readonly, assign, nonatomic) Alarm *alarm;
+@property(readonly, nonatomic) Alarm *alarm;
 
 @end
 
 // custom interface for added properties to the edit alarm view controller
-@interface EditAlarmViewController (Sleeper)
+@interface MTAAlarmEditViewController (Sleeper)
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 
 @end
 
-%hook EditAlarmViewController
+%hook MTAAlarmEditViewController
 
 // the Sleeper preferences for the alarm being displayed
 %property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
@@ -92,8 +94,8 @@ SLPickerSelectionDelegate>
     NSInteger numRows = %orig;
     
     // add custom rows to allow the user to edit the snooze time and configure skipping
-    if (section == kSLEditAlarmViewSectionAttribute) {
-        numRows = numRows + 3;
+    if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
+        numRows = kSLMTAAlarmEditViewControllerAttributeSectionNumRows;
     }
     
     return numRows;
@@ -105,21 +107,21 @@ SLPickerSelectionDelegate>
     MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
     
     // configure the custom cells
-    if (indexPath.section == kSLEditAlarmViewSectionAttribute) {
+    if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAttribute) {
         // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
         // cell so that it is not reused on the wrong cell
-        if (indexPath.row != kSLEditAlarmViewSectionAttributeRowSnoozeToggle) {
+        if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeToggle) {
             cell.accessoryView = nil;
         }
 
-        if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSnoozeTime) {
+        if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeTime) {
             cell.textLabel.text = kSLSnoozeTimeString;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
             // format the cell of the text with the snooze time values
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.snoozeTimeHour,
                                         (long)self.SLAlarmPrefs.snoozeTimeMinute, (long)self.SLAlarmPrefs.snoozeTimeSecond];
-        } else if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSkipToggle) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             cell.textLabel.text = kSLSkipString;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.detailTextLabel.text = nil;
@@ -133,7 +135,7 @@ SLPickerSelectionDelegate>
             
             // set the switch to the custom view in the cell
             cell.accessoryView = skipControl;
-        } else if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSkipTime) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime) {
             cell.textLabel.text = kSLSkipTimeString;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
@@ -149,8 +151,8 @@ SLPickerSelectionDelegate>
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // handle row selection for the custom cells
-    if (indexPath.section == kSLEditAlarmViewSectionAttribute) {
-        if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSnoozeTime) {
+    if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAttribute) {
+        if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeTime) {
             // create a custom view controller which will decide the snooze time
             SLSnoozeTimeViewController *snoozeController = [[SLSnoozeTimeViewController alloc] initWithHours:self.SLAlarmPrefs.snoozeTimeHour
                                                                                                      minutes:self.SLAlarmPrefs.snoozeTimeMinute
@@ -159,7 +161,7 @@ SLPickerSelectionDelegate>
             
             // push the controller to our stack
             [self.navigationController pushViewController:snoozeController animated:YES];
-        } else if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSkipTime) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime) {
             // create a custom view controller which will decide the skip time
             SLSkipTimeViewController *skipController = [[SLSkipTimeViewController alloc] initWithHours:self.SLAlarmPrefs.skipTimeHour
                                                                                                minutes:self.SLAlarmPrefs.skipTimeMinute
@@ -168,7 +170,7 @@ SLPickerSelectionDelegate>
             
             // push the controller to our stack
             [self.navigationController pushViewController:skipController animated:YES];
-        } else if (indexPath.row != kSLEditAlarmViewSectionAttributeRowSkipToggle) {
+        } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             %orig;
         }
     } else {
@@ -218,3 +220,10 @@ SLPickerSelectionDelegate>
 }
 
 %end
+
+%ctor {
+    // only initialize this file if we are on iOS 11
+    if (kSLSystemVersioniOS11) {
+        %init();
+    }
+}

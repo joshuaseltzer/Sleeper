@@ -6,7 +6,7 @@
 //
 //
 
-#import "SLCompatibilityHelper.h"
+#import "../SLCompatibilityHelper.h"
 
 %hook UNLocalNotificationClient
 

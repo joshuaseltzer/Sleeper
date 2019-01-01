@@ -1,24 +1,24 @@
 //
-//  SLMTABedtimeViewController.x
-//  The view controller that lets a user configure the sleep alarm (used in iOS 11).
+//  SLMTSleepAlarmViewController.x
+//  The view controller that lets a user configure the sleep alarm on iOS 10.
 //
-//  Created by Joshua Seltzer on 4/1/18.
+//  Created by Joshua Seltzer on 2/26/17.
 //
 //
 
-#import "SLAppleSharedInterfaces.h"
-#import "SLPrefsManager.h"
-#import "SLCompatibilityHelper.h"
+#import "../SLAppleSharedInterfaces.h"
+#import "../SLPrefsManager.h"
+#import "../SLCompatibilityHelper.h"
 
 // interface for the sleep alarm view controller
-@interface MTABedtimeViewController : UIViewController
+@interface MTSleepAlarmViewController : UIViewController
 
 // reset the skip activation status for the sleep alarm when any preferences are changed
 - (void)SLResetSkipActivatedStatus;
 
 @end
 
-%hook MTABedtimeViewController
+%hook MTSleepAlarmViewController
 
 %new
 - (void)SLResetSkipActivatedStatus
@@ -56,8 +56,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11
-    if (kSLSystemVersioniOS11) {
+    // only initialize this file if we are on iOS 10
+    if (kSLSystemVersioniOS10) {
         %init();
     }
 }

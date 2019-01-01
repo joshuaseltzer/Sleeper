@@ -6,10 +6,11 @@
 //
 //
 
-#import "SLAppleSharedInterfaces.h"
-#import "SLCompatibilityHelper.h"
-#import "SLPrefsManager.h"
+#import "../SLAppleSharedInterfaces.h"
+#import "../SLCompatibilityHelper.h"
+#import "../SLPrefsManager.h"
 
+// used for multiple versions of iOS
 %hook AlarmManager
 
 - (void)removeAlarm:(Alarm *)alarm

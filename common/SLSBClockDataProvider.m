@@ -6,9 +6,9 @@
 //
 //
 
-#import "SLCompatibilityHelper.h"
-#import "SLPrefsManager.h"
-#import "SLAppleSharedInterfaces.h"
+#import "../SLCompatibilityHelper.h"
+#import "../SLPrefsManager.h"
+#import "../SLAppleSharedInterfaces.h"
 
 %group iOS10iOS11
 
@@ -91,7 +91,7 @@
     // check which version we are running to determine which group to initialize
     if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         %init(iOS10iOS11);
-    } else {
+    } else if (kSLSystemVersioniOS8 || kSLSystemVersioniOS9) {
         %init(iOS8iOS9);
     }
 }

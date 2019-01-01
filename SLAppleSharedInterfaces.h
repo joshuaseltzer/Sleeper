@@ -8,7 +8,7 @@
 
 @import UserNotifications;
 
-// iOS 8/ iOS 9: the notification that gets fired when the user decides to snooze an alarm
+// iOS 8 / iOS 9: the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification
 
 // returns a date for a given notification that will happen after a date in a given time zone

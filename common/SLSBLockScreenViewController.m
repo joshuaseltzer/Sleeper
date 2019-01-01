@@ -6,9 +6,9 @@
 //
 //
 
-#import "SLCompatibilityHelper.h"
-#import "SLAppleSharedInterfaces.h"
-#import "SLSkipAlarmAlertItem.h"
+#import "../SLCompatibilityHelper.h"
+#import "../SLAppleSharedInterfaces.h"
+#import "../SLSkipAlarmAlertItem.h"
 
 %hook SBLockScreenViewController
 
