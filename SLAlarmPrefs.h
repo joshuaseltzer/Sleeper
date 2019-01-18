@@ -32,6 +32,12 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // and default preferences
 - (instancetype)initWithAlarmId:(NSString *)alarmId;
 
+// invoked in the case that holiday skip dates were not set in the preferences for this alarm
+- (void)populateDefaultHolidaySkipDates;
+
+// returns the total number of selected holidays to be skipped for the given alarm
+- (NSInteger)totalSelectedHolidays;
+
 // alarm Id associated with this preference object
 @property (nonatomic, strong) NSString *alarmId;
 
@@ -58,5 +64,11 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 
 // the skip activation status
 @property (nonatomic) SLPrefsSkipActivatedStatus skipActivationStatus;
+
+// an array of NSDate objects that represent the custom skip dates for this alarm
+@property (nonatomic, strong) NSArray *customSkipDates;
+
+// a dictionary containing additional dictionaries that correspond to the available holidays per country
+@property (nonatomic, strong) NSDictionary *holidaySkipDates;
 
 @end

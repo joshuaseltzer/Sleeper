@@ -53,8 +53,11 @@
 // returns the picker view's background color, which will depend on the iOS version
 + (UIColor *)pickerViewBackgroundColor;
 
-// returns the color of the labels in the picker view
-+ (UIColor *)pickerViewLabelColor;
+// returns the color of the standard labels used throughout the tweak
++ (UIColor *)defaultLabelColor;
+
+// returns the color of the destructive labels used throughout the tweak
++ (UIColor *)destructiveLabelColor;
 
 // iOS 10 / iOS 11: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor;

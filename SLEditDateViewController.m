@@ -6,6 +6,8 @@
 //
 
 #import "SLEditDateViewController.h"
+#import "SLCompatibilityHelper.h"
+#import "SLLocalizedStrings.h"
 
 // define constants for the view dictionary when creating constraints
 #define kSLDatePickerViewKey            @"datePickerView"
@@ -44,8 +46,7 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 {
     [super viewDidLoad];
     
-    // set the title of the controller
-    self.title = @"Select Date";
+    self.navigationItem.title = kSLSelectDateString;
     
     // create and customize the date picker
     self.datePickerView = [[UIDatePicker alloc] initWithFrame:CGRectZero];
@@ -54,6 +55,9 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
     if (self.initialDate != nil) {
         self.datePickerView.date = self.initialDate;
     }
+    self.datePickerView.backgroundColor = [SLCompatibilityHelper pickerViewBackgroundColor];
+    self.view.backgroundColor = [SLCompatibilityHelper pickerViewBackgroundColor];
+    [self.datePickerView setValue:[SLCompatibilityHelper defaultLabelColor] forKey:@"textColor"];
     self.datePickerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:self.datePickerView];
     
@@ -82,14 +86,14 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
     [self.view addConstraints:@[pickerViewHeightConstraint, pickerViewYConstraint, pickerViewXConstraint]];
     
     // create a cancel button to dismiss changes
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil)
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:kSLCancelString
                                                                      style:UIBarButtonItemStylePlain
                                                                     target:self
                                                                     action:@selector(cancelButtonPressed:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     
     // create a save button to save changes and dismiss the controller
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", nil)
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:kSLSaveString
                                                                    style:UIBarButtonItemStyleDone
                                                                   target:self
                                                                   action:@selector(saveButtonPressed:)];

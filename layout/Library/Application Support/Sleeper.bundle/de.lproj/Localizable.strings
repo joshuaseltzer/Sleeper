@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Zeit-Überspringen";
 "SKIP_ALARM" = "Wecker-Überspringen";
 "SKIP_QUESTION" = "Möchtest du \"%@\" überspringen, der in %@ losgehen wird?";
-"SKIP_EXPLANATION" = "Wähle eine Zeitspanne in der du abgefragt wirst den Wecker zu überspringen, bevor er ausgelöst wird.";
+"SKIP_TIME_EXPLANATION" = "Wähle eine Zeitspanne in der du abgefragt wirst den Wecker zu überspringen, bevor er ausgelöst wird.";

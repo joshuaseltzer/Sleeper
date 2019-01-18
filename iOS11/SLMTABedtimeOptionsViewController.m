@@ -148,6 +148,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                 skipControl.on = self.SLAlarmPrefs.skipEnabled;
                 
                 // set the switch to the custom view in the cell
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 cell.accessoryView = skipControl;
                 break;
             }

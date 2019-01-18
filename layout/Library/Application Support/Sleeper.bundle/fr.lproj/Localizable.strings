@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Durée";
 "SKIP_ALARM" = "Ignorer l'alarme";
 "SKIP_QUESTION" = "Voulez-vous ignorer \"%@\" qui doit se déclencher à %@?";
-"SKIP_EXPLANATION" = "Choisissez la durée pendant laquelle il vous sera demandé si vous souhaitez ignorer l'alarme avant qu'elle ne se déclenche.";
+"SKIP_TIME_EXPLANATION" = "Choisissez la durée pendant laquelle il vous sera demandé si vous souhaitez ignorer l'alarme avant qu'elle ne se déclenche.";

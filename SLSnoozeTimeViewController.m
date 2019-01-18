@@ -64,10 +64,7 @@
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     
     // set the color of the button to the red, destructive color as defined by Apple in other cells
-    cell.textLabel.textColor = [UIColor colorWithRed:1.0
-                                               green:0.231373
-                                                blue:0.188235
-                                               alpha:1.0];
+    cell.textLabel.textColor = [SLCompatibilityHelper destructiveLabelColor];
     
     return cell;
 }

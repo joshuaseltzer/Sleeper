@@ -116,7 +116,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                           reuseIdentifier:kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier];
 
-            // set the background color of the cell
+            // set the selected background color of the cell
             UIView *backgroundView = [[UIView alloc] init];
             backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
             cell.selectedBackgroundView = backgroundView;
@@ -148,6 +148,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 skipControl.on = self.SLAlarmPrefs.skipEnabled;
                 
                 // set the switch to the custom view in the cell
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 cell.accessoryView = skipControl;
                 break;
             }

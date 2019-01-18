@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Spring Time Over";
 "SKIP_ALARM" = "Spring Alarm Over";
 "SKIP_QUESTION" = "Vil du springe \"%@\" over? Den er sat til kl. \"%@\"";
-"SKIP_EXPLANATION" = "Vælg hvor lang tid før en alarm ringer at du vil spørges om du vil springe den fra.";
+"SKIP_TIME_EXPLANATION" = "Vælg hvor lang tid før en alarm ringer at du vil spørges om du vil springe den fra.";

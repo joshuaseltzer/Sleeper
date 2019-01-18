@@ -48,7 +48,7 @@
 // return a footer view for each table view section
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return kSLSkipExplanationString;
+    return kSLSkipTimeExplanationString;
 }
 
 #pragma mark - UITableViewDelegate

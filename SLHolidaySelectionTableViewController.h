@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLPrefsManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SLHolidaySelectionTableViewController : UITableViewController
 
-// initialize this controller with a list of available holidays and the selection criteria
-- (instancetype)initWithHolidays:(NSArray *)holidays;
+// initialize this controller the list of available holidays and the selection criteria
+- (instancetype)initWithHolidays:(NSMutableArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry;
 
 @end
 

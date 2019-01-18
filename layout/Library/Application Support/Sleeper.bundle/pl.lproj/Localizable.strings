@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Czas pominięcia";
 "SKIP_ALARM" = "Pomiń alarm";
 "SKIP_QUESTION" = "Czy chciałbyś pominąć alarm \"%@\" który jest zaplanowany na %@?";
-"SKIP_EXPLANATION" = "Wybierz, po jakim czasie chcesz być zapytany o możliwość pominięcia alarmu, zanim zabrzmi.";
+"SKIP_TIME_EXPLANATION" = "Wybierz, po jakim czasie chcesz być zapytany o możliwość pominięcia alarmu, zanim zabrzmi.";

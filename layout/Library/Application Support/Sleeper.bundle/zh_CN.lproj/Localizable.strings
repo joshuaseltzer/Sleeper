@@ -17,4 +17,4 @@
 "SKIP_TIME" = "跳过时间";
 "SKIP_ALARM" = "跳过闹钟";
 "SKIP_QUESTION" = "预计启动％@？你是否想要跳过\"％@\"";
-"SKIP_EXPLANATION" = "选择你会被提示跳过闹钟激发之前的时间量";
+"SKIP_TIME_EXPLANATION" = "选择你会被提示跳过闹钟激发之前的时间量";

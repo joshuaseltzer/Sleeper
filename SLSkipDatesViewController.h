@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SLSkipDatesViewController : UITableViewController <SLEditDateViewControllerDelegate, UIViewControllerTransitioningDelegate>
 
+// initialize this controller with optional custom skip dates and holiday skip dates
+- (instancetype)initWithCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates;
+
 @end
 
 NS_ASSUME_NONNULL_END

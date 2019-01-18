@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Degero";
 "SKIP_ALARM" = "Autem Clangor";
 "SKIP_QUESTION" = "Vis omit \"%@\" in qua venturus est %@ abire?";
-"SKIP_EXPLANATION" = "Elige quam promptus spatium antequam trepidatione ignes omit.";
+"SKIP_TIME_EXPLANATION" = "Elige quam promptus spatium antequam trepidatione ignes omit.";

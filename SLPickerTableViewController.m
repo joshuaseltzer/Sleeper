@@ -393,7 +393,7 @@ static NSInteger const kSLSecondComponent = 4;
     self.hourLabel.adjustsFontSizeToFitWidth = YES;
     self.hourLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.hourLabel.text = kSLHoursString;
-    self.hourLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
+    self.hourLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
     [labelContainerView addSubview:self.hourLabel];
     
     // create the minute label
@@ -403,7 +403,7 @@ static NSInteger const kSLSecondComponent = 4;
     self.minuteLabel.adjustsFontSizeToFitWidth = YES;
     self.minuteLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.minuteLabel.text = kSLMinutesString;
-    self.minuteLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
+    self.minuteLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
     [labelContainerView addSubview:self.minuteLabel];
     
     // create the second label
@@ -413,7 +413,7 @@ static NSInteger const kSLSecondComponent = 4;
     self.secondLabel.adjustsFontSizeToFitWidth = YES;
     self.secondLabel.minimumScaleFactor = 8.0 / self.hourLabel.font.pointSize;
     self.secondLabel.text = kSLSecondsString;
-    self.secondLabel.textColor = [SLCompatibilityHelper pickerViewLabelColor];
+    self.secondLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
     [labelContainerView addSubview:self.secondLabel];
     
     return labelContainerView;
@@ -491,7 +491,7 @@ static NSInteger const kSLSecondComponent = 4;
 {
     // update the text to include the correct color and the row text
     NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)row]
-                                                                     attributes:@{NSForegroundColorAttributeName:[SLCompatibilityHelper pickerViewLabelColor]}];
+                                                                     attributes:@{NSForegroundColorAttributeName:[SLCompatibilityHelper defaultLabelColor]}];
 
     return attrString;
 }

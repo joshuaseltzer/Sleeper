@@ -110,6 +110,7 @@ SLPickerSelectionDelegate>
         // cell so that it is not reused on the wrong cell
         if (indexPath.row != kSLEditAlarmViewSectionAttributeRowSnoozeToggle) {
             cell.accessoryView = nil;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
 
         if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSnoozeTime) {
@@ -132,6 +133,7 @@ SLPickerSelectionDelegate>
             skipControl.on = self.SLAlarmPrefs.skipEnabled;
             
             // set the switch to the custom view in the cell
+            cell.accessoryType = UITableViewCellAccessoryNone;
             cell.accessoryView = skipControl;
         } else if (indexPath.row == kSLEditAlarmViewSectionAttributeRowSkipTime) {
             cell.textLabel.text = kSLSkipTimeString;

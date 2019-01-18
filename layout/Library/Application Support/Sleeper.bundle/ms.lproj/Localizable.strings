@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Langkau Masa";
 "SKIP_ALARM" = "Langkau Penggera";
 "SKIP_QUESTION" = "Adakah kamu ingin melangkau \"%@\" dimana ia telah dijadualkan untuk bunyi pada %@?";
-"SKIP_EXPLANATION" = "Pilih berapa kali kamu ingin didorong untuk melangkau penggera sebelum ia berbunyi.";
+"SKIP_TIME_EXPLANATION" = "Pilih berapa kali kamu ingin didorong untuk melangkau penggera sebelum ia berbunyi.";

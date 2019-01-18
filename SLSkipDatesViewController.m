@@ -9,26 +9,31 @@
 #import "SLPartialModalPresentationController.h"
 #import "SLPrefsManager.h"
 #import "SLHolidaySelectionTableViewController.h"
+#import "SLLocalizedStrings.h"
+#import "SLCompatibilityHelper.h"
 
 // define the reuse identifier for the cells in this table
 #define kSLSkipDateTableViewCellIdentifier              @"SLSkipDateTableViewCell"
 #define kSLAddNewDateTableViewCellIdentifier            @"SLAddNewDateTableViewCell"
 #define kSLResetDefaultTableViewCellIdentifier          @"SLResetDefaultTableViewCell"
-#define kSLHolidaysTableViewCellIdentifier              @"SLHolidaysTableViewCell"
+#define kSLCountriesTableViewCellIdentifier             @"SLCountriesTableViewCell"
 
 // enum that defines the sections that will be used in this table
 typedef enum SLSkipDatesViewControllerSection : NSInteger {
     kSLSkipDatesViewControllerSectionDates,
     kSLSkipDatesViewControllerSectionAddDate,
-    kSLSkipDatesViewControllerSectionHolidays,
+    kSLSkipDatesViewControllerSectionCountries,
     kSLSkipDatesViewControllerSectionnResetDefault,
     kSLSkipDatesViewControllerSectionNumSections
 } SLSkipDatesViewControllerSection;
 
 @interface SLSkipDatesViewController ()
 
-// the array that contains the dates that will be skipping
+// the array that contains the custom dates that will be skipped
 @property (nonatomic, strong) NSMutableArray *customSkipDates;
+
+// the dictionary containing the holiday skip dates for this alarm
+@property (nonatomic, strong) NSMutableDictionary *holidaySkipDates;
 
 // this value is set if the user is editing an existing date
 @property (nonatomic, strong) NSIndexPath *editingIndexPath;
@@ -41,20 +46,28 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 // TODO: Update all strings with localized versions
 @implementation SLSkipDatesViewController
 
+// initialize this controller with optional custom skip dates and holiday skip dates
+- (instancetype)initWithCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
+{
+    self = [super init];
+    if (self) {
+        self.customSkipDates = [[NSMutableArray alloc] initWithArray:customSkipDates];
+        self.holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:holidaySkipDates];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.title = @"Skip Dates";
+    self.title = kSLSkipDatesString;
     
     // create and customize the table
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.allowsSelectionDuringEditing = YES;
-    
-    // initialize the skip dates
-    self.customSkipDates = [[NSMutableArray alloc] init];
     
     // set the edit button to the right bar button if there are skip dates to remove
     if (self.customSkipDates.count > 0) {
@@ -114,7 +127,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
         case kSLSkipDatesViewControllerSectionDates:
             numRows = self.customSkipDates.count;
             break;
-        case kSLSkipDatesViewControllerSectionHolidays:
+        case kSLSkipDatesViewControllerSectionCountries:
             numRows = kSLHolidayCountryNumCountries;
             break;
         case kSLSkipDatesViewControllerSectionAddDate:
@@ -138,11 +151,17 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 skipDateCell.accessoryType = UITableViewCellAccessoryNone;
                 skipDateCell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 skipDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
+
+                // set the background color of the cell
+                UIView *backgroundView = [[UIView alloc] init];
+                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                skipDateCell.selectedBackgroundView = backgroundView;
             }
             [self updateSkipDateCellSelectionStyle:skipDateCell];
             
             // customize the cell by grabbing the corresponding skip date
             NSDate *skipDate = [self.customSkipDates objectAtIndex:indexPath.row];
+            skipDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
             skipDateCell.textLabel.text = [sSLCustomSkipDatesDateFormatter stringFromDate:skipDate];
             
             cell = skipDateCell;
@@ -156,33 +175,35 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 addNewDateCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 addNewDateCell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 addNewDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
+
+                // set the background color of the cell
+                UIView *backgroundView = [[UIView alloc] init];
+                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                addNewDateCell.selectedBackgroundView = backgroundView;
             }
             
             // customize the cell
-            addNewDateCell.textLabel.text = @"Add New Date...";
+            addNewDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+            addNewDateCell.textLabel.text = kSLAddNewDateString;
             
             cell = addNewDateCell;
             break;
         }
-        case kSLSkipDatesViewControllerSectionHolidays: {
-            UITableViewCell *holidayCell = [tableView dequeueReusableCellWithIdentifier:kSLHolidaysTableViewCellIdentifier];
-            if (holidayCell == nil) {
-                holidayCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                     reuseIdentifier:kSLHolidaysTableViewCellIdentifier];
-                holidayCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                holidayCell.selectionStyle = UITableViewCellSelectionStyleDefault;
-                holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
+        case kSLSkipDatesViewControllerSectionCountries: {
+            UITableViewCell *countryCell = [tableView dequeueReusableCellWithIdentifier:kSLCountriesTableViewCellIdentifier];
+            if (countryCell == nil) {
+                countryCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                     reuseIdentifier:kSLCountriesTableViewCellIdentifier];
+                countryCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                countryCell.selectionStyle = UITableViewCellSelectionStyleDefault;
+                countryCell.textLabel.textAlignment = NSTextAlignmentLeft;
             }
             
             // customize the cell
-            switch (indexPath.row) {
-                case kSLHolidayCountryUnitedStates:
-                    // TODO: update the text here with the localized string, the key for which comes from the corresponding plist
-                    holidayCell.textLabel.text = @"United States";
-                    break;
-            }
+            countryCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+            countryCell.textLabel.text = [SLPrefsManager friendlyNameForCountry:indexPath.row];
             
-            cell = holidayCell;
+            cell = countryCell;
             break;
         }
         case kSLSkipDatesViewControllerSectionnResetDefault: {
@@ -193,10 +214,16 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 resetDefaultCell.accessoryType = UITableViewCellAccessoryNone;
                 resetDefaultCell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 resetDefaultCell.textLabel.textAlignment = NSTextAlignmentCenter;
+
+                // set the background color of the cell
+                UIView *backgroundView = [[UIView alloc] init];
+                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                resetDefaultCell.selectedBackgroundView = backgroundView;
             }
             
             // customize the cell
-            resetDefaultCell.textLabel.text = @"Reset Default";
+            resetDefaultCell.textLabel.textColor = [SLCompatibilityHelper destructiveLabelColor];
+            resetDefaultCell.textLabel.text = kSLResetDefaultString;
             
             cell = resetDefaultCell;
             break;
@@ -250,8 +277,13 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerTitle = nil;
-    if (section == kSLSkipDatesViewControllerSectionDates) {
-        footerTitle = @"This alarm will be skipped on the dates selected.";
+    switch (section) {
+        case kSLSkipDatesViewControllerSectionDates:
+            footerTitle = kSLSkipDateExplanationString;
+            break;
+        case kSLSkipDatesViewControllerSectionnResetDefault:
+            footerTitle = kSLDefaultSkipDatesString;
+            break;
     }
     return footerTitle;
 }
@@ -259,8 +291,8 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSString *headerTitle = nil;
-    if (section == kSLSkipDatesViewControllerSectionHolidays) {
-        headerTitle = @"Holidays";
+    if (section == kSLSkipDatesViewControllerSectionCountries) {
+        headerTitle = kSLHolidaysString;
     }
     return headerTitle;
 }
@@ -298,16 +330,15 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
             [self presentViewController:navController animated:YES completion:nil];
             break;
         }
-        case kSLSkipDatesViewControllerSectionHolidays: {
+        case kSLSkipDatesViewControllerSectionCountries: {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
-            // load up the corresponding holidays to be displayed in the pushed controller
-            NSArray *holidays = [SLPrefsManager holidaysForCountry:indexPath.row];
-            if (holidays != nil) {
-                // TODO: determine what holidays the user has picked and set the selections accordingly
-                
+            // load up the corresponding country to be displayed in the holiday selection controller
+            NSString *resourceName = [SLPrefsManager resourceNameForCountry:indexPath.row];
+            if (resourceName != nil) {
                 // create a new holiday selection controller with the list of holidays for the user to configure
-                SLHolidaySelectionTableViewController *holidaySelectionTableViewController = [[SLHolidaySelectionTableViewController alloc] initWithHolidays:holidays];
+                SLHolidaySelectionTableViewController *holidaySelectionTableViewController = [[SLHolidaySelectionTableViewController alloc] initWithHolidays:[self.holidaySkipDates objectForKey:resourceName]
+                                                                                                                                           forHolidayCountry:indexPath.row];
                 [self.navigationController pushViewController:holidaySelectionTableViewController animated:YES];
             }
             break;
@@ -368,7 +399,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
     // calculate the percentage of the screen that should be shown to display the edit date controller
     CGFloat safeAreaInsets = 0.0;
     if (@available(iOS 11.0, *)) {
-        safeAreaInsets = [[[UIApplication sharedApplication] delegate] window].safeAreaInsets.bottom + [[[UIApplication sharedApplication] delegate] window].safeAreaInsets.top;
+        safeAreaInsets = source.view.safeAreaInsets.bottom + source.view.safeAreaInsets.top;
     }
     CGFloat partialModalPercentage = ceilf((kSLEditDatePickerViewHeight + [UIApplication sharedApplication].statusBarFrame.size.height) / (source.view.frame.size.height - safeAreaInsets) * 100) / 100;
     

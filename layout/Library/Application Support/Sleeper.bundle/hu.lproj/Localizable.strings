@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Időpont kihagyása";
 "SKIP_ALARM" = "Ébresztő kihagyása";
 "SKIP_QUESTION" = "Biztosan ki szeretnéd hagyni a \"%@\" nevű ébresztőt  ami %@ időben indul?";
-"SKIP_EXPLANATION" = "Válassz egy időintervallumot amikor a program megkér, hogy átugord az ébresztőt mielőtt az indul";
+"SKIP_TIME_EXPLANATION" = "Válassz egy időintervallumot amikor a program megkér, hogy átugord az ébresztőt mielőtt az indul";

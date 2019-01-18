@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Tijd Overslaan";
 "SKIP_ALARM" = "Wekker Overslaan";
 "SKIP_QUESTION" = "Zou u graag \"%@\" overslaan, welke staat gepland om af te gaan binnen %@?";
-"SKIP_EXPLANATION" = "Hoeveel tijd voordat het alarm afgaat wilt u gevraagd worden om het alarm over te slaan?";
+"SKIP_TIME_EXPLANATION" = "Hoeveel tijd voordat het alarm afgaat wilt u gevraagd worden om het alarm over te slaan?";

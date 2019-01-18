@@ -7,7 +7,6 @@
 //
 
 #import "SLPrefsManager.h"
-#import "SLHoliday.h"
 
 // the path of our settings that is used to store the alarm snooze times
 #define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
@@ -39,12 +38,23 @@
                 alarmPrefs.skipTimeMinute = [[alarm objectForKey:kSLSkipMinuteKey] integerValue];
                 alarmPrefs.skipTimeSecond = [[alarm objectForKey:kSLSkipSecondKey] integerValue];
                 alarmPrefs.skipActivationStatus = [[alarm objectForKey:kSLSkipActivatedStatusKey] integerValue];
+                
+                // check to see if the prefs contain any of the skip dates options (added in v4.1.0)
+                NSDictionary *skipDates = [alarm objectForKey:kSLSkipDatesKey];
+                if (skipDates != nil) {
+                    alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDatesKey];
+                    alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
+                } else {
+                    // if an alarm did not have a skip dates key in the preferences, we need to add the default
+                    // holiday skip dates
+                    alarmPrefs.customSkipDates = [[NSArray alloc] init];
+                    [alarmPrefs populateDefaultHolidaySkipDates];
+                }
+                
                 return alarmPrefs;
             }
         }
     }
-    
-    // return nil if no alarm is found
     return nil;
 }
 
@@ -54,7 +64,7 @@
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
     
-    // if the clock preferences don't exist, create a new mutable dictionary now
+    // if no preferences exist, create a new mutable dictionary now
     if (!prefs) {
         prefs = [[NSMutableDictionary alloc] initWithCapacity:1];
     }
@@ -71,14 +81,25 @@
         for (alarm in alarms) {
             if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmPrefs.alarmId]) {
                 // update the alarm dictionary with the values given
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour] forKey:kSLSnoozeHourKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute] forKey:kSLSnoozeMinuteKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond] forKey:kSLSnoozeSecondKey];
-                [alarm setObject:[NSNumber numberWithBool:alarmPrefs.skipEnabled] forKey:kSLSkipEnabledKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeHour] forKey:kSLSkipHourKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeMinute] forKey:kSLSkipMinuteKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeSecond] forKey:kSLSkipSecondKey];
-                [alarm setObject:[NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown] forKey:kSLSkipActivatedStatusKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour]
+                          forKey:kSLSnoozeHourKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute]
+                          forKey:kSLSnoozeMinuteKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond]
+                          forKey:kSLSnoozeSecondKey];
+                [alarm setObject:[NSNumber numberWithBool:alarmPrefs.skipEnabled]
+                          forKey:kSLSkipEnabledKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeHour]
+                          forKey:kSLSkipHourKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeMinute]
+                          forKey:kSLSkipMinuteKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.skipTimeSecond]
+                          forKey:kSLSkipSecondKey];
+                [alarm setObject:[NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown]
+                          forKey:kSLSkipActivatedStatusKey];
+                [alarm setObject:@{kSLCustomSkipDatesKey:alarmPrefs.customSkipDates,
+                                   kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}
+                          forKey:kSLSkipDatesKey];
                 break;
             }
         }
@@ -95,7 +116,9 @@
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeHour], kSLSkipHourKey,
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
-                                  [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey, nil];
+                                  [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
+                                  @{kSLCustomSkipDatesKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
+                                  nil];
         
         // add the object to the array
         [alarms addObject:newAlarm];
@@ -221,34 +244,48 @@
     }
 }
 
-// Returns an array of dictionaries that correspond to the holidays for a particular country.  The countries available
-// correspond with the rows that are displayed in the skip dates view controller.
-+ (NSArray *)holidaysForCountry:(SLHolidayCountry)country
+// returns an array of dictionaries that correspond to the default holidays for a particular resource
++ (NSArray *)defaultHolidaysForResourceName:(NSString *)resourceName
 {
-    // load up the corresponding list corresponding to the country
-    NSString *resourcePath = nil;
+    // get the resource name that correponds to the country
+    NSArray *defaultHolidays = nil;
+    NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
+    if (resourcePath != nil) {
+        // load the list of holidays from the file system
+        defaultHolidays = [[NSArray alloc] initWithContentsOfFile:resourcePath];
+    }
+    return defaultHolidays;
+}
+
+// returns a string that corresponds to the resource name for a given holiday country
++ (NSString *)resourceNameForCountry:(SLHolidayCountry)country
+{
+    NSString *resourceName = nil;
     switch (country) {
         case kSLHolidayCountryUnitedStates:
-            resourcePath = [kSLSleeperBundle pathForResource:@"holidays-us" ofType:@"plist"];
+            resourceName = @"holidays-us";
             break;
         case kSLHolidayCountryNumCountries:
             // this is in invalid country to provide, do nothing
             break;
     }
+    return resourceName;
+}
 
-    // if a valid country was given, proceed to load the file
-    NSMutableArray *holidays = nil;
-    if (resourcePath != nil) {
-        // load the list of holidays from the file system
-        NSMutableArray *rawHolidays = [[NSMutableArray alloc] initWithContentsOfFile:resourcePath];
-        
-        // create holiday objects from the list of raw holidays loaded from the
-        // TODO: find a better way to do this?
-        for (NSDictionary *rawHoliday in rawHolidays) {
-            [holidays addObject:[[SLHoliday alloc] initWithLZNameKey:[rawHoliday objectForKey:@"lz_key"] dates:[rawHoliday objectForKey:@"dates"]]];
-        }
+// returns the localized, friendly name to be displayed for the given country
++ (NSString *)friendlyNameForCountry:(SLHolidayCountry)country
+{
+    NSString *friendlyName = nil;
+    switch (country) {
+        case kSLHolidayCountryUnitedStates:
+            friendlyName = [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
+                                                                 value:@"US"];
+            break;
+        case kSLHolidayCountryNumCountries:
+            // this is in invalid country to provide, do nothing
+            break;
     }
-    return [holidays copy];
+    return friendlyName;
 }
 
 @end

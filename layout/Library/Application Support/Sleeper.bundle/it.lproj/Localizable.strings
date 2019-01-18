@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Orario del salto";
 "SKIP_ALARM" = "Salta Sveglia";
 "SKIP_QUESTION" = "Vuoi saltare \"%@,\" programmata per le %@?";
-"SKIP_EXPLANATION" = "Scegli il periodo di tempo prima della sveglia in cui ti verrà chiesto se saltarla.";
+"SKIP_TIME_EXPLANATION" = "Scegli il periodo di tempo prima della sveglia in cui ti verrà chiesto se saltarla.";

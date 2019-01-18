@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Tempo para Ignorar";
 "SKIP_ALARM" = "Ignorar Alarme";
 "SKIP_QUESTION" = "Gostaria de ignorar o alarme \"%@\" que está marcado para as %@?";
-"SKIP_EXPLANATION" = "Escolha o período de tempo para  poder ignorar o alarme antes de o mesmo tocar.";
+"SKIP_TIME_EXPLANATION" = "Escolha o período de tempo para  poder ignorar o alarme antes de o mesmo tocar.";

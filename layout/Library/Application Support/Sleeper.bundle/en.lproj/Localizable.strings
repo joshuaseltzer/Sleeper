@@ -17,4 +17,24 @@
 "SKIP_TIME" = "Skip Time";
 "SKIP_ALARM" = "Skip Alarm";
 "SKIP_QUESTION" = "Would you like to skip \"%@\" which is scheduled to go off at %@?";
-"SKIP_EXPLANATION" = "Choose an amount of time that you will be prompted to skip the alarm before it fires.";
+"SKIP_TIME_EXPLANATION" = "Choose an amount of time that you will be prompted to skip the alarm before it fires.";
+"SKIP_DATES" = "Skip Dates";
+"SELECT_DATE" = "Select Date";
+"HOLIDAYS" = "Holidays";
+"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
+"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
+"ADD_NEW_DATE" = "Add New Date...";
+
+"NEW_YEARS_DAY" = "New Year's Day";
+"MARTIN_LUTHER_KING_DAY" = "Martin Luther King Day";
+"PRESIDENTS_DAY" = "Presidents' Day";
+"MEMORIAL_DAY" = "Memorial Day";
+"INDEPENDENCE_DAY" = "Independence Day";
+"LABOR_DAY" = "Labor Day";
+"COLUMBUS_DAY" = "Columbus Day";
+"VETERANS_DAY" = "Veterans Day";
+"THANKSGIVING_DAY" = "Thanksgiving Day";
+"DAY_AFTER_THANKSGIVING" = "Day After Thanksgiving";
+"CHRISTMAS_EVE" = "Christmas Eve";
+"CHRISTMAS_DAY" = "Christmas Day";
+"NEW_YEARS_EVE" = "New Year's Eve";

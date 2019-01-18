@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Ohita aika";
 "SKIP_ALARM" = "Ohita hälytys";
 "SKIP_QUESTION" = "Haluatko ohittaa herätyksen \"%@\" jonka on tarkoitus käynnistyä %@?";
-"SKIP_EXPLANATION" = "Aseta aika milloin sinua muistutetaan ohittamaan herätys ennen kuin se alkaa.";
+"SKIP_TIME_EXPLANATION" = "Aseta aika milloin sinua muistutetaan ohittamaan herätys ennen kuin se alkaa.";

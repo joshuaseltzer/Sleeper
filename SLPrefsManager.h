@@ -28,6 +28,9 @@ static NSString *const kSLSkipHourKey =             @"skipTimeHour";
 static NSString *const kSLSkipMinuteKey =           @"skipTimeMinute";
 static NSString *const kSLSkipSecondKey =           @"skipTimeSecond";
 static NSString *const kSLSkipActivatedStatusKey =  @"skipActivatedStatus";
+static NSString *const kSLSkipDatesKey =            @"skipDates";
+static NSString *const kSLHolidaySkipDatesKey =     @"holidaySkipDates";
+static NSString *const kSLCustomSkipDatesKey =      @"customSkipDates";
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface SLPrefsManager : NSObject
@@ -49,8 +52,13 @@ static NSString *const kSLSkipActivatedStatusKey =  @"skipActivatedStatus";
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
 
-// Returns an array of dictionaries that correspond to the holidays for a particular country.  The countries available
-// correspond with the rows that are displayed in the skip dates view controller.
-+ (NSArray *)holidaysForCountry:(SLHolidayCountry)country;
+// returns an array of dictionaries that correspond to the default holidays for a particular resource
++ (NSArray *)defaultHolidaysForResourceName:(NSString *)resourceName;
+
+// returns a string that corresponds to the resource name for a given holiday country
++ (NSString *)resourceNameForCountry:(SLHolidayCountry)country;
+
+// returns the localized, friendly name to be displayed for the given country
++ (NSString *)friendlyNameForCountry:(SLHolidayCountry)country;
 
 @end

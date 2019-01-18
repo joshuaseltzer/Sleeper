@@ -91,7 +91,7 @@
         
         // animate the alpha of the blurred view
         [self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-            self.blurredView.alpha = 0.9;
+            self.blurredView.alpha = 1.0;
         }
                                                                              completion:nil];
     }

@@ -17,4 +17,4 @@
 "SKIP_TIME" = "Hopp over tid";
 "SKIP_ALARM" = "Hopp over alarm";
 "SKIP_QUESTION" = "Vil du hoppe over spørsmålet \"%@\" som er planlagt til å kjøre %@?";
-"SKIP_EXPLANATION" = "Velg tid som du vil bli spørt om å hoppe over før den kjører.";
+"SKIP_TIME_EXPLANATION" = "Velg tid som du vil bli spørt om å hoppe over før den kjører.";

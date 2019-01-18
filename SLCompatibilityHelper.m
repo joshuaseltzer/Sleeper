@@ -194,8 +194,8 @@
     return color;
 }
 
-// returns the color of the labels in the picker view
-+ (UIColor *)pickerViewLabelColor
+// returns the color of the standard labels used throughout the tweak
++ (UIColor *)defaultLabelColor
 {
     // the color to return
     UIColor *color = nil;
@@ -208,6 +208,15 @@
     }
     
     return color;
+}
+
+// returns the color of the destructive labels used throughout the tweak
++ (UIColor *)destructiveLabelColor
+{
+    return [UIColor colorWithRed:1.0
+                           green:0.231373
+                            blue:0.188235
+                           alpha:1.0];
 }
 
 // iOS 10 / iOS 11: returns the cell selection background color for cells
