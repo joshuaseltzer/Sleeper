@@ -8,6 +8,15 @@
 
 #import "SLAlarmPrefs.h"
 
+// enum that defines the rows countries that are available to choose from for the holiday selection
+typedef enum SLHolidayCountry : NSInteger {
+    kSLHolidayCountryUnitedStates,
+    kSLHolidayCountryNumCountries
+} SLHolidayCountry;
+
+// the bundle path which includes some custom preference files needed for the tweak
+#define kSLSleeperBundle                            [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
+
 // constant keys for the values we are going to add to the preferences file
 static NSString *const kSLAlarmsKey =               @"Alarms";
 static NSString *const kSLAlarmIdKey =              @"alarmId";
@@ -39,5 +48,9 @@ static NSString *const kSLSkipActivatedStatusKey =  @"skipActivatedStatus";
 
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
+
+// Returns an array of dictionaries that correspond to the holidays for a particular country.  The countries available
+// correspond with the rows that are displayed in the skip dates view controller.
++ (NSArray *)holidaysForCountry:(SLHolidayCountry)country;
 
 @end

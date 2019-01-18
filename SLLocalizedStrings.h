@@ -6,8 +6,7 @@
 //  Copyright (c) 2015 Joshua Seltzer. All rights reserved.
 //
 
-// the bundle path which includes all custom localization strings
-#define kSLSleeperBundle                        [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
+#import "SLPrefsManager.h"
 
 // the bundle path for the preferences app
 #define kSLPreferencesBundle                    [NSBundle bundleWithPath:@"/Applications/Preferences.app"]

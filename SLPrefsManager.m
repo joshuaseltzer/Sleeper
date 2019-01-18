@@ -7,6 +7,7 @@
 //
 
 #import "SLPrefsManager.h"
+#import "SLHoliday.h"
 
 // the path of our settings that is used to store the alarm snooze times
 #define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
@@ -218,6 +219,36 @@
             }
         }
     }
+}
+
+// Returns an array of dictionaries that correspond to the holidays for a particular country.  The countries available
+// correspond with the rows that are displayed in the skip dates view controller.
++ (NSArray *)holidaysForCountry:(SLHolidayCountry)country
+{
+    // load up the corresponding list corresponding to the country
+    NSString *resourcePath = nil;
+    switch (country) {
+        case kSLHolidayCountryUnitedStates:
+            resourcePath = [kSLSleeperBundle pathForResource:@"holidays-us" ofType:@"plist"];
+            break;
+        case kSLHolidayCountryNumCountries:
+            // this is in invalid country to provide, do nothing
+            break;
+    }
+
+    // if a valid country was given, proceed to load the file
+    NSMutableArray *holidays = nil;
+    if (resourcePath != nil) {
+        // load the list of holidays from the file system
+        NSMutableArray *rawHolidays = [[NSMutableArray alloc] initWithContentsOfFile:resourcePath];
+        
+        // create holiday objects from the list of raw holidays loaded from the
+        // TODO: find a better way to do this?
+        for (NSDictionary *rawHoliday in rawHolidays) {
+            [holidays addObject:[[SLHoliday alloc] initWithLZNameKey:[rawHoliday objectForKey:@"lz_key"] dates:[rawHoliday objectForKey:@"dates"]]];
+        }
+    }
+    return [holidays copy];
 }
 
 @end

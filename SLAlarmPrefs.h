@@ -6,6 +6,8 @@
 //
 //
 
+#import <Foundation/Foundation.h>
+
 // enum to define the different options that can be returned for the alarm's skip activation
 typedef enum SLPrefsSkipActivatedStatus : NSInteger {
     kSLSkipActivatedStatusUnknown,

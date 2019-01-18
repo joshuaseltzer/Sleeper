@@ -230,7 +230,7 @@
     if (alarmPrefs && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
-        NSDateComponents *components= [[NSDateComponents alloc] init];
+        NSDateComponents *components = [[NSDateComponents alloc] init];
         [components setHour:alarmPrefs.skipTimeHour];
         [components setMinute:alarmPrefs.skipTimeMinute];
         [components setSecond:alarmPrefs.skipTimeSecond];
