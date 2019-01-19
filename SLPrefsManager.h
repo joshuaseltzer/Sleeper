@@ -18,19 +18,22 @@ typedef enum SLHolidayCountry : NSInteger {
 #define kSLSleeperBundle                            [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
 
 // constant keys for the values we are going to add to the preferences file
-static NSString *const kSLAlarmsKey =               @"Alarms";
-static NSString *const kSLAlarmIdKey =              @"alarmId";
-static NSString *const kSLSnoozeHourKey =           @"snoozeTimeHour";
-static NSString *const kSLSnoozeMinuteKey =         @"snoozeTimeMinute";
-static NSString *const kSLSnoozeSecondKey =         @"snoozeTimeSecond";
-static NSString *const kSLSkipEnabledKey =          @"skipEnabled";
-static NSString *const kSLSkipHourKey =             @"skipTimeHour";
-static NSString *const kSLSkipMinuteKey =           @"skipTimeMinute";
-static NSString *const kSLSkipSecondKey =           @"skipTimeSecond";
-static NSString *const kSLSkipActivatedStatusKey =  @"skipActivatedStatus";
-static NSString *const kSLSkipDatesKey =            @"skipDates";
-static NSString *const kSLHolidaySkipDatesKey =     @"holidaySkipDates";
-static NSString *const kSLCustomSkipDatesKey =      @"customSkipDates";
+static NSString *const kSLAlarmsKey =                   @"Alarms";
+static NSString *const kSLAlarmIdKey =                  @"alarmId";
+static NSString *const kSLSnoozeHourKey =               @"snoozeTimeHour";
+static NSString *const kSLSnoozeMinuteKey =             @"snoozeTimeMinute";
+static NSString *const kSLSnoozeSecondKey =             @"snoozeTimeSecond";
+static NSString *const kSLSkipEnabledKey =              @"skipEnabled";
+static NSString *const kSLSkipHourKey =                 @"skipTimeHour";
+static NSString *const kSLSkipMinuteKey =               @"skipTimeMinute";
+static NSString *const kSLSkipSecondKey =               @"skipTimeSecond";
+static NSString *const kSLSkipActivatedStatusKey =      @"skipActivatedStatus";
+static NSString *const kSLSkipDatesKey =                @"skipDates";
+static NSString *const kSLHolidaySkipDatesKey =         @"holidaySkipDates";
+static NSString *const kSLCustomSkipDatesKey =          @"customSkipDates";
+static NSString *const kSLHolidayLocalizationNameKey =  @"lz_key";
+static NSString *const kSLHolidaySelectedKey =          @"selected";
+static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface SLPrefsManager : NSObject

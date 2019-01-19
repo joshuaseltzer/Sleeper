@@ -7,17 +7,18 @@
 
 #import <UIKit/UIKit.h>
 
+// forward delcare the view controller class so that we can define it in the delegate
+@class SLEditDateViewController;
+
 // define the height of the time picker view
 #define kSLEditDatePickerViewHeight             216.0
-
-// define the segue from the storyboard to show this controller
-#define kSLEditDateSegue                        @"SLEditDateSegue"
 
 // delegate for the edit date controller
 @protocol SLEditDateViewControllerDelegate <NSObject>
 
 // notify the delegate that the date was updated
-- (void)dateUpdated:(NSDate *)date;
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController
+                   didUpdateDate:(NSDate *)date;
 
 @end
 
@@ -28,6 +29,6 @@
 - (instancetype)initWithInitialDate:(NSDate *)initialDate;
 
 // the delegate of this view controller
-@property (nonatomic, weak) id delegate;
+@property (nonatomic, weak) id <SLEditDateViewControllerDelegate> delegate;
 
 @end

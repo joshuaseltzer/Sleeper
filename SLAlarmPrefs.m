@@ -55,7 +55,7 @@
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
         NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
         for (NSDictionary *holiday in holidays) {
-            if ([[holiday objectForKey:@"selected"] boolValue]) {
+            if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
                 ++total;
             }
         }

@@ -106,6 +106,18 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
     }
 }
 
+// invoked when the given view is moving to the parent view controller
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    // if the parent is nil, we know we are popping this view controller
+    if (!parent && self.delegate) {
+        // tell the delegate about the updated skip dates
+        [self.delegate SLSkipDatesViewController:self
+                        didUpdateCustomSkipDates:self.customSkipDates
+                                holidaySkipDates:self.holidaySkipDates];
+    }
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -413,7 +425,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 #pragma mark - SLEditDateViewControllerDelegate
 
 // invoked when the edit date view controller saves a date
-- (void)dateUpdated:(NSDate *)date
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didUpdateDate:(NSDate *)date
 {
     if (self.editingIndexPath != nil) {
         // if an editing index path is set, then we are editing an existing date.

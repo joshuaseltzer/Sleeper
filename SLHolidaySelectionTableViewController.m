@@ -45,6 +45,28 @@
     self.title = [SLPrefsManager friendlyNameForCountry:self.holidayCountry];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     [self setEditing:YES animated:NO];
+
+    // create a clear button to clear all selections
+    UIBarButtonItem *clearButton = [[UIBarButtonItem alloc] initWithTitle:kSLClearString
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(clearButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = clearButton;
+}
+
+// invoked when the user presses the clear button
+- (void)clearButtonPressed:(UIBarButtonItem *)clearButton
+{
+    // change all of the holidays/cells that were previously selected
+    NSMutableArray *indexPathsToReload = [[NSMutableArray alloc] init];
+    for (NSInteger i = 0; i < self.holidays.count; i++) {
+        NSMutableDictionary *holiday = [self.holidays objectAtIndex:i];
+        if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
+            [holiday setObject:[NSNumber numberWithBool:NO] forKey:kSLHolidaySelectedKey];
+            [indexPathsToReload addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+    }
+    [self.tableView reloadRowsAtIndexPaths:indexPathsToReload withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - UITableViewDataSource
@@ -70,19 +92,43 @@
         holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
         holidayCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
 
-        // set the background color of the cell
+        // set the background color of the cell to clear to remove the selection color
         UIView *backgroundView = [[UIView alloc] init];
         backgroundView.backgroundColor = [UIColor clearColor];
         holidayCell.selectedBackgroundView = backgroundView;
-        
     }
 
     // get the corresponding holiday for this cell for display
     NSDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
-    holidayCell.textLabel.text = kSLHolidayNameString([holiday objectForKey:@"lz_key"]);
-    [holidayCell setSelected:[[holiday objectForKey:@"selected"] boolValue] animated:NO];
+    holidayCell.textLabel.text = kSLHolidayNameString([holiday objectForKey:kSLHolidayLocalizationNameKey]);
     
     return holidayCell;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // set the selection for this cell if it should be selected
+    NSDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
+    if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
+        [cell setSelected:YES animated:NO];
+        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+}
+
+// handle cell selection
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // modify the selection flag for the selected row
+    NSMutableDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
+    [holiday setObject:[NSNumber numberWithBool:![[holiday objectForKey:kSLHolidaySelectedKey] boolValue]] forKey:kSLHolidaySelectedKey];
+}
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // modify the selection flag for the selected row
+    NSMutableDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
+    [holiday setObject:[NSNumber numberWithBool:![[holiday objectForKey:kSLHolidaySelectedKey] boolValue]] forKey:kSLHolidaySelectedKey];
 }
 
 @end

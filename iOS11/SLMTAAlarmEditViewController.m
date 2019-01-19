@@ -42,7 +42,7 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-SLPickerSelectionDelegate>
+SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
 // the alarm object associated with the controller
 @property(readonly, nonatomic) Alarm *alarm;
@@ -151,10 +151,20 @@ SLPickerSelectionDelegate>
 
             // customize the detail text label depending on whether or not we have skip dates enabled
             NSInteger totalSelectedHolidays = [self.SLAlarmPrefs totalSelectedHolidays];
-            if (self.SLAlarmPrefs.customSkipDates.count + totalSelectedHolidays > 0) {
+            NSString *holidayString = nil;
+            if (totalSelectedHolidays == 1) {
+                holidayString = kSLHolidayString;
+            } else {
+                holidayString = kSLHolidaysString;
+            }
+            if (self.SLAlarmPrefs.customSkipDates.count > 0 && totalSelectedHolidays > 0) {
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld (%ld %@)", (long)self.SLAlarmPrefs.customSkipDates.count,
                                                                                         (long)totalSelectedHolidays,
-                                                                                        kSLHolidaysString];
+                                                                                        holidayString];
+            } else if (self.SLAlarmPrefs.customSkipDates.count > 0) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.SLAlarmPrefs.customSkipDates.count];
+            } else if (totalSelectedHolidays > 0) {
+                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld %@", (long)totalSelectedHolidays, holidayString];
             } else {
                 cell.detailTextLabel.text = kSLNoneString;
             }
@@ -188,6 +198,7 @@ SLPickerSelectionDelegate>
             // create a custom view controller which will display the skip dates for this alarm
             SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithCustomSkipDates:self.SLAlarmPrefs.customSkipDates
                                                                                                        holidaySkipDates:self.SLAlarmPrefs.holidaySkipDates];
+            skipDatesController.delegate = self;
             [self.navigationController pushViewController:skipDatesController animated:YES];
         } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             %orig;
@@ -236,6 +247,15 @@ SLPickerSelectionDelegate>
             self.SLAlarmPrefs.skipTimeSecond = seconds;
         }
     }
+}
+
+#pragma mark - SLSkipDatesDelegate
+
+// create a new delegate method for when the skip dates controller has updated skip dates
+%new
+- (void)SLSkipDatesViewController:(SLSkipDatesViewController *)skipDatesViewController didUpdateCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
+{
+    self.SLAlarmPrefs.customSkipDates = customSkipDates;
 }
 
 %end

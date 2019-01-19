@@ -117,7 +117,7 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 {
     // tell the delegate about the updated date selection
     if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
-        [self.delegate dateUpdated:self.datePickerView.date];
+        [self.delegate SLEditDateViewController:self didUpdateDate:self.datePickerView.date];
     }
     [self cancelButtonPressed:nil];
 }
