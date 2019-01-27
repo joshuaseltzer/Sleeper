@@ -33,6 +33,43 @@
     return self;
 }
 
+// clears all dates (custom and holidays) that might have passed for the given alarm
+- (void)removePassedSkipDates
+{
+    // remove any passed dates from the holidays
+    NSMutableDictionary *holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:self.holidaySkipDates];
+    BOOL holidaysUpdated = NO;
+    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+        // get the holidays that correspond to the country's particular resource
+        NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
+        NSMutableArray *holidays = [holidaySkipDates objectForKey:resourceName];
+        if (holidays) {
+            // remove any dates that might have already passed
+            BOOL datesUpdated = NO;
+            for (NSMutableDictionary *holiday in holidays) {
+                NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
+                NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
+                if (dates.count != newDates.count) {
+                    [holiday setObject:newDates forKey:kSLHolidayDatesKey];
+                    datesUpdated = YES;
+                }
+            }
+            if (datesUpdated) {
+                [holidaySkipDates setObject:[holidays copy] forKey:resourceName];
+            }
+        }
+    }
+    if (holidaysUpdated) {
+        self.holidaySkipDates = holidaySkipDates;
+    }
+
+    // remove any passed dates from the custom skip dates
+    NSArray *newCustomSkipDates = [SLPrefsManager removePassedDatesFromArray:self.customSkipDates];
+    if (self.customSkipDates.count != newCustomSkipDates.count) {
+        self.customSkipDates = newCustomSkipDates;
+    }
+}
+
 // invoked in the case that holiday skip dates were not set in the preferences for this alarm
 - (void)populateDefaultHolidaySkipDates
 {
@@ -42,8 +79,8 @@
         // get the holidays that correspond to the country's particular resource
         NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
         NSArray *holidays = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
-        if (holidays != nil) {
-            [holidaySkipDates setObject:holidays forKey:resourceName];
+        if (holidays) {
+            [holidaySkipDates setObject:[holidays copy] forKey:resourceName];
         }
     }
     self.holidaySkipDates = [holidaySkipDates copy];

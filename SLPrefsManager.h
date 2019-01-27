@@ -64,4 +64,10 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // gets a sorted list of skip dates for a given alarm Id
 + (NSArray *)sortedSkipDatesForAlarmId:(NSString *)alarmId;
 
+// returns an array of new dates that removes any dates from the given array of dates that have passed
++ (NSArray *)removePassedDatesFromArray:(NSArray *)dates;
+
+// returns a string that represents a date that is going to be skipped
++ (NSString *)skipDateStringForDate:(NSDate *)date;
+
 @end

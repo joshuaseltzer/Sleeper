@@ -11,6 +11,9 @@
 // the path of our settings that is used to store the alarm snooze times
 #define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
+// keep a single static instance of the date formatter that will be used to display the skip dates to the user
+static NSDateFormatter *sSLSkipDatesDateFormatter;
+
 @implementation SLPrefsManager
 
 // Return an SLAlarmPrefs object with alarm information for a given alarm Id.  Return nil if no alarm is found.
@@ -44,6 +47,9 @@
                 if (skipDates != nil) {
                     alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDatesKey];
                     alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
+
+                    // remove any dates that might have passed for this alarm
+                    [alarmPrefs removePassedSkipDates];
                 } else {
                     // if an alarm did not have a skip dates key in the preferences, we need to add the default
                     // holiday skip dates
@@ -248,11 +254,20 @@
 + (NSArray *)defaultHolidaysForResourceName:(NSString *)resourceName
 {
     // get the resource name that correponds to the country
-    NSArray *defaultHolidays = nil;
+    NSMutableArray *defaultHolidays = nil;
     NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
     if (resourcePath != nil) {
         // load the list of holidays from the file system
-        defaultHolidays = [[NSArray alloc] initWithContentsOfFile:resourcePath];
+        defaultHolidays = [[NSMutableArray alloc] initWithContentsOfFile:resourcePath];
+
+        // remove any dates that might have already passed
+        for (NSMutableDictionary *holiday in defaultHolidays) {
+            NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
+            NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
+            if (dates.count != newDates.count) {
+                [holiday setObject:newDates forKey:kSLHolidayDatesKey];
+            }
+        }
     }
     return defaultHolidays;
 }
@@ -305,6 +320,30 @@
     }
     
     return [sortedSkipDates copy];
+}
+
+// returns an array of new dates that removes any dates from the given array of dates that have passed
++ (NSArray *)removePassedDatesFromArray:(NSArray *)dates
+{
+    NSMutableArray *newDates = [[NSMutableArray alloc] init];
+    for (NSDate *date in dates) {
+        NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
+        if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
+            [newDates addObject:date];
+        }
+    }
+    return [newDates copy];
+}
+
+// returns a string that represents a date that is going to be skipped
++ (NSString *)skipDateStringForDate:(NSDate *)date
+{
+    // create the date formatter that will be used to display the dates
+    if (sSLSkipDatesDateFormatter == nil) {
+        sSLSkipDatesDateFormatter = [[NSDateFormatter alloc] init];
+        sSLSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, YYYY";
+    }
+    return [sSLSkipDatesDateFormatter stringFromDate:date];
 }
 
 @end

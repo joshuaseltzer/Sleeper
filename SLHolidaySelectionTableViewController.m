@@ -98,11 +98,12 @@
     // dequeue the cell and create one if needed
     UITableViewCell *holidayCell = [tableView dequeueReusableCellWithIdentifier:kSLHolidayTableViewCellIdentifier];
     if (holidayCell == nil) {
-        holidayCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+        holidayCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                              reuseIdentifier:kSLHolidayTableViewCellIdentifier];
         holidayCell.accessoryType = UITableViewCellAccessoryNone;
         holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
         holidayCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+        holidayCell.detailTextLabel.textColor = [UIColor lightGrayColor];
 
         // set the background color of the cell to clear to remove the selection color
         UIView *backgroundView = [[UIView alloc] init];
@@ -113,6 +114,7 @@
     // get the corresponding holiday for this cell for display
     NSDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
     holidayCell.textLabel.text = kSLHolidayNameString([holiday objectForKey:kSLHolidayLocalizationNameKey]);
+    holidayCell.detailTextLabel.text = [SLPrefsManager skipDateStringForDate:[[holiday objectForKey:kSLHolidayDatesKey] objectAtIndex:0]];
     
     return holidayCell;
 }

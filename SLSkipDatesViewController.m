@@ -42,9 +42,6 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 
 @end
 
-// keep a single static instance of the date formatter that will be used to display the skip dates to the user
-static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
-
 // TODO: Update all strings with localized versions
 @implementation SLSkipDatesViewController
 
@@ -75,12 +72,6 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
     // set the edit button to the right bar button if there are skip dates to remove
     if (self.customSkipDates.count > 0) {
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    }
-    
-    // create the date formatter that will be used to display the dates (only once)
-    if (sSLCustomSkipDatesDateFormatter == nil) {
-        sSLCustomSkipDatesDateFormatter = [[NSDateFormatter alloc] init];
-        sSLCustomSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, YYYY";
     }
 }
 
@@ -177,7 +168,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
             // customize the cell by grabbing the corresponding skip date
             NSDate *skipDate = [self.customSkipDates objectAtIndex:indexPath.row];
             skipDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-            skipDateCell.textLabel.text = [sSLCustomSkipDatesDateFormatter stringFromDate:skipDate];
+            skipDateCell.textLabel.text = [SLPrefsManager skipDateStringForDate:skipDate];
             
             cell = skipDateCell;
             break;
@@ -373,8 +364,9 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 [customSkipDatesIndexPaths addObject:[NSIndexPath indexPathForRow:i
                                                                         inSection:kSLSkipDatesViewControllerSectionDates]];
             }
+            [tableView beginUpdates];
             [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPaths
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
+                             withRowAnimation:UITableViewRowAnimationFade];
 
             // clear out any of the selected holidays
             NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
@@ -396,7 +388,8 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 }
             }
             [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
+                             withRowAnimation:UITableViewRowAnimationFade];
+            [tableView endUpdates];
             
             // remove the edit button from the controller since there are no dates to edit
             self.navigationItem.rightBarButtonItem = nil;
@@ -454,11 +447,11 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 // invoked when the edit date view controller saves a date
 - (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didUpdateDate:(NSDate *)date
 {
+    BOOL tableNeedsRefresh = NO;
     if (self.editingIndexPath != nil) {
         // if an editing index path is set, then we are editing an existing date.
         [self.customSkipDates replaceObjectAtIndex:self.editingIndexPath.row withObject:date];
-        [self.tableView reloadRowsAtIndexPaths:@[self.editingIndexPath]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        tableNeedsRefresh = YES;
         self.editingIndexPath = nil;
     } else {
         // check to see if the date has already been added (in this case, do not add a new date)
@@ -472,15 +465,22 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
         if (!containsDate) {
             // add a new date to the array of skip dates
             [self.customSkipDates addObject:date];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.customSkipDates.count - 1
-                                                                        inSection:kSLSkipDatesViewControllerSectionDates]]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+            tableNeedsRefresh = YES;
             
             // set the edit button to the right bar button if there are skip dates to remove
             if (self.customSkipDates.count > 0) {
                 self.navigationItem.rightBarButtonItem = self.editButtonItem;
             }
         }
+    }
+    // refresh the table if necessary
+    if (tableNeedsRefresh) {
+        // sort the custom skip dates
+        [self.customSkipDates sortUsingSelector:@selector(compare:)];
+
+        // reload the section with the custom skip dates
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
+                      withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -494,7 +494,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
     [self.holidaySkipDates setObject:holidays forKey:resourceName];
 
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:holidayCountry inSection:kSLSkipDatesViewControllerSectionCountries]]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
+                          withRowAnimation:UITableViewRowAnimationFade];
 }
 
 @end
