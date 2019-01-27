@@ -288,4 +288,23 @@
     return friendlyName;
 }
 
+// gets a sorted list of skip dates for a given alarm Id
++ (NSArray *)sortedSkipDatesForAlarmId:(NSString *)alarmId
+{
+    NSMutableArray *sortedSkipDates = [[NSMutableArray alloc] init];
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    
+    // if the alarm preferences exist, attempt to get the skip dates
+    if (alarmPrefs) {
+        // if a valid alarm was found get all of the skip dates for that alarm into a single array
+        [sortedSkipDates addObjectsFromArray:alarmPrefs.customSkipDates];
+        [sortedSkipDates addObjectsFromArray:[alarmPrefs allHolidaySkipDates]];
+
+        // sort the skip dates
+        [sortedSkipDates sortUsingSelector:@selector(compare:)];
+    }
+    
+    return [sortedSkipDates copy];
+}
+
 @end

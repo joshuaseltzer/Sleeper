@@ -8,6 +8,7 @@
 
 #import "SLAlarmPrefs.h"
 #import "SLPrefsManager.h"
+#import "SLLocalizedStrings.h"
 
 @implementation SLAlarmPrefs
 
@@ -53,14 +54,70 @@
 {
     NSInteger total = 0;
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-        NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
+        total = total + [self selectedHolidaysForCountry:holidayCountry];
+    }
+    return total;
+}
+
+// returns the number of selected holidays for the given holiday country
+- (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry
+{
+    NSInteger selectedHolidays = 0;
+    NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
+    if (holidays) {
         for (NSDictionary *holiday in holidays) {
             if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-                ++total;
+                ++selectedHolidays;
             }
         }
     }
-    return total;
+    return selectedHolidays;
+}
+
+// returns a customized string that indicates the number of selected skip dates and/or holidays
+- (NSString *)selectedDatesString
+{
+    // customize the detail text label depending on whether or not we have skip dates enabled
+    NSString *selectedDatesString = nil;
+    NSString *holidayString = nil;
+    NSInteger totalSelectedHolidays = [self totalSelectedHolidays];
+    
+    // make the holiday string singular or plural based on the count
+    if (totalSelectedHolidays == 1) {
+        holidayString = kSLHolidayString;
+    } else {
+        holidayString = kSLHolidaysString;
+    }
+
+    // depending on what was selected for this alarm, customize the string to return
+    if (self.customSkipDates.count > 0 && totalSelectedHolidays > 0) {
+        selectedDatesString = [NSString stringWithFormat:@"%ld (%ld %@)", (long)self.customSkipDates.count,
+                                                                          (long)totalSelectedHolidays,
+                                                                          holidayString];
+    } else if (self.customSkipDates.count > 0) {
+        selectedDatesString = [NSString stringWithFormat:@"%ld", (long)self.customSkipDates.count];
+    } else if (totalSelectedHolidays > 0) {
+        selectedDatesString = [NSString stringWithFormat:@"%ld %@", (long)totalSelectedHolidays, holidayString];
+    } else {
+        selectedDatesString = kSLNoneString;
+    }
+
+    return selectedDatesString;
+}
+
+// returns an array of unsorted dates for all of the selected holidays
+- (NSArray *)allHolidaySkipDates
+{
+    NSMutableArray *holidaySkipDates = [[NSMutableArray alloc] init];
+    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+        NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
+        for (NSDictionary *holiday in holidays) {
+            if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
+                [holidaySkipDates addObjectsFromArray:[holiday objectForKey:kSLHolidayDatesKey]];
+            }
+        }
+    }
+    return [holidaySkipDates copy];
 }
 
 @end

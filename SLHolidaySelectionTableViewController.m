@@ -27,11 +27,11 @@
 @implementation SLHolidaySelectionTableViewController
 
 // initialize this controller the list of available holidays and the selection criteria
-- (instancetype)initWithHolidays:(NSMutableArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry
+- (instancetype)initWithHolidays:(NSArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.holidays = holidays;
+        self.holidays = [[NSMutableArray alloc] initWithArray:holidays];
         self.holidayCountry = holidayCountry;
     }
     return self;
@@ -67,6 +67,18 @@
         }
     }
     [self.tableView reloadRowsAtIndexPaths:indexPathsToReload withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+// invoked when the given view is moving to the parent view controller
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+    // if the parent is nil, we know we are popping this view controller
+    if (!parent && self.delegate) {
+        // tell the delegate about the updated skip dates
+        [self.delegate SLHolidaySelectionTableViewController:self
+                                           didUpdateHolidays:[self.holidays copy]
+                                           forHolidayCountry:self.holidayCountry];
+    }
 }
 
 #pragma mark - UITableViewDataSource

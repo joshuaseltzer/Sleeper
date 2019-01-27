@@ -8,7 +8,6 @@
 #import "SLSkipDatesViewController.h"
 #import "SLPartialModalPresentationController.h"
 #import "SLPrefsManager.h"
-#import "SLHolidaySelectionTableViewController.h"
 #import "SLLocalizedStrings.h"
 #import "SLCompatibilityHelper.h"
 
@@ -35,6 +34,9 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 // the dictionary containing the holiday skip dates for this alarm
 @property (nonatomic, strong) NSMutableDictionary *holidaySkipDates;
 
+// the preferences for the alarm
+@property (nonatomic, strong) SLAlarmPrefs *alarmPrefs;
+
 // this value is set if the user is editing an existing date
 @property (nonatomic, strong) NSIndexPath *editingIndexPath;
 
@@ -46,13 +48,14 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
 // TODO: Update all strings with localized versions
 @implementation SLSkipDatesViewController
 
-// initialize this controller with optional custom skip dates and holiday skip dates
-- (instancetype)initWithCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
+// initialize this controller with the preferences for the given alarm
+- (instancetype)initWithAlarmPrefs:(SLAlarmPrefs *)alarmPrefs
 {
     self = [super init];
     if (self) {
-        self.customSkipDates = [[NSMutableArray alloc] initWithArray:customSkipDates];
-        self.holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:holidaySkipDates];
+        self.alarmPrefs = alarmPrefs;
+        self.customSkipDates = [[NSMutableArray alloc] initWithArray:alarmPrefs.customSkipDates];
+        self.holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:alarmPrefs.holidaySkipDates];
     }
     return self;
 }
@@ -113,8 +116,8 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
     if (!parent && self.delegate) {
         // tell the delegate about the updated skip dates
         [self.delegate SLSkipDatesViewController:self
-                        didUpdateCustomSkipDates:self.customSkipDates
-                                holidaySkipDates:self.holidaySkipDates];
+                        didUpdateCustomSkipDates:[self.customSkipDates copy]
+                                holidaySkipDates:[self.holidaySkipDates copy]];
     }
 }
 
@@ -204,7 +207,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
         case kSLSkipDatesViewControllerSectionCountries: {
             UITableViewCell *countryCell = [tableView dequeueReusableCellWithIdentifier:kSLCountriesTableViewCellIdentifier];
             if (countryCell == nil) {
-                countryCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                countryCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                      reuseIdentifier:kSLCountriesTableViewCellIdentifier];
                 countryCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 countryCell.selectionStyle = UITableViewCellSelectionStyleDefault;
@@ -214,6 +217,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
             // customize the cell
             countryCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
             countryCell.textLabel.text = [SLPrefsManager friendlyNameForCountry:indexPath.row];
+            countryCell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)[self.alarmPrefs selectedHolidaysForCountry:indexPath.row]];
             
             cell = countryCell;
             break;
@@ -351,6 +355,7 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
                 // create a new holiday selection controller with the list of holidays for the user to configure
                 SLHolidaySelectionTableViewController *holidaySelectionTableViewController = [[SLHolidaySelectionTableViewController alloc] initWithHolidays:[self.holidaySkipDates objectForKey:resourceName]
                                                                                                                                            forHolidayCountry:indexPath.row];
+                holidaySelectionTableViewController.delegate = self;
                 [self.navigationController pushViewController:holidaySelectionTableViewController animated:YES];
             }
             break;
@@ -363,12 +368,34 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
             [self.customSkipDates removeAllObjects];
             
             // update the UI to indicate the changes by removing all of the rows in the custom skip dates section
-            NSMutableArray *customSkipDatesIndexPathes = [[NSMutableArray alloc] initWithCapacity:rowsToRemove];
+            NSMutableArray *customSkipDatesIndexPaths = [[NSMutableArray alloc] initWithCapacity:rowsToRemove];
             for (NSInteger i = 0; i < rowsToRemove; i++) {
-                [customSkipDatesIndexPathes addObject:[NSIndexPath indexPathForRow:i
-                                                                         inSection:kSLSkipDatesViewControllerSectionDates]];
+                [customSkipDatesIndexPaths addObject:[NSIndexPath indexPathForRow:i
+                                                                        inSection:kSLSkipDatesViewControllerSectionDates]];
             }
-            [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPathes
+            [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPaths
+                             withRowAnimation:UITableViewRowAnimationAutomatic];
+
+            // clear out any of the selected holidays
+            NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
+            for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+                // get the holidays that correspond to the country's particular resource
+                NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
+                BOOL countryNeedsUpdated = NO;
+                for (NSMutableDictionary *holiday in [self.holidaySkipDates objectForKey:resourceName]) {
+                    if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
+                        [holiday setObject:[NSNumber numberWithBool:NO] forKey:kSLHolidaySelectedKey];
+                        countryNeedsUpdated = YES;
+                    }
+                }
+                
+                // if this particular country had a change, add the index path to reload
+                if (countryNeedsUpdated) {
+                    [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
+                                                                                  inSection:kSLSkipDatesViewControllerSectionCountries]];
+                }
+            }
+            [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
                              withRowAnimation:UITableViewRowAnimationAutomatic];
             
             // remove the edit button from the controller since there are no dates to edit
@@ -455,6 +482,19 @@ static NSDateFormatter *sSLCustomSkipDatesDateFormatter;
             }
         }
     }
+}
+
+#pragma mark - SLHolidaySelectionDelegate
+
+// invoked when the holiday selection controller returns with updated holidays
+- (void)SLHolidaySelectionTableViewController:(SLHolidaySelectionTableViewController *)holidaySelectionTableViewController didUpdateHolidays:(NSArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry
+{
+    // update the row that corresponds to the holiday country
+    NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
+    [self.holidaySkipDates setObject:holidays forKey:resourceName];
+
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:holidayCountry inSection:kSLSkipDatesViewControllerSectionCountries]]
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end

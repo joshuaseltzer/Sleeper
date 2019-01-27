@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 #import "SLEditDateViewController.h"
+#import "SLAlarmPrefs.h"
+#import "SLHolidaySelectionTableViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,10 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface SLSkipDatesViewController : UITableViewController <SLEditDateViewControllerDelegate, UIViewControllerTransitioningDelegate>
+@interface SLSkipDatesViewController : UITableViewController <SLEditDateViewControllerDelegate, SLHolidaySelectionDelegate, UIViewControllerTransitioningDelegate>
 
-// initialize this controller with optional custom skip dates and holiday skip dates
-- (instancetype)initWithCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates;
+// initialize this controller with the preferences for the given alarm
+- (instancetype)initWithAlarmPrefs:(SLAlarmPrefs *)alarmPrefs;
 
 // the delegate of this view controller
 @property (nonatomic, weak) id <SLSkipDatesDelegate> delegate;

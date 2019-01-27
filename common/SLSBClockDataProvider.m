@@ -24,18 +24,32 @@
     if ([clockDataProvider _isAlarmNotification:notification]) {
         // get the alarm Id from the notification
         NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:notification.request];
-        
-        // check to see if skip is activated for this alarm
-        if ([SLPrefsManager skipActivatedStatusForAlarmId:alarmId] != kSLSkipActivatedStatusActivated) {
-            // if we did not activate skip for this alarm, perform the original implementation
+
+        // get the sleeper alarm preferences for this alarm
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs) {
+            // check to see one of today's dates is included in the skip dates for this alarm
+            BOOL shouldSkip = NO;
+            NSArray *skipDates = [SLPrefsManager sortedSkipDatesForAlarmId:alarmId];
+            for (NSDate *skipDate in skipDates) {
+                if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
+                    shouldSkip = YES;
+                    break;
+                }
+            }
+
+            // if we went through all of the set skip dates, check to see if the skip prompt was activated
+            if (!shouldSkip && alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusActivated) {
+                %orig;
+            }
+
+            // save the alarm's skip activation state to unknown for this alarm
+            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+        } else {
             %orig;
         }
-
-        // save the alarm's skip activation state to unknown for this alarm
-        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
     } else {
-        // if it is not an alarm notification, perform the original implementation
         %orig;
     }
 }

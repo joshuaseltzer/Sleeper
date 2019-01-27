@@ -6,13 +6,8 @@
 //  Copyright (c) 2014 Joshua Seltzer. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "SLAlarmPrefs.h"
-
-// enum that defines the rows countries that are available to choose from for the holiday selection
-typedef enum SLHolidayCountry : NSInteger {
-    kSLHolidayCountryUnitedStates,
-    kSLHolidayCountryNumCountries
-} SLHolidayCountry;
 
 // the bundle path which includes some custom preference files needed for the tweak
 #define kSLSleeperBundle                            [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
@@ -34,6 +29,8 @@ static NSString *const kSLCustomSkipDatesKey =          @"customSkipDates";
 static NSString *const kSLHolidayLocalizationNameKey =  @"lz_key";
 static NSString *const kSLHolidaySelectedKey =          @"selected";
 static NSString *const kSLHolidayDatesKey =             @"dates";
+
+@class SLAlarmPrefs;
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface SLPrefsManager : NSObject
@@ -63,5 +60,8 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForCountry:(SLHolidayCountry)country;
+
+// gets a sorted list of skip dates for a given alarm Id
++ (NSArray *)sortedSkipDatesForAlarmId:(NSString *)alarmId;
 
 @end

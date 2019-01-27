@@ -27,14 +27,9 @@
     AlarmManager *alarmManager = [AlarmManager sharedManager];
     NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
     
-    // if the alarm is no longer active and the skip activation has already been decided for this
-    // alarm, disable the skip activation now
-    SLPrefsSkipActivatedStatus skipActivatedStatus = [SLPrefsManager skipActivatedStatusForAlarmId:alarmId];
-    if (skipActivatedStatus == kSLSkipActivatedStatusActivated || skipActivatedStatus == kSLSkipActivatedStatusDisabled) {
-        // save the alarm's skip activation state to our preferences
-        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
-    }
+    // reset the skip activation status for this alarm
+    [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                 skipActivatedStatus:kSLSkipActivatedStatusUnknown];
 }
 
 - (void)circleViewDidEndEditing:(id)sleepAlarmClockView

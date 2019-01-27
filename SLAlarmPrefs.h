@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+// enum that defines the rows countries that are available to choose from for the holiday selection
+typedef enum SLHolidayCountry : NSInteger {
+    kSLHolidayCountryUnitedStates,
+    kSLHolidayCountryNumCountries
+} SLHolidayCountry;
+
 // enum to define the different options that can be returned for the alarm's skip activation
 typedef enum SLPrefsSkipActivatedStatus : NSInteger {
     kSLSkipActivatedStatusUnknown,
@@ -37,6 +43,15 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 
 // returns the total number of selected holidays to be skipped for the given alarm
 - (NSInteger)totalSelectedHolidays;
+
+// returns the number of selected holidays for the given holiday country
+- (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry;
+
+// returns a customized string that indicates the number of selected skip dates and/or holidays
+- (NSString *)selectedDatesString;
+
+// returns an array of unsorted dates for all of the selected holidays
+- (NSArray *)allHolidaySkipDates;
 
 // alarm Id associated with this preference object
 @property (nonatomic, strong) NSString *alarmId;

@@ -150,24 +150,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
             // customize the detail text label depending on whether or not we have skip dates enabled
-            NSInteger totalSelectedHolidays = [self.SLAlarmPrefs totalSelectedHolidays];
-            NSString *holidayString = nil;
-            if (totalSelectedHolidays == 1) {
-                holidayString = kSLHolidayString;
-            } else {
-                holidayString = kSLHolidaysString;
-            }
-            if (self.SLAlarmPrefs.customSkipDates.count > 0 && totalSelectedHolidays > 0) {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld (%ld %@)", (long)self.SLAlarmPrefs.customSkipDates.count,
-                                                                                        (long)totalSelectedHolidays,
-                                                                                        holidayString];
-            } else if (self.SLAlarmPrefs.customSkipDates.count > 0) {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)self.SLAlarmPrefs.customSkipDates.count];
-            } else if (totalSelectedHolidays > 0) {
-                cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld %@", (long)totalSelectedHolidays, holidayString];
-            } else {
-                cell.detailTextLabel.text = kSLNoneString;
-            }
+            cell.detailTextLabel.text = [self.SLAlarmPrefs selectedDatesString];
         }
     }
     
@@ -196,8 +179,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
             [self.navigationController pushViewController:skipTimeController animated:YES];
         } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipDates) {
             // create a custom view controller which will display the skip dates for this alarm
-            SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithCustomSkipDates:self.SLAlarmPrefs.customSkipDates
-                                                                                                       holidaySkipDates:self.SLAlarmPrefs.holidaySkipDates];
+            SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithAlarmPrefs:self.SLAlarmPrefs];
             skipDatesController.delegate = self;
             [self.navigationController pushViewController:skipDatesController animated:YES];
         } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
@@ -256,6 +238,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 - (void)SLSkipDatesViewController:(SLSkipDatesViewController *)skipDatesViewController didUpdateCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
 {
     self.SLAlarmPrefs.customSkipDates = customSkipDates;
+    self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
 }
 
 %end
