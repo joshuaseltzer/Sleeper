@@ -56,6 +56,10 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // returns an array of unsorted dates for all of the selected holidays
 - (NSArray *)allHolidaySkipDates;
 
+// determines whether or not this alarm should be skipped based on the selected skip dates
+// and the skip activated status
+- (BOOL)shouldSkip;
+
 // alarm Id associated with this preference object
 @property (nonatomic, strong) NSString *alarmId;
 

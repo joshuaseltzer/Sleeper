@@ -18,3 +18,27 @@
 "SKIP_ALARM" = "Omitir alarma";
 "SKIP_QUESTION" = "¿Deseas omitir la alarma \"%@\" que está programada para que suene a las %@?";
 "SKIP_TIME_EXPLANATION" = "Define el tiempo en el que se te pedirá omitir la alarma antes de que salte.";
+
+"SKIP_DATES" = "Skip Dates";
+"SELECT_DATE" = "Select Date";
+"HOLIDAYS" = "Holidays";
+"HOLIDAY" = "Holiday";
+"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
+"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
+"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
+"ADD_NEW_DATE" = "Add New Date...";
+"CLEAR" = "Clear";
+
+"NEW_YEARS_DAY" = "Día de Año Nuevo ";
+"MARTIN_LUTHER_KING_DAY" = "Día de Martin Luther King Jr.";
+"PRESIDENTS_DAY" = "Día del Presidente";
+"MEMORIAL_DAY" = "Día de los Caídos";
+"INDEPENDENCE_DAY" = "Día de la Independencia";
+"LABOR_DAY" = "Día del Trabajo";
+"COLUMBUS_DAY" = "Día de la Raza";
+"VETERANS_DAY" = "Día de los Veteranos de Guerra";
+"THANKSGIVING_DAY" = "Día de Acción de Gracias";
+"DAY_AFTER_THANKSGIVING" = "Día después de la Acción de Gracias";
+"CHRISTMAS_EVE" = "Nochebuena";
+"CHRISTMAS_DAY" = "Día de Navidad";
+"NEW_YEARS_EVE" = "Nochevieja";

@@ -44,6 +44,7 @@
     // customize the view controller and table
     self.title = [SLPrefsManager friendlyNameForCountry:self.holidayCountry];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.tableView.rowHeight = 50.0;
     [self setEditing:YES animated:NO];
 
     // create a clear button to clear all selections
@@ -103,7 +104,7 @@
         holidayCell.accessoryType = UITableViewCellAccessoryNone;
         holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
         holidayCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-        holidayCell.detailTextLabel.textColor = [UIColor lightGrayColor];
+        holidayCell.detailTextLabel.textColor = [UIColor grayColor];
 
         // set the background color of the cell to clear to remove the selection color
         UIView *backgroundView = [[UIView alloc] init];
@@ -117,6 +118,11 @@
     holidayCell.detailTextLabel.text = [SLPrefsManager skipDateStringForDate:[[holiday objectForKey:kSLHolidayDatesKey] objectAtIndex:0]];
     
     return holidayCell;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    return kSLHolidayExplanationString;
 }
 
 #pragma mark - UITableViewDelegate

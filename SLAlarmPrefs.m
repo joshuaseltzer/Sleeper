@@ -157,4 +157,47 @@
     return [holidaySkipDates copy];
 }
 
+// determines whether or not this alarm should be skipped based on the selected skip dates
+// and the skip activated status
+- (BOOL)shouldSkip
+{
+    // check to see one of today's dates is included in the skip dates for this alarm
+    BOOL shouldSkip = NO;
+    
+    // first check to see if the skip switch is activated
+    if (self.skipEnabled) {
+        // check to see if the skip activated status is enabled for this alarm
+        if (self.skipActivationStatus == kSLSkipActivatedStatusActivated) {
+            shouldSkip = YES;
+        } else {
+            // check to see if one of the skip dates for this alarm is today
+            NSArray *skipDates = [self sortedSkipDates];
+            for (NSDate *skipDate in skipDates) {
+                if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
+                    shouldSkip = YES;
+                    break;
+                }
+            }
+        }
+    }
+
+    return shouldSkip;
+}
+
+// gets a sorted list of skip dates for this alarm
+- (NSArray *)sortedSkipDates
+{
+    NSArray *allHolidaySkipDates = [self allHolidaySkipDates];
+    
+    // get all of the skip dates for that alarm into a single array
+    NSMutableArray *sortedSkipDates = [[NSMutableArray alloc] initWithCapacity:self.customSkipDates.count + allHolidaySkipDates.count];
+    [sortedSkipDates addObjectsFromArray:self.customSkipDates];
+    [sortedSkipDates addObjectsFromArray:allHolidaySkipDates];
+
+    // sort the skip dates
+    [sortedSkipDates sortUsingSelector:@selector(compare:)];
+    
+    return [sortedSkipDates copy];
+}
+
 @end

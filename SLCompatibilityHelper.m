@@ -93,6 +93,7 @@
     NSArray *sortedNotifications = [scheduledNotifications sortedArrayUsingComparator:notificationComparator];
     
     // iterate through all of the notifications that are scheduled
+    UIConcreteLocalNotification *nextLocalNotification = nil;
     for (UIConcreteLocalNotification *notification in sortedNotifications) {
         // only continue checking if the given notification is an alarm notification and did not
         // originate from a snooze action
@@ -103,13 +104,13 @@
             // check to see if this notification is skippable
             if ([SLCompatibilityHelper isAlarmLocalNotificationSkippable:notification forAlarmId:alarmId]) {
                 // since the array is sorted we know that this is the earliest skippable notification
-                return notification;
+                nextLocalNotification = notification;
+                break;
             }
         }
     }
     
-    // if no skippable notification was found, return nil
-    return nil;
+    return nextLocalNotification;
 }
 
 // iOS 10 / iOS 11: Returns the next skippable alarm notification request given an array of notification requests.
@@ -143,6 +144,7 @@
     NSArray *sortedNotificationRequests = [notificationRequests sortedArrayUsingComparator:notificationRequestComparator];
 
     // iterate through all of the notifications that are scheduled
+    UNNotificationRequest *nextNotificationRequest = nil;
     for (UNNotificationRequest *notificationRequest in sortedNotificationRequests) {
         // only continue checking if the given notification is an alarm notification and did not
         // originate from a snooze action
@@ -153,13 +155,13 @@
             // check to see if this notification request is skippable
             if ([SLCompatibilityHelper isAlarmNotificationRequestSkippable:notificationRequest forAlarmId:alarmId]) {
                 // since the array is sorted we know that this is the earliest skippable notification
-                return notificationRequest;
+                nextNotificationRequest = notificationRequest;
+                break;
             }
         }
     }
-    
-    // if no skippable notification was found, return nil
-    return nil;
+
+    return nextNotificationRequest;
 }
 
 // returns a valid alarm Id for a given alarm
@@ -236,7 +238,8 @@
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (alarmPrefs && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
+    BOOL skippable = NO;
+    if (alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -255,11 +258,10 @@
                                                            localTimeZone:[NSTimeZone localTimeZone]];
         
         // compare the dates to see if this notification is skippable
-        return [alarmFireDate compare:thresholdDate] == NSOrderedAscending;
-    } else {
-        // skip is not even enabled, so we know it is not skippable
-        return NO;
+        skippable = [alarmFireDate compare:thresholdDate] == NSOrderedAscending;
     }
+
+    return skippable;
 }
 
 // iOS 10 / iOS 11: helper function that will investigate an alarm notification request and alarm Id to see if it is skippable
@@ -270,7 +272,8 @@
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     
     // check to see if the skip functionality has been enabled for the alarm
-    if (alarmPrefs != nil && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown && [notificationRequest.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")]) {
+    BOOL skippable = NO;
+    if ([notificationRequest.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")] && alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
@@ -290,11 +293,10 @@
                                                                                                           defaultTimeZone:[NSTimeZone localTimeZone]];
         
         // compare the dates to see if this notification is skippable
-        return [nextTriggerDate compare:thresholdDate] == NSOrderedAscending;
-    } else {
-        // skip is not even enabled, so we know it is not skippable
-        return NO;
+        skippable = [nextTriggerDate compare:thresholdDate] == NSOrderedAscending;
     }
+    
+    return skippable;
 }
 
 @end

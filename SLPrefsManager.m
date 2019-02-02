@@ -137,30 +137,6 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     [prefs writeToFile:SETTINGS_PATH atomically:YES];
 }
 
-// Return the status that signifies whether or not skip is activated for a given alarm Id.  Return
-// NSNotFound if no alarm is found.
-+ (SLPrefsSkipActivatedStatus)skipActivatedStatusForAlarmId:(NSString *)alarmId
-{
-    // grab the preferences plist
-    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
-    
-    // if the alarm preferences exist, attempt to get the alarms
-    if (prefs) {
-        // get the array of dictionaries of all of the alarms
-        NSArray *alarms = [prefs objectForKey:kSLAlarmsKey];
-        
-        // iterate through the alarms until we the find the one with a matching id
-        for (NSDictionary *alarm in alarms) {
-            if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmId]) {
-                return [[alarm objectForKey:kSLSkipActivatedStatusKey] integerValue];
-            }
-        }
-    }
-    
-    // return NSNotFound if no alarm is found
-    return NSNotFound;
-}
-
 // save the skip activation status for a given alarm
 + (void)setSkipActivatedStatusForAlarmId:(NSString *)alarmId
                      skipActivatedStatus:(SLPrefsSkipActivatedStatus)skipActivatedStatus
@@ -303,25 +279,6 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     return friendlyName;
 }
 
-// gets a sorted list of skip dates for a given alarm Id
-+ (NSArray *)sortedSkipDatesForAlarmId:(NSString *)alarmId
-{
-    NSMutableArray *sortedSkipDates = [[NSMutableArray alloc] init];
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    
-    // if the alarm preferences exist, attempt to get the skip dates
-    if (alarmPrefs) {
-        // if a valid alarm was found get all of the skip dates for that alarm into a single array
-        [sortedSkipDates addObjectsFromArray:alarmPrefs.customSkipDates];
-        [sortedSkipDates addObjectsFromArray:[alarmPrefs allHolidaySkipDates]];
-
-        // sort the skip dates
-        [sortedSkipDates sortUsingSelector:@selector(compare:)];
-    }
-    
-    return [sortedSkipDates copy];
-}
-
 // returns an array of new dates that removes any dates from the given array of dates that have passed
 + (NSArray *)removePassedDatesFromArray:(NSArray *)dates
 {
@@ -341,7 +298,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     // create the date formatter that will be used to display the dates
     if (sSLSkipDatesDateFormatter == nil) {
         sSLSkipDatesDateFormatter = [[NSDateFormatter alloc] init];
-        sSLSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, YYYY";
+        sSLSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, yyyy";
     }
     return [sSLSkipDatesDateFormatter stringFromDate:date];
 }

@@ -42,6 +42,7 @@
 #define kSLHolidayString                        [kSLSleeperBundle localizedStringForKey:@"HOLIDAY" value:@"Holiday" table:@"Localizable"]
 #define kSLDefaultSkipDatesString               [kSLSleeperBundle localizedStringForKey:@"DEFAULT_SKIP_DATES" value:@"Remove all skip dates, including any holiday selections, for this alarm." table:@"Localizable"]
 #define kSLSkipDateExplanationString            [kSLSleeperBundle localizedStringForKey:@"SKIP_DATE_EXPLANATION" value:@"This alarm will be skipped on the dates selected." table:@"Localizable"]
+#define kSLHolidayExplanationString             [kSLSleeperBundle localizedStringForKey:@"HOLIDAY_EXPLANATION" value:@"If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year." table:@"Localizable"]
 #define kSLAddNewDateString                     [kSLSleeperBundle localizedStringForKey:@"ADD_NEW_DATE" value:@"Add New Date..." table:@"Localizable"]
 #define kSLHolidayNameString(holdayNameKey)     [kSLSleeperBundle localizedStringForKey:holdayNameKey value:@"Holiday" table:@"Localizable"]
 #define kSLClearString                          [kSLSleeperBundle localizedStringForKey:@"CLEAR" value:@"Clear" table:@"Localizable"]

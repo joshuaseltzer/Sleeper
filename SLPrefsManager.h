@@ -41,10 +41,6 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // save the specific alarm preferences object
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs;
 
-// Return the status that signifies whether or not skip is activated for a given alarm Id.  Return
-// NSNotFound if no alarm is found.
-+ (SLPrefsSkipActivatedStatus)skipActivatedStatusForAlarmId:(NSString *)alarmId;
-
 // save the skip activation status for a given alarm
 + (void)setSkipActivatedStatusForAlarmId:(NSString *)alarmId
                      skipActivatedStatus:(SLPrefsSkipActivatedStatus)skipActivatedStatus;
@@ -60,9 +56,6 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForCountry:(SLHolidayCountry)country;
-
-// gets a sorted list of skip dates for a given alarm Id
-+ (NSArray *)sortedSkipDatesForAlarmId:(NSString *)alarmId;
 
 // returns an array of new dates that removes any dates from the given array of dates that have passed
 + (NSArray *)removePassedDatesFromArray:(NSArray *)dates;

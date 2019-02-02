@@ -18,3 +18,27 @@
 "SKIP_ALARM" = "דלג/י על ההתראה";
 "SKIP_QUESTION" = "האם תרצה/י לדלג על ההתראה \"%@\" שמתוזמנת לפעול ב%@?";
 "SKIP_TIME_EXPLANATION" = "בחר כמות זמן שבו תישאל/י האם את/ה רוצה לדלג על ההתראה לפני שהיא מתחילה.";
+
+"SKIP_DATES" = "Skip Dates";
+"SELECT_DATE" = "Select Date";
+"HOLIDAYS" = "Holidays";
+"HOLIDAY" = "Holiday";
+"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
+"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
+"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
+"ADD_NEW_DATE" = "Add New Date...";
+"CLEAR" = "Clear";
+
+"NEW_YEARS_DAY" = "New Year's Day";
+"MARTIN_LUTHER_KING_DAY" = "Martin Luther King Jr. Day";
+"PRESIDENTS_DAY" = "Presidents' Day";
+"MEMORIAL_DAY" = "Memorial Day";
+"INDEPENDENCE_DAY" = "Independence Day";
+"LABOR_DAY" = "Labor Day";
+"COLUMBUS_DAY" = "Columbus Day";
+"VETERANS_DAY" = "Veterans Day";
+"THANKSGIVING_DAY" = "Thanksgiving Day";
+"DAY_AFTER_THANKSGIVING" = "Day After Thanksgiving";
+"CHRISTMAS_EVE" = "Christmas Eve";
+"CHRISTMAS_DAY" = "Christmas Day";
+"NEW_YEARS_EVE" = "New Year's Eve";

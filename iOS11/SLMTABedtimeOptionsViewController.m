@@ -13,6 +13,7 @@
 #import "../SLPickerTableViewController.h"
 #import "../SLSnoozeTimeViewController.h"
 #import "../SLSkipTimeViewController.h"
+#import "../SLSkipDatesViewController.h"
 
 // define an enum to reference the sections of the table view
 typedef enum SLBedtimeOptionsViewControllerSection : NSUInteger {
@@ -28,11 +29,12 @@ typedef enum SLBedtimeOptionsViewControllerSleeperSectionRow : NSUInteger {
     kSLBedtimeOptionsViewControllerSleeperSectionRowSnoozeTime,
     kSLBedtimeOptionsViewControllerSleeperSectionRowSkipToggle,
     kSLBedtimeOptionsViewControllerSleeperSectionRowSkipTime,
+    kSLBedtimeOptionsViewControllerSleeperSectionRowSkipDates,
     kSLBedtimeOptionsViewControllerSleeperSectionNumRows
 } SLBedtimeOptionsViewControllerSleeperSectionRow;
 
 // table view controller which configures the settings for the sleep alarm
-@interface MTABedtimeOptionsViewController : UITableViewController <SLPickerSelectionDelegate>
+@interface MTABedtimeOptionsViewController : UITableViewController <SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
 // updates the status of the done button on the view controller
 - (void)updateDoneButtonEnabled;
@@ -160,6 +162,13 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.skipTimeHour,
                                             (long)self.SLAlarmPrefs.skipTimeMinute, (long)self.SLAlarmPrefs.skipTimeSecond];
                 break;
+            case kSLBedtimeOptionsViewControllerSleeperSectionRowSkipDates:
+                cell.textLabel.text = kSLSkipDatesString;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+                // customize the detail text label depending on whether or not we have skip dates enabled
+                cell.detailTextLabel.text = [self.SLAlarmPrefs selectedDatesString];
+                break;
         }
     } else {
         cell = %orig;
@@ -179,8 +188,6 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                                                                                                          minutes:self.SLAlarmPrefs.snoozeTimeMinute
                                                                                                          seconds:self.SLAlarmPrefs.snoozeTimeSecond];
                 snoozeController.delegate = self;
-                
-                // push the controller to our stack
                 [self.navigationController pushViewController:snoozeController animated:YES];
                 break;
             }
@@ -190,9 +197,14 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                                                                                                    minutes:self.SLAlarmPrefs.skipTimeMinute
                                                                                                    seconds:self.SLAlarmPrefs.skipTimeSecond];
                 skipController.delegate = self;
-                
-                // push the controller to our stack
                 [self.navigationController pushViewController:skipController animated:YES];
+                break;
+            }
+            case kSLBedtimeOptionsViewControllerSleeperSectionRowSkipDates: {
+                // create a custom view controller which will display the skip dates for this alarm
+                SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithAlarmPrefs:self.SLAlarmPrefs];
+                skipDatesController.delegate = self;
+                [self.navigationController pushViewController:skipDatesController animated:YES];
                 break;
             }
         }
@@ -236,10 +248,6 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 %new
 - (void)SLPickerTableViewController:(SLPickerTableViewController *)pickerTableViewController didUpdateWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
 {
-    // signify that changes were made to the Sleeper preferences
-    self.SLAlarmPrefsChanged = YES;
-    [self updateDoneButtonEnabled];
-
     // check to see if we are updating the snooze time or the skip time
     if ([pickerTableViewController isMemberOfClass:[SLSnoozeTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
@@ -276,6 +284,29 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                                                                     inSection:kSLBedtimeOptionsViewControllerSectionSleeper]]
                               withRowAnimation:UITableViewRowAnimationNone];
     }
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+    [self updateDoneButtonEnabled];
+}
+
+#pragma mark - SLSkipDatesDelegate
+
+// create a new delegate method for when the skip dates controller has updated skip dates
+%new
+- (void)SLSkipDatesViewController:(SLSkipDatesViewController *)skipDatesViewController didUpdateCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
+{
+    self.SLAlarmPrefs.customSkipDates = customSkipDates;
+    self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
+
+    // reload the cell that contains the skip dates
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLBedtimeOptionsViewControllerSleeperSectionRowSkipDates
+                                                                inSection:kSLBedtimeOptionsViewControllerSectionSleeper]]
+                            withRowAnimation:UITableViewRowAnimationNone];
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+    [self updateDoneButtonEnabled];
 }
 
 %end

@@ -167,8 +167,6 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
                                                                                                      minutes:self.SLAlarmPrefs.snoozeTimeMinute
                                                                                                      seconds:self.SLAlarmPrefs.snoozeTimeSecond];
             snoozeController.delegate = self;
-            
-            // push the controller to our stack
             [self.navigationController pushViewController:snoozeController animated:YES];
         } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime) {
             // create a custom view controller which will decide the skip time

@@ -14,7 +14,7 @@
 
 %hook SBClockDataProvider
 
-// invoked when an alarm alert (i.e. bulletin) is about to be displayed
+// iOS 10 / iOS 11: invoked when an alarm alert (i.e. bulletin) is about to be displayed
 - (void)_publishBulletinForNotification:(UNNotification *)notification
 {
     // grab the shared instance of the clock data provider
@@ -28,18 +28,8 @@
         // get the sleeper alarm preferences for this alarm
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs) {
-            // check to see one of today's dates is included in the skip dates for this alarm
-            BOOL shouldSkip = NO;
-            NSArray *skipDates = [SLPrefsManager sortedSkipDatesForAlarmId:alarmId];
-            for (NSDate *skipDate in skipDates) {
-                if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
-                    shouldSkip = YES;
-                    break;
-                }
-            }
-
-            // if we went through all of the set skip dates, check to see if the skip prompt was activated
-            if (!shouldSkip && alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusActivated) {
+            // only activate the actual alarm if we should not be skipping this alarm
+            if (![alarmPrefs shouldSkip]) {
                 %orig;
             }
 
@@ -72,27 +62,31 @@
     if ([clockDataProvider _isAlarmNotification:notification]) {
         // get the alarm Id from the notification
         NSString *alarmId = [clockDataProvider _alarmIDFromNotification:notification];
-        
-        // check to see if skip is activated for this alarm
-        if ([SLPrefsManager skipActivatedStatusForAlarmId:alarmId] == kSLSkipActivatedStatusActivated) {
-            // grab the alarm that we are going to ask to skip from the shared alarm manager
-            AlarmManager *alarmManager = [AlarmManager sharedManager];
-            [alarmManager loadAlarms];
-            Alarm *alarm = [alarmManager alarmWithId:alarmId];
-            
-            // simulate the alarm going off
-            [alarm handleAlarmFired:notification];
-            [alarmManager handleNotificationFired:notification];
+
+        // get the sleeper alarm preferences for this alarm
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs) {
+            // check to see if this alarm should be skipped
+            if ([alarmPrefs shouldSkip]) {
+                // grab the alarm that we are going to ask to skip from the shared alarm manager
+                AlarmManager *alarmManager = [AlarmManager sharedManager];
+                [alarmManager loadAlarms];
+                Alarm *alarm = [alarmManager alarmWithId:alarmId];
+                
+                // simulate the alarm going off
+                [alarm handleAlarmFired:notification];
+                [alarmManager handleNotificationFired:notification];
+            } else {
+                %orig;
+            }
+
+            // save the alarm's skip activation state to unknown for this alarm
+            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
         } else {
-            // if we did not activate skip for this alarm, perform the original implementation
             %orig;
         }
-
-        // save the alarm's skip activation state to unknown for this alarm
-        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
     } else {
-        // if it is not an alarm notification, perform the original implementation
         %orig;
     }
 }

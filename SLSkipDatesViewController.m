@@ -42,7 +42,6 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 
 @end
 
-// TODO: Update all strings with localized versions
 @implementation SLSkipDatesViewController
 
 // initialize this controller with the preferences for the given alarm
@@ -159,9 +158,11 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 skipDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
 
                 // set the background color of the cell
-                UIView *backgroundView = [[UIView alloc] init];
-                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                skipDateCell.selectedBackgroundView = backgroundView;
+                if (@available(iOS 10.0, *)) {
+                    UIView *backgroundView = [[UIView alloc] init];
+                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                    skipDateCell.selectedBackgroundView = backgroundView;
+                }
             }
             [self updateSkipDateCellSelectionStyle:skipDateCell];
             
@@ -183,9 +184,11 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 addNewDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
 
                 // set the background color of the cell
-                UIView *backgroundView = [[UIView alloc] init];
-                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                addNewDateCell.selectedBackgroundView = backgroundView;
+                if (@available(iOS 10.0, *)) {
+                    UIView *backgroundView = [[UIView alloc] init];
+                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                    addNewDateCell.selectedBackgroundView = backgroundView;
+                }
             }
             
             // customize the cell
@@ -203,6 +206,13 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 countryCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 countryCell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 countryCell.textLabel.textAlignment = NSTextAlignmentLeft;
+
+                // set the background color of the cell
+                if (@available(iOS 10.0, *)) {
+                    UIView *backgroundView = [[UIView alloc] init];
+                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                    countryCell.selectedBackgroundView = backgroundView;
+                }
             }
             
             // customize the cell
@@ -223,9 +233,11 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 resetDefaultCell.textLabel.textAlignment = NSTextAlignmentCenter;
 
                 // set the background color of the cell
-                UIView *backgroundView = [[UIView alloc] init];
-                backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                resetDefaultCell.selectedBackgroundView = backgroundView;
+                if (@available(iOS 10.0, *)) {
+                    UIView *backgroundView = [[UIView alloc] init];
+                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+                    resetDefaultCell.selectedBackgroundView = backgroundView;
+                }
             }
             
             // customize the cell
@@ -432,6 +444,9 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     CGFloat safeAreaInsets = 0.0;
     if (@available(iOS 11.0, *)) {
         safeAreaInsets = source.view.safeAreaInsets.bottom + source.view.safeAreaInsets.top;
+    } else {
+        // for older iOS versions, add some additional padding
+        safeAreaInsets = 30.0;
     }
     CGFloat partialModalPercentage = ceilf((kSLEditDatePickerViewHeight + [UIApplication sharedApplication].statusBarFrame.size.height) / (source.view.frame.size.height - safeAreaInsets) * 100) / 100;
     
