@@ -1,6 +1,6 @@
 //
 //  SLMTAAlarmEditViewController.x
-//  The view controller responsible for editing an iOS alarm (introduced in iOS 11).
+//  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -44,7 +44,7 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
 SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
-// the alarm object associated with the controller
+// the alarm object associated with the controller (iOS 11)
 @property(readonly, nonatomic) Alarm *alarm;
 
 @end
@@ -242,8 +242,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11
-    if (kSLSystemVersioniOS11) {
+    // only initialize this file if we are on iOS 11 or iOS 12
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         %init();
     }
 }
