@@ -44,6 +44,9 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
 SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
+// the original alarm object before any modifications were made (iOS 12)
+@property(retain, nonatomic) MTAlarm *originalAlarm;
+
 // the alarm object associated with the controller (iOS 11)
 @property(readonly, nonatomic) Alarm *alarm;
 
@@ -64,7 +67,12 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 - (void)viewDidLoad
 {
     // get the alarm Id from the alarm for this controller
-    NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
+    NSString *alarmId = nil;
+    if (kSLSystemVersioniOS12) {
+        alarmId = [self.originalAlarm alarmIDString];
+    } else {
+        alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
+    }
 
     // load the preferences for the alarm
     self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];

@@ -187,7 +187,7 @@
     UIColor *color = nil;
 
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         color = [UIColor blackColor];
     } else {
         color = [UIColor whiteColor];
@@ -203,7 +203,7 @@
     UIColor *color = nil;
 
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         color = [UIColor whiteColor];
     } else {
         color = [UIColor blackColor];
@@ -221,7 +221,7 @@
                            alpha:1.0];
 }
 
-// iOS 10 / iOS 11: returns the cell selection background color for cells
+// iOS 10 / iOS 11 / iOS 12: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor
 {
     return [UIColor colorWithRed:52.0 / 255.0

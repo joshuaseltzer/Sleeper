@@ -16,10 +16,18 @@
 
 @end
 
-// the alarm object that contains all of the information about the alarm
+// the alarm object (introduced in iOS 12)
+@interface MTAlarm : NSObject
+
+// returns a string representation of the alarm Id
+- (NSString *)alarmIDString;
+
+@end
+
+// the alarm object that contains all of the information about the alarm (iOS 8 - iOS 11)
 @interface Alarm : NSObject
 
-// tells us if the given notification object was generated from a snooze notification
+// tells us if the given notification object was generated from a snooze notification (iOS 8 / iOS 9)
 + (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
 // iOS 8: the alarm Id corresponding to the alarm object
