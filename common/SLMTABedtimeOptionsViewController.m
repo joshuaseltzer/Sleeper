@@ -63,8 +63,15 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 - (void)viewDidLoad
 {
     // get the alarm ID for the special sleep alarm
-    AlarmManager *alarmManager = [AlarmManager sharedManager];
-    NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+    NSString *alarmId = nil;
+    if (kSLSystemVersioniOS12) {
+        MTAlarmManager *alarmManager = (MTAlarmManager *)[[objc_getClass("MTAlarmManager") alloc] init];
+        
+    } else {
+        AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
+        alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+    }
+    NSLog(@"*** SLEEPER *** - alarmId: %@", alarmId);
 
     // load the preferences for the sleep alarm
     self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
@@ -313,7 +320,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 
 %ctor {
     // only initialize this file if we are on iOS 11
-    if (kSLSystemVersioniOS11) {
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         %init();
     }
 }

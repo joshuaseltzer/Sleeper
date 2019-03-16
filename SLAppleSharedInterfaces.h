@@ -50,6 +50,13 @@
 
 @end
 
+// manager that governs all alarms on the system (iOS 12)
+@interface MTAlarmManager : NSObject
+
+
+
+@end
+
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject
 
