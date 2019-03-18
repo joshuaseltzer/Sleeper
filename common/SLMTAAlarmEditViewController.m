@@ -10,10 +10,8 @@
 #import "../SLPrefsManager.h"
 #import "../SLLocalizedStrings.h"
 #import "../SLCompatibilityHelper.h"
-#import "../SLPickerTableViewController.h"
 #import "../SLSnoozeTimeViewController.h"
 #import "../SLSkipTimeViewController.h"
-#import "../SLSkipDatesViewController.h"
 
 // define an enum to reference the sections of the table view
 typedef enum SLMTAAlarmEditViewControllerSection : NSUInteger {
@@ -44,11 +42,11 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
 SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
-// the original alarm object before any modifications were made (iOS 12)
-@property(retain, nonatomic) MTAlarm *originalAlarm;
+// the edited alarm object for this view controller (iOS 12)
+@property (retain, nonatomic) MTMutableAlarm *editedAlarm;
 
 // the alarm object associated with the controller (iOS 11)
-@property(readonly, nonatomic) Alarm *alarm;
+@property (readonly, nonatomic) Alarm *alarm;
 
 @end
 
@@ -69,7 +67,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     // get the alarm Id from the alarm for this controller
     NSString *alarmId = nil;
     if (kSLSystemVersioniOS12) {
-        alarmId = [self.originalAlarm alarmIDString];
+        alarmId = [self.editedAlarm alarmIDString];
     } else {
         alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
     }

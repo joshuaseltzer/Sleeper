@@ -10,10 +10,8 @@
 #import "../SLPrefsManager.h"
 #import "../SLLocalizedStrings.h"
 #import "../SLCompatibilityHelper.h"
-#import "../SLPickerTableViewController.h"
 #import "../SLSnoozeTimeViewController.h"
 #import "../SLSkipTimeViewController.h"
-#import "../SLSkipDatesViewController.h"
 
 // define an enum to reference the sections of the table view
 typedef enum SLBedtimeOptionsViewControllerSection : NSUInteger {
@@ -33,22 +31,6 @@ typedef enum SLBedtimeOptionsViewControllerSleeperSectionRow : NSUInteger {
     kSLBedtimeOptionsViewControllerSleeperSectionNumRows
 } SLBedtimeOptionsViewControllerSleeperSectionRow;
 
-// table view controller which configures the settings for the sleep alarm
-@interface MTABedtimeOptionsViewController : UITableViewController <SLPickerSelectionDelegate, SLSkipDatesDelegate>
-
-// updates the status of the done button on the view controller
-- (void)updateDoneButtonEnabled;
-
-@end
-
-// custom interface for added properties
-@interface MTABedtimeOptionsViewController (Sleeper)
-
-@property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
-@property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
-
-@end
-
 // define a constant for the reuse identifier for the custom cell we will create
 static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseIdentifier = @"SLBedtimeOptionsViewControllerSleeperSectionCellReuseIdentifier";
 
@@ -60,25 +42,23 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 // boolean property to signify whether or not changes were made to the Sleeper preferences
 %property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
+-
+
 - (void)viewDidLoad
 {
-    // get the alarm ID for the special sleep alarm
-    NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12) {
-        MTAlarmManager *alarmManager = (MTAlarmManager *)[[objc_getClass("MTAlarmManager") alloc] init];
-        
-    } else {
+    // Load the preferences for the sleep alarm (iOS 11).  On iOS 12, the preferences will be set from the parent controller
+    // prior to this controller being displayed.
+    if (kSLSystemVersioniOS11) {
         AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
-        alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+        NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs == nil) {
+            self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        } else {
+            self.SLAlarmPrefs = alarmPrefs;
+        }
+        self.SLAlarmPrefsChanged = NO;
     }
-    NSLog(@"*** SLEEPER *** - alarmId: %@", alarmId);
-
-    // load the preferences for the sleep alarm
-    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (self.SLAlarmPrefs == nil) {
-        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-    }
-    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -87,7 +67,6 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 {
     // clear out the alarm preferences
     self.SLAlarmPrefs = nil;
-    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -100,9 +79,8 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger numRows = 0;
-    
     // define the number of custom rows we are adding to the extra section
+    NSInteger numRows = 0;
     if (section == kSLBedtimeOptionsViewControllerSectionSleeper) {
         numRows = kSLBedtimeOptionsViewControllerSleeperSectionNumRows;
     } else {
@@ -188,6 +166,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 {
     // handle row selection for the custom cells
     if (indexPath.section == kSLBedtimeOptionsViewControllerSectionSleeper) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         switch (indexPath.row) {
             case kSLBedtimeOptionsViewControllerSleeperSectionRowSnoozeTime: {
                 // create a custom view controller which will decide the snooze time
@@ -319,7 +298,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11
+    // only initialize this file if we are on iOS 11 or iOS 12
     if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         %init();
     }

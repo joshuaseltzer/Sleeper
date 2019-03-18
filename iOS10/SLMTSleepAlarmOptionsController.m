@@ -10,10 +10,8 @@
 #import "../SLPrefsManager.h"
 #import "../SLLocalizedStrings.h"
 #import "../SLCompatibilityHelper.h"
-#import "../SLPickerTableViewController.h"
 #import "../SLSnoozeTimeViewController.h"
 #import "../SLSkipTimeViewController.h"
-#import "../SLSkipDatesViewController.h"
 
 // define an enum to reference the sections of the table view
 typedef enum SLSleepAlarmOptionsSection : NSUInteger {

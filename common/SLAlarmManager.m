@@ -10,7 +10,7 @@
 #import "../SLCompatibilityHelper.h"
 #import "../SLPrefsManager.h"
 
-// used for multiple versions of iOS
+// utilized in iOS 8, iOS 9, iOS 10, and iOS 11
 %hook AlarmManager
 
 - (void)removeAlarm:(Alarm *)alarm
@@ -34,3 +34,10 @@
 }
 
 %end
+
+%ctor {
+    // only initialize this file if we are on iOS 8, iOS 9, iOS 10, or iOS 11
+    if (kSLSystemVersioniOS8 || kSLSystemVersioniOS9 || kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+        %init();
+    }
+}

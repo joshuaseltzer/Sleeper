@@ -7,6 +7,9 @@
 //
 
 @import UserNotifications;
+#import "SLAlarmPrefs.h"
+#import "SLPickerTableViewController.h"
+#import "SLSkipDatesViewController.h"
 
 // iOS 8 / iOS 9: the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification
@@ -22,6 +25,10 @@
 // returns a string representation of the alarm Id
 - (NSString *)alarmIDString;
 
+@end
+
+// an extension to the MTAlarm interface indicating an editable alarm (iOS 12)
+@interface MTMutableAlarm : MTAlarm
 @end
 
 // the alarm object that contains all of the information about the alarm (iOS 8 - iOS 11)
@@ -50,12 +57,43 @@
 
 @end
 
+// table view controller which configures the settings for the sleep alarm
+@interface MTABedtimeOptionsViewController : UITableViewController
+
+// updates the status of the done button on the view controller
+- (void)updateDoneButtonEnabled;
+
+@end
+
+// custom interface for added properties to the options controller
+@interface MTABedtimeOptionsViewController (Sleeper) <SLPickerSelectionDelegate, SLSkipDatesDelegate>
+
+@property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
+@property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
+
+@end
+
+/*@interface MTAlarmCache : NSObject
+
+@end
+
 // manager that governs all alarms on the system (iOS 12)
 @interface MTAlarmManager : NSObject
 
+- (id)alarms;
 
++ (void)warmUp;
 
-@end
+- (void)reconnect;
+- (void)checkIn;
+
+- (id)sleepAlarm;
+
+- (void)_getCachedAlarmsWithFuture:(id)arg1 finishBlock:(void (^)(MTAlarmCache *))arg2;
+
+@property(retain, nonatomic) MTAlarmCache *cache;
+
+@end*/
 
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject

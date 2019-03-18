@@ -1,14 +1,26 @@
 //
-//  SLUNSNotificationSchedulingService.x
-//  Hook into the UNSNotificationSchedulingService class to modify the snooze notification on iOS 10 and iOS 11.
+//  .x
+//  
 //
-//  Created by Joshua Seltzer on 2/23/17.
+//  Created by Joshua Seltzer on 3/16/2019.
 //
 //
 
 #import "../SLCompatibilityHelper.h"
 
-%hook UNSNotificationSchedulingService
+// MTAlarmScheduler, mobiletimerd??
+%hook MTAgentNotificationManager
+
+- (void)_handleNotification:(id)arg1
+{
+    NSLog(@"**** SLEEPER ****");
+    %log;
+    %orig;
+}
+
+%end
+
+/*%hook UNSNotificationSchedulingService
 
 // iOS 10 / iOS 11: function that adds new notification records to the scheduling service
 - (void)addPendingNotificationRecords:(NSArray *)notificationRecords forBundleIdentifier:(NSString *)bundleId withCompletionHandler:(id)completionHandler
@@ -29,11 +41,11 @@
     %orig;
 }
 
-%end
+%end*/
 
 %ctor {
-    // only initialize this file if we are on iOS 10 or iOS 11
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+    // only initialize this file if we are on iOS 12
+    if (kSLSystemVersioniOS12) {
         %init();
     }
 }
