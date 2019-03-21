@@ -46,6 +46,10 @@
 // iOS 10 / iOS 11: modifies a snooze UNSNotificationRecord object with the selected snooze time (if applicable)
 + (void)modifySnoozeNotificationForNotificationRecord:(UNSNotificationRecord *)notificationRecord;
 
+// Returns a modified NSDate object with an appropriately modified snooze time for a given alarm Id and original date
+// Returns nil if no modified snooze date is available
++ (NSDate *)modifiedSnoozeDateForAlarmId:(NSString *)alarmId withOriginalDate:(NSDate *)originalDate;
+
 // iOS 8 / iOS 9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
 + (UIConcreteLocalNotification *)nextSkippableAlarmLocalNotification;
 

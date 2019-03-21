@@ -13,7 +13,6 @@
 // iOS 10 / iOS 11: function that adds new notification records to the scheduling service
 - (void)addPendingNotificationRecords:(NSArray *)notificationRecords forBundleIdentifier:(NSString *)bundleId withCompletionHandler:(id)completionHandler
 {
-    %log;
     // check to see if the notification is for the timer application
     if ([bundleId isEqualToString:@"com.apple.mobiletimer"]) {
         // iterate through the notification records

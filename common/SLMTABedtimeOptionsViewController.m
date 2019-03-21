@@ -42,8 +42,6 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 // boolean property to signify whether or not changes were made to the Sleeper preferences
 %property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
--
-
 - (void)viewDidLoad
 {
     // Load the preferences for the sleep alarm (iOS 11).  On iOS 12, the preferences will be set from the parent controller

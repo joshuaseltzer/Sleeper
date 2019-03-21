@@ -17,21 +17,11 @@
 {
     // grab the alarm Id from the notification
     NSString *alarmId = [localNotification.userInfo objectForKey:kSLAlarmIdKey];
-    
-    // check to see if we have an updated snooze time for this alarm
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs != nil) {
-        // subtract the default snooze time from these values since they have already been added to
-        // the fire date
-        NSInteger hours = alarmPrefs.snoozeTimeHour - kSLDefaultSnoozeHour;
-        NSInteger minutes = alarmPrefs.snoozeTimeMinute - kSLDefaultSnoozeMinute;
-        NSInteger seconds = alarmPrefs.snoozeTimeSecond - kSLDefaultSnoozeSecond;
-        
-        // convert the entire value into seconds
-        NSTimeInterval timeInterval = hours * 3600 + minutes * 60 + seconds;
-        
-        // modify the fire date of the notification
-        localNotification.fireDate = [localNotification.fireDate dateByAddingTimeInterval:timeInterval];
+
+    // check to see if a modified snooze time is available to set on this notification record
+    NSDate *modifiedSnoozeDate = [SLCompatibilityHelper modifiedSnoozeDateForAlarmId:alarmId withOriginalDate:localNotification.fireDate];
+    if (modifiedSnoozeDate) {
+        localNotification.fireDate = modifiedSnoozeDate;
     }
 }
 
@@ -41,7 +31,19 @@
     // grab the alarm Id from the notification record
     NSString *alarmId = [notificationRecord.userInfo objectForKey:kSLAlarmIdKey];
 
+    // check to see if a modified snooze time is available to set on this notification record
+    NSDate *modifiedSnoozeDate = [SLCompatibilityHelper modifiedSnoozeDateForAlarmId:alarmId withOriginalDate:notificationRecord.triggerDate];
+    if (modifiedSnoozeDate) {
+        [notificationRecord setTriggerDate:modifiedSnoozeDate];
+    }
+}
+
+// Returns a modified NSDate object with an appropriately modified snooze time for a given alarm Id and original date
+// Returns nil if no modified snooze date is available
++ (NSDate *)modifiedSnoozeDateForAlarmId:(NSString *)alarmId withOriginalDate:(NSDate *)originalDate
+{
     // check to see if we have an updated snooze time for this alarm
+    NSDate *modifiedSnoozeDate = nil;
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (alarmPrefs != nil) {
         // subtract the default snooze time from these values since they have already been added to
@@ -53,9 +55,10 @@
         // convert the entire value into seconds
         NSTimeInterval timeInterval = hours * 3600 + minutes * 60 + seconds;
         
-        // modify the trigger date of the notification record
-        [notificationRecord setTriggerDate:[notificationRecord.triggerDate dateByAddingTimeInterval:timeInterval]];
+        // create the modified date from the original date
+        modifiedSnoozeDate = [originalDate dateByAddingTimeInterval:timeInterval];
     }
+    return modifiedSnoozeDate;
 }
 
 // iOS 8 / iOS 9: Returns the next skippable alarm local notification.  If there is no skippable notification found, return nil.
