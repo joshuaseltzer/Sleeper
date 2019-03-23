@@ -18,7 +18,7 @@
 - (void)_publishBulletinForNotification:(UNNotification *)notification
 {
     // grab the shared instance of the clock data provider
-    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    SBClockDataProvider *clockDataProvider = [objc_getClass("SBClockDataProvider") sharedInstance];
     
     // check to see if this notification is an alarm notification
     if ([clockDataProvider _isAlarmNotification:notification]) {
@@ -56,7 +56,7 @@
 - (void)_publishBulletinForLocalNotification:(UIConcreteLocalNotification *)notification
 {
     // grab the shared instance of the clock data provider
-    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    SBClockDataProvider *clockDataProvider = [objc_getClass("SBClockDataProvider") sharedInstance];
     
     // check to see if this notification is an alarm notification
     if ([clockDataProvider _isAlarmNotification:notification]) {

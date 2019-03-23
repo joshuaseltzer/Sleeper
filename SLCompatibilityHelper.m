@@ -266,7 +266,7 @@
                                                                                                         withRequestedDate:nil
                                                                                                           defaultTimeZone:[NSTimeZone localTimeZone]];
         
-        [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextTriggerDate];
+        skippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextTriggerDate];
     }
     
     return skippable;

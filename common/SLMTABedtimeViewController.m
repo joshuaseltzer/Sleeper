@@ -51,9 +51,16 @@
         alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
     }
 
-    // reset the skip activation status for this alarm
-    [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                 skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+    // check if we have alarm preferences for this alarm
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs) {
+        // reset the skip activation status for this alarm
+        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+    } else {
+        alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        [SLPrefsManager saveAlarmPrefs:alarmPrefs];
+    }
 }
 
 - (void)showOptions:(UIBarButtonItem *)optionsBarButtonItem

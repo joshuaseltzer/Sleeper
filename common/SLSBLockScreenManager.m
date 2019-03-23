@@ -27,7 +27,7 @@
     NSDate *tomorrow = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:today] options:0];
 
     // get the list of next alarms for today and tomorrow from the alarm manager
-    MTAlarmManager *alarmManager = [[MTAlarmManager alloc] init];
+    MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
     NSArray *nextAlarmsToday = [alarmManager nextAlarmsForDateSync:today maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
     NSArray *nextAlarmsTomorrow = [alarmManager nextAlarmsForDateSync:tomorrow maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
     NSArray *nextAlarms = @[];
@@ -57,10 +57,10 @@
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             // create and display the custom alert item
-            SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithTitle:alarmTitle
-                                                                                  alarmId:alarmId
-                                                                             nextFireDate:nextFireDate];
-            [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
+            SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
+                                                                                               alarmId:alarmId
+                                                                                          nextFireDate:nextFireDate];
+            [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
         });
     }
 }
@@ -88,7 +88,7 @@
             // if we found a valid alarm, check to see if we should ask to skip it
             if (nextAlarmNotificationRequest != nil) {
                 // grab the shared instance of the clock data provider
-                SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+                SBClockDataProvider *clockDataProvider = [objc_getClass("SBClockDataProvider") sharedInstance];
 
                 // grab the alarm Id for this notification request
                 NSString *alarmId = [clockDataProvider _alarmIDFromNotificationRequest:nextAlarmNotificationRequest];
@@ -108,17 +108,17 @@
                                                                                                                                defaultTimeZone:[NSTimeZone localTimeZone]];
                     
                     // create and display the custom alert item
-                    SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
-                                                                                          alarmId:alarmId
-                                                                                     nextFireDate:nextTriggerDate];
-                    [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
+                    SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
+                                                                                                       alarmId:alarmId
+                                                                                                  nextFireDate:nextTriggerDate];
+                    [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
                 });
             }
         }
     };
 
     // get the clock notification manager and get the notification requests
-    SBClockNotificationManager *clockNotificationManager = [%c(SBClockNotificationManager) sharedInstance];
+    SBClockNotificationManager *clockNotificationManager = [objc_getClass("SBClockNotificationManager") sharedInstance];
     [clockNotificationManager getPendingNotificationRequestsWithCompletionHandler:clockNotificationManagerNotificationRequests];
 }
 

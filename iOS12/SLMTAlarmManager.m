@@ -23,9 +23,17 @@
 
 - (id)updateAlarm:(MTMutableAlarm *)alarm
 {
-    // reset the skip activation status for this alarm
-    [SLPrefsManager setSkipActivatedStatusForAlarmId:[alarm alarmIDString]
-                                 skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+    // check if we have alarm preferences for this alarm
+    NSString *alarmId = [alarm alarmIDString];
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs) {
+        // reset the skip activation status for this alarm
+        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+    } else {
+        alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        [SLPrefsManager saveAlarmPrefs:alarmPrefs];
+    }
 
     return %orig;
 }

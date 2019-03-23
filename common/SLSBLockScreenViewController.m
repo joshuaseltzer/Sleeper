@@ -19,7 +19,7 @@
     %orig;
     
     // grab the shared instance of the clock data provider
-    SBClockDataProvider *clockDataProvider = [%c(SBClockDataProvider) sharedInstance];
+    SBClockDataProvider *clockDataProvider = [objc_getClass("SBClockDataProvider") sharedInstance];
     
     // attempt to get the next skippable alarm notification
     UIConcreteLocalNotification *nextAlarmNotification = [SLCompatibilityHelper nextSkippableAlarmLocalNotification];
@@ -42,10 +42,10 @@
                                                                    localTimeZone:[NSTimeZone localTimeZone]];
             
             // create and display the custom alert item
-            SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
-                                                                                  alarmId:alarmId
-                                                                             nextFireDate:alarmFireDate];
-            [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
+            SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
+                                                                                               alarmId:alarmId
+                                                                                          nextFireDate:alarmFireDate];
+            [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
         });
     }
 }
