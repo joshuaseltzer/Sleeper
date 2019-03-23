@@ -61,14 +61,12 @@
     // If the options controller does not have the Sleeper properties set, set them now (iOS 12).  On iOS 11,
     // the preferences are set when the options view is loaded from the Alarm Manager.
     if (kSLSystemVersioniOS12) {
-        if (self.optionsController.SLAlarmPrefs == nil) {
-            NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
-            SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-            if (alarmPrefs == nil) {
-                self.optionsController.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-            } else {
-                self.optionsController.SLAlarmPrefs = alarmPrefs;
-            }
+        NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs == nil) {
+            self.optionsController.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        } else {
+            self.optionsController.SLAlarmPrefs = alarmPrefs;
         }
         self.optionsController.SLAlarmPrefsChanged = NO;
         [self.optionsController updateDoneButtonEnabled];

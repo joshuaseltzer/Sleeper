@@ -36,7 +36,7 @@
 // system alert for skipping alarms
 @interface SLSkipAlarmAlertItem : SBAlertItem
 
-// create a new alert item with a given alarm and fire date
-- (id)initWithAlarm:(Alarm *)alarm nextFireDate:(NSDate *)nextFireDate;
+// create a new alert item with a given title, alarmId, and next fire date
+- (id)initWithTitle:(NSString *)title alarmId:(NSString *)alarmId nextFireDate:(NSDate *)nextFireDate;
 
 @end

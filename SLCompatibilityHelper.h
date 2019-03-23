@@ -57,8 +57,14 @@
 // If there is no skippable notification found, return nil.
 + (UNNotificationRequest *)nextSkippableAlarmNotificationRequestForNotificationRequests:(NSArray *)notificationRequests;
 
+// returns whether or not an alarm is skippable based on the alarm Id
++ (BOOL)isAlarmSkippableForAlarmId:(NSString *)alarmId withNextFireDate:(NSDate *)nextFireDate;
+
 // returns a valid alarm Id for a given alarm
 + (NSString *)alarmIdForAlarm:(Alarm *)alarm;
+
+// returns the appropriate title string for a given alarm object
++ (NSString *)alarmTitleForAlarm:(Alarm *)alarm;
 
 // returns the picker view's background color, which will depend on the iOS version
 + (UIColor *)pickerViewBackgroundColor;

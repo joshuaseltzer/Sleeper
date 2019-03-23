@@ -7,14 +7,15 @@
 //
 
 #import "SLSkipAlarmAlertItem.h"
-#import "SLPrefsManager.h"
-#import "SLLocalizedStrings.h"
-#import "SLCompatibilityHelper.h"
+#import "../SLPrefsManager.h"
+#import "../SLLocalizedStrings.h"
+#import "../SLCompatibilityHelper.h"
 
 // private interface definition to define some properties
 @interface SLSkipAlarmAlertItem (Sleeper)
 
-@property (nonatomic, retain) Alarm *SLAlertAlarm;
+@property (nonatomic, retain) NSString *SLTitle;
+@property (nonatomic, retain) NSString *SLAlarmId;
 @property (nonatomic, retain) NSDate *SLAlertFireDate;
 
 @end
@@ -24,20 +25,23 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 
 %subclass SLSkipAlarmAlertItem : SBAlertItem
 
-// the alarm object associated with this alert
-%property (nonatomic, retain) Alarm *SLAlertAlarm;
+// the title associated with this alert
+%property (nonatomic, retain) NSString *SLTitle;
+
+// the alarmId associated with the alarm being displayed in this alert
+%property (nonatomic, retain) NSString *SLAlarmId;
 
 // the fire date for the alarm in this alert
 %property (nonatomic, retain) NSDate *SLAlertFireDate;
 
-// create a new alert item with a given alarm and fire date
+// create a new alert item with a given title, alarmId, and next fire date
 %new
-- (id)initWithAlarm:(Alarm *)alarm nextFireDate:(NSDate *)nextFireDate
+- (id)initWithTitle:(NSString *)title alarmId:(NSString *)alarmId nextFireDate:(NSDate *)nextFireDate
 {
     self = [self init];
     if (self) {
-        // set the alarm and date that we will present to the user
-        self.SLAlertAlarm = alarm;
+        self.SLTitle = title;
+        self.SLAlarmId = alarmId;
         self.SLAlertFireDate = nextFireDate;
         
         // create the date formatter object once since date formatters are expensive
@@ -53,7 +57,8 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 - (void)dealloc
 {
     // clear out some properties associated with this alert
-    self.SLAlertAlarm = nil;
+    self.SLTitle = nil;
+    self.SLAlarmId = nil;
     self.SLAlertFireDate = nil;
 
     %orig;
@@ -64,24 +69,16 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 {
     %orig;
 
-    // determine the title of the alarm
-    NSString *alarmTitle = nil;
-    if ((kSLSystemVersioniOS10 || kSLSystemVersioniOS11) && [self.SLAlertAlarm isSleepAlarm]) {
-        alarmTitle = kSLSleepAlarmString;
-    } else {
-        alarmTitle = self.SLAlertAlarm.uiTitle;
-    }
-
     // customize the alert controller
     self.alertController.title = kSLSkipAlarmString;
-    self.alertController.message = kSLSkipQuestionString(alarmTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
+    self.alertController.message = kSLSkipQuestionString(self.SLTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
 
     // add yes and no actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:kSLYesString
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:[SLCompatibilityHelper alarmIdForAlarm:self.SLAlertAlarm]
+                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:self.SLAlarmId
                                                                                       skipActivatedStatus:kSLSkipActivatedStatusActivated];
                                                          [self dismiss];
                                                       }];
@@ -89,7 +86,7 @@ static NSDateFormatter *sSLSAlertDateFormatter;
                                                        style:UIAlertActionStyleCancel
                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
-                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:[SLCompatibilityHelper alarmIdForAlarm:self.SLAlertAlarm]
+                                                         [SLPrefsManager setSkipActivatedStatusForAlarmId:self.SLAlarmId
                                                                                       skipActivatedStatus:kSLSkipActivatedStatusDisabled];
                                                          [self dismiss];
                                                      }];
@@ -123,6 +120,12 @@ static NSDateFormatter *sSLSAlertDateFormatter;
 
 // do not allow the alert to be shown in Apple CarPlay
 - (BOOL)allowInCar
+{
+    return NO;
+}
+
+// do not allow the alert to be shown during setup
+- (BOOL)allowInSetup
 {
     return NO;
 }

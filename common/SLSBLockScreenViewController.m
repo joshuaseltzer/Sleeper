@@ -42,7 +42,8 @@
                                                                    localTimeZone:[NSTimeZone localTimeZone]];
             
             // create and display the custom alert item
-            SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithAlarm:alarm
+            SLSkipAlarmAlertItem *alert = [[%c(SLSkipAlarmAlertItem) alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
+                                                                                  alarmId:alarmId
                                                                              nextFireDate:alarmFireDate];
             [(SBAlertItemsController *)[%c(SBAlertItemsController) sharedInstance] activateAlertItem:alert animated:YES];
         });

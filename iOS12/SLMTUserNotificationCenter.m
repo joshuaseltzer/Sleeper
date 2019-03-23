@@ -8,13 +8,63 @@
 
 #import "../SLCompatibilityHelper.h"
 
+// trigger object which signifies why an alarm was fired
+@interface MTTrigger : NSObject
+
+// signifies whether or not this trigger is for an alert
+@property (readonly, nonatomic) BOOL isForAlert;
+
+// signifies whether or not this trigger is from snooze
+@property (readonly, nonatomic) BOOL isForSnooze;
+
+@end
+
+// protocol defining a schedulable object
+@protocol MTScheduleable
+
+// the identifier for the scheduleable object, which is the alarm Id
+- (NSString *)identifier;
+
+@end
+
+// the scheduled object that will be fired when a notification is about to be posted
+@interface MTScheduledObject : NSObject
+
+// the trigger that invoked this scheduled object
+@property (copy, nonatomic) MTTrigger *trigger;
+
+// the schedulable object, in this case an MTAlarm
+@property (copy, nonatomic) id <MTScheduleable> scheduleable;
+
+@end
+
 %hook MTUserNotificationCenter
 
 // invoked when the given scheduled alarm is fired
-- (void)postNotificationForScheduledAlarm:(MTAlarm *)alarm completionBlock:(id)completionBlock
+- (void)postNotificationForScheduledAlarm:(MTScheduledObject *)scheduledObject completionBlock:(id)completionBlock
 {
-    %log;
-    %orig;
+    // check to see if the alarm's trigger is an alert (as opposed to a snooze alert or snooze countdown)
+    if (scheduledObject.trigger.isForAlert && !scheduledObject.trigger.isForSnooze) {
+        // get the identifier for the scheduled object, which is in fact the alarm Id
+        NSString *alarmId = [scheduledObject.scheduleable identifier];
+
+        // get the sleeper alarm preferences for this alarm
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs) {
+            // only activate the actual alarm if we should not be skipping this alarm
+            if (![alarmPrefs shouldSkip]) {
+                %orig;
+            }
+
+            // save the alarm's skip activation state to unknown for this alarm
+            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+        } else {
+            %orig;
+        }
+    } else {
+        %orig;
+    }
 }
 
 %end

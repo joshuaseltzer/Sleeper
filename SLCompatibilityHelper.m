@@ -7,6 +7,7 @@
 //
 
 #import "SLCompatibilityHelper.h"
+#import "SLLocalizedStrings.h"
 #import "SLPrefsManager.h"
 #import <objc/runtime.h>
 
@@ -170,17 +171,27 @@
 // returns a valid alarm Id for a given alarm
 + (NSString *)alarmIdForAlarm:(Alarm *)alarm
 {
-    // the alarm Id we will return
-    NSString *alarmId = nil;
-    
     // check the version of iOS that the device is running to determine where to get the alarm Id
+    NSString *alarmId = nil;
     if (kSLSystemVersioniOS9 || kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
         alarmId = alarm.alarmID;
     } else {
         alarmId = alarm.alarmId;
     }
-    
     return alarmId;
+}
+
+// returns the appropriate title string for a given alarm object
++ (NSString *)alarmTitleForAlarm:(Alarm *)alarm
+{
+    // check the version of iOS that the device is running along with any indication that the alarm is the sleep alarm
+    NSString *alarmTitle = nil;
+    if ((kSLSystemVersioniOS10 || kSLSystemVersioniOS11) && [alarm isSleepAlarm]) {
+        alarmTitle = kSLSleepAlarmString;
+    } else {
+        alarmTitle = alarm.uiTitle;
+    }
+    return alarmTitle;
 }
 
 // returns the picker view's background color, which will depend on the iOS version
@@ -237,46 +248,37 @@
 + (BOOL)isAlarmLocalNotificationSkippable:(UIConcreteLocalNotification *)localNotification
                                forAlarmId:(NSString *)alarmId
 {
-    // grab the attributes for the alarm
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    // get the fire date of the notification we are checking
+    NSDate *nextFireDate = [localNotification nextFireDateAfterDate:[NSDate date]
+                                                      localTimeZone:[NSTimeZone localTimeZone]];
     
-    // check to see if the skip functionality has been enabled for the alarm
-    BOOL skippable = NO;
-    if (alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
-        // create a date components object with the user's selected skip time to see if we are within
-        // the threshold to ask the user to skip the alarm
-        NSDateComponents *components = [[NSDateComponents alloc] init];
-        [components setHour:alarmPrefs.skipTimeHour];
-        [components setMinute:alarmPrefs.skipTimeMinute];
-        [components setSecond:alarmPrefs.skipTimeSecond];
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        
-        // create a date that is the amount of time ahead of the current date
-        NSDate *thresholdDate = [calendar dateByAddingComponents:components
-                                                          toDate:[NSDate date]
-                                                         options:0];
-        
-        // get the fire date of the alarm we are checking
-        NSDate *alarmFireDate = [localNotification nextFireDateAfterDate:[NSDate date]
-                                                           localTimeZone:[NSTimeZone localTimeZone]];
-        
-        // compare the dates to see if this notification is skippable
-        skippable = [alarmFireDate compare:thresholdDate] == NSOrderedAscending;
-    }
-
-    return skippable;
+    return [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextFireDate];
 }
 
 // iOS 10 / iOS 11: helper function that will investigate an alarm notification request and alarm Id to see if it is skippable
 + (BOOL)isAlarmNotificationRequestSkippable:(UNNotificationRequest *)notificationRequest
                                  forAlarmId:(NSString *)alarmId
 {
-    // grab the attributes for the alarm
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    
-    // check to see if the skip functionality has been enabled for the alarm
     BOOL skippable = NO;
-    if ([notificationRequest.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")] && alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
+    if ([notificationRequest.trigger isKindOfClass:objc_getClass("UNLegacyNotificationTrigger")]) {
+        // get the fire date of the alarm we are checking
+        NSDate *nextTriggerDate = [((UNLegacyNotificationTrigger *)notificationRequest.trigger) _nextTriggerDateAfterDate:[NSDate date]
+                                                                                                        withRequestedDate:nil
+                                                                                                          defaultTimeZone:[NSTimeZone localTimeZone]];
+        
+        [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextTriggerDate];
+    }
+    
+    return skippable;
+}
+
+// returns whether or not an alarm is skippable based on the alarm Id
++ (BOOL)isAlarmSkippableForAlarmId:(NSString *)alarmId withNextFireDate:(NSDate *)nextFireDate
+{
+    // grab the attributes for the alarm
+    BOOL skippable = NO;
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
@@ -290,15 +292,9 @@
                                                           toDate:[NSDate date]
                                                          options:0];
         
-        // get the fire date of the alarm we are checking
-        NSDate *nextTriggerDate = [((UNLegacyNotificationTrigger *)notificationRequest.trigger) _nextTriggerDateAfterDate:[NSDate date]
-                                                                                                        withRequestedDate:nil
-                                                                                                          defaultTimeZone:[NSTimeZone localTimeZone]];
-        
         // compare the dates to see if this notification is skippable
-        skippable = [nextTriggerDate compare:thresholdDate] == NSOrderedAscending;
+        skippable = [nextFireDate compare:thresholdDate] == NSOrderedAscending;
     }
-    
     return skippable;
 }
 

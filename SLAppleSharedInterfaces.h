@@ -22,8 +22,17 @@
 // the alarm object (introduced in iOS 12)
 @interface MTAlarm : NSObject
 
+// the title of the alarm
+@property (readonly, nonatomic) NSString *displayTitle;
+
+// signifies whether or not this alarm is snozoed
+@property (readonly, nonatomic, getter=isSnoozed) BOOL snoozed;
+
 // returns a string representation of the alarm Id
 - (NSString *)alarmIDString;
+
+// returns the next fire date for the alarm given a start date
+- (NSDate *)nextFireDateAfterDate:(NSDate *)date includeBedtimeNotification:(BOOL)includeBedtimeNotification;
 
 @end
 
@@ -34,9 +43,6 @@
 // the alarm object that contains all of the information about the alarm (iOS 8 - iOS 11)
 @interface Alarm : NSObject
 
-// tells us if the given notification object was generated from a snooze notification (iOS 8 / iOS 9)
-+ (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
-
 // iOS 8: the alarm Id corresponding to the alarm object
 @property (readonly) NSString *alarmId;
 
@@ -45,6 +51,9 @@
 
 // the display title of the alarm
 @property (readonly, nonatomic) NSString *uiTitle;
+
+// tells us if the given notification object was generated from a snooze notification (iOS 8 / iOS 9)
++ (BOOL)isSnoozeNotification:(UIConcreteLocalNotification *)notification;
 
 // returns the next date that this alarm will fire
 - (NSDate *)nextFireDate;
@@ -73,27 +82,13 @@
 
 @end
 
-/*@interface MTAlarmCache : NSObject
-
-@end
-
 // manager that governs all alarms on the system (iOS 12)
 @interface MTAlarmManager : NSObject
 
-- (id)alarms;
+// returns an array of MTAlarm objects for the given date and 
+- (NSArray *)nextAlarmsForDateSync:(NSDate *)date maxCount:(int)maxCount includeSleepAlarm:(BOOL)includeSleepAlarm includeBedtimeNotification:(BOOL)includeBedtimeNotification;
 
-+ (void)warmUp;
-
-- (void)reconnect;
-- (void)checkIn;
-
-- (id)sleepAlarm;
-
-- (void)_getCachedAlarmsWithFuture:(id)arg1 finishBlock:(void (^)(MTAlarmCache *))arg2;
-
-@property(retain, nonatomic) MTAlarmCache *cache;
-
-@end*/
+@end
 
 // manager that governs all alarms on the system
 @interface AlarmManager : NSObject
