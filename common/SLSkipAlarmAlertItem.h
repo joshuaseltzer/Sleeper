@@ -6,7 +6,7 @@
 //
 //
 
-#import "SLAppleSharedInterfaces.h"
+#import "../SLAppleSharedInterfaces.h"
 
 // a system alert item
 @interface SBAlertItem : NSObject

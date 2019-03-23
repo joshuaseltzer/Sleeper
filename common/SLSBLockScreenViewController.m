@@ -8,7 +8,7 @@
 
 #import "../SLCompatibilityHelper.h"
 #import "../SLAppleSharedInterfaces.h"
-#import "../SLSkipAlarmAlertItem.h"
+#import "SLSkipAlarmAlertItem.h"
 
 %hook SBLockScreenViewController
 
@@ -30,7 +30,7 @@
         NSString *alarmId = [clockDataProvider _alarmIDFromNotification:nextAlarmNotification];
         
         // grab the shared instance of the alarm manager and load the alarms
-        AlarmManager *alarmManager = [AlarmManager sharedManager];
+        AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
         [alarmManager loadAlarms];
         Alarm *alarm = [alarmManager alarmWithId:alarmId];
         

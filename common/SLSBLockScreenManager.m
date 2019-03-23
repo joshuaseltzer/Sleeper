@@ -8,7 +8,7 @@
 
 #import "../SLCompatibilityHelper.h"
 #import "../SLAppleSharedInterfaces.h"
-#import "../SLSkipAlarmAlertItem.h"
+#import "SLSkipAlarmAlertItem.h"
 
 %hook SBLockScreenManager
 
@@ -34,7 +34,7 @@
                 
                 // grab the shared instance of the alarm manager, load the alarms, and get the alarm object
                 // that is associated with this notification request
-                AlarmManager *alarmManager = [AlarmManager sharedManager];
+                AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
                 [alarmManager loadAlarms];
                 Alarm *alarm = [alarmManager alarmWithId:alarmId];
                 

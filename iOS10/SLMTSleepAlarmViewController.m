@@ -24,7 +24,7 @@
 - (void)SLResetSkipActivatedStatus
 {
     // get the alarm ID for the special sleep alarm
-    AlarmManager *alarmManager = [AlarmManager sharedManager];
+    AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
     NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
     
     // reset the skip activation status for this alarm

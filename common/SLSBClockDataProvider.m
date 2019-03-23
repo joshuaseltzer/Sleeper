@@ -69,7 +69,7 @@
             // check to see if this alarm should be skipped
             if ([alarmPrefs shouldSkip]) {
                 // grab the alarm that we are going to ask to skip from the shared alarm manager
-                AlarmManager *alarmManager = [AlarmManager sharedManager];
+                AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
                 [alarmManager loadAlarms];
                 Alarm *alarm = [alarmManager alarmWithId:alarmId];
                 
