@@ -117,4 +117,10 @@
     }
 }
 
+// override to disable showing in full screen for this presentation controller
+- (BOOL)shouldPresentInFullscreen
+{
+    return NO;
+}
+
 @end
