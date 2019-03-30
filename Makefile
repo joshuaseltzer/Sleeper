@@ -1,4 +1,5 @@
 TARGET=iphone:clang:11.2:8.0
+ARCHS=armv7 arm64 arm64e
 
 include theos/makefiles/common.mk
 
