@@ -1,8 +1,10 @@
-Package: com.joshuaseltzer.sleeper
+Package: org.packix.sleeper
 Name: Sleeper
 Depends: mobilesubstrate
 Version: 5.0.0
 Architecture: iphoneos-arm
+Conflicts: org.thebigboss.sleeper
+Replaces: org.thebigboss.sleeper
 Description: Sleeper (developer version).
 Maintainer: Joshua Seltzer
 Author: Joshua Seltzer
