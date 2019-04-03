@@ -1,10 +1,9 @@
-Package: org.packix.sleeper
-Name: Sleeper
+Package: org.thebigboss.sleeper
+Name: Sleeper (Legacy)
 Depends: mobilesubstrate
 Version: 5.0.0
 Architecture: iphoneos-arm
-Conflicts: org.thebigboss.sleeper
-Replaces: org.thebigboss.sleeper
+Conflicts: org.packix.sleeper
 Description: Set custom snooze times and skip alarms with the Clock app using Sleeper!
 Maintainer: Joshua Seltzer
 Author: Joshua Seltzer
