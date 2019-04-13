@@ -15,7 +15,6 @@
 // iOS 8 / iOS 9: override to display a pop up allowing the user to skip an alarm
 - (void)finishUIUnlockFromSource:(int)source
 {
-    // perform the original implementation
     %orig;
     
     // grab the shared instance of the clock data provider
@@ -35,7 +34,7 @@
         Alarm *alarm = [alarmManager alarmWithId:alarmId];
         
         // after a slight delay, show an alert that will ask the user to skip the alarm
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC));
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             // get the fire date of the alarm we are going to display
             NSDate *alarmFireDate = [nextAlarmNotification nextFireDateAfterDate:[NSDate date]
