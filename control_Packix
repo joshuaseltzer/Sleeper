@@ -1,7 +1,7 @@
 Package: org.packix.sleeper
 Name: Sleeper
 Depends: mobilesubstrate
-Version: 5.0.1-dev
+Version: 5.0.1
 Architecture: iphoneos-arm
 Conflicts: org.thebigboss.sleeper
 Replaces: org.thebigboss.sleeper
