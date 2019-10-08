@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import os
 import datetime
@@ -6,20 +8,38 @@ import holidays
 import plistlib
 
 # define the years which will be generated for any given country
-START_YEAR = 2019
-END_YEAR = 2030
+START_YEAR = 2021
+END_YEAR = 2022
 
-# define some string constants that will be used when parsing holidays for our use case
-OBSERVED_TEXT = " (Observed)"
-NEW_YEARS_TEXT = "New Year's Day"
-
-# define constants used to generate custom holidays
-THANKSGIVING_DAY = "Thanksgiving Day"
-DAY_AFTER_THANKSGIVING = "Day After Thanksgiving"
+# define constants used to modify holidays upon generation
+OBSERVED_TEXT = "(Observed)"
+THANKSGIVING_TEXT = "Thanksgiving"
+DAY_AFTER_THANKSGIVING_TEXT = "Day After Thanksgiving"
+CHRISTMAS_DAY_TEXT = "Christmas Day"
+CHRISTMAS_EVE_TEXT = "Christmas Eve"
+NEW_YEARS_DAY_TEXT = "New Year's Day"
+NEW_YEARS_EVE_TEXT = "New Year's Eve"
 
 # define the path to the Sleeper bundle which is used to store the holidays and localized strings
 SLEEPER_BUNDLE_PATH = "layout/Library/Application Support/Sleeper.bundle"
 
+# custom class for additional United States holidays
+'''
+class CustomUSHolidays(holidays.UnitedStates):
+    def _populate(self, year):
+        # use the default United states holidays as a base
+        holidays.UnitedStates._populate(self, year)
+
+        # add the Day After Thanksgiving (credit: https://codegolf.stackexchange.com/a/64803)
+        day_after_thanksgiving = lambda x:28.11-(x-2+x/4-x/100+x/400)%7
+        self[datetime.date(year, 11, round(day_after_thanksgiving(year)) + 1)] = "Day After Thanksgiving"
+
+        # add Christmas Eve
+        print(self.
+        self[datetime.date(year, 12, 24)] = "Christmas Eve"
+'''
+
+# entry point for creating the holidays for a particular country
 def gen_country_holidays(country_code):
     # define the high-level plist file which will be generated for this country
     plist_root = []
@@ -34,7 +54,8 @@ def gen_country_holidays(country_code):
         holiday_class = "holidays.{0}".format(country_code)
     '''
 
-    # generate the list of holidays for the given country code (if valid) for the iterated year
+    '''
+    # generate the list of all holidays for the given country code (if valid) for the iterated year
     try:
         exec("all_holidays = sorted(holidays.{0}(observed=True, expand=False, years=list(range({1}, {2}))).items())".format(country_code, START_YEAR, END_YEAR), globals())
     except AttributeError:
@@ -55,26 +76,40 @@ def gen_country_holidays(country_code):
     for year in holidays_by_year.keys():
         # get all of the holidays for the iterated year
         holidays_for_year = holidays_by_year.get(year)
+    '''
 
-        # iterate through the sorted holidays to remove any non-observed holidays first
-        items_to_remove = []
+    # iterate through each year one by one
+    years = list(range(START_YEAR, END_YEAR))
+    for year in years:
+        # generate the list of holidays for the given country code (if valid) for the iterated year
+        try:
+            global holidays_for_year
+            exec("holidays_for_year = holidays.{0}(observed=True, expand=False, years=[{1}])".format(country_code, year), globals())
+        except AttributeError:
+            print("Entered invalid country code, exiting.")
+            exit(1)
+
+        # iterate through the generated holidays to potentially remove holidays
+        holidays_to_remove = []
         new_holidays = {}
         for date, name in holidays_for_year.items():
-            if OBSERVED_TEXT in name and NEW_YEARS_TEXT not in name:
-                items_to_remove.append(name.replace(OBSERVED_TEXT, ""))
+            # mark any non-observed holidays for removal
+            if OBSERVED_TEXT in name:
+                holidays_to_remove.append(name.replace(OBSERVED_TEXT, "").strip())
+        holidays_for_year = {date:name.replace(OBSERVED_TEXT, "").strip() for date, name in holidays_for_year.items() if name not in holidays_to_remove or date.weekday() < 5}
 
-            # use this opportunity to add additional holidays for a particular country
-            if country_code == 'US':
-                new_holiday = generate_additional_US_holiday(date, name)
-                print(new_holiday)
+        # for particular countries, add custom holidays now
+        if country_code == 'US':
+            for date, name in holidays_for_year.items():
+                # add additional holidays for some particular countries
+                new_holiday = generate_additional_US_holidays(date, name)
                 if new_holiday:
                     new_holidays.update(new_holiday)
+            holidays_for_year.update(new_holidays)
 
-        holidays_for_year.update(new_holidays)
-        holidays_for_year = {date:name.replace(OBSERVED_TEXT, "") for date, name in holidays_for_year.items() if name not in items_to_remove}
-        print(holidays_for_year)
-
+        # final pass of the holidays for the given year to add them to the plist
         for date, name in holidays_for_year.items():
+            '''
             # check if we have already defined the localized string for the name of the given holiday
             if name not in lz_name_map:
                 # ask the user to input the localized name used for this name
@@ -83,6 +118,7 @@ def gen_country_holidays(country_code):
                 lz_name_map.update({name:lz_name})
             else:
                 lz_name = lz_name_map.get(name)
+            '''
             
             # update the holiday map with the added holiday
             date_time = datetime.datetime.combine(date, datetime.time(0, 0)).astimezone(pytz.utc)
@@ -105,6 +141,18 @@ def gen_country_holidays(country_code):
         with open("{0}/holidays-{1}.plist".format(SLEEPER_BUNDLE_PATH, country_code), 'wb') as fp:
             plistlib.dump(plist_root, fp, sort_keys=False)
 
+# add additional holidays for the United State country
+def generate_additional_US_holidays(date, name):
+    if THANKSGIVING_TEXT in name:
+        return {date + datetime.timedelta(days=1):DAY_AFTER_THANKSGIVING_TEXT}
+    elif CHRISTMAS_DAY_TEXT in name:
+        return {date - datetime.timedelta(days=1):CHRISTMAS_EVE_TEXT}
+    elif NEW_YEARS_DAY_TEXT in name:
+        return {date - datetime.timedelta(days=1):NEW_YEARS_EVE_TEXT}
+    else:
+        return None
+
+'''
 def update_localized_strings():
     # list all of the directories in the Sleeper bundle
     for (dirpath, dirnames, filenames) in os.walk(SLEEPER_BUNDLE_PATH):
@@ -122,26 +170,6 @@ def update_localized_strings():
                                 fp.write("\n\n")
                                 first_change = False
                             fp.write("\"{0}\" = \"{1}\";\n".format(lz_name, name))
-
-# add additional holidays for the United State country
-def generate_additional_US_holiday(date, name):
-    if THANKSGIVING_DAY in name:
-        return {date + datetime.timedelta(days=1):DAY_AFTER_THANKSGIVING}
-
-# custom class for additional United States holidays
-'''
-class CustomUSHolidays(holidays.UnitedStates):
-    def _populate(self, year):
-        # use the default United states holidays as a base
-        holidays.UnitedStates._populate(self, year)
-
-        # add the Day After Thanksgiving (credit: https://codegolf.stackexchange.com/a/64803)
-        day_after_thanksgiving = lambda x:28.11-(x-2+x/4-x/100+x/400)%7
-        self[datetime.date(year, 11, round(day_after_thanksgiving(year)) + 1)] = "Day After Thanksgiving"
-
-        # add Christmas Eve
-        print(self.
-        self[datetime.date(year, 12, 24)] = "Christmas Eve"
 '''
   
 if __name__== "__main__":
