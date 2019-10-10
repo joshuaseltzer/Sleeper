@@ -48,8 +48,8 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                     alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDatesKey];
                     alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
 
-                    // remove any dates that might have passed for this alarm
-                    [alarmPrefs removePassedSkipDates];
+                    // update the skip dates, by potentially adding ones from a new update or removing dates that might have passed
+                    [alarmPrefs updateSkipDates];
                 } else {
                     // if an alarm did not have a skip dates key in the preferences, we need to add the default
                     // holiday skip dates

@@ -3,15 +3,14 @@
 import sys
 import os
 import datetime
-import pytz
 import holidays
 import plistlib
 
-# define the years which will be generated for any given country
+# years which will be generated for any given country
 START_YEAR = 2019
 END_YEAR = 2099
 
-# define constants used to modify holidays upon generation
+# constants used to modify holidays upon generation
 OBSERVED_TEXT = "(Observed)"
 THANKSGIVING_TEXT = "Thanksgiving"
 DAY_AFTER_THANKSGIVING_TEXT = "Day After Thanksgiving"
@@ -20,15 +19,25 @@ CHRISTMAS_EVE_TEXT = "Christmas Eve"
 NEW_YEARS_DAY_TEXT = "New Year's Day"
 NEW_YEARS_EVE_TEXT = "New Year's Eve"
 
-# define the path to the Sleeper bundle which is used to store the holidays and localized strings
+# path to the Sleeper bundle which is used to store the holidays and localized strings
 SLEEPER_BUNDLE_PATH = "layout/Library/Application Support/Sleeper.bundle"
+
+# name of the localized string files included in the Sleeper bundle
+LOCALIZED_STRINGS_FILE = "Localizable.strings"
+
+# names of the keys that will be used when creating the plist
+DATE_CREATED_KEY = "dateCreated"
+HOLIDAYS_KEY = "holidays"
+NAME_KEY = "name"
+DATES_KEY = "dates"
+SELECTED_KEY = "selected"
 
 # entry point for creating the holidays for a particular country
 def gen_country_holidays(country_code):
-    print("Generating holiday plist file for {0}".format(country_code))
+    print("Generating holiday plist file for \"{0}\" from years {1} to {2}.".format(country_code, START_YEAR, END_YEAR))
 
     # define the high-level plist file and holiday mapping which will be generated for this country
-    plist_root = []
+    country_holidays = []
     holiday_map = {}
 
     # iterate through each year one by one
@@ -47,7 +56,9 @@ def gen_country_holidays(country_code):
         for date, name in holidays_for_year.items():
             # mark any non-observed holidays for removal
             if OBSERVED_TEXT in name:
-                holidays_to_remove.append(name.replace(OBSERVED_TEXT, "").strip())
+                holiday_to_remove = name.replace(OBSERVED_TEXT, "").strip()
+                holidays_to_remove.append(holiday_to_remove)
+                print("Attempting to remove holiday \"{0}\" since this is an observed holiday in {1}.".format(holiday_to_remove, year))
         holidays_for_year = {date:name.replace(OBSERVED_TEXT, "").strip() for date, name in holidays_for_year.items() if name not in holidays_to_remove or date.weekday() < 5}
 
         # add additional holidays for particular countries
@@ -56,7 +67,7 @@ def gen_country_holidays(country_code):
         # final pass of the holidays for the given year to add them to the plist
         for date, name in sorted(holidays_for_year.items()):
             # update the holiday map with the added holiday
-            date_time = datetime.datetime.combine(date, datetime.time(0, 0)).astimezone(pytz.utc)
+            date_time = datetime.datetime.combine(date, datetime.time(0, 0)).astimezone(datetime.timezone.utc)
             dates = holiday_map.get(name)
             if not dates:
                 dates = [date_time]
@@ -70,11 +81,18 @@ def gen_country_holidays(country_code):
         dates = holiday_map.get(name)
 
         # add a new entry to the plist
-        plist_root.append({'name':name, 'dates':dates, 'selected':False})
+        country_holidays.append({NAME_KEY:name, DATES_KEY:dates, SELECTED_KEY:False})
 
-        # write the plist to file
-        with open(os.path.join(SLEEPER_BUNDLE_PATH, "holidays-{0}.plist".format(country_code)), 'wb') as fp:
-            plistlib.dump(plist_root, fp, sort_keys=False)
+    # create the root of the plist
+    plist_root = {DATE_CREATED_KEY:datetime.datetime.now().astimezone(datetime.timezone.utc), "holidays":country_holidays}
+
+    # write the final plist to file
+    plist_file_path = os.path.join(SLEEPER_BUNDLE_PATH, "holidays-{0}.plist".format(country_code))
+    with open(plist_file_path, 'wb') as fp:
+        plistlib.dump(plist_root, fp, sort_keys=False)
+
+    print("Wrote results to file: {0}".format(plist_file_path))
+    print("Holiday list generation completed for \"{0}\" from years {1} to {2}.".format(country_code, START_YEAR, END_YEAR))
 
 # creates new holidays for particular countries
 def generate_additional_holidays(country_code, year, holidays_for_year):
@@ -84,9 +102,12 @@ def generate_additional_holidays(country_code, year, holidays_for_year):
         # add new holidays which have different dates each year
         for date, name in holidays_for_year.items():
             if THANKSGIVING_TEXT in name:
+                print("Adding additional holiday, \"{0}\" for {1}.".format(DAY_AFTER_THANKSGIVING_TEXT, year))
                 new_holidays.update({date + datetime.timedelta(days=1):DAY_AFTER_THANKSGIVING_TEXT})
 
         # add New Year's Eve and Christmas Eve which are static each year
+        print("Adding additional holiday, \"{0}\" for {1}.".format(CHRISTMAS_EVE_TEXT, year))
+        print("Adding additional holiday, \"{0}\" for {1}.".format(NEW_YEARS_EVE_TEXT, year))
         new_holidays.update({datetime.date(year, 12, 24):CHRISTMAS_EVE_TEXT, datetime.date(year, 12, 31):NEW_YEARS_EVE_TEXT})
 
     return new_holidays
@@ -97,7 +118,7 @@ def update_localized_strings(num_lines):
     for (dirpath, dirnames, filenames) in os.walk(SLEEPER_BUNDLE_PATH):
         for dirname in dirnames:
             # each lproj directory should only contain one file, the localized strings file
-            string_file_path = os.path.join(SLEEPER_BUNDLE_PATH, dirname, "Localizable.strings")
+            string_file_path = os.path.join(SLEEPER_BUNDLE_PATH, dirname, LOCALIZED_STRINGS_FILE)
             with open(string_file_path, 'r') as fp:
                 existing_lines = fp.readlines()
             with open(string_file_path, 'w') as fp:

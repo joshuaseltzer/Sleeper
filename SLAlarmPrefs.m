@@ -33,8 +33,8 @@
     return self;
 }
 
-// clears all dates (custom and holidays) that might have passed for the given alarm
-- (void)removePassedSkipDates
+// updates all dates (custom and holidays) by potentially updating the dates and removing any past dates
+- (void)updateSkipDates
 {
     // remove any passed dates from the holidays
     NSMutableDictionary *holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:self.holidaySkipDates];
@@ -42,6 +42,8 @@
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
         // get the holidays that correspond to the country's particular resource
         NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
+
+        // check first to see if the 
         NSMutableArray *holidays = [holidaySkipDates objectForKey:resourceName];
         if (holidays) {
             // remove any dates that might have already passed

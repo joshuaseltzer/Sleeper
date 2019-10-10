@@ -10,7 +10,7 @@
 #import "SLAlarmPrefs.h"
 
 // the bundle path which includes some custom preference files needed for the tweak
-#define kSLSleeperBundle                            [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
+#define kSLSleeperBundle                                [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
 
 // constant keys for the values we are going to add to the preferences file
 static NSString *const kSLAlarmsKey =                   @"Alarms";
@@ -26,7 +26,9 @@ static NSString *const kSLSkipActivatedStatusKey =      @"skipActivatedStatus";
 static NSString *const kSLSkipDatesKey =                @"skipDates";
 static NSString *const kSLHolidaySkipDatesKey =         @"holidaySkipDates";
 static NSString *const kSLCustomSkipDatesKey =          @"customSkipDates";
-static NSString *const kSLHolidayLocalizationNameKey =  @"lz_key";
+static NSString *const kSLHolidayDateCreatedKey =       @"dateCreated";
+static NSString *const kSLHolidayHolidaysKey =          @"holidays";
+static NSString *const kSLHolidayNameKey =              @"name";
 static NSString *const kSLHolidaySelectedKey =          @"selected";
 static NSString *const kSLHolidayDatesKey =             @"dates";
 
