@@ -14,11 +14,14 @@
 // the bundle path for the MobileTimer app
 #define kSLMobileTimerBundle                    [NSBundle bundleWithPath:@"/Applications/MobileTimer.app"]
 
+// the bundle path for the MobilePhone app
+#define kSLMobilePhoneBundle                    [NSBundle bundleWithPath:@"/Applications/MobilePhone.app"]
+
 // the snooze strings
 #define kSLSnoozeTimeString                     [kSLSleeperBundle localizedStringForKey:@"SNOOZE_TIME" value:@"Snooze Time" table:@"Localizable"]
-#define kSLHoursString                          [kSLSleeperBundle localizedStringForKey:@"HOURS" value:@"hours" table:@"Localizable"]
-#define kSLMinutesString                        [kSLSleeperBundle localizedStringForKey:@"MINUTES" value:@"min" table:@"Localizable"]
-#define kSLSecondsString                        [kSLSleeperBundle localizedStringForKey:@"SECONDS" value:@"sec" table:@"Localizable"]
+#define kSLHoursString                          [kSLMobileTimerBundle localizedStringForKey:@"hour[plural]" value:@"hours" table:@"Localizable"]
+#define kSLMinutesString                        [kSLMobileTimerBundle localizedStringForKey:@"min[plural]" value:@"min" table:@"Localizable"]
+#define kSLSecondsString                        [kSLMobileTimerBundle localizedStringForKey:@"sec[plural]" value:@"sec" table:@"Localizable"]
 #define kSLResetDefaultString                   [kSLSleeperBundle localizedStringForKey:@"RESET_DEFAULT" value:@"Reset Default" table:@"Localizable"]
 #define kSLDefaultSnoozeTimeString(time)        [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"DEFAULT_SNOOZE_TIME" value:@"The default snooze time is %@." table:@"Localizable"], time]
 #define kSLSleepAlarmString                     [kSLMobileTimerBundle localizedStringForKey:@"SLEEP_ALARM_SPOTLIGHT_KEYWORD" value:@"Sleep Alarm" table:@"Localizable"]
@@ -44,5 +47,5 @@
 #define kSLSkipDateExplanationString            [kSLSleeperBundle localizedStringForKey:@"SKIP_DATE_EXPLANATION" value:@"This alarm will be skipped on the dates selected." table:@"Localizable"]
 #define kSLHolidayExplanationString             [kSLSleeperBundle localizedStringForKey:@"HOLIDAY_EXPLANATION" value:@"If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year." table:@"Localizable"]
 #define kSLAddNewDateString                     [kSLSleeperBundle localizedStringForKey:@"ADD_NEW_DATE" value:@"Add New Date..." table:@"Localizable"]
-#define kSLHolidayNameString(holdayNameKey)     [kSLSleeperBundle localizedStringForKey:holdayNameKey value:@"Holiday" table:@"Localizable"]
-#define kSLClearString                          [kSLSleeperBundle localizedStringForKey:@"CLEAR" value:@"Clear" table:@"Localizable"]
+#define kSLClearString                          [kSLMobilePhoneBundle localizedStringForKey:@"CLEAR" value:@"Clear" table:@"Voicemail"]
+#define kSLNumberSelectedString(numSelected)    [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"NUMBER_SELECTED" value:@"%ld Selected" table:@"Localizable"], (long)numSelected]

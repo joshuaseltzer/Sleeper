@@ -226,15 +226,17 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     }
 }
 
-// returns an array of dictionaries that correspond to the default holidays for a particular resource
-+ (NSArray *)defaultHolidaysForResourceName:(NSString *)resourceName
+// Returns a dictionary that corresponds to the default holidays for a particular resource.
+// This function will also remove any passed dates.
++ (NSDictionary *)defaultHolidaysForResourceName:(NSString *)resourceName
 {
-    // get the resource name that correponds to the country
+    NSMutableDictionary *defaultHolidayResource = nil;
     NSMutableArray *defaultHolidays = nil;
     NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
     if (resourcePath != nil) {
         // load the list of holidays from the file system
-        defaultHolidays = [[NSMutableArray alloc] initWithContentsOfFile:resourcePath];
+        defaultHolidayResource = [[NSMutableDictionary alloc] initWithContentsOfFile:resourcePath];
+        defaultHolidays = [defaultHolidayResource objectForKey:kSLHolidayHolidaysKey];
 
         // remove any dates that might have already passed
         for (NSMutableDictionary *holiday in defaultHolidays) {
@@ -244,39 +246,69 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                 [holiday setObject:newDates forKey:kSLHolidayDatesKey];
             }
         }
+        [defaultHolidayResource setObject:[defaultHolidays copy] forKey:kSLHolidayHolidaysKey];
     }
-    return defaultHolidays;
+    return defaultHolidayResource;
+}
+
+// returns the creation date for the given holiday resource
++ (NSDate *)dateCreatedForResourceName:(NSString *)resourceName
+{
+    NSDate *dateCreated = nil;
+    NSDictionary *defaultHolidayResource = nil;
+    NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
+    if (resourcePath != nil) {
+        // load the list of holidays from the file system
+        defaultHolidayResource = [[NSDictionary alloc] initWithContentsOfFile:resourcePath];
+        dateCreated = [defaultHolidayResource objectForKey:kSLHolidayDateCreatedKey];
+    }
+    return dateCreated;
+}
+
+// returns a corresponding country code for any given country
++ (NSString *)countryCodeForCountry:(SLHolidayCountry)country
+{
+    NSString *countryCode = nil;
+    switch (country) {
+        case kSLHolidayCountryArgentina:
+            countryCode = @"ar";
+            break;
+        case kSLHolidayCountryAustralia:
+            countryCode = @"au";
+            break;
+        case kSLHolidayCountryBrazil:
+            countryCode = @"br";
+            break;
+        case kSLHolidayCountryCanada:
+            countryCode = @"ca";
+            break;
+        case kSLHolidayCountrySweden:
+            countryCode = @"se";
+            break;
+        case kSLHolidayCountryUnitedKingdom:
+            countryCode = @"uk";
+            break;
+        case kSLHolidayCountryUnitedStates:
+            countryCode = @"us";
+            break;
+        case kSLHolidayCountryNumCountries:
+            // this is in invalid country to provide, do nothing
+            break;
+    }
+    return countryCode;
 }
 
 // returns a string that corresponds to the resource name for a given holiday country
 + (NSString *)resourceNameForCountry:(SLHolidayCountry)country
 {
-    NSString *resourceName = nil;
-    switch (country) {
-        case kSLHolidayCountryUnitedStates:
-            resourceName = @"holidays-us";
-            break;
-        case kSLHolidayCountryNumCountries:
-            // this is in invalid country to provide, do nothing
-            break;
-    }
-    return resourceName;
+    return [NSString stringWithFormat:@"holidays-%@", [SLPrefsManager countryCodeForCountry:country]];
 }
 
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForCountry:(SLHolidayCountry)country
 {
-    NSString *friendlyName = nil;
-    switch (country) {
-        case kSLHolidayCountryUnitedStates:
-            friendlyName = [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
-                                                                 value:@"US"];
-            break;
-        case kSLHolidayCountryNumCountries:
-            // this is in invalid country to provide, do nothing
-            break;
-    }
-    return friendlyName;
+    return [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
+                                                 value:[SLPrefsManager countryCodeForCountry:country]];;
 }
 
 // returns an array of new dates that removes any dates from the given array of dates that have passed

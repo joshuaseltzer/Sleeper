@@ -44,7 +44,8 @@
     // customize the view controller and table
     self.title = [SLPrefsManager friendlyNameForCountry:self.holidayCountry];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    self.tableView.rowHeight = 50.0;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 50.0;
     [self setEditing:YES animated:NO];
 
     // create a clear button to clear all selections
@@ -104,6 +105,7 @@
         holidayCell.accessoryType = UITableViewCellAccessoryNone;
         holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
         holidayCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+        holidayCell.textLabel.numberOfLines = 2;
         holidayCell.detailTextLabel.textColor = [UIColor grayColor];
 
         // set the background color of the cell to clear to remove the selection color

@@ -12,8 +12,7 @@
 
 @implementation SLAlarmPrefs
 
-// custom initialization that creates a new alarm prefs object with the given alarm Id
-// and default preferences
+// custom initialization that creates a new alarm prefs object with the given alarm Id and default preferences
 - (instancetype)initWithAlarmId:(NSString *)alarmId
 {
     self = [super init];
@@ -28,7 +27,7 @@
         self.skipTimeSecond = kSLDefaultSkipSecond;
         self.skipActivationStatus = kSLDefaultSkipActivatedStatus;
         self.customSkipDates = [[NSArray alloc] init];
-        [self populateDefaultHolidaySkipDates];
+        self.holidaySkipDates = [[NSArray alloc] init];
     }
     return self;
 }
@@ -36,33 +35,76 @@
 // updates all dates (custom and holidays) by potentially updating the dates and removing any past dates
 - (void)updateSkipDates
 {
-    // remove any passed dates from the holidays
-    NSMutableDictionary *holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:self.holidaySkipDates];
-    BOOL holidaysUpdated = NO;
+    BOOL hasHolidayUpdates = NO;
+    NSMutableDictionary *allHolidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:self.holidaySkipDates];
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
         // get the holidays that correspond to the country's particular resource
         NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
+        NSDictionary *holidaySkipDates = [allHolidaySkipDates objectForKey:resourceName];
 
-        // check first to see if the 
-        NSMutableArray *holidays = [holidaySkipDates objectForKey:resourceName];
-        if (holidays) {
-            // remove any dates that might have already passed
-            BOOL datesUpdated = NO;
-            for (NSMutableDictionary *holiday in holidays) {
-                NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
-                NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
-                if (dates.count != newDates.count) {
-                    [holiday setObject:newDates forKey:kSLHolidayDatesKey];
-                    datesUpdated = YES;
+        // if the holiday skip dates already exist, check to see if they need to be updated based on the creation date
+        if ([holidaySkipDates isKindOfClass:[NSDictionary class]]) {
+            NSDate *preferenceDateCreated = [holidaySkipDates objectForKey:kSLHolidayDateCreatedKey];
+            if (preferenceDateCreated != nil) {
+                NSDate *resourceDateCreated = [SLPrefsManager dateCreatedForResourceName:resourceName];
+                if ([resourceDateCreated compare:preferenceDateCreated] == NSOrderedDescending) {
+                    NSDictionary *defaultHolidayResource = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
+
+                    // update the selected flag for the updated holidays (if applicable)
+                    NSArray *existingHolidays = [holidaySkipDates objectForKey:kSLHolidayHolidaysKey];
+                    for (NSDictionary *existingHoliday in existingHolidays) {
+                        // get the selected key for the existing holiday to see if we need to update the new holiday
+                        BOOL isSelected = [[existingHoliday objectForKey:kSLHolidaySelectedKey] boolValue];
+                        if (isSelected) {
+                            // get the name of the holiday, which will be used as the key for the holiday
+                            NSString *existingHolidayName = [existingHoliday objectForKey:kSLHolidayNameKey];
+                            if (existingHolidayName != nil) {
+                                // look for this holiday in the new holidays
+                                NSArray *newHolidays = [defaultHolidayResource objectForKey:kSLHolidayHolidaysKey];
+                                for (NSMutableDictionary *newHolidayToUpdate in newHolidays) {
+                                    if ([existingHolidayName isEqualToString:[newHolidayToUpdate objectForKey:kSLHolidayNameKey]]) {
+                                        // make the necessary changes to the new data source
+                                        [newHolidayToUpdate setObject:[NSNumber numberWithBool:YES] forKey:kSLHolidaySelectedKey];
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // in this case, we needed to reload the default holidays from the bundle
+                    [allHolidaySkipDates setObject:[defaultHolidayResource copy] forKey:resourceName];
+                    hasHolidayUpdates = YES;
+                } else {
+                    // if we do not need to update the holidays from the bundle, simply check for any passed dates
+                    NSArray *existingHolidays = [holidaySkipDates objectForKey:kSLHolidayHolidaysKey];
+                    if (existingHolidays != nil) {
+                        // remove any dates that might have already passed
+                        for (NSMutableDictionary *holiday in existingHolidays) {
+                            NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
+                            NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
+                            if (dates.count != newDates.count) {
+                                [holiday setObject:newDates forKey:kSLHolidayDatesKey];
+                                hasHolidayUpdates = YES;
+                            }
+                        }
+                    }
                 }
+            } else {
+                // in this case, the previous holiday did not have a valid creation date (from Sleeper v5.0.0 and v5.0.1)
+                [allHolidaySkipDates setObject:[SLPrefsManager defaultHolidaysForResourceName:resourceName] forKey:resourceName];
+                hasHolidayUpdates = YES;
             }
-            if (datesUpdated) {
-                [holidaySkipDates setObject:[holidays copy] forKey:resourceName];
-            }
+        } else {
+            // in this case, the country for the holiday does not exist at all
+            [allHolidaySkipDates setObject:[SLPrefsManager defaultHolidaysForResourceName:resourceName] forKey:resourceName];
+            hasHolidayUpdates = YES;
         }
     }
-    if (holidaysUpdated) {
-        self.holidaySkipDates = holidaySkipDates;
+
+    // if there were any updates to the holidays, set the holiday object for this alarm
+    if (hasHolidayUpdates) {
+        self.holidaySkipDates = [allHolidaySkipDates copy];
     }
 
     // remove any passed dates from the custom skip dates
@@ -80,9 +122,9 @@
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
         // get the holidays that correspond to the country's particular resource
         NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
-        NSArray *holidays = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
-        if (holidays) {
-            [holidaySkipDates setObject:[holidays copy] forKey:resourceName];
+        NSDictionary *defaultHolidayResource = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
+        if (defaultHolidayResource != nil) {
+            [holidaySkipDates setObject:defaultHolidayResource forKey:resourceName];
         }
     }
     self.holidaySkipDates = [holidaySkipDates copy];
@@ -102,7 +144,8 @@
 - (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry
 {
     NSInteger selectedHolidays = 0;
-    NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
+    NSDictionary *countryHolidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
+    NSArray *holidays = [countryHolidays objectForKey:kSLHolidayHolidaysKey];
     if (holidays) {
         for (NSDictionary *holiday in holidays) {
             if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
@@ -111,6 +154,12 @@
         }
     }
     return selectedHolidays;
+}
+
+// returns the number of total available holidays avaliable for a given holiday country
+- (NSInteger)totalAvailableHolidaysForCountry:(SLHolidayCountry)holidayCountry
+{
+    return [[[self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]] objectForKey:kSLHolidayHolidaysKey] count];
 }
 
 // returns a customized string that indicates the number of selected skip dates and/or holidays

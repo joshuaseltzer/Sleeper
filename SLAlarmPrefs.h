@@ -10,6 +10,12 @@
 
 // enum that defines the rows countries that are available to choose from for the holiday selection
 typedef enum SLHolidayCountry : NSInteger {
+    kSLHolidayCountryArgentina,
+    kSLHolidayCountryAustralia,
+    kSLHolidayCountryBrazil,
+    kSLHolidayCountryCanada,
+    kSLHolidayCountrySweden,
+    kSLHolidayCountryUnitedKingdom,
     kSLHolidayCountryUnitedStates,
     kSLHolidayCountryNumCountries
 } SLHolidayCountry;
@@ -49,6 +55,9 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 
 // returns the number of selected holidays for the given holiday country
 - (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry;
+
+// returns the number of total available holidays avaliable for a given holiday country
+- (NSInteger)totalAvailableHolidaysForCountry:(SLHolidayCountry)holidayCountry;
 
 // returns a customized string that indicates the number of selected skip dates and/or holidays
 - (NSString *)selectedDatesString;
@@ -90,7 +99,7 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // an array of NSDate objects that represent the custom skip dates for this alarm
 @property (nonatomic, strong) NSArray *customSkipDates;
 
-// a dictionary containing additional dictionaries that correspond to the available holidays per country
+// a dictionary containing additional dictionaries that correspond to the selected holidays per country
 @property (nonatomic, strong) NSDictionary *holidaySkipDates;
 
 @end

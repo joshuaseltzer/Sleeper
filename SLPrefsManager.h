@@ -50,8 +50,15 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
 
-// returns an array of dictionaries that correspond to the default holidays for a particular resource
-+ (NSArray *)defaultHolidaysForResourceName:(NSString *)resourceName;
+// Returns a dictionary that corresponds to the default holidays for a particular resource.
+// This function will also remove any passed dates.
++ (NSDictionary *)defaultHolidaysForResourceName:(NSString *)resourceName;
+
+// returns the creation date for the given holiday resource
++ (NSDate *)dateCreatedForResourceName:(NSString *)resourceName;
+
+// returns a corresponding country code for any given country
++ (NSString *)countryCodeForCountry:(SLHolidayCountry)country;
 
 // returns a string that corresponds to the resource name for a given holiday country
 + (NSString *)resourceNameForCountry:(SLHolidayCountry)country;

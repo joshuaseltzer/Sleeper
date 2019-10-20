@@ -27,4 +27,3 @@
 "SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
 "HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
 "ADD_NEW_DATE" = "Add New Date...";
-"CLEAR" = "Clear";
