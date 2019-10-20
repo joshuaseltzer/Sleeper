@@ -316,6 +316,15 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryCzechia:
             countryCode = @"cz";
             break;
+        case kSLHolidayCountryDenmark:
+            countryCode = @"dk";
+            break;
+        case kSLHolidayCountryFrance:
+            countryCode = @"fra";
+            break;
+        case kSLHolidayCountryGermany:
+            countryCode = @"de";
+            break;
         case kSLHolidayCountrySweden:
             countryCode = @"se";
             break;
