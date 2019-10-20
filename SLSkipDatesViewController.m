@@ -34,6 +34,9 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 // the dictionary containing the holiday skip dates for this alarm
 @property (nonatomic, strong) NSMutableDictionary *holidaySkipDates;
 
+// dictionary of all available holiday country resources
+@property (nonatomic, strong) NSDictionary *holidayResources;
+
 // the preferences for the alarm
 @property (nonatomic, strong) SLAlarmPrefs *alarmPrefs;
 
@@ -52,6 +55,15 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         self.alarmPrefs = alarmPrefs;
         self.customSkipDates = [[NSMutableArray alloc] initWithArray:alarmPrefs.customSkipDates];
         self.holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:alarmPrefs.holidaySkipDates];
+
+        // populate a dictionary of all available holiday resource objects
+        NSMutableDictionary *holidayResources = [[NSMutableDictionary alloc] initWithCapacity:kSLHolidayCountryNumCountries];
+        for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+            // grab the resource for the holiday country
+            NSDictionary *holidayResource = [SLPrefsManager holidayResourceForHolidayCountry:holidayCountry];
+            [holidayResources setObject:holidayResource forKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+        }
+        self.holidayResources = [holidayResources copy];
     }
     return self;
 }
@@ -217,11 +229,13 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             
             // customize the cell
             countryCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-            countryCell.textLabel.text = [SLPrefsManager friendlyNameForCountry:indexPath.row];
+            countryCell.textLabel.text = [SLPrefsManager friendlyNameForHolidayCountry:indexPath.row];
             
             // display the text for the country different if there are any selected
-            NSInteger numTotalAvailableHolidays = [self.alarmPrefs totalAvailableHolidaysForCountry:indexPath.row];
-            NSInteger numSelectedHolidays = [self.alarmPrefs selectedHolidaysForCountry:indexPath.row];
+            NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:indexPath.row];
+            NSDictionary *holidayResource = [self.holidayResources objectForKey:resourceName];
+            NSInteger numTotalAvailableHolidays = [[holidayResource objectForKey:kSLHolidayHolidaysKey] count];
+            NSInteger numSelectedHolidays = [[self.holidaySkipDates objectForKey:resourceName] count];
             if (numSelectedHolidays > 0) {
                 countryCell.detailTextLabel.text = [NSString stringWithFormat:@"%ld (%@)", (long)numTotalAvailableHolidays, kSLNumberSelectedString(numSelectedHolidays)];
             } else {
@@ -361,11 +375,12 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
             // load up the corresponding country to be displayed in the holiday selection controller
-            NSString *resourceName = [SLPrefsManager resourceNameForCountry:indexPath.row];
+            NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:indexPath.row];
             if (resourceName != nil) {
                 // create a new holiday selection controller with the list of holidays for the user to configure
-                SLHolidaySelectionTableViewController *holidaySelectionTableViewController = [[SLHolidaySelectionTableViewController alloc] initWithHolidays:[[self.holidaySkipDates objectForKey:resourceName] objectForKey:kSLHolidayHolidaysKey]
-                                                                                                                                           forHolidayCountry:indexPath.row];
+                SLHolidaySelectionTableViewController *holidaySelectionTableViewController = [[SLHolidaySelectionTableViewController alloc] initWithSelectedHolidays:[self.holidaySkipDates objectForKey:resourceName]
+                                                                                                                                                     holidayResource:[self.holidayResources objectForKey:resourceName]
+                                                                                                                                                    inHolidayCountry:indexPath.row];
                 holidaySelectionTableViewController.delegate = self;
                 [self.navigationController pushViewController:holidaySelectionTableViewController animated:YES];
             }
@@ -392,23 +407,23 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
             for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
                 // get the holidays that correspond to the country's particular resource
-                NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
-                BOOL countryNeedsUpdated = NO;
-                for (NSMutableDictionary *holiday in [[self.holidaySkipDates objectForKey:resourceName] objectForKey:kSLHolidayHolidaysKey]) {
-                    if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-                        [holiday setObject:[NSNumber numberWithBool:NO] forKey:kSLHolidaySelectedKey];
-                        countryNeedsUpdated = YES;
-                    }
-                }
-                
-                // if this particular country had a change, add the index path to reload
-                if (countryNeedsUpdated) {
+                NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
+                NSMutableArray *selectedHolidayNames = [[NSMutableArray alloc] initWithArray:[self.holidaySkipDates objectForKey:resourceName]];
+                if (selectedHolidayNames != nil && selectedHolidayNames.count > 0) {
+                    // remove all selected holidays
+                    [selectedHolidayNames removeAllObjects];
+                    [self.holidaySkipDates setObject:selectedHolidayNames forKey:resourceName];
+
+                    // add the corresponding index path to update
                     [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
                                                                                   inSection:kSLSkipDatesViewControllerSectionCountries]];
                 }
             }
-            [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
-                             withRowAnimation:UITableViewRowAnimationFade];
+
+            if (updatedHolidayCountryIndexPaths.count > 0) {
+                [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
+                                withRowAnimation:UITableViewRowAnimationFade];
+            }
             [tableView endUpdates];
             
             // remove the edit button from the controller since there are no dates to edit
@@ -510,14 +525,15 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 #pragma mark - SLHolidaySelectionDelegate
 
 // invoked when the holiday selection controller returns with updated holidays
-- (void)SLHolidaySelectionTableViewController:(SLHolidaySelectionTableViewController *)holidaySelectionTableViewController didUpdateHolidays:(NSArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry
+- (void)SLHolidaySelectionTableViewController:(SLHolidaySelectionTableViewController *)holidaySelectionTableViewController didUpdateSelectedHolidays:(NSArray *)selectedHolidays forHolidayCountry:(SLHolidayCountry)holidayCountry
 {
     // update the row that corresponds to the holiday country
-    NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
-    NSMutableDictionary *skipDatesForHoliday = [[NSMutableDictionary alloc] initWithDictionary:[self.holidaySkipDates objectForKey:resourceName]];
-    [skipDatesForHoliday setObject:holidays forKey:kSLHolidayHolidaysKey];
-    [self.holidaySkipDates setObject:skipDatesForHoliday forKey:resourceName];
+    NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
 
+    // set the new selected holidays
+    [self.holidaySkipDates setObject:selectedHolidays forKey:resourceName];
+
+    // refresh the table UI
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:holidayCountry inSection:kSLSkipDatesViewControllerSectionCountries]]
                           withRowAnimation:UITableViewRowAnimationFade];
 }

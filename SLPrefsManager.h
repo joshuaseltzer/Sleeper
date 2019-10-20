@@ -26,10 +26,8 @@ static NSString *const kSLSkipActivatedStatusKey =      @"skipActivatedStatus";
 static NSString *const kSLSkipDatesKey =                @"skipDates";
 static NSString *const kSLHolidaySkipDatesKey =         @"holidaySkipDates";
 static NSString *const kSLCustomSkipDatesKey =          @"customSkipDates";
-static NSString *const kSLHolidayDateCreatedKey =       @"dateCreated";
 static NSString *const kSLHolidayHolidaysKey =          @"holidays";
 static NSString *const kSLHolidayNameKey =              @"name";
-static NSString *const kSLHolidaySelectedKey =          @"selected";
 static NSString *const kSLHolidayDatesKey =             @"dates";
 
 @class SLAlarmPrefs;
@@ -50,24 +48,24 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
 
-// Returns a dictionary that corresponds to the default holidays for a particular resource.
-// This function will also remove any passed dates.
-+ (NSDictionary *)defaultHolidaysForResourceName:(NSString *)resourceName;
-
-// returns the creation date for the given holiday resource
-+ (NSDate *)dateCreatedForResourceName:(NSString *)resourceName;
-
-// returns a corresponding country code for any given country
-+ (NSString *)countryCodeForCountry:(SLHolidayCountry)country;
-
-// returns a string that corresponds to the resource name for a given holiday country
-+ (NSString *)resourceNameForCountry:(SLHolidayCountry)country;
-
-// returns the localized, friendly name to be displayed for the given country
-+ (NSString *)friendlyNameForCountry:(SLHolidayCountry)country;
-
 // returns an array of new dates that removes any dates from the given array of dates that have passed
 + (NSArray *)removePassedDatesFromArray:(NSArray *)dates;
+
+// Returns a dictionary that corresponds to the default holiday source for the given holiday country.
+// This function will also remove any passed dates.
++ (NSDictionary *)holidayResourceForHolidayCountry:(SLHolidayCountry)holidayCountry;
+
+// Returns the first available skip date for the given holiday name and country.  This function will not take into consideration any passed dates.
++ (NSDate *)firstSkipDateForHolidayName:(NSString *)holidayName inHolidayCountry:(SLHolidayCountry)holidayCountry;
+
+// returns a corresponding country code for any given country
++ (NSString *)countryCodeForHolidayCountry:(SLHolidayCountry)country;
+
+// returns a string that corresponds to the resource name for a given holiday country
++ (NSString *)resourceNameForHolidayCountry:(SLHolidayCountry)country;
+
+// returns the localized, friendly name to be displayed for the given country
++ (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country;
 
 // returns a string that represents a date that is going to be skipped
 + (NSString *)skipDateStringForDate:(NSDate *)date;

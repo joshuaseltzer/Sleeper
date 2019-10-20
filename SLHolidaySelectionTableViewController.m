@@ -16,8 +16,11 @@
 
 @interface SLHolidaySelectionTableViewController ()
 
-// the holiday objects that this controller is responsible for displaying
-@property (nonatomic, strong) NSMutableArray *holidays;
+// the array of selected holidays to be displayed
+@property (nonatomic, strong) NSMutableArray *selectedHolidays;
+
+// the available holidays for this country (loaded from the bundle resource)
+@property (nonatomic, strong) NSArray *availableHolidays;
 
 // the holiday country that this selection controller is displaying
 @property (nonatomic) SLHolidayCountry holidayCountry;
@@ -26,12 +29,13 @@
 
 @implementation SLHolidaySelectionTableViewController
 
-// initialize this controller the list of available holidays and the selection criteria
-- (instancetype)initWithHolidays:(NSArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry
+// initialize this controller with the selected holidays and available holidays for a given holiday country
+- (instancetype)initWithSelectedHolidays:(NSArray *)selectedHolidays holidayResource:(NSDictionary *)holidayResource inHolidayCountry:(SLHolidayCountry)holidayCountry
 {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
-        self.holidays = [[NSMutableArray alloc] initWithArray:holidays];
+        self.selectedHolidays = [[NSMutableArray alloc] initWithArray:selectedHolidays];
+        self.availableHolidays = [holidayResource objectForKey:kSLHolidayHolidaysKey];
         self.holidayCountry = holidayCountry;
     }
     return self;
@@ -42,7 +46,7 @@
     [super viewDidLoad];
     
     // customize the view controller and table
-    self.title = [SLPrefsManager friendlyNameForCountry:self.holidayCountry];
+    self.title = [SLPrefsManager friendlyNameForHolidayCountry:self.holidayCountry];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 50.0;
@@ -61,13 +65,15 @@
 {
     // change all of the holidays/cells that were previously selected
     NSMutableArray *indexPathsToReload = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < self.holidays.count; i++) {
-        NSMutableDictionary *holiday = [self.holidays objectAtIndex:i];
-        if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-            [holiday setObject:[NSNumber numberWithBool:NO] forKey:kSLHolidaySelectedKey];
-            [indexPathsToReload addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    for (NSInteger i = 0; i < self.availableHolidays.count; i++) {
+        NSDictionary *holiday = [self.availableHolidays objectAtIndex:i];
+        for (NSString *selectedHolidayName in self.selectedHolidays) {
+            if ([selectedHolidayName isEqualToString:[holiday objectForKey:kSLHolidayNameKey]]) {
+                [indexPathsToReload addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
         }
     }
+    [self.selectedHolidays removeAllObjects];
     [self.tableView reloadRowsAtIndexPaths:indexPathsToReload withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
@@ -78,7 +84,7 @@
     if (!parent && self.delegate) {
         // tell the delegate about the updated skip dates
         [self.delegate SLHolidaySelectionTableViewController:self
-                                           didUpdateHolidays:[self.holidays copy]
+                                   didUpdateSelectedHolidays:[self.selectedHolidays copy]
                                            forHolidayCountry:self.holidayCountry];
     }
 }
@@ -92,7 +98,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.holidays.count;
+    return self.availableHolidays.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -115,7 +121,7 @@
     }
 
     // get the corresponding holiday for this cell for display
-    NSDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
+    NSDictionary *holiday = [self.availableHolidays objectAtIndex:indexPath.row];
     holidayCell.textLabel.text = [holiday objectForKey:kSLHolidayNameKey];
     holidayCell.detailTextLabel.text = [SLPrefsManager skipDateStringForDate:[[holiday objectForKey:kSLHolidayDatesKey] objectAtIndex:0]];
     
@@ -132,25 +138,27 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // set the selection for this cell if it should be selected
-    NSDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
-    if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-        [cell setSelected:YES animated:NO];
-        [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    for (NSString *selectedHolidayName in self.selectedHolidays) {
+        if ([selectedHolidayName isEqualToString:[[self.availableHolidays objectAtIndex:indexPath.row] objectForKey:kSLHolidayNameKey]]) {
+            [cell setSelected:YES animated:NO];
+            [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+            break;
+        }
     }
 }
 
 // handle cell selection
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // modify the selection flag for the selected row
-    NSMutableDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
-    [holiday setObject:[NSNumber numberWithBool:![[holiday objectForKey:kSLHolidaySelectedKey] boolValue]] forKey:kSLHolidaySelectedKey];
+    // add the name of the holiday to the selected array
+    [self.selectedHolidays addObject:[[self.availableHolidays objectAtIndex:indexPath.row] objectForKey:kSLHolidayNameKey]];
 }
+
+// handle cell deselection
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // modify the selection flag for the selected row
-    NSMutableDictionary *holiday = [self.holidays objectAtIndex:indexPath.row];
-    [holiday setObject:[NSNumber numberWithBool:![[holiday objectForKey:kSLHolidaySelectedKey] boolValue]] forKey:kSLHolidaySelectedKey];
+    // remove the name of the selected holiday from the selected array
+    [self.selectedHolidays removeObject:[[self.availableHolidays objectAtIndex:indexPath.row] objectForKey:kSLHolidayNameKey]];
 }
 
 @end

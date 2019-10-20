@@ -12,8 +12,10 @@
 typedef enum SLHolidayCountry : NSInteger {
     kSLHolidayCountryArgentina,
     kSLHolidayCountryAustralia,
+    kSLHolidayCountryBelgium,
     kSLHolidayCountryBrazil,
     kSLHolidayCountryCanada,
+    kSLHolidayCountryCzechia,
     kSLHolidayCountrySweden,
     kSLHolidayCountryUnitedKingdom,
     kSLHolidayCountryUnitedStates,
@@ -44,26 +46,14 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // and default preferences
 - (instancetype)initWithAlarmId:(NSString *)alarmId;
 
-// updates all dates (custom and holidays) by potentially updating the dates and removing any past dates
-- (void)updateSkipDates;
-
-// invoked in the case that holiday skip dates were not set in the preferences for this alarm
-- (void)populateDefaultHolidaySkipDates;
+// updates all custom skip dates by potentially removing any past dates
+- (void)updateCustomSkipDates;
 
 // returns the total number of selected holidays to be skipped for the given alarm
 - (NSInteger)totalSelectedHolidays;
 
-// returns the number of selected holidays for the given holiday country
-- (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry;
-
-// returns the number of total available holidays avaliable for a given holiday country
-- (NSInteger)totalAvailableHolidaysForCountry:(SLHolidayCountry)holidayCountry;
-
-// returns a customized string that indicates the number of selected skip dates and/or holidays
-- (NSString *)selectedDatesString;
-
-// returns an array of unsorted dates for all of the selected holidays
-- (NSArray *)allHolidaySkipDates;
+// returns a customized string that indicates the total number of selected skip dates and/or holidays
+- (NSString *)totalSelectedDatesString;
 
 // determines whether or not this alarm should be skipped based on the selected skip dates
 // and the skip activated status

@@ -150,7 +150,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
                 // customize the detail text label depending on whether or not we have skip dates enabled
-                cell.detailTextLabel.text = [self.SLAlarmPrefs selectedDatesString];
+                cell.detailTextLabel.text = [self.SLAlarmPrefs totalSelectedDatesString];
                 break;
         }
     } else {

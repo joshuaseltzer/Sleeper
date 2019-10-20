@@ -27,86 +27,14 @@
         self.skipTimeSecond = kSLDefaultSkipSecond;
         self.skipActivationStatus = kSLDefaultSkipActivatedStatus;
         self.customSkipDates = [[NSArray alloc] init];
-        self.holidaySkipDates = [[NSArray alloc] init];
+        self.holidaySkipDates = [[NSDictionary alloc] init];
     }
     return self;
 }
 
-// updates all dates (custom and holidays) by potentially updating the dates and removing any past dates
-- (void)updateSkipDates
+// updates all custom skip dates by potentially removing any past dates
+- (void)updateCustomSkipDates
 {
-    BOOL hasHolidayUpdates = NO;
-    NSMutableDictionary *allHolidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:self.holidaySkipDates];
-    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-        // get the holidays that correspond to the country's particular resource
-        NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
-        NSDictionary *holidaySkipDates = [allHolidaySkipDates objectForKey:resourceName];
-
-        // if the holiday skip dates already exist, check to see if they need to be updated based on the creation date
-        if ([holidaySkipDates isKindOfClass:[NSDictionary class]]) {
-            NSDate *preferenceDateCreated = [holidaySkipDates objectForKey:kSLHolidayDateCreatedKey];
-            if (preferenceDateCreated != nil) {
-                NSDate *resourceDateCreated = [SLPrefsManager dateCreatedForResourceName:resourceName];
-                if ([resourceDateCreated compare:preferenceDateCreated] == NSOrderedDescending) {
-                    NSDictionary *defaultHolidayResource = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
-
-                    // update the selected flag for the updated holidays (if applicable)
-                    NSArray *existingHolidays = [holidaySkipDates objectForKey:kSLHolidayHolidaysKey];
-                    for (NSDictionary *existingHoliday in existingHolidays) {
-                        // get the selected key for the existing holiday to see if we need to update the new holiday
-                        BOOL isSelected = [[existingHoliday objectForKey:kSLHolidaySelectedKey] boolValue];
-                        if (isSelected) {
-                            // get the name of the holiday, which will be used as the key for the holiday
-                            NSString *existingHolidayName = [existingHoliday objectForKey:kSLHolidayNameKey];
-                            if (existingHolidayName != nil) {
-                                // look for this holiday in the new holidays
-                                NSArray *newHolidays = [defaultHolidayResource objectForKey:kSLHolidayHolidaysKey];
-                                for (NSMutableDictionary *newHolidayToUpdate in newHolidays) {
-                                    if ([existingHolidayName isEqualToString:[newHolidayToUpdate objectForKey:kSLHolidayNameKey]]) {
-                                        // make the necessary changes to the new data source
-                                        [newHolidayToUpdate setObject:[NSNumber numberWithBool:YES] forKey:kSLHolidaySelectedKey];
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // in this case, we needed to reload the default holidays from the bundle
-                    [allHolidaySkipDates setObject:[defaultHolidayResource copy] forKey:resourceName];
-                    hasHolidayUpdates = YES;
-                } else {
-                    // if we do not need to update the holidays from the bundle, simply check for any passed dates
-                    NSArray *existingHolidays = [holidaySkipDates objectForKey:kSLHolidayHolidaysKey];
-                    if (existingHolidays != nil) {
-                        // remove any dates that might have already passed
-                        for (NSMutableDictionary *holiday in existingHolidays) {
-                            NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
-                            NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
-                            if (dates.count != newDates.count) {
-                                [holiday setObject:newDates forKey:kSLHolidayDatesKey];
-                                hasHolidayUpdates = YES;
-                            }
-                        }
-                    }
-                }
-            } else {
-                // in this case, the previous holiday did not have a valid creation date (from Sleeper v5.0.0 and v5.0.1)
-                [allHolidaySkipDates setObject:[SLPrefsManager defaultHolidaysForResourceName:resourceName] forKey:resourceName];
-                hasHolidayUpdates = YES;
-            }
-        } else {
-            // in this case, the country for the holiday does not exist at all
-            [allHolidaySkipDates setObject:[SLPrefsManager defaultHolidaysForResourceName:resourceName] forKey:resourceName];
-            hasHolidayUpdates = YES;
-        }
-    }
-
-    // if there were any updates to the holidays, set the holiday object for this alarm
-    if (hasHolidayUpdates) {
-        self.holidaySkipDates = [allHolidaySkipDates copy];
-    }
-
     // remove any passed dates from the custom skip dates
     NSArray *newCustomSkipDates = [SLPrefsManager removePassedDatesFromArray:self.customSkipDates];
     if (self.customSkipDates.count != newCustomSkipDates.count) {
@@ -114,56 +42,29 @@
     }
 }
 
-// invoked in the case that holiday skip dates were not set in the preferences for this alarm
-- (void)populateDefaultHolidaySkipDates
-{
-    // populate all of the countries
-    NSMutableDictionary *holidaySkipDates = [[NSMutableDictionary alloc] initWithCapacity:kSLHolidayCountryNumCountries];
-    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-        // get the holidays that correspond to the country's particular resource
-        NSString *resourceName = [SLPrefsManager resourceNameForCountry:holidayCountry];
-        NSDictionary *defaultHolidayResource = [SLPrefsManager defaultHolidaysForResourceName:resourceName];
-        if (defaultHolidayResource != nil) {
-            [holidaySkipDates setObject:defaultHolidayResource forKey:resourceName];
-        }
-    }
-    self.holidaySkipDates = [holidaySkipDates copy];
-}
-
 // returns the total number of selected holidays to be skipped for the given alarm
 - (NSInteger)totalSelectedHolidays
 {
     NSInteger total = 0;
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-        total = total + [self selectedHolidaysForCountry:holidayCountry];
+        total = total + [self selectedHolidaysForHolidayCountry:holidayCountry];
     }
     return total;
 }
 
 // returns the number of selected holidays for the given holiday country
-- (NSInteger)selectedHolidaysForCountry:(SLHolidayCountry)holidayCountry
+- (NSInteger)selectedHolidaysForHolidayCountry:(SLHolidayCountry)holidayCountry
 {
     NSInteger selectedHolidays = 0;
-    NSDictionary *countryHolidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
-    NSArray *holidays = [countryHolidays objectForKey:kSLHolidayHolidaysKey];
-    if (holidays) {
-        for (NSDictionary *holiday in holidays) {
-            if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-                ++selectedHolidays;
-            }
-        }
+    NSArray *selectedHolidayNames = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+    if (selectedHolidayNames != nil) {
+        selectedHolidays = selectedHolidayNames.count;
     }
     return selectedHolidays;
 }
 
-// returns the number of total available holidays avaliable for a given holiday country
-- (NSInteger)totalAvailableHolidaysForCountry:(SLHolidayCountry)holidayCountry
-{
-    return [[[self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]] objectForKey:kSLHolidayHolidaysKey] count];
-}
-
-// returns a customized string that indicates the number of selected skip dates and/or holidays
-- (NSString *)selectedDatesString
+// returns a customized string that indicates the total number of selected skip dates and/or holidays
+- (NSString *)totalSelectedDatesString
 {
     // customize the detail text label depending on whether or not we have skip dates enabled
     NSString *selectedDatesString = nil;
@@ -193,62 +94,39 @@
     return selectedDatesString;
 }
 
-// returns an array of unsorted dates for all of the selected holidays
-- (NSArray *)allHolidaySkipDates
-{
-    NSMutableArray *holidaySkipDates = [[NSMutableArray alloc] init];
-    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-        NSArray *holidays = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForCountry:holidayCountry]];
-        for (NSDictionary *holiday in holidays) {
-            if ([[holiday objectForKey:kSLHolidaySelectedKey] boolValue]) {
-                [holidaySkipDates addObjectsFromArray:[holiday objectForKey:kSLHolidayDatesKey]];
-            }
-        }
-    }
-    return [holidaySkipDates copy];
-}
-
 // determines whether or not this alarm should be skipped based on the selected skip dates
 // and the skip activated status
 - (BOOL)shouldSkip
 {
-    // check to see one of today's dates is included in the skip dates for this alarm
-    BOOL shouldSkip = NO;
-    
     // first check to see if the skip switch is activated
     if (self.skipEnabled) {
         // check to see if the skip activated status is enabled for this alarm
         if (self.skipActivationStatus == kSLSkipActivatedStatusActivated) {
-            shouldSkip = YES;
+            return YES;
         } else {
-            // check to see if one of the skip dates for this alarm is today
-            NSArray *skipDates = [self sortedSkipDates];
-            for (NSDate *skipDate in skipDates) {
+            // check the custom skip dates
+            for (NSDate *skipDate in self.customSkipDates) {
                 if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
-                    shouldSkip = YES;
-                    break;
+                    return YES;
+                }
+            }
+
+            // check the selected holidays next
+            for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+                // check to see if any holidays are selected for the given holiday country
+                NSArray *selectedHolidayNames = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+                if (selectedHolidayNames != nil) {
+                    for (NSString *holidayName in selectedHolidayNames) {
+                        NSDate *firstHolidayDate = [SLPrefsManager firstSkipDateForHolidayName:holidayName inHolidayCountry:holidayCountry];
+                        if (firstHolidayDate != nil && [[NSCalendar currentCalendar] isDateInToday:firstHolidayDate]) {
+                            return YES;
+                        }
+                    }
                 }
             }
         }
     }
-
-    return shouldSkip;
-}
-
-// gets a sorted list of skip dates for this alarm
-- (NSArray *)sortedSkipDates
-{
-    NSArray *allHolidaySkipDates = [self allHolidaySkipDates];
-    
-    // get all of the skip dates for that alarm into a single array
-    NSMutableArray *sortedSkipDates = [[NSMutableArray alloc] initWithCapacity:self.customSkipDates.count + allHolidaySkipDates.count];
-    [sortedSkipDates addObjectsFromArray:self.customSkipDates];
-    [sortedSkipDates addObjectsFromArray:allHolidaySkipDates];
-
-    // sort the skip dates
-    [sortedSkipDates sortUsingSelector:@selector(compare:)];
-    
-    return [sortedSkipDates copy];
+    return NO;
 }
 
 @end

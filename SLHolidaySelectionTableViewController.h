@@ -17,17 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 // delegate that will notify the object that holidays have been updated
 @protocol SLHolidaySelectionDelegate <NSObject>
 
-// passes the updated holiday holidays for the holiday country
+// passes the updated holiday selections for the holiday country
 - (void)SLHolidaySelectionTableViewController:(SLHolidaySelectionTableViewController *)holidaySelectionTableViewController
-                            didUpdateHolidays:(NSArray *)holidays
+                    didUpdateSelectedHolidays:(NSArray *)selectedHolidays
                             forHolidayCountry:(SLHolidayCountry)holidayCountry;
 
 @end
 
 @interface SLHolidaySelectionTableViewController : UITableViewController
 
-// initialize this controller the list of available holidays and the selection criteria
-- (instancetype)initWithHolidays:(NSArray *)holidays forHolidayCountry:(SLHolidayCountry)holidayCountry;
+// initialize this controller with the selected holidays and available holidays for a given holiday country
+- (instancetype)initWithSelectedHolidays:(NSArray *)selectedHolidays holidayResource:(NSDictionary *)holidayResource inHolidayCountry:(SLHolidayCountry)holidayCountry;
 
 // the delegate of this view controller
 @property (nonatomic, weak) id <SLHolidaySelectionDelegate> delegate;

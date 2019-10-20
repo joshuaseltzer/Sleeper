@@ -49,12 +49,12 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                     alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
 
                     // update the skip dates, by potentially adding ones from a new update or removing dates that might have passed
-                    [alarmPrefs updateSkipDates];
+                    [alarmPrefs updateCustomSkipDates];
                 } else {
                     // if an alarm did not have a skip dates key in the preferences, we need to add the default
                     // holiday skip dates
                     alarmPrefs.customSkipDates = [[NSArray alloc] init];
-                    [alarmPrefs populateDefaultHolidaySkipDates];
+                    alarmPrefs.holidaySkipDates = [[NSDictionary alloc] init];
                 }
                 
                 return alarmPrefs;
@@ -226,19 +226,19 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     }
 }
 
-// Returns a dictionary that corresponds to the default holidays for a particular resource.
+// Returns a dictionary that corresponds to the default holiday source for the given holiday country.
 // This function will also remove any passed dates.
-+ (NSDictionary *)defaultHolidaysForResourceName:(NSString *)resourceName
++ (NSDictionary *)holidayResourceForHolidayCountry:(SLHolidayCountry)holidayCountry
 {
-    NSMutableDictionary *defaultHolidayResource = nil;
-    NSMutableArray *defaultHolidays = nil;
+    NSMutableDictionary *holidayResource = nil;
+    NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
     NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
     if (resourcePath != nil) {
         // load the list of holidays from the file system
-        defaultHolidayResource = [[NSMutableDictionary alloc] initWithContentsOfFile:resourcePath];
-        defaultHolidays = [defaultHolidayResource objectForKey:kSLHolidayHolidaysKey];
+        holidayResource = [[NSMutableDictionary alloc] initWithContentsOfFile:resourcePath];
 
         // remove any dates that might have already passed
+        NSMutableArray *defaultHolidays = [holidayResource objectForKey:kSLHolidayHolidaysKey];
         for (NSMutableDictionary *holiday in defaultHolidays) {
             NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
             NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
@@ -246,27 +246,55 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                 [holiday setObject:newDates forKey:kSLHolidayDatesKey];
             }
         }
-        [defaultHolidayResource setObject:[defaultHolidays copy] forKey:kSLHolidayHolidaysKey];
+        [holidayResource setObject:[defaultHolidays copy] forKey:kSLHolidayHolidaysKey];
     }
-    return defaultHolidayResource;
+    return [holidayResource copy];
 }
 
-// returns the creation date for the given holiday resource
-+ (NSDate *)dateCreatedForResourceName:(NSString *)resourceName
+// returns an array of new dates that removes any dates from the given array of dates that have passed
++ (NSArray *)removePassedDatesFromArray:(NSArray *)dates
 {
-    NSDate *dateCreated = nil;
-    NSDictionary *defaultHolidayResource = nil;
+    NSMutableArray *newDates = [[NSMutableArray alloc] init];
+    for (NSDate *date in dates) {
+        NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
+        if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
+            [newDates addObject:date];
+        }
+    }
+    return [newDates copy];
+}
+
+// Returns the first available skip date for the given holiday name and country.  This function will not take into consideration any passed dates.
++ (NSDate *)firstSkipDateForHolidayName:(NSString *)holidayName inHolidayCountry:(SLHolidayCountry)holidayCountry
+{
+    // load the resource in the bundle to get the skip dates for the holidays selected
+    NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
     NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
     if (resourcePath != nil) {
         // load the list of holidays from the file system
-        defaultHolidayResource = [[NSDictionary alloc] initWithContentsOfFile:resourcePath];
-        dateCreated = [defaultHolidayResource objectForKey:kSLHolidayDateCreatedKey];
+        NSDictionary *holidayResource = [[NSDictionary alloc] initWithContentsOfFile:resourcePath];
+        NSArray *holidays = [holidayResource objectForKey:kSLHolidayHolidaysKey];
+
+        // grab the first date for the matching holiday name (removing any that might have passed)
+        for (NSDictionary *holiday in holidays) {
+            // match the holiday based on the name
+            if ([holidayName isEqualToString:[holiday objectForKey:kSLHolidayNameKey]]) {
+                // get the dates for this holiday
+                NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
+                for (NSDate *date in dates) {
+                    NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
+                    if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
+                        return date;
+                    }
+                }
+            }
+        }
     }
-    return dateCreated;
+    return nil;
 }
 
 // returns a corresponding country code for any given country
-+ (NSString *)countryCodeForCountry:(SLHolidayCountry)country
++ (NSString *)countryCodeForHolidayCountry:(SLHolidayCountry)country
 {
     NSString *countryCode = nil;
     switch (country) {
@@ -276,11 +304,17 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryAustralia:
             countryCode = @"au";
             break;
+        case kSLHolidayCountryBelgium:
+            countryCode = @"be";
+            break;
         case kSLHolidayCountryBrazil:
             countryCode = @"br";
             break;
         case kSLHolidayCountryCanada:
             countryCode = @"ca";
+            break;
+        case kSLHolidayCountryCzechia:
+            countryCode = @"cz";
             break;
         case kSLHolidayCountrySweden:
             countryCode = @"se";
@@ -299,29 +333,16 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
 }
 
 // returns a string that corresponds to the resource name for a given holiday country
-+ (NSString *)resourceNameForCountry:(SLHolidayCountry)country
++ (NSString *)resourceNameForHolidayCountry:(SLHolidayCountry)country
 {
-    return [NSString stringWithFormat:@"holidays-%@", [SLPrefsManager countryCodeForCountry:country]];
+    return [NSString stringWithFormat:@"%@_holidays", [SLPrefsManager countryCodeForHolidayCountry:country]];
 }
 
 // returns the localized, friendly name to be displayed for the given country
-+ (NSString *)friendlyNameForCountry:(SLHolidayCountry)country
++ (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country
 {
     return [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
-                                                 value:[SLPrefsManager countryCodeForCountry:country]];;
-}
-
-// returns an array of new dates that removes any dates from the given array of dates that have passed
-+ (NSArray *)removePassedDatesFromArray:(NSArray *)dates
-{
-    NSMutableArray *newDates = [[NSMutableArray alloc] init];
-    for (NSDate *date in dates) {
-        NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
-        if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
-            [newDates addObject:date];
-        }
-    }
-    return [newDates copy];
+                                                 value:[SLPrefsManager countryCodeForHolidayCountry:country]];
 }
 
 // returns a string that represents a date that is going to be skipped
