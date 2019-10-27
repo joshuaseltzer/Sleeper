@@ -24,7 +24,7 @@ if __name__== "__main__":
     if len(sys.argv) == 3:
         if sys.argv[1] == "-r":
             # update the localized string files to remove unused localization strings
-            # e.g. this includes files from v5.0.0 and v5.0.1 (this code was used to fix the files in v5.1.0)
+            # e.g. this includes files from v5.0.0 and v5.0.1 (this code was used to fix the files in v5.5.0)
             remove_trailing_localized_strings(sys.argv[2])
     else:
         print("Incorrect usage!")
