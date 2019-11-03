@@ -18,12 +18,3 @@
 "SKIP_ALARM" = "Pular alarme";
 "SKIP_QUESTION" = "Você gostaria de pular \"%@\" que esta marcado para disparar as %@?";
 "SKIP_TIME_EXPLANATION" = "Escolhe um um período de tempo que você pode esperar antes que o alarme dispara.";
-
-"SKIP_DATES" = "Skip Dates";
-"SELECT_DATE" = "Select Date";
-"HOLIDAYS" = "Holidays";
-"HOLIDAY" = "Holiday";
-"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
-"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
-"ADD_NEW_DATE" = "Add New Date...";

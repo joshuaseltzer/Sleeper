@@ -18,7 +18,6 @@
 "SKIP_ALARM" = "Skip Alarm";
 "SKIP_QUESTION" = "Would you like to skip \"%@\" which is scheduled to go off at %@?";
 "SKIP_TIME_EXPLANATION" = "Choose an amount of time that you will be prompted to skip the alarm before it fires.";
-
 "SKIP_DATES" = "Skip Dates";
 "SELECT_DATE" = "Select Date";
 "HOLIDAYS" = "Holidays";
@@ -28,4 +27,6 @@
 "HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
 "ADD_NEW_DATE" = "Add New Date...";
 "NUMBER_SELECTED" = "%ld Selected";
-"SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire."
+"SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire.";
+"SKIP_REASON_DATE" = "This alarm will be skipped since it falls on a chosen skip date.";
+"SKIP_REASON_HOLIDAY" = "This alarm will be skipped since it falls on a selected holiday.";

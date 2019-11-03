@@ -18,12 +18,3 @@
 "SKIP_ALARM" = "Отменить будильник";
 "SKIP_QUESTION" = "Вы хотели бы отменить будильник \"%@\", который прозвенит в %@?";
 "SKIP_TIME_EXPLANATION" = "Выберите за сколько времени вам будет предложено отменить будильник, прежде чем он сработает";
-
-"SKIP_DATES" = "Skip Dates";
-"SELECT_DATE" = "Select Date";
-"HOLIDAYS" = "Holidays";
-"HOLIDAY" = "Holiday";
-"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
-"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
-"ADD_NEW_DATE" = "Add New Date...";

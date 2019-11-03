@@ -19,7 +19,8 @@ typedef enum SLSleepAlarmOptionsSection : NSUInteger {
     kSLSleepAlarmOptionsSectionBedtimeReminder,
     kSLSleepAlarmOptionsSectionWakeUpSound,
     kSLSleepAlarmOptionsSectionSoundVolume,
-    kSLSleepAlarmOptionsSectionSleeper
+    kSLSleepAlarmOptionsSectionSleeper,
+    kSLSleepAlarmOptionsNumSections
 } SLSleepAlarmOptionsSection;
 
 // define an enum to define the rows in the kSLSleepAlarmOptionsSectionSleeper section
@@ -229,6 +230,17 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     }
 }
 
+// potentially customize the footer text depending on whether or not the alarm is going to be skipped
+%new
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footerTitle = nil;
+    if (section == kSLSleepAlarmOptionsSectionSleeper) {
+        footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
+    }
+    return footerTitle;
+}
+
 // handle when the skip switch is changed
 %new
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch
@@ -238,6 +250,14 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
     [self updateDoneButtonEnabled];
+
+    // force the footer title to update since the explanation to display might have changed
+    [UIView setAnimationsEnabled:NO];
+    [self.tableView beginUpdates];
+    [self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+    [[self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel sizeToFit];
+    [self.tableView endUpdates];
+    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate

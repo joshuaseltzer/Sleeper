@@ -18,12 +18,3 @@
 "SKIP_ALARM" = "Langkau Penggera";
 "SKIP_QUESTION" = "Adakah kamu ingin melangkau \"%@\" dimana ia telah dijadualkan untuk bunyi pada %@?";
 "SKIP_TIME_EXPLANATION" = "Pilih berapa kali kamu ingin didorong untuk melangkau penggera sebelum ia berbunyi.";
-
-"SKIP_DATES" = "Skip Dates";
-"SELECT_DATE" = "Select Date";
-"HOLIDAYS" = "Holidays";
-"HOLIDAY" = "Holiday";
-"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
-"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
-"ADD_NEW_DATE" = "Add New Date...";

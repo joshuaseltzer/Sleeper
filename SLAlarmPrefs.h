@@ -11,10 +11,15 @@
 // enum that defines the rows countries that are available to choose from for the holiday selection
 typedef enum SLHolidayCountry : NSInteger {
     kSLHolidayCountryArgentina,
+    kSLHolidayCountryAruba,
     kSLHolidayCountryAustralia,
+    kSLHolidayCountryAustria,
+    kSLHolidayCountryBelarus,
     kSLHolidayCountryBelgium,
     kSLHolidayCountryBrazil,
+    kSLHolidayCountryBulgaria,
     kSLHolidayCountryCanada,
+    kSLHolidayCountryColombia,
     kSLHolidayCountryCzechia,
     kSLHolidayCountryDenmark,
     kSLHolidayCountryFrance,

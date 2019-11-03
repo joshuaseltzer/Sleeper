@@ -14,6 +14,13 @@
 // define the reuse identifier for the cells in this table
 #define kSLHolidayTableViewCellIdentifier               @"SLHolidayTableViewCell"
 
+// define some of the sizes of the components of this cell to help calculate the height of the cell
+#define kSLHolidayTableViewCellEditControlWidth         38.0
+#define kSLHolidayTableViewCellLabelVerticalPadding     8.0
+#define kSLHolidayTableViewCellLabelHorizontalPadding   16.0
+#define kSLHolidayTableViewCellDetailLabelHeight        15.0
+#define kSLHolidayTableViewCellMinimumHeight            50.0
+
 @interface SLHolidaySelectionTableViewController ()
 
 // the array of selected holidays to be displayed
@@ -48,8 +55,6 @@
     // customize the view controller and table
     self.title = [SLPrefsManager friendlyNameForHolidayCountry:self.holidayCountry];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    self.tableView.estimatedRowHeight = 50.0;
     [self setEditing:YES animated:NO];
 
     // create a clear button to clear all selections
@@ -109,10 +114,12 @@
         holidayCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                              reuseIdentifier:kSLHolidayTableViewCellIdentifier];
         holidayCell.accessoryType = UITableViewCellAccessoryNone;
+        holidayCell.accessoryView = nil;
         holidayCell.textLabel.textAlignment = NSTextAlignmentLeft;
         holidayCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-        holidayCell.textLabel.numberOfLines = 2;
+        holidayCell.textLabel.numberOfLines = 0;
         holidayCell.detailTextLabel.textColor = [UIColor grayColor];
+        holidayCell.detailTextLabel.numberOfLines = 1;
 
         // set the background color of the cell to clear to remove the selection color
         UIView *backgroundView = [[UIView alloc] init];
@@ -159,6 +166,23 @@
 {
     // remove the name of the selected holiday from the selected array
     [self.selectedHolidays removeObject:[[self.availableHolidays objectAtIndex:indexPath.row] objectForKey:kSLHolidayNameKey]];
+}
+
+// calculate the height for the cell based on the text provided
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // get the corresponding holiday for this cell for display
+    NSDictionary *holiday = [self.availableHolidays objectAtIndex:indexPath.row];
+
+    // determine the size of the label that will be used to display the holiday name
+    NSString *holidayName = [holiday objectForKey:kSLHolidayNameKey];
+    CGRect holidayNameRect = [holidayName boundingRectWithSize:CGSizeMake(tableView.frame.size.width - kSLHolidayTableViewCellEditControlWidth - (2 * kSLHolidayTableViewCellLabelHorizontalPadding), CGFLOAT_MAX)
+                                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                                    attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17.0]}
+                                                       context:nil];
+    
+    // return the calculated height (with the additional cell padding) or the minimum height for this cell, whichever is greater
+    return MAX(ceilf(holidayNameRect.size.height) + (2 * kSLHolidayTableViewCellLabelVerticalPadding) + kSLHolidayTableViewCellDetailLabelHeight + 1.0, kSLHolidayTableViewCellMinimumHeight);
 }
 
 @end

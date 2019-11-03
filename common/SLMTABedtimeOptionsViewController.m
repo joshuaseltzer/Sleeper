@@ -215,6 +215,16 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
     }
 }
 
+// potentially customize the footer text depending on whether or not the alarm is going to be skipped
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footerTitle = %orig;
+    if (section == kSLBedtimeOptionsViewControllerSectionSleeper) {
+        footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
+    }
+    return footerTitle;
+}
+
 // handle when the skip switch is changed
 %new
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch
@@ -224,6 +234,14 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
     [self updateDoneButtonEnabled];
+
+    // force the footer title to update since the explanation to display might have changed
+    [UIView setAnimationsEnabled:NO];
+    [self.tableView beginUpdates];
+    [self.tableView footerViewForSection:kSLBedtimeOptionsViewControllerSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+    [[self.tableView footerViewForSection:kSLBedtimeOptionsViewControllerSectionSleeper].textLabel sizeToFit];
+    [self.tableView endUpdates];
+    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate

@@ -18,12 +18,3 @@
 "SKIP_ALARM" = "Ébresztő kihagyása";
 "SKIP_QUESTION" = "Biztosan ki szeretnéd hagyni a \"%@\" nevű ébresztőt  ami %@ időben indul?";
 "SKIP_TIME_EXPLANATION" = "Válassz egy időintervallumot amikor a program megkér, hogy átugord az ébresztőt mielőtt az indul";
-
-"SKIP_DATES" = "Skip Dates";
-"SELECT_DATE" = "Select Date";
-"HOLIDAYS" = "Holidays";
-"HOLIDAY" = "Holiday";
-"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
-"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
-"ADD_NEW_DATE" = "Add New Date...";

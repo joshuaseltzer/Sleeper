@@ -301,8 +301,17 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryArgentina:
             countryCode = @"ar";
             break;
+        case kSLHolidayCountryAruba:
+            countryCode = @"aw";
+            break;
         case kSLHolidayCountryAustralia:
             countryCode = @"au";
+            break;
+        case kSLHolidayCountryAustria:
+            countryCode = @"au";
+            break;
+        case kSLHolidayCountryBelarus:
+            countryCode = @"by";
             break;
         case kSLHolidayCountryBelgium:
             countryCode = @"be";
@@ -310,8 +319,14 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryBrazil:
             countryCode = @"br";
             break;
+        case kSLHolidayCountryBulgaria:
+            countryCode = @"bg";
+            break;
         case kSLHolidayCountryCanada:
             countryCode = @"ca";
+            break;
+        case kSLHolidayCountryColombia:
+            countryCode = @"co";
             break;
         case kSLHolidayCountryCzechia:
             countryCode = @"cz";

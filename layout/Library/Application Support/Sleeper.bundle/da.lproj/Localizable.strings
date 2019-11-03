@@ -18,12 +18,3 @@
 "SKIP_ALARM" = "Spring Alarm Over";
 "SKIP_QUESTION" = "Vil du springe \"%@\" over? Den er sat til kl. \"%@\"";
 "SKIP_TIME_EXPLANATION" = "Vælg hvor lang tid før en alarm ringer at du vil spørges om du vil springe den fra.";
-
-"SKIP_DATES" = "Skip Dates";
-"SELECT_DATE" = "Select Date";
-"HOLIDAYS" = "Holidays";
-"HOLIDAY" = "Holiday";
-"DEFAULT_SKIP_DATES" = "Remove all skip dates, including any holiday selections, for this alarm.";
-"SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
-"ADD_NEW_DATE" = "Add New Date...";

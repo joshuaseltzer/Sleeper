@@ -36,10 +36,20 @@ typedef enum SLEditAlarmViewAttributeSectionRow : NSUInteger {
 @interface MoreInfoTableViewCell : UITableViewCell
 @end
 
+// the editing alarm view which contains the main tableview for this controller
+@interface EditAlarmView : UIView
+
+// the tableview for displaying the settings
+@property(readonly, nonatomic) UITableView *settingsTable;
+
+@end
+
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface EditAlarmViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-SLPickerSelectionDelegate, SLSkipDatesDelegate>
+SLPickerSelectionDelegate, SLSkipDatesDelegate> {
+    EditAlarmView *_editAlarmView;
+}
 
 // the alarm object associated with the controller
 @property (readonly, assign, nonatomic) Alarm *alarm;
@@ -186,11 +196,31 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     }
 }
 
+// potentially customize the footer text depending on whether or not the alarm is going to be skipped
+%new
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footerTitle = nil;
+    if (section == kSLEditAlarmViewAttributeSection) {
+        footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
+    }
+    return footerTitle;
+}
+
 // handle when the skip switch is changed
 %new
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch
 {
     self.SLAlarmPrefs.skipEnabled = skipSwitch.on;
+
+    // force the footer title to update since the explanation to display might have changed
+    EditAlarmView *editAlarmView = MSHookIvar<EditAlarmView *>(self, "_editAlarmView");
+    [UIView setAnimationsEnabled:NO];
+    [editAlarmView.settingsTable beginUpdates];
+    [editAlarmView.settingsTable footerViewForSection:kSLEditAlarmViewAttributeSection].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+    [[editAlarmView.settingsTable footerViewForSection:kSLEditAlarmViewAttributeSection].textLabel sizeToFit];
+    [editAlarmView.settingsTable endUpdates];
+    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate

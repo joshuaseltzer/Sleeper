@@ -37,10 +37,20 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 @interface MoreInfoTableViewCell : UITableViewCell
 @end
 
+// the editing alarm view which contains the main tableview for this controller
+@interface MTAAlarmEditView : UIView
+
+// the tableview for displaying the settings
+@property(readonly, nonatomic) UITableView *settingsTable;
+
+@end
+
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-SLPickerSelectionDelegate, SLSkipDatesDelegate>
+SLPickerSelectionDelegate, SLSkipDatesDelegate> {
+    MTAAlarmEditView *_editAlarmView;
+}
 
 // the edited alarm object for this view controller (iOS 12)
 @property (retain, nonatomic) MTMutableAlarm *editedAlarm;
@@ -210,6 +220,15 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch
 {
     self.SLAlarmPrefs.skipEnabled = skipSwitch.on;
+
+    // force the footer title to update since the explanation to display might have changed
+    MTAAlarmEditView *editAlarmView = MSHookIvar<MTAAlarmEditView *>(self, "_editAlarmView");
+    [UIView setAnimationsEnabled:NO];
+    [editAlarmView.settingsTable beginUpdates];
+    [editAlarmView.settingsTable footerViewForSection:kSLMTAAlarmEditViewControllerSectionAttribute].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+    [[editAlarmView.settingsTable footerViewForSection:kSLMTAAlarmEditViewControllerSectionAttribute].textLabel sizeToFit];
+    [editAlarmView.settingsTable endUpdates];
+    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate
