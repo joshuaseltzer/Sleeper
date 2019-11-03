@@ -94,39 +94,61 @@
     return selectedDatesString;
 }
 
-// determines whether or not this alarm should be skipped based on the selected skip dates
-// and the skip activated status
+// determines whether or not this alarm should be skipped
 - (BOOL)shouldSkip
 {
-    // first check to see if the skip switch is activated
-    if (self.skipEnabled) {
-        // check to see if the skip activated status is enabled for this alarm
-        if (self.skipActivationStatus == kSLSkipActivatedStatusActivated) {
-            return YES;
-        } else {
-            // check the custom skip dates
-            for (NSDate *skipDate in self.customSkipDates) {
-                if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
-                    return YES;
-                }
-            }
+    return self.skipEnabled && ([self shouldSkipFromPopup] || [self shouldSkipFromDate] || [self shouldSkipFromHoliday]);
+}
 
-            // check the selected holidays next
-            for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-                // check to see if any holidays are selected for the given holiday country
-                NSArray *selectedHolidayNames = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
-                if (selectedHolidayNames != nil) {
-                    for (NSString *holidayName in selectedHolidayNames) {
-                        NSDate *firstHolidayDate = [SLPrefsManager firstSkipDateForHolidayName:holidayName inHolidayCountry:holidayCountry];
-                        if (firstHolidayDate != nil && [[NSCalendar currentCalendar] isDateInToday:firstHolidayDate]) {
-                            return YES;
-                        }
-                    }
+// determines whether or not the alarm should be skipped from activating the popup
+- (BOOL)shouldSkipFromPopup
+{
+    return self.skipActivationStatus == kSLSkipActivatedStatusActivated;
+}
+
+// determines whether or not the alarm will be skipped from a custom skip date
+- (BOOL)shouldSkipFromDate
+{
+    for (NSDate *skipDate in self.customSkipDates) {
+        if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+// determines whether or not the alarm will be skipped from a holiday selection
+- (BOOL)shouldSkipFromHoliday
+{
+    for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+        // check to see if any holidays are selected for the given holiday country
+        NSArray *selectedHolidayNames = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+        if (selectedHolidayNames != nil) {
+            for (NSString *holidayName in selectedHolidayNames) {
+                NSDate *firstHolidayDate = [SLPrefsManager firstSkipDateForHolidayName:holidayName inHolidayCountry:holidayCountry];
+                if (firstHolidayDate != nil && [[NSCalendar currentCalendar] isDateInToday:firstHolidayDate]) {
+                    return YES;
                 }
             }
         }
     }
     return NO;
+}
+
+// returns an explanation of why a given alarm will be skipped
+- (NSString *)skipReasonExplanation
+{
+    NSString *skipExplanation = nil;
+    if (self.skipEnabled) {
+        if ([self shouldSkipFromPopup]) {
+            skipExplanation = kSLSkipReasonPopupString;
+        } else if ([self shouldSkipFromDate]) {
+            skipExplanation = kSLSkipReasonDateString;
+        } else if ([self shouldSkipFromHoliday]) {
+            skipExplanation = kSLSkipReasonHolidayString;
+        }
+    }
+    return skipExplanation;
 }
 
 @end

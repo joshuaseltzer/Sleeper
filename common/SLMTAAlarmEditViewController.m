@@ -194,6 +194,17 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     }
 }
 
+// potentially customize the footer text depending on whether or not the alarm is going to be skipped
+%new
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    NSString *footerTitle = nil;
+    if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
+        footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
+    }
+    return footerTitle;
+}
+
 // handle when the skip switch is changed
 %new
 - (void)SLSkipControlChanged:(UISwitch *)skipSwitch

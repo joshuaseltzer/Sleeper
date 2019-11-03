@@ -49,3 +49,6 @@
 #define kSLAddNewDateString                     [kSLSleeperBundle localizedStringForKey:@"ADD_NEW_DATE" value:@"Add New Date..." table:@"Localizable"]
 #define kSLClearString                          [kSLMobilePhoneBundle localizedStringForKey:@"CLEAR" value:@"Clear" table:@"Voicemail"]
 #define kSLNumberSelectedString(numSelected)    [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"NUMBER_SELECTED" value:@"%ld Selected" table:@"Localizable"], (long)numSelected]
+#define kSLSkipReasonPopupString                [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_POPUP" value:@"You have decided to skip this alarm the next time it is set to fire." table:@"Localizable"]
+#define kSLSkipReasonDateString                 [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_DATE" value:@"This alarm will be skipped since it falls on a chosen skip date." table:@"Localizable"]
+#define kSLSkipReasonHolidayString              [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_HOLIDAY" value:@"This alarm will be skipped since it falls on a selected holiday." table:@"Localizable"]
