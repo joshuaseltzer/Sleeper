@@ -52,3 +52,5 @@
 #define kSLSkipReasonPopupString                [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_POPUP" value:@"You have decided to skip this alarm the next time it is set to fire.  This decision will be reset if you save the alarm." table:@"Localizable"]
 #define kSLSkipReasonDateString                 [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_DATE" value:@"This alarm will be skipped since it falls on a chosen skip date." table:@"Localizable"]
 #define kSLSkipReasonHolidayString              [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_HOLIDAY" value:@"This alarm will be skipped since it falls on a selected holiday." table:@"Localizable"]
+#define kSLRecomendedHolidaysString             [kSLSleeperBundle localizedStringForKey:@"RECOMMENDED_HOLIDAYS" value:@"Recommended Holidays" table:@"Localizable"]
+#define kSLOtherHolidaysString                  [kSLSleeperBundle localizedStringForKey:@"OTHER_HOLIDAYS" value:@"Other Holidays" table:@"Localizable"]

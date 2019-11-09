@@ -226,12 +226,11 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
     }
 }
 
-// Returns a dictionary that corresponds to the default holiday source for the given holiday country.
+// Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
 // This function will also remove any passed dates.
-+ (NSDictionary *)holidayResourceForHolidayCountry:(SLHolidayCountry)holidayCountry
++ (NSDictionary *)holidayResourceForResourceName:(NSString *)resourceName
 {
     NSMutableDictionary *holidayResource = nil;
-    NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
     NSString *resourcePath = [kSLSleeperBundle pathForResource:resourceName ofType:@"plist"];
     if (resourcePath != nil) {
         // load the list of holidays from the file system
@@ -438,6 +437,12 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
 + (NSString *)resourceNameForHolidayCountry:(SLHolidayCountry)country
 {
     return [NSString stringWithFormat:@"%@_holidays", [SLPrefsManager countryCodeForHolidayCountry:country]];
+}
+
+// returns a string that corresponds to the resource name for a given country code
++ (NSString *)resourceNameForCountryCode:(NSString *)countryCode
+{
+    return [NSString stringWithFormat:@"%@_holidays", countryCode];
 }
 
 // returns the localized, friendly name to be displayed for the given country

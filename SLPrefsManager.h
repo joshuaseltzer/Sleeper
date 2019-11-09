@@ -51,9 +51,9 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // returns an array of new dates that removes any dates from the given array of dates that have passed
 + (NSArray *)removePassedDatesFromArray:(NSArray *)dates;
 
-// Returns a dictionary that corresponds to the default holiday source for the given holiday country.
+// Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
 // This function will also remove any passed dates.
-+ (NSDictionary *)holidayResourceForHolidayCountry:(SLHolidayCountry)holidayCountry;
++ (NSDictionary *)holidayResourceForResourceName:(NSString *)resourceName;
 
 // Returns the first available skip date for the given holiday name and country.  This function will not take into consideration any passed dates.
 + (NSDate *)firstSkipDateForHolidayName:(NSString *)holidayName inHolidayCountry:(SLHolidayCountry)holidayCountry;
@@ -63,6 +63,9 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // returns a string that corresponds to the resource name for a given holiday country
 + (NSString *)resourceNameForHolidayCountry:(SLHolidayCountry)country;
+
+// returns a string that corresponds to the resource name for a given country code
++ (NSString *)resourceNameForCountryCode:(NSString *)countryCode;
 
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country;

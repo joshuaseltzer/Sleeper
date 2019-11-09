@@ -21,7 +21,7 @@
 typedef enum SLSkipDatesViewControllerSection : NSInteger {
     kSLSkipDatesViewControllerSectionDates,
     kSLSkipDatesViewControllerSectionAddDate,
-    kSLSkipDatesViewControllerSectionCountries,
+    kSLSkipDatesViewControllerSectionOtherHolidays,
     kSLSkipDatesViewControllerSectionnResetDefault,
     kSLSkipDatesViewControllerSectionNumSections
 } SLSkipDatesViewControllerSection;
@@ -43,6 +43,9 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 // this value is set if the user is editing an existing date
 @property (nonatomic, strong) NSIndexPath *editingIndexPath;
 
+// the device might optionally have a holiday country used to show the recommended holidays
+@property (nonatomic) SLHolidayCountry deviceHolidayCountry;
+
 @end
 
 @implementation SLSkipDatesViewController
@@ -55,13 +58,23 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         self.alarmPrefs = alarmPrefs;
         self.customSkipDates = [[NSMutableArray alloc] initWithArray:alarmPrefs.customSkipDates];
         self.holidaySkipDates = [[NSMutableDictionary alloc] initWithDictionary:alarmPrefs.holidaySkipDates];
+        self.deviceHolidayCountry = -1;
 
-        // populate a dictionary of all available holiday resource objects
+        // Populate a dictionary of all available holiday resource objects.  Also use this as an opportunity to check to see
+        // if this device has any recommended holidays
+        NSString *deviceCountryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
         NSMutableDictionary *holidayResources = [[NSMutableDictionary alloc] initWithCapacity:kSLHolidayCountryNumCountries];
         for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
             // grab the resource for the holiday country
-            NSDictionary *holidayResource = [SLPrefsManager holidayResourceForHolidayCountry:holidayCountry];
-            [holidayResources setObject:holidayResource forKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+            NSString *countryCode = [SLPrefsManager countryCodeForHolidayCountry:holidayCountry];
+            NSString *resourceName = [SLPrefsManager resourceNameForCountryCode:countryCode];
+            NSDictionary *holidayResource = [SLPrefsManager holidayResourceForResourceName:resourceName];
+            [holidayResources setObject:holidayResource forKey:resourceName];
+
+            // check to see if the country code matches the device's country code
+            if ([deviceCountryCode isEqualToString:countryCode]) {
+                self.deviceHolidayCountry = holidayCountry;
+            }
         }
         self.holidayResources = [holidayResources copy];
     }
@@ -144,7 +157,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         case kSLSkipDatesViewControllerSectionDates:
             numRows = self.customSkipDates.count;
             break;
-        case kSLSkipDatesViewControllerSectionCountries:
+        case kSLSkipDatesViewControllerSectionOtherHolidays:
             numRows = kSLHolidayCountryNumCountries;
             break;
         case kSLSkipDatesViewControllerSectionAddDate:
@@ -210,7 +223,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             cell = addNewDateCell;
             break;
         }
-        case kSLSkipDatesViewControllerSectionCountries: {
+        case kSLSkipDatesViewControllerSectionOtherHolidays: {
             UITableViewCell *countryCell = [tableView dequeueReusableCellWithIdentifier:kSLCountriesTableViewCellIdentifier];
             if (countryCell == nil) {
                 countryCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
@@ -332,8 +345,8 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSString *headerTitle = nil;
-    if (section == kSLSkipDatesViewControllerSectionCountries) {
-        headerTitle = kSLHolidaysString;
+    if (section == kSLSkipDatesViewControllerSectionOtherHolidays) {
+        headerTitle = kSLOtherHolidaysString;
     }
     return headerTitle;
 }
@@ -371,7 +384,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             [self presentViewController:navController animated:YES completion:nil];
             break;
         }
-        case kSLSkipDatesViewControllerSectionCountries: {
+        case kSLSkipDatesViewControllerSectionOtherHolidays: {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
             // load up the corresponding country to be displayed in the holiday selection controller
@@ -416,7 +429,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 
                     // add the corresponding index path to update
                     [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
-                                                                                  inSection:kSLSkipDatesViewControllerSectionCountries]];
+                                                                                  inSection:kSLSkipDatesViewControllerSectionOtherHolidays]];
                 }
             }
 
@@ -534,7 +547,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     [self.holidaySkipDates setObject:selectedHolidays forKey:resourceName];
 
     // refresh the table UI
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:holidayCountry inSection:kSLSkipDatesViewControllerSectionCountries]]
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:holidayCountry inSection:kSLSkipDatesViewControllerSectionOtherHolidays]]
                           withRowAnimation:UITableViewRowAnimationFade];
 }
 

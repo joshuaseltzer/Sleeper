@@ -30,3 +30,5 @@
 "SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire.  This decision will be reset if you save the alarm.";
 "SKIP_REASON_DATE" = "This alarm will be skipped since it falls on a chosen skip date.";
 "SKIP_REASON_HOLIDAY" = "This alarm will be skipped since it falls on a selected holiday.";
+"RECOMMENDED_HOLIDAYS" = "Recommended Holidays";
+"OTHER_HOLIDAYS" = "Other Holidays";
