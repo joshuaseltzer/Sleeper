@@ -53,6 +53,7 @@ def gen_country_holidays(country_code):
             exit(1)
 
         if year == START_YEAR:
+            print(holidays_for_year)
             print("This country has {0} holidays.".format(len(holidays_for_year)))
 
         # iterate through the generated holidays to potentially remove holidays

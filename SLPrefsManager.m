@@ -328,11 +328,20 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryColombia:
             countryCode = @"co";
             break;
+        case kSLHolidayCountryCroatia:
+            countryCode = @"hr";
+            break;
         case kSLHolidayCountryCzechia:
             countryCode = @"cz";
             break;
         case kSLHolidayCountryDenmark:
             countryCode = @"dk";
+            break;
+        case kSLHolidayCountryEstonia:
+            countryCode = @"ee";
+            break;
+        case kSLHolidayCountryFinland:
+            countryCode = @"fi";
             break;
         case kSLHolidayCountryFrance:
             countryCode = @"fra";
@@ -340,8 +349,77 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         case kSLHolidayCountryGermany:
             countryCode = @"de";
             break;
+        case kSLHolidayCountryHungary:
+            countryCode = @"hu";
+            break;
+        case kSLHolidayCountryIceland:
+            countryCode = @"is";
+            break;
+        case kSLHolidayCountryIndia:
+            countryCode = @"ind";
+            break;
+        case kSLHolidayCountryIreland:
+            countryCode = @"ie";
+            break;
+        case kSLHolidayCountryItaly:
+            countryCode = @"it";
+            break;
+        case kSLHolidayCountryJapan:
+            countryCode = @"jp";
+            break;
+        case kSLHolidayCountryKenya:
+            countryCode = @"ke";
+            break;
+        case kSLHolidayCountryLithuania:
+            countryCode = @"lt";
+            break;
+        case kSLHolidayCountryLuxembourg:
+            countryCode = @"lu";
+            break;
+        case kSLHolidayCountryMexico:
+            countryCode = @"mx";
+            break;
+        case kSLHolidayCountryNetherlands:
+            countryCode = @"nl";
+            break;
+        case kSLHolidayCountryNewZealand:
+            countryCode = @"nz";
+            break;
+        case kSLHolidayCountryNorway:
+            countryCode = @"no";
+            break;
+        case kSLHolidayCountryPeru:
+            countryCode = @"pe";
+            break;
+        case kSLHolidayCountryPoland:
+            countryCode = @"pl";
+            break;
+        case kSLHolidayCountryPortugal:
+            countryCode = @"pt";
+            break;
+        case kSLHolidayCountryRussia:
+            countryCode = @"ru";
+            break;
+        case kSLHolidayCountrySlovakia:
+            countryCode = @"sk";
+            break;
+        case kSLHolidayCountrySlovenia:
+            countryCode = @"si";
+            break;
+        case kSLHolidayCountrySouthAfrica:
+            countryCode = @"za";
+            break;
+        case kSLHolidayCountrySpain:
+            countryCode = @"es";
+            break;
         case kSLHolidayCountrySweden:
             countryCode = @"se";
+            break;
+        case kSLHolidayCountrySwitzerland:
+            countryCode = @"ch";
+            break;
+        case kSLHolidayCountryUkraine:
+            countryCode = @"ua";
             break;
         case kSLHolidayCountryUnitedKingdom:
             countryCode = @"uk";

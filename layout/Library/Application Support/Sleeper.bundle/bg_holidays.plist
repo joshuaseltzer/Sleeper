@@ -502,70 +502,77 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Рождество Христово</string>
+			<string>1. Рождество Христово</string>
 			<key>dates</key>
 			<array>
 				<date>2019-12-25T05:00:00Z</date>
-				<date>2019-12-26T05:00:00Z</date>
 				<date>2020-12-25T05:00:00Z</date>
-				<date>2020-12-26T05:00:00Z</date>
 				<date>2021-12-25T05:00:00Z</date>
-				<date>2021-12-26T05:00:00Z</date>
 				<date>2022-12-25T05:00:00Z</date>
-				<date>2022-12-26T05:00:00Z</date>
 				<date>2023-12-25T05:00:00Z</date>
-				<date>2023-12-26T05:00:00Z</date>
 				<date>2024-12-25T05:00:00Z</date>
-				<date>2024-12-26T05:00:00Z</date>
 				<date>2025-12-25T05:00:00Z</date>
-				<date>2025-12-26T05:00:00Z</date>
 				<date>2026-12-25T05:00:00Z</date>
-				<date>2026-12-26T05:00:00Z</date>
 				<date>2027-12-25T05:00:00Z</date>
-				<date>2027-12-26T05:00:00Z</date>
 				<date>2028-12-25T05:00:00Z</date>
-				<date>2028-12-26T05:00:00Z</date>
 				<date>2029-12-25T05:00:00Z</date>
-				<date>2029-12-26T05:00:00Z</date>
 				<date>2030-12-25T05:00:00Z</date>
-				<date>2030-12-26T05:00:00Z</date>
 				<date>2031-12-25T05:00:00Z</date>
-				<date>2031-12-26T05:00:00Z</date>
 				<date>2032-12-25T05:00:00Z</date>
-				<date>2032-12-26T05:00:00Z</date>
 				<date>2033-12-25T05:00:00Z</date>
-				<date>2033-12-26T05:00:00Z</date>
 				<date>2034-12-25T05:00:00Z</date>
-				<date>2034-12-26T05:00:00Z</date>
 				<date>2035-12-25T05:00:00Z</date>
-				<date>2035-12-26T05:00:00Z</date>
 				<date>2036-12-25T05:00:00Z</date>
-				<date>2036-12-26T05:00:00Z</date>
 				<date>2037-12-25T05:00:00Z</date>
-				<date>2037-12-26T05:00:00Z</date>
 				<date>2038-12-25T05:00:00Z</date>
-				<date>2038-12-26T05:00:00Z</date>
 				<date>2039-12-25T05:00:00Z</date>
-				<date>2039-12-26T05:00:00Z</date>
 				<date>2040-12-25T05:00:00Z</date>
-				<date>2040-12-26T05:00:00Z</date>
 				<date>2041-12-25T05:00:00Z</date>
-				<date>2041-12-26T05:00:00Z</date>
 				<date>2042-12-25T05:00:00Z</date>
-				<date>2042-12-26T05:00:00Z</date>
 				<date>2043-12-25T05:00:00Z</date>
-				<date>2043-12-26T05:00:00Z</date>
 				<date>2044-12-25T05:00:00Z</date>
-				<date>2044-12-26T05:00:00Z</date>
 				<date>2045-12-25T05:00:00Z</date>
-				<date>2045-12-26T05:00:00Z</date>
 				<date>2046-12-25T05:00:00Z</date>
-				<date>2046-12-26T05:00:00Z</date>
 				<date>2047-12-25T05:00:00Z</date>
-				<date>2047-12-26T05:00:00Z</date>
 				<date>2048-12-25T05:00:00Z</date>
-				<date>2048-12-26T05:00:00Z</date>
 				<date>2049-12-25T05:00:00Z</date>
+			</array>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>2. Рождество Христово</string>
+			<key>dates</key>
+			<array>
+				<date>2019-12-26T05:00:00Z</date>
+				<date>2020-12-26T05:00:00Z</date>
+				<date>2021-12-26T05:00:00Z</date>
+				<date>2022-12-26T05:00:00Z</date>
+				<date>2023-12-26T05:00:00Z</date>
+				<date>2024-12-26T05:00:00Z</date>
+				<date>2025-12-26T05:00:00Z</date>
+				<date>2026-12-26T05:00:00Z</date>
+				<date>2027-12-26T05:00:00Z</date>
+				<date>2028-12-26T05:00:00Z</date>
+				<date>2029-12-26T05:00:00Z</date>
+				<date>2030-12-26T05:00:00Z</date>
+				<date>2031-12-26T05:00:00Z</date>
+				<date>2032-12-26T05:00:00Z</date>
+				<date>2033-12-26T05:00:00Z</date>
+				<date>2034-12-26T05:00:00Z</date>
+				<date>2035-12-26T05:00:00Z</date>
+				<date>2036-12-26T05:00:00Z</date>
+				<date>2037-12-26T05:00:00Z</date>
+				<date>2038-12-26T05:00:00Z</date>
+				<date>2039-12-26T05:00:00Z</date>
+				<date>2040-12-26T05:00:00Z</date>
+				<date>2041-12-26T05:00:00Z</date>
+				<date>2042-12-26T05:00:00Z</date>
+				<date>2043-12-26T05:00:00Z</date>
+				<date>2044-12-26T05:00:00Z</date>
+				<date>2045-12-26T05:00:00Z</date>
+				<date>2046-12-26T05:00:00Z</date>
+				<date>2047-12-26T05:00:00Z</date>
+				<date>2048-12-26T05:00:00Z</date>
 				<date>2049-12-26T05:00:00Z</date>
 			</array>
 		</dict>
