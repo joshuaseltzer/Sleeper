@@ -89,8 +89,8 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // returns a customized string that indicates the total number of selected skip dates and/or holidays
 - (NSString *)totalSelectedDatesString;
 
-// determines whether or not this alarm should be skipped
-- (BOOL)shouldSkip;
+// determines whether or not this alarm should be skipped today
+- (BOOL)shouldSkipToday;
 
 // returns an explanation of why a given alarm will be skipped
 - (NSString *)skipReasonExplanation;

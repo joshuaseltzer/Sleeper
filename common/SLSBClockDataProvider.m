@@ -29,7 +29,7 @@
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs) {
             // only activate the actual alarm if we should not be skipping this alarm
-            if (![alarmPrefs shouldSkip]) {
+            if (![alarmPrefs shouldSkipToday]) {
                 %orig;
             }
 
@@ -67,7 +67,7 @@
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs) {
             // check to see if this alarm should be skipped
-            if ([alarmPrefs shouldSkip]) {
+            if ([alarmPrefs shouldSkipToday]) {
                 // grab the alarm that we are going to ask to skip from the shared alarm manager
                 AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
                 [alarmManager loadAlarms];

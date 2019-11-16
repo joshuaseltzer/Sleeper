@@ -40,8 +40,9 @@
 
 %hook MTUserNotificationCenter
 
-// invoked when the given scheduled alarm is fired
-- (void)postNotificationForScheduledAlarm:(MTScheduledObject *)scheduledObject completionBlock:(id)completionBlock
+// Invoked whenever the content for a scheduled alarm notification is going to be created.  Override this function
+// to potentially set no content for the notification if we are to skip the alarm.
++ (void)_setSpecificContent:(UNMutableNotificationContent *)notificationContent forScheduledAlarm:(MTScheduledObject *)scheduledObject
 {
     // check to see if the alarm's trigger is an alert (as opposed to a snooze alert or snooze countdown)
     if (scheduledObject.trigger.isForAlert && !scheduledObject.trigger.isForSnooze) {
@@ -52,7 +53,7 @@
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs) {
             // only activate the actual alarm if we should not be skipping this alarm
-            if (![alarmPrefs shouldSkip]) {
+            if (![alarmPrefs shouldSkipToday]) {
                 %orig;
             }
 

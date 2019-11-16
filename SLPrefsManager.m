@@ -7,6 +7,7 @@
 //
 
 #import "SLPrefsManager.h"
+#import "SLLocalizedStrings.h"
 
 // the path of our settings that is used to store the alarm snooze times
 #define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
@@ -307,7 +308,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
             countryCode = @"au";
             break;
         case kSLHolidayCountryAustria:
-            countryCode = @"au";
+            countryCode = @"at";
             break;
         case kSLHolidayCountryBelarus:
             countryCode = @"by";
@@ -452,13 +453,23 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                                                  value:[SLPrefsManager countryCodeForHolidayCountry:country]];
 }
 
-// returns a string that represents a date that is going to be skipped
-+ (NSString *)skipDateStringForDate:(NSDate *)date
+// Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
+// a relative string is shown instead (i.e. Today, Tomorrow)
++ (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString
 {
     // create the date formatter that will be used to display the dates
     if (sSLSkipDatesDateFormatter == nil) {
         sSLSkipDatesDateFormatter = [[NSDateFormatter alloc] init];
         sSLSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, yyyy";
+    }
+    
+    // check to see if a relative string can be shown instead of the date string
+    if (showRelativeString) {
+        if ([[NSCalendar currentCalendar] isDateInToday:date]) {
+            return kSLTodayString;
+        } else if ([[NSCalendar currentCalendar] isDateInTomorrow:date]) {
+            return kSLTomorrowString;
+        }
     }
     return [sSLSkipDatesDateFormatter stringFromDate:date];
 }

@@ -28,8 +28,13 @@
 #define kCFCoreFoundationVersionNumber_iOS_12_0 1556.00
 #endif
 
+#ifndef kCFCoreFoundationVersionNumber_iOS_13_0
+#define kCFCoreFoundationVersionNumber_iOS_13_0 1665.15
+#endif
+
 // create definitions for the different versions of iOS that are supported by Sleeper
-#define kSLSystemVersioniOS12 kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0
+//#define kSLSystemVersioniOS13 kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0
+#define kSLSystemVersioniOS12 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)// && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 #define kSLSystemVersioniOS11 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_0)
 #define kSLSystemVersioniOS10 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
 #define kSLSystemVersioniOS9 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)

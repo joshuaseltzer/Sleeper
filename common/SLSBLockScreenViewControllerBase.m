@@ -10,14 +10,35 @@
 #import "../SLAppleSharedInterfaces.h"
 #import "SLSkipAlarmAlertItem.h"
 
+@interface SpringBoard
+
++(id)sharedApplication;
+
+- (_Bool)isLocked;
+
+@end
+
 %group iOS12
 
-%hook SBLockScreenViewControllerBase
+%hook SBDashBoardViewController
 
-// iOS 12: override to display a pop up allowing the user to skip an alarm
 - (void)prepareForUIUnlock
 {
+    NSLog(@"* SELTZER * prepareForUIUnlock");
+    NSLog(@"* SELTZER * Springboard isLocked BEFORE prepareForUIUnlock: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
     %orig;
+
+    NSLog(@"* SELTZER * Springboard isLocked AFTER prepareForUIUnlock: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
+}
+
+// iOS 12: override to display a pop up allowing the user to skip an alarm
+- (void)finishUIUnlockFromSource:(int)source
+{
+    NSLog(@"* SELTZER * finishUIUnlockFromSource: %d", source);
+    NSLog(@"* SELTZER * Springboard isLocked BEFORE finishUIUnlockFromSource: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
+    %orig;
+
+    NSLog(@"* SELTZER * Springboard isLocked AFTER finishUIUnlockFromSource: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
 
     // get dates for today and tomorrow so we can properly determine if any of those alarms need to be skipped
     NSDate *today = [NSDate date];

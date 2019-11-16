@@ -70,7 +70,8 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country;
 
-// returns a string that represents a date that is going to be skipped
-+ (NSString *)skipDateStringForDate:(NSDate *)date;
+// Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
+// a relative string is shown instead (i.e. Today, Tomorrow)
++ (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString;
 
 @end

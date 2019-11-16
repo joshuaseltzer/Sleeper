@@ -67,47 +67,46 @@
 - (NSString *)totalSelectedDatesString
 {
     // customize the detail text label depending on whether or not we have skip dates enabled
-    NSString *selectedDatesString = nil;
-    NSString *holidayString = nil;
-    NSInteger totalSelectedHolidays = [self totalSelectedHolidays];
+    NSString *datesString = nil;
+    NSString *holidaysString = nil;
+
+    // make the skip date string singular or plural based on the count
+    if (self.customSkipDates.count == 1) {
+        datesString = kSLNumDateString((long)self.customSkipDates.count);
+    } else {
+        datesString = kSLNumDatesString((long)self.customSkipDates.count);
+    }
     
     // make the holiday string singular or plural based on the count
+    NSInteger totalSelectedHolidays = [self totalSelectedHolidays];
     if (totalSelectedHolidays == 1) {
-        holidayString = kSLHolidayString;
+        holidaysString = kSLNumHolidayString((long)totalSelectedHolidays);
     } else {
-        holidayString = kSLHolidaysString;
+        holidaysString = kSLNumHolidaysString((long)totalSelectedHolidays);
     }
 
     // depending on what was selected for this alarm, customize the string to return
-    if (self.customSkipDates.count > 0 && totalSelectedHolidays > 0) {
-        selectedDatesString = [NSString stringWithFormat:@"%ld (%ld %@)", (long)self.customSkipDates.count,
-                                                                          (long)totalSelectedHolidays,
-                                                                          holidayString];
-    } else if (self.customSkipDates.count > 0) {
-        selectedDatesString = [NSString stringWithFormat:@"%ld", (long)self.customSkipDates.count];
-    } else if (totalSelectedHolidays > 0) {
-        selectedDatesString = [NSString stringWithFormat:@"%ld %@", (long)totalSelectedHolidays, holidayString];
+    if (self.customSkipDates.count == 0 && totalSelectedHolidays == 0) {
+        return kSLNoneString;
     } else {
-        selectedDatesString = kSLNoneString;
+        return [NSString stringWithFormat:@"%@, %@", datesString, holidaysString];
     }
-
-    return selectedDatesString;
 }
 
 // determines whether or not this alarm should be skipped
-- (BOOL)shouldSkip
+- (BOOL)shouldSkipToday
 {
-    return self.skipEnabled && ([self shouldSkipFromPopup] || [self shouldSkipFromDate] || [self shouldSkipFromHoliday]);
+    return self.skipEnabled && ([self shouldSkipFromPopupDecision] || [self shouldSkipFromSelectedDateToday] || [self shouldSkipFromSelectedHolidayToday]);
 }
 
 // determines whether or not the alarm should be skipped from activating the popup
-- (BOOL)shouldSkipFromPopup
+- (BOOL)shouldSkipFromPopupDecision
 {
     return self.skipActivationStatus == kSLSkipActivatedStatusActivated;
 }
 
-// determines whether or not the alarm will be skipped from a custom skip date
-- (BOOL)shouldSkipFromDate
+// determines whether or not the alarm will be skipped from a custom skip date in a particular date
+- (BOOL)shouldSkipFromSelectedDateToday
 {
     for (NSDate *skipDate in self.customSkipDates) {
         if ([[NSCalendar currentCalendar] isDateInToday:skipDate]) {
@@ -117,8 +116,8 @@
     return NO;
 }
 
-// determines whether or not the alarm will be skipped from a holiday selection
-- (BOOL)shouldSkipFromHoliday
+// determines whether or not the first selected holiday name falls on a particular date
+- (BOOL)shouldSkipFromSelectedHolidayToday
 {
     for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
         // check to see if any holidays are selected for the given holiday country
@@ -138,17 +137,59 @@
 // returns an explanation of why a given alarm will be skipped
 - (NSString *)skipReasonExplanation
 {
-    NSString *skipExplanation = nil;
     if (self.skipEnabled) {
-        if ([self shouldSkipFromPopup]) {
-            skipExplanation = kSLSkipReasonPopupString;
-        } else if ([self shouldSkipFromDate]) {
-            skipExplanation = kSLSkipReasonDateString;
-        } else if ([self shouldSkipFromHoliday]) {
-            skipExplanation = kSLSkipReasonHolidayString;
+        // declare the skip explanation strings that will potentially be concatinated and displayed
+        NSMutableString *skipExplanation = nil;
+
+        // if the skip decision has been activated, add that to the string
+        if ([self shouldSkipFromPopupDecision]) {
+            skipExplanation = [NSMutableString stringWithString:kSLSkipReasonPopupString];
         }
+
+        // check to see if there are any custom skip dates to display
+        if (self.customSkipDates != nil && self.customSkipDates.count > 0) {
+            // append or create the skip explanation string
+            NSString *skipExplanationDateString = kSLSkipReasonDateString([SLPrefsManager skipDateStringForDate:[self.customSkipDates objectAtIndex:0] showRelativeString:YES]);
+            if (skipExplanation != nil) {
+                [skipExplanation appendString:@"\n\n"];
+                [skipExplanation appendString:skipExplanationDateString];
+            } else {
+                skipExplanation = [NSMutableString stringWithString:skipExplanationDateString];
+            }
+        }
+        
+        // grab the first available selected holiday date and name
+        NSString *firstSelectedHolidayName = nil;
+        NSDate *firstSelectedHolidayDate = nil;
+        for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+            // check to see if any holidays are selected for the given holiday country
+            NSArray *selectedHolidayNames = [self.holidaySkipDates objectForKey:[SLPrefsManager resourceNameForHolidayCountry:holidayCountry]];
+            if (selectedHolidayNames != nil) {
+                for (NSString *holidayName in selectedHolidayNames) {
+                    NSDate *firstHolidayDate = [SLPrefsManager firstSkipDateForHolidayName:holidayName inHolidayCountry:holidayCountry];
+                    if (firstHolidayDate != nil && (firstSelectedHolidayDate == nil || [firstHolidayDate compare:firstSelectedHolidayDate] == NSOrderedAscending)) {
+                        firstSelectedHolidayDate = firstHolidayDate;
+                        firstSelectedHolidayName = holidayName;
+                    }
+                }
+            }
+        }
+
+        // if there was a holiday country, display it
+        if (firstSelectedHolidayDate != nil) {
+            // append or create the skip explanation string
+            NSString *skipExplanationHolidayString = kSLSkipReasonHolidayString([SLPrefsManager skipDateStringForDate:firstSelectedHolidayDate showRelativeString:YES], firstSelectedHolidayName);
+            if (skipExplanation != nil) {
+                [skipExplanation appendString:@"\n\n"];
+                [skipExplanation appendString:skipExplanationHolidayString];
+            } else {
+                skipExplanation = [NSMutableString stringWithString:skipExplanationHolidayString];
+            }
+        }
+
+        return [skipExplanation copy];
     }
-    return skipExplanation;
+    return nil;
 }
 
 @end

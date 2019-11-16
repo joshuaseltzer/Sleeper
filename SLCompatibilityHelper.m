@@ -278,7 +278,7 @@
     // grab the attributes for the alarm
     BOOL skippable = NO;
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs && ![alarmPrefs shouldSkip] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
+    if (alarmPrefs && ![alarmPrefs shouldSkipToday] && alarmPrefs.skipEnabled && alarmPrefs.skipActivationStatus == kSLSkipActivatedStatusUnknown) {
         // create a date components object with the user's selected skip time to see if we are within
         // the threshold to ask the user to skip the alarm
         NSDateComponents *components= [[NSDateComponents alloc] init];
