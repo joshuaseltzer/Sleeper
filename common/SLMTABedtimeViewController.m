@@ -1,6 +1,6 @@
 //
 //  SLMTABedtimeViewController.x
-//  The view controller that lets a user configure the sleep alarm (used in iOS 11).
+//  The view controller that lets a user configure the sleep alarm (used in iOS 11, iOS 12, and iOS 13).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -44,7 +44,7 @@
 {
     // get the alarm ID for the special sleep alarm
     NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         alarmId = [self.dataSource.sleepAlarm alarmIDString];
     } else if (kSLSystemVersioniOS11) {
         AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
@@ -67,7 +67,7 @@
 {
     // If the options controller does not have the Sleeper properties set, set them now (iOS 12).  On iOS 11,
     // the preferences are set when the options view is loaded from the Alarm Manager.
-    if (kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs == nil) {
@@ -101,8 +101,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11 or iOS 12
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }

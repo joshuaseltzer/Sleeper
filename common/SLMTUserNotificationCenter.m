@@ -1,6 +1,6 @@
 //
 //  SLMTUserNotificationCenter.x
-//  Handles the posting of notifications for a scheduled alarm (iOS 12).
+//  Handles the posting of notifications for a scheduled alarm (iOS 12, iOS 13).
 //
 //  Created by Joshua Seltzer on 3/20/2019.
 //
@@ -71,8 +71,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 12
-    if (kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }

@@ -1,6 +1,6 @@
 //
 //  SLMTAlarmStorage.x
-//  Handles the modification of the snooze time for alarms on iOS 12.
+//  Handles the modification of the snooze time for alarms on iOS 12 and iOS 13.
 //
 //  Created by Joshua Seltzer on 3/20/2019.
 //
@@ -25,8 +25,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 12
-    if (kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }

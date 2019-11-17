@@ -1,6 +1,6 @@
 //
 //  SLMTAAlarmEditViewController.x
-//  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12).
+//  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12 / iOS 13).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -76,7 +76,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 {
     // get the alarm Id from the alarm for this controller
     NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         alarmId = [self.editedAlarm alarmIDString];
     } else {
         alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
@@ -278,8 +278,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11 or iOS 12
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }

@@ -1,6 +1,6 @@
 //
 //  SLMTAlarmManager.x
-//  Modify Apple's internal class for managing alarms (iOS 12).
+//  Modify Apple's internal class for managing alarms (iOS 12 and iOS 13).
 //
 //  Created by Joshua Seltzer on 3/16/2019.
 //
@@ -10,7 +10,7 @@
 #import "../SLCompatibilityHelper.h"
 #import "../SLPrefsManager.h"
 
-// alarm manager used in iOS 12
+// alarm manager used in modern versions of iOS
 %hook MTAlarmManager
 
 - (id)removeAlarm:(MTMutableAlarm *)alarm
@@ -41,8 +41,8 @@
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 12
-    if (kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }

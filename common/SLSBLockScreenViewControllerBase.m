@@ -1,6 +1,6 @@
 //
 //  SLSBLockScreenViewControllerBase.x
-//  Hooks into this class allow for actions to be performed upon unlocking the device.
+//  Hooks into this class allow for actions to be performed upon unlocking the device (iOS 11 and iOS 12).
 //
 //  Created by Joshua Seltzer on 4/12/19.
 //
@@ -10,35 +10,14 @@
 #import "../SLAppleSharedInterfaces.h"
 #import "SLSkipAlarmAlertItem.h"
 
-@interface SpringBoard
-
-+(id)sharedApplication;
-
-- (_Bool)isLocked;
-
-@end
-
 %group iOS12
 
-%hook SBDashBoardViewController
-
-- (void)prepareForUIUnlock
-{
-    NSLog(@"* SELTZER * prepareForUIUnlock");
-    NSLog(@"* SELTZER * Springboard isLocked BEFORE prepareForUIUnlock: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
-    %orig;
-
-    NSLog(@"* SELTZER * Springboard isLocked AFTER prepareForUIUnlock: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
-}
+%hook SBLockScreenViewControllerBase
 
 // iOS 12: override to display a pop up allowing the user to skip an alarm
-- (void)finishUIUnlockFromSource:(int)source
+- (void)prepareForUIUnlock
 {
-    NSLog(@"* SELTZER * finishUIUnlockFromSource: %d", source);
-    NSLog(@"* SELTZER * Springboard isLocked BEFORE finishUIUnlockFromSource: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
     %orig;
-
-    NSLog(@"* SELTZER * Springboard isLocked AFTER finishUIUnlockFromSource: %s", [[objc_getClass("SpringBoard") sharedApplication] isLocked] ? "true" : "false");
 
     // get dates for today and tomorrow so we can properly determine if any of those alarms need to be skipped
     NSDate *today = [NSDate date];
@@ -79,8 +58,8 @@
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             // create and display the custom alert item
             SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
-                                                                                               alarmId:alarmId
-                                                                                          nextFireDate:nextFireDate];
+                                                                                            alarmId:alarmId
+                                                                                        nextFireDate:nextFireDate];
             [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
         });
     }
@@ -97,8 +76,6 @@
 // iOS 11: override to display a pop up allowing the user to skip an alarm
 - (void)prepareForUIUnlock
 {
-    %orig;
-
     // create the block that will be used to inspect the notification requests from the clock notification manager
     void (^clockNotificationManagerNotificationRequests) (NSArray *) = ^(NSArray *notificationRequests) {
         // only continue if valid notification requests were returned
@@ -125,13 +102,13 @@
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                     // get the fire date of the alarm we are going to display
                     NSDate *nextTriggerDate = [((UNLegacyNotificationTrigger *)nextAlarmNotificationRequest.trigger) _nextTriggerDateAfterDate:[NSDate date]
-                                                                                                                             withRequestedDate:nil
-                                                                                                                               defaultTimeZone:[NSTimeZone localTimeZone]];
+                                                                                                                            withRequestedDate:nil
+                                                                                                                            defaultTimeZone:[NSTimeZone localTimeZone]];
                     
                     // create and display the custom alert item
                     SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
-                                                                                                       alarmId:alarmId
-                                                                                                  nextFireDate:nextTriggerDate];
+                                                                                                    alarmId:alarmId
+                                                                                                nextFireDate:nextTriggerDate];
                     [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
                 });
             }

@@ -1,6 +1,6 @@
 //
 //  SLMTABedtimeOptionsViewController.x
-//  The view controller that allows the user to configure the options for the special Sleep alarm (iOS 11).
+//  The view controller that allows the user to configure the options for the special Sleep alarm (iOS 11, iOS 12, and iOS 13).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -314,8 +314,8 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 11 or iOS 12
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    // only initialize this file for particular versions
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
     }
 }
