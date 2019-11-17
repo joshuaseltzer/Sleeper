@@ -30,9 +30,6 @@ static CGFloat const kSLTimePickerHiddenComponentWidth = 57.0;
 // constants the define the size and layout of the labels
 static CGFloat const kSLTimePickerLabelHeight = 60.0;
 static CGFloat const kSLTimePickerLabelSpaceBetween = 45.0;
-static CGFloat const kSLTimePickerLabelLeadingSpace = 10.0;
-static CGFloat const kSLTimePickerLabelWidth = (kSLTimePickerWidth - kSLTimePickerLabelLeadingSpace
-                                                  - kSLTimePickerLabelSpaceBetween * 3) / 3;
 
 // constants that define the location of the valued components in our time picker
 static NSInteger const kSLHourComponent =   0;
@@ -209,20 +206,23 @@ static NSInteger const kSLSecondComponent = 4;
                                                                     multiplier:1.0
                                                                       constant:0.0];
     
-    // set up the horizontal layout for all of the time picker labels
-    NSString *labelLayoutStringH = [NSString stringWithFormat:@"H:|-%f-[%@(%f)]-%f-[%@(%f)]-%f-[%@(%f)]-0-|",
-                                    kSLTimePickerLabelSpaceBetween + kSLTimePickerLabelLeadingSpace,
-                                    kSLHourLabelViewKey, kSLTimePickerLabelWidth,
-                                    kSLTimePickerLabelSpaceBetween, kSLMinuteLabelViewKey,
-                                    kSLTimePickerLabelWidth, kSLTimePickerLabelSpaceBetween,
-                                    kSLSecondLabelViewKey, kSLTimePickerLabelWidth];
-    
-    // if the device supports right to left orientation display, then use leading to trailing direction
+    // if the device supports right to left orientation display, then use leading to trailing direction and some varying values for the labels
+    CGFloat timePickerLabelLeadingSpace = 10.0;
     NSLayoutFormatOptions formatOption = NSLayoutFormatDirectionLeftToRight;
     if ([[UIView class] respondsToSelector:@selector(userInterfaceLayoutDirectionForSemanticContentAttribute:)] &&
         [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.view.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft) {
         formatOption = NSLayoutFormatDirectionLeadingToTrailing;
+        timePickerLabelLeadingSpace = timePickerLabelLeadingSpace * -1;
     }
+    CGFloat timePickerLabelWidth = (kSLTimePickerWidth - fabs(timePickerLabelLeadingSpace) - kSLTimePickerLabelSpaceBetween * 3) / 3;
+
+    // set up the horizontal layout for all of the time picker labels
+    NSString *labelLayoutStringH = [NSString stringWithFormat:@"H:|-%f-[%@(%f)]-%f-[%@(%f)]-%f-[%@(%f)]-0-|",
+                                    kSLTimePickerLabelSpaceBetween + timePickerLabelLeadingSpace,
+                                    kSLHourLabelViewKey, timePickerLabelWidth,
+                                    kSLTimePickerLabelSpaceBetween, kSLMinuteLabelViewKey,
+                                    timePickerLabelWidth, kSLTimePickerLabelSpaceBetween,
+                                    kSLSecondLabelViewKey, timePickerLabelWidth];
     
     // generate the array of horizontal constraints
     NSArray *labelConstraintsH = [NSLayoutConstraint constraintsWithVisualFormat:labelLayoutStringH
@@ -368,6 +368,7 @@ static NSInteger const kSLSecondComponent = 4;
     optionsTableView.translatesAutoresizingMaskIntoConstraints = NO;
     optionsTableView.delegate = delegate;
     optionsTableView.dataSource = delegate;
+    optionsTableView.scrollEnabled = NO;
     
     return optionsTableView;
 }
@@ -494,6 +495,22 @@ static NSInteger const kSLSecondComponent = 4;
                                                                      attributes:@{NSForegroundColorAttributeName:[SLCompatibilityHelper defaultLabelColor]}];
 
     return attrString;
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    // set a single space for the so that the delegate method asking for the height is called
+    return @" ";;
+}
+
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    // return an almost-zero height for the header size
+    return 0.1;
 }
 
 @end

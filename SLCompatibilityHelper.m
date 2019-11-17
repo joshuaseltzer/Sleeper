@@ -11,6 +11,22 @@
 #import "SLPrefsManager.h"
 #import <objc/runtime.h>
 
+// define some properties that are defined in the iOS 13 SDK for UIColor
+@interface UIColor (iOS13)
+
++ (UIColor *)systemGroupedBackgroundColor;
++ (UIColor *)secondarySystemGroupedBackgroundColor;
++ (UIColor *)quaternaryLabelColor;
+
+@end
+
+// define some static color objects that will be used throughout the UI
+static UIColor *sSLPickerViewBackgroundColor = nil;
+static UIColor *sSLDefaultLabelColor = nil;
+static UIColor *sSLDestructiveLabelColor = nil;
+static UIColor *sSLTableViewCellBackgroundColor = nil;
+static UIColor *sSLTableViewCellSelectedBackgroundColor = nil;
+
 @implementation SLCompatibilityHelper
 
 // iOS 8 / iOS 9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
@@ -197,51 +213,84 @@
 // returns the picker view's background color, which will depend on the iOS version
 + (UIColor *)pickerViewBackgroundColor
 {
-    // the color to return
-    UIColor *color = nil;
-
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
-        color = [UIColor blackColor];
-    } else {
-        color = [UIColor whiteColor];
+    if (!sSLPickerViewBackgroundColor) {
+        if (kSLSystemVersioniOS13) {
+            if (@available(iOS 13.0, *)) {
+                // use the new system grouped background color if available
+                sSLPickerViewBackgroundColor = [UIColor systemGroupedBackgroundColor];
+            } else {
+                // fallback to the color that was extracted from the time picker
+                sSLPickerViewBackgroundColor = [UIColor colorWithRed:0.109804 green:0.109804 blue:0.117647 alpha:1.0];
+            }
+        } else if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+            sSLPickerViewBackgroundColor = [UIColor blackColor];
+        } else {
+            sSLPickerViewBackgroundColor = [UIColor whiteColor];
+        }
     }
-    
-    return color;
+
+    return sSLPickerViewBackgroundColor;
 }
 
 // returns the color of the standard labels used throughout the tweak
 + (UIColor *)defaultLabelColor
 {
-    // the color to return
-    UIColor *color = nil;
-
     // check the version of iOS that the device is running to determine which color to pick
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
-        color = [UIColor whiteColor];
-    } else {
-        color = [UIColor blackColor];
+    if (!sSLDefaultLabelColor) {
+        if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+            sSLDefaultLabelColor = [UIColor whiteColor];
+        } else {
+            sSLDefaultLabelColor = [UIColor blackColor];
+        }
     }
     
-    return color;
+    return sSLDefaultLabelColor;
 }
 
 // returns the color of the destructive labels used throughout the tweak
 + (UIColor *)destructiveLabelColor
 {
-    return [UIColor colorWithRed:1.0
-                           green:0.231373
-                            blue:0.188235
-                           alpha:1.0];
+    if (!sSLDestructiveLabelColor) {
+        sSLDestructiveLabelColor = [UIColor colorWithRed:1.0
+                                                   green:0.231373
+                                                    blue:0.188235
+                                                   alpha:1.0];
+    }
+    return sSLDestructiveLabelColor;
 }
 
-// iOS 10 / iOS 11 / iOS 12: returns the cell selection background color for cells
+// iOS 13: returns the background color used for cells used in the various views
++ (UIColor *)tableViewCellBackgroundColor
+{
+    if (!sSLTableViewCellBackgroundColor) {
+        if (@available(iOS 13.0, *)) {
+            sSLTableViewCellBackgroundColor = [UIColor secondarySystemGroupedBackgroundColor];
+        } else {
+            sSLTableViewCellBackgroundColor = [UIColor colorWithRed:0.172549 green:0.172549 blue:0.180392 alpha:1.0];
+        }
+    }
+    return sSLTableViewCellBackgroundColor;
+}
+
+// iOS 10, iOS 11, iOS 12, iOS 13: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor
 {
-    return [UIColor colorWithRed:52.0 / 255.0
-                           green:52.0 / 255.0
-                            blue:52.0 / 255.0
-                           alpha:1.0];
+    if (!sSLTableViewCellSelectedBackgroundColor) {
+        if (kSLSystemVersioniOS13) {
+            if (@available(iOS 13.0, *)) {
+                sSLTableViewCellSelectedBackgroundColor = [UIColor quaternaryLabelColor];
+            } else {
+                sSLTableViewCellSelectedBackgroundColor = [UIColor colorWithRed:0.921569 green:0.921569 blue:0.960784 alpha:180000];
+            }
+        } else {
+            sSLTableViewCellSelectedBackgroundColor = [UIColor colorWithRed:52.0 / 255.0
+                                                                      green:52.0 / 255.0
+                                                                       blue:52.0 / 255.0
+                                                                      alpha:1.0];
+        }
+    }
+    return sSLTableViewCellSelectedBackgroundColor;
 }
 
 // iOS 8 / iOS 9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable

@@ -80,7 +80,10 @@
 // returns the color of the destructive labels used throughout the tweak
 + (UIColor *)destructiveLabelColor;
 
-// iOS 10 / iOS 11: returns the cell selection background color for cells
+// iOS 13: returns the background color used for cells used in the various views
++ (UIColor *)tableViewCellBackgroundColor;
+
+// iOS 10, iOS 11, iOS 12, iOS 13: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor;
 
 @end

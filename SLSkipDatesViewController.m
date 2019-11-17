@@ -206,13 +206,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 skipDateCell.accessoryType = UITableViewCellAccessoryNone;
                 skipDateCell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 skipDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
-
-                // set the background color of the cell
-                if (@available(iOS 10.0, *)) {
-                    UIView *backgroundView = [[UIView alloc] init];
-                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                    skipDateCell.selectedBackgroundView = backgroundView;
-                }
+                [self setBackgroundColorsForCell:skipDateCell];
             }
             [self updateSkipDateCellSelectionStyle:skipDateCell];
             
@@ -232,13 +226,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 addNewDateCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 addNewDateCell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 addNewDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
-
-                // set the background color of the cell
-                if (@available(iOS 10.0, *)) {
-                    UIView *backgroundView = [[UIView alloc] init];
-                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                    addNewDateCell.selectedBackgroundView = backgroundView;
-                }
+                [self setBackgroundColorsForCell:addNewDateCell];
             }
             
             // customize the cell
@@ -262,13 +250,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 resetDefaultCell.accessoryType = UITableViewCellAccessoryNone;
                 resetDefaultCell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 resetDefaultCell.textLabel.textAlignment = NSTextAlignmentCenter;
-
-                // set the background color of the cell
-                if (@available(iOS 10.0, *)) {
-                    UIView *backgroundView = [[UIView alloc] init];
-                    backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-                    resetDefaultCell.selectedBackgroundView = backgroundView;
-                }
+                [self setBackgroundColorsForCell:resetDefaultCell];
             }
             
             // customize the cell
@@ -293,13 +275,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         countryCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         countryCell.selectionStyle = UITableViewCellSelectionStyleDefault;
         countryCell.textLabel.textAlignment = NSTextAlignmentLeft;
-
-        // set the background color of the cell
-        if (@available(iOS 10.0, *)) {
-            UIView *backgroundView = [[UIView alloc] init];
-            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-            countryCell.selectedBackgroundView = backgroundView;
-        }
+        [self setBackgroundColorsForCell:countryCell];
     }
     
     // customize the cell
@@ -318,6 +294,22 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     }
     
     return countryCell;
+}
+
+// sets some default colors for newly created cells
+- (void)setBackgroundColorsForCell:(UITableViewCell *)cell
+{
+    // on newer versions of iOS, we need to set the background views for the cell
+    if (kSLSystemVersioniOS13) {
+        cell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
+    }
+
+    // set the background color of the cell
+    if (@available(iOS 10.0, *)) {
+        UIView *backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+        cell.selectedBackgroundView = backgroundView;
+    }
 }
 
 // updates the state of the skip date cell depending on whether or not the tableview is in edit mode
@@ -456,9 +448,13 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                 [customSkipDatesIndexPaths addObject:[NSIndexPath indexPathForRow:i
                                                                         inSection:kSLSkipDatesViewControllerSectionDates]];
             }
+
+            // remove any custom skip dates from the table
             [tableView beginUpdates];
-            [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPaths
-                             withRowAnimation:UITableViewRowAnimationFade];
+            if (customSkipDatesIndexPaths.count > 0) {
+                [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPaths
+                                 withRowAnimation:UITableViewRowAnimationFade];
+            }
 
             // clear out any of the selected holidays
             NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
@@ -472,11 +468,17 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
                     [self.holidaySkipDates setObject:selectedHolidayNames forKey:resourceName];
 
                     // add the corresponding index path to update
-                    [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
-                                                                                  inSection:kSLSkipDatesViewControllerSectionAllHolidays]];
+                    if (holidayCountry == self.deviceHolidayCountry) {
+                        [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:0
+                                                                                      inSection:kSLSkipDatesViewControllerSectionRecommendedHolidays]];
+                    } else {
+                        [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
+                                                                                      inSection:kSLSkipDatesViewControllerSectionAllHolidays]];
+                    }
                 }
             }
 
+            // reload any of the country holiday rows in the table
             if (updatedHolidayCountryIndexPaths.count > 0) {
                 [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
                                 withRowAnimation:UITableViewRowAnimationFade];
@@ -609,6 +611,15 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         // reload the section with the custom skip dates
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
                       withRowAnimation:UITableViewRowAnimationFade];
+
+        // scroll to the newly added or updated date
+        NSUInteger rowIndex = [self.customSkipDates indexOfObject:date];
+        if (rowIndex != NSNotFound) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowIndex
+                                                                      inSection:kSLSkipDatesViewControllerSectionDates]
+                                  atScrollPosition:UITableViewScrollPositionMiddle
+                                          animated:YES];
+        }
     }
 }
 

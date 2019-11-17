@@ -1,6 +1,6 @@
 //
 //  SLMTABedtimeViewController.x
-//  The view controller that lets a user configure the sleep alarm (used in iOS 11, iOS 12, and iOS 13).
+//  The view controller that lets a user configure the sleep alarm (used in iOS 11 and iOS 12).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -102,7 +102,7 @@
 
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
         %init();
     }
 }

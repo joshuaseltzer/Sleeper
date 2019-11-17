@@ -121,6 +121,11 @@
         holidayCell.detailTextLabel.textColor = [UIColor grayColor];
         holidayCell.detailTextLabel.numberOfLines = 1;
 
+        // on newer versions of iOS, we need to set the background views for the cell
+        if (kSLSystemVersioniOS13) {
+            holidayCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
+        }
+
         // set the background color of the cell to clear to remove the selection color
         UIView *backgroundView = [[UIView alloc] init];
         backgroundView.backgroundColor = [UIColor clearColor];
