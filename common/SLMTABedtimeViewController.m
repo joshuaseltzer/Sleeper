@@ -44,7 +44,7 @@
 {
     // get the alarm ID for the special sleep alarm
     NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS12) {
         alarmId = [self.dataSource.sleepAlarm alarmIDString];
     } else if (kSLSystemVersioniOS11) {
         AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
@@ -67,7 +67,7 @@
 {
     // If the options controller does not have the Sleeper properties set, set them now (iOS 12).  On iOS 11,
     // the preferences are set when the options view is loaded from the Alarm Manager.
-    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS12) {
         NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
         SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
         if (alarmPrefs == nil) {
