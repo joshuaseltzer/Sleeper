@@ -40,6 +40,14 @@
 @interface MTMutableAlarm : MTAlarm
 @end
 
+// the data source corresponding to a particular alarm
+@interface MTAlarmDataSource : NSObject
+
+// the sleep alarm that corresponds to the alarm data source object
+@property (retain, nonatomic) MTAlarm *sleepAlarm;
+
+@end
+
 // the alarm object that contains all of the information about the alarm (iOS 8 - iOS 11)
 @interface Alarm : NSObject
 

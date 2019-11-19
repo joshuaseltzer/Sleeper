@@ -58,8 +58,10 @@
             }
 
             // save the alarm's skip activation state to unknown for this alarm
-            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                         skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+            if (alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+                [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                            skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+            }
         } else {
             %orig;
         }

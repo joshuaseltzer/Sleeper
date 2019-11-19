@@ -93,6 +93,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 - (void)_doneButtonClicked:(id)doneButton
 {
     // save our preferences
+    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
     [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
 
     %orig;

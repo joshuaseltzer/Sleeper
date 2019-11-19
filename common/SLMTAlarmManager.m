@@ -26,11 +26,11 @@
     // check if we have alarm preferences for this alarm
     NSString *alarmId = [alarm alarmIDString];
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs) {
+    if (alarmPrefs && alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
         // reset the skip activation status for this alarm
         [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
                                      skipActivatedStatus:kSLSkipActivatedStatusUnknown];
-    } else {
+    } else if (!alarmPrefs) {
         alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
         [SLPrefsManager saveAlarmPrefs:alarmPrefs];
     }

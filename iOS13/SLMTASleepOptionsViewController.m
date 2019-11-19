@@ -1,8 +1,8 @@
 //
-//  SLMTSleepAlarmOptionsController.x
-//  The view controller that allows the user to configure the options for the special Sleep alarm on iOS 10.
+//  SLMTASleepOptionsViewController.x
+//  The view controller that allows the user to configure the options for the special Sleep alarm (iOS 13).
 //
-//  Created by Joshua Seltzer on 2/23/17.
+//  Created by Joshua Seltzer on 11/18/19.
 //
 //
 
@@ -14,34 +14,39 @@
 #import "../SLSkipTimeViewController.h"
 
 // define an enum to reference the sections of the table view
-typedef enum SLSleepAlarmOptionsSection : NSUInteger {
-    kSLSleepAlarmOptionsSectionDaysOfWeek,
-    kSLSleepAlarmOptionsSectionBedtimeReminder,
-    kSLSleepAlarmOptionsSectionWakeUpSound,
-    kSLSleepAlarmOptionsSectionSoundVolume,
-    kSLSleepAlarmOptionsSectionSleeper,
-    kSLSleepAlarmOptionsNumSections
-} SLSleepAlarmOptionsSection;
+typedef enum SLSleepOptionsViewControllerSection : NSUInteger {
+    kSLSleepOptionsViewControllerSectionBedtimeReminder,
+    kSLSleepOptionsViewControllerSectionDoNotDisturb,
+    kSLSleepOptionsViewControllerSectionWakeUpSound,
+    kSLSleepOptionsViewControllerSectionSleeper,
+    kSLSleepOptionsViewControllerNumSections
+} SLSleepOptionsViewControllerSection;
 
-// define an enum to define the rows in the kSLSleepAlarmOptionsSectionSleeper section
-typedef enum SLSleepAlarmOptionsSectionSleeperRow : NSUInteger {
-    kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime,
-    kSLSleepAlarmOptionsSectionSleeperRowSkipToggle,
-    kSLSleepAlarmOptionsSectionSleeperRowSkipTime,
-    kSLSleepAlarmOptionsSectionSleeperRowSkipDates,
-    kSLSleepAlarmOptionsSectionSleeperNumRows
-} SLSleepAlarmOptionsSectionSleeperRow;
+// define an enum to define the rows in the kSLSleepOptionsViewControllerSectionSleeper section
+typedef enum SLSleepOptionsViewControllerSleeperSectionRow : NSUInteger {
+    kSLSleepOptionsViewControllerSleeperSectionRowSnoozeTime,
+    kSLSleepOptionsViewControllerSleeperSectionRowSkipToggle,
+    kSLSleepOptionsViewControllerSleeperSectionRowSkipTime,
+    kSLSleepOptionsViewControllerSleeperSectionRowSkipDates,
+    kSLSleepOptionsViewControllerSleeperSectionNumRows
+} SLSleepOptionsViewControllerSleeperSectionRow;
 
-// table view controller which configures the settings for the sleep alarm
-@interface MTSleepAlarmOptionsController : UITableViewController <SLPickerSelectionDelegate, SLSkipDatesDelegate>
+// define the base view controller for the sleep options controller
+@interface MTASleepBaseTableViewController : UITableViewController
+@end
 
-// updates the status of the done button on the view controller
-- (void)updateDoneButtonEnabled;
+// define the options view controller which will be used to inject the Sleeper preferences
+@interface MTASleepOptionsViewController : MTASleepBaseTableViewController
+
+// define the data source, which will include the sleep alarm
+@property(retain, nonatomic) MTAlarmDataSource *dataSource;
+
+@property(retain, nonatomic) NSArray *sections;
 
 @end
 
-// custom interface for added properties
-@interface MTSleepAlarmOptionsController (Sleeper)
+// custom interface for added properties to the options controller
+@interface MTASleepOptionsViewController (Sleeper) <SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 @property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
@@ -49,9 +54,9 @@ typedef enum SLSleepAlarmOptionsSectionSleeperRow : NSUInteger {
 @end
 
 // define a constant for the reuse identifier for the custom cell we will create
-static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = @"SLSleepAlarmOptionsSectionSleeperCellReuseIdentifier";
+static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIdentifier = @"SLSleepOptionsViewControllerSleeperSectionCellReuseIdentifier";
 
-%hook MTSleepAlarmOptionsController
+%hook MTASleepOptionsViewController
 
 // the Sleeper preferences for the special sleep alarm
 %property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
@@ -61,17 +66,24 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 
 - (void)viewDidLoad
 {
-    // get the alarm ID for the special sleep alarm
-    AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
-    NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
-
     // load the preferences for the sleep alarm
-    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (self.SLAlarmPrefs == nil) {
+    NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+    } else {
+        self.SLAlarmPrefs = alarmPrefs;
     }
     self.SLAlarmPrefsChanged = NO;
 
+    NSLog(@"* SLEEPER * viewDidLoad sections: %@", self.sections);
+
+    %orig;
+}
+
+- (void)setupSections
+{
+    %log;
     %orig;
 }
 
@@ -79,7 +91,6 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 {
     // clear out the alarm preferences
     self.SLAlarmPrefs = nil;
-    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -87,16 +98,16 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // add an additional section for Sleeper options
+    NSLog(@"* SLEEPER * numberOfSectionsInTableView sections: %@", self.sections);
     return %orig + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger numRows = 0;
-    
     // define the number of custom rows we are adding to the extra section
-    if (section == kSLSleepAlarmOptionsSectionSleeper) {
-        numRows = kSLSleepAlarmOptionsSectionSleeperNumRows;
+    NSInteger numRows = 0;
+    if (section == kSLSleepOptionsViewControllerSectionSleeper) {
+        numRows = kSLSleepOptionsViewControllerSleeperSectionNumRows;
     } else {
         numRows = %orig;
     }
@@ -110,14 +121,14 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     UITableViewCell *cell = nil;
     
     // configure the custom cells
-    if (indexPath.section == kSLSleepAlarmOptionsSectionSleeper) {
+    if (indexPath.section == kSLSleepOptionsViewControllerSectionSleeper) {
         // Dequeue the custom cell from the table.  Create a new one if it does not yet exist.
-        cell = [tableView dequeueReusableCellWithIdentifier:kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier];
+        cell = [tableView dequeueReusableCellWithIdentifier:kSLSleepOptionsViewControllerSleeperSectionCellReuseIdentifier];
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
-                                          reuseIdentifier:kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier];
+                                          reuseIdentifier:kSLSleepOptionsViewControllerSleeperSectionCellReuseIdentifier];
 
-            // set the selected background color of the cell
+            // set the background color of the cell
             UIView *backgroundView = [[UIView alloc] init];
             backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
             cell.selectedBackgroundView = backgroundView;
@@ -128,7 +139,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 
         // customize the cell based on the row
         switch (indexPath.row) {
-            case kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime:
+            case kSLSleepOptionsViewControllerSleeperSectionRowSnoozeTime:
                 cell.textLabel.text = kSLSnoozeTimeString;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 
@@ -136,7 +147,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.snoozeTimeHour,
                                             (long)self.SLAlarmPrefs.snoozeTimeMinute, (long)self.SLAlarmPrefs.snoozeTimeSecond];
                 break;
-            case kSLSleepAlarmOptionsSectionSleeperRowSkipToggle: {
+            case kSLSleepOptionsViewControllerSleeperSectionRowSkipToggle: {
                 cell.textLabel.text = kSLSkipString;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.detailTextLabel.text = nil;
@@ -153,7 +164,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 cell.accessoryView = skipControl;
                 break;
             }
-            case kSLSleepAlarmOptionsSectionSleeperRowSkipTime:
+            case kSLSleepOptionsViewControllerSleeperSectionRowSkipTime:
                 cell.textLabel.text = kSLSkipTimeString;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
@@ -161,7 +172,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.skipTimeHour,
                                             (long)self.SLAlarmPrefs.skipTimeMinute, (long)self.SLAlarmPrefs.skipTimeSecond];
                 break;
-            case kSLSleepAlarmOptionsSectionSleeperRowSkipDates:
+            case kSLSleepOptionsViewControllerSleeperSectionRowSkipDates:
                 cell.textLabel.text = kSLSkipDatesString;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -179,9 +190,10 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // handle row selection for the custom cells
-    if (indexPath.section == kSLSleepAlarmOptionsSectionSleeper) {
+    if (indexPath.section == kSLSleepOptionsViewControllerSectionSleeper) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
         switch (indexPath.row) {
-            case kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime: {
+            case kSLSleepOptionsViewControllerSleeperSectionRowSnoozeTime: {
                 // create a custom view controller which will decide the snooze time
                 SLSnoozeTimeViewController *snoozeController = [[SLSnoozeTimeViewController alloc] initWithHours:self.SLAlarmPrefs.snoozeTimeHour
                                                                                                          minutes:self.SLAlarmPrefs.snoozeTimeMinute
@@ -190,7 +202,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 [self.navigationController pushViewController:snoozeController animated:YES];
                 break;
             }
-            case kSLSleepAlarmOptionsSectionSleeperRowSkipTime: {
+            case kSLSleepOptionsViewControllerSleeperSectionRowSkipTime: {
                 // create a custom view controller which will decide the skip time
                 SLSkipTimeViewController *skipController = [[SLSkipTimeViewController alloc] initWithHours:self.SLAlarmPrefs.skipTimeHour
                                                                                                    minutes:self.SLAlarmPrefs.skipTimeMinute
@@ -199,8 +211,8 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
                 [self.navigationController pushViewController:skipController animated:YES];
                 break;
             }
-            case kSLSleepAlarmOptionsSectionSleeperRowSkipDates: {
-                 // create a custom view controller which will display the skip dates for this alarm
+            case kSLSleepOptionsViewControllerSleeperSectionRowSkipDates: {
+                // create a custom view controller which will display the skip dates for this alarm
                 SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithAlarmPrefs:self.SLAlarmPrefs];
                 skipDatesController.delegate = self;
                 [self.navigationController pushViewController:skipDatesController animated:YES];
@@ -212,7 +224,7 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     }
 }
 
-- (void)done:(UIBarButtonItem *)doneButton
+- (void)doneAction:(UIBarButtonItem *)doneButton
 {
     // save our preferences
     self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
@@ -221,22 +233,11 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     %orig;
 }
 
-- (void)updateDoneButtonEnabled
-{
-    // check to see if any changes were made to the Sleeper preferences
-    if (self.SLAlarmPrefsChanged) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    } else {
-        %orig;
-    }
-}
-
 // potentially customize the footer text depending on whether or not the alarm is going to be skipped
-%new
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    NSString *footerTitle = nil;
-    if (section == kSLSleepAlarmOptionsSectionSleeper) {
+    NSString *footerTitle = %orig;
+    if (section == kSLSleepOptionsViewControllerSectionSleeper) {
         footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
     }
     return footerTitle;
@@ -250,13 +251,12 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
-    [self updateDoneButtonEnabled];
 
     // force the footer title to update since the explanation to display might have changed
     [UIView setAnimationsEnabled:NO];
     [self.tableView beginUpdates];
-    [self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
-    [[self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel sizeToFit];
+    [self.tableView footerViewForSection:kSLSleepOptionsViewControllerSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+    [[self.tableView footerViewForSection:kSLSleepOptionsViewControllerSectionSleeper].textLabel sizeToFit];
     [self.tableView endUpdates];
     [UIView setAnimationsEnabled:YES];
 }
@@ -267,10 +267,6 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 %new
 - (void)SLPickerTableViewController:(SLPickerTableViewController *)pickerTableViewController didUpdateWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
 {
-    // signify that changes were made to the Sleeper preferences
-    self.SLAlarmPrefsChanged = YES;
-    [self updateDoneButtonEnabled];
-
     // check to see if we are updating the snooze time or the skip time
     if ([pickerTableViewController isMemberOfClass:[SLSnoozeTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
@@ -286,7 +282,8 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepAlarmOptionsSectionSleeperRowSnoozeTime inSection:kSLSleepAlarmOptionsSectionSleeper]]
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepOptionsViewControllerSleeperSectionRowSnoozeTime
+                                                                    inSection:kSLSleepOptionsViewControllerSectionSleeper]]
                               withRowAnimation:UITableViewRowAnimationNone];
     } else if ([pickerTableViewController isMemberOfClass:[SLSkipTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
@@ -302,10 +299,13 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepAlarmOptionsSectionSleeperRowSkipTime
-                                                                    inSection:kSLSleepAlarmOptionsSectionSleeper]]
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepOptionsViewControllerSleeperSectionRowSkipTime
+                                                                    inSection:kSLSleepOptionsViewControllerSectionSleeper]]
                               withRowAnimation:UITableViewRowAnimationNone];
     }
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
 }
 
 #pragma mark - SLSkipDatesDelegate
@@ -318,20 +318,18 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
 
     // reload the cell that contains the skip dates
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepAlarmOptionsSectionSleeperRowSkipDates
-                                                                inSection:kSLSleepAlarmOptionsSectionSleeper]]
-                          withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepOptionsViewControllerSleeperSectionRowSkipDates
+                                                                inSection:kSLSleepOptionsViewControllerSectionSleeper]]
+                            withRowAnimation:UITableViewRowAnimationNone];
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
-    [self updateDoneButtonEnabled];
 }
 
 %end
 
 %ctor {
-    // only initialize this file if we are on iOS 10
-    if (kSLSystemVersioniOS10) {
+    if (kSLSystemVersioniOS13) {
         %init();
     }
 }

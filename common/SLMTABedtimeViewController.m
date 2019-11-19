@@ -10,14 +10,6 @@
 #import "../SLPrefsManager.h"
 #import "../SLCompatibilityHelper.h"
 
-// the data source corresponding to a particular alarm
-@interface MTAlarmDataSource : NSObject
-
-// the sleep alarm that corresponds to the alarm data source object
-@property (retain, nonatomic) MTAlarm *sleepAlarm;
-
-@end
-
 // interface for the sleep alarm (i.e. Bedtime) view controller
 @interface MTABedtimeViewController : UIViewController
 
@@ -37,49 +29,54 @@
 
 @end
 
+%group iOS12
+
 %hook MTABedtimeViewController
-
-%new
-- (void)SLResetSkipActivatedStatus
-{
-    // get the alarm ID for the special sleep alarm
-    NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12) {
-        alarmId = [self.dataSource.sleepAlarm alarmIDString];
-    } else if (kSLSystemVersioniOS11) {
-        AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
-        alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
-    }
-
-    // check if we have alarm preferences for this alarm
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs) {
-        // reset the skip activation status for this alarm
-        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
-    } else {
-        alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-        [SLPrefsManager saveAlarmPrefs:alarmPrefs];
-    }
-}
 
 - (void)showOptions:(UIBarButtonItem *)optionsBarButtonItem
 {
     // If the options controller does not have the Sleeper properties set, set them now (iOS 12).  On iOS 11,
     // the preferences are set when the options view is loaded from the Alarm Manager.
-    if (kSLSystemVersioniOS12) {
-        NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
-        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-        if (alarmPrefs == nil) {
-            self.optionsController.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-        } else {
-            self.optionsController.SLAlarmPrefs = alarmPrefs;
-        }
-        self.optionsController.SLAlarmPrefsChanged = NO;
-        [self.optionsController updateDoneButtonEnabled];
+    NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs == nil) {
+        self.optionsController.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+    } else {
+        self.optionsController.SLAlarmPrefs = alarmPrefs;
     }
+    self.optionsController.SLAlarmPrefsChanged = NO;
+    [self.optionsController updateDoneButtonEnabled];
 
     %orig;
+}
+
+%end
+
+%end // %group iOS12
+
+%group iOS11
+
+%hook MTABedtimeViewController
+
+// Method that will set the reset the skip activation status when various views are edited.  This is not needed
+// on iOS 12 since the MTAlarmManager's updateAlarm will be called anytime the sleep timer is edited.
+%new
+- (void)SLResetSkipActivatedStatus
+{
+    // get the alarm ID for the special sleep alarm
+    AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
+    NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
+
+    // check if we have alarm preferences for this alarm
+    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (alarmPrefs || alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+        // reset the skip activation status for this alarm
+        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+    } else if (!alarmPrefs) {
+        alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        [SLPrefsManager saveAlarmPrefs:alarmPrefs];
+    }
 }
 
 - (void)circleViewDidEndEditing:(id)sleepAlarmClockView
@@ -100,9 +97,13 @@
 
 %end
 
+%end // %group iOS11
+
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
-        %init();
+    if (kSLSystemVersioniOS12) {
+        %init(iOS12)
+    } else if (kSLSystemVersioniOS11) {
+        %init(iOS11);
     }
 }

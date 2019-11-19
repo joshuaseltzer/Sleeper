@@ -200,6 +200,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 - (void)done:(UIBarButtonItem *)doneButton
 {
     // save our preferences
+    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
     [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
 
     %orig;
