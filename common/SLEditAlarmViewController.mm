@@ -60,6 +60,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 @interface EditAlarmViewController (Sleeper)
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
+@property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
 @end
 
@@ -67,6 +68,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 
 // the Sleeper preferences for the alarm being displayed
 %property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
+
+// boolean property to signify whether or not changes were made to the Sleeper preferences
+%property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
 - (void)viewDidLoad
 {
@@ -77,6 +81,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
     self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (self.SLAlarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        self.SLAlarmPrefsChanged = YES;
+    } else {
+        self.SLAlarmPrefsChanged = NO;
     }
 
     %orig;
@@ -92,9 +99,11 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 
 - (void)_doneButtonClicked:(id)doneButton
 {
-    // save our preferences
-    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
-    [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    // save our preferences if needed
+    if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+        self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
+        [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    }
 
     %orig;
 }
@@ -214,6 +223,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 {
     self.SLAlarmPrefs.skipEnabled = skipSwitch.on;
 
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+
     // force the footer title to update since the explanation to display might have changed
     EditAlarmView *editAlarmView = MSHookIvar<EditAlarmView *>(self, "_editAlarmView");
     [UIView setAnimationsEnabled:NO];
@@ -256,6 +268,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
             self.SLAlarmPrefs.skipTimeSecond = seconds;
         }
     }
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
 }
 
 #pragma mark - SLSkipDatesDelegate
@@ -266,6 +281,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate> {
 {
     self.SLAlarmPrefs.customSkipDates = customSkipDates;
     self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
 }
 
 %end

@@ -41,10 +41,11 @@
     SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (alarmPrefs == nil) {
         self.optionsController.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        self.optionsController.SLAlarmPrefsChanged = YES;
     } else {
         self.optionsController.SLAlarmPrefs = alarmPrefs;
+        self.optionsController.SLAlarmPrefsChanged = NO;
     }
-    self.optionsController.SLAlarmPrefsChanged = NO;
     [self.optionsController updateDoneButtonEnabled];
 
     %orig;

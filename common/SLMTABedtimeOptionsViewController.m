@@ -49,13 +49,13 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
     if (kSLSystemVersioniOS11) {
         AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
         NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:alarmManager.sleepAlarm];
-        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-        if (alarmPrefs == nil) {
+        self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (self.SLAlarmPrefs == nil) {
             self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+            self.SLAlarmPrefsChanged = YES;
         } else {
-            self.SLAlarmPrefs = alarmPrefs;
+            self.SLAlarmPrefsChanged = NO;
         }
-        self.SLAlarmPrefsChanged = NO;
     }
 
     %orig;
@@ -199,9 +199,11 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 
 - (void)done:(UIBarButtonItem *)doneButton
 {
-    // save our preferences
-    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
-    [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    // save our preferences if needed
+    if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+        self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
+        [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    }
 
     %orig;
 }

@@ -69,8 +69,10 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (self.SLAlarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        self.SLAlarmPrefsChanged = YES;
+    } else {
+        self.SLAlarmPrefsChanged = NO;
     }
-    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -79,7 +81,6 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 {
     // clear out the alarm preferences
     self.SLAlarmPrefs = nil;
-    self.SLAlarmPrefsChanged = NO;
 
     %orig;
 }
@@ -214,9 +215,11 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
 
 - (void)done:(UIBarButtonItem *)doneButton
 {
-    // save our preferences
-    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
-    [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    // save our preferences if needed
+    if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+        self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
+        [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    }
 
     %orig;
 }

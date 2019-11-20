@@ -68,13 +68,13 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
 {
     // load the preferences for the sleep alarm
     NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs == nil) {
+    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+    if (self.SLAlarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+        self.SLAlarmPrefsChanged = YES;
     } else {
-        self.SLAlarmPrefs = alarmPrefs;
+        self.SLAlarmPrefsChanged = NO;
     }
-    self.SLAlarmPrefsChanged = NO;
 
     NSLog(@"* SLEEPER * viewDidLoad sections: %@", self.sections);
 
@@ -226,9 +226,11 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
 
 - (void)doneAction:(UIBarButtonItem *)doneButton
 {
-    // save our preferences
-    self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
-    [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    // save our preferences if needed
+    if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+        self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
+        [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
+    }
 
     %orig;
 }
