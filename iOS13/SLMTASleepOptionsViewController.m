@@ -41,6 +41,7 @@ typedef enum SLSleepOptionsViewControllerSleeperSectionRow : NSUInteger {
 // define the data source, which will include the sleep alarm
 @property(retain, nonatomic) MTAlarmDataSource *dataSource;
 
+// the array containing strings signifying the section numbers of the table
 @property(retain, nonatomic) NSArray *sections;
 
 @end
@@ -76,15 +77,15 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
         self.SLAlarmPrefsChanged = NO;
     }
 
-    NSLog(@"* SLEEPER * viewDidLoad sections: %@", self.sections);
-
     %orig;
 }
 
 - (void)setupSections
 {
-    %log;
     %orig;
+
+    // inject our additional section to show the Sleeper options
+    self.sections = [self.sections arrayByAddingObject:[NSNumber numberWithInt:kSLSleepOptionsViewControllerSectionSleeper]];
 }
 
 - (void)dealloc
@@ -93,13 +94,6 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
     self.SLAlarmPrefs = nil;
 
     %orig;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    // add an additional section for Sleeper options
-    NSLog(@"* SLEEPER * numberOfSectionsInTableView sections: %@", self.sections);
-    return %orig + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
