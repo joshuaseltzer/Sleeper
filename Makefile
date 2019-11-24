@@ -4,11 +4,11 @@ ARCHS=armv7 arm64 arm64e
 include theos/makefiles/common.mk
 
 TWEAK_NAME = Sleeper
-$(TWEAK_NAME)_FILES = iOS13/SLSBDashBoardLockScreenEnvironment.x iOS13/SLMTASleepOptionsViewController.x iOS10/SLMTSleepAlarmOptionsController.x \
-iOS10/SLMTSleepAlarmViewController.x iOS10/SLSBLockScreenManager.x iOS9/SLUNLocalNotificationClient.x iOS8/SLSBApplication.x common/SLMTAlarmManager.x \
-common/SLMTAlarmStorage.x common/SLMTUserNotificationCenter.x common/SLAlarmManager.x common/SLEditAlarmViewController.xm common/SLMTAAlarmEditViewController.xm \
-common/SLMTABedtimeOptionsViewController.x common/SLMTABedtimeViewController.x common/SLSBClockDataProvider.x common/SLSBLockScreenViewController.x \
-common/SLSBLockScreenViewControllerBase.x common/SLSkipAlarmAlertItem.xm common/SLUNSNotificationSchedulingService.x SLAlarmPrefs.m \
+$(TWEAK_NAME)_FILES = iOS13/SLSBDashBoardLockScreenEnvironment.x iOS13/SLMTASleepOptionsViewController.x iOS13/SLMTASleepDetailViewController.x \
+iOS10/SLMTSleepAlarmOptionsController.x iOS10/SLMTSleepAlarmViewController.x iOS10/SLSBLockScreenManager.x iOS9/SLUNLocalNotificationClient.x iOS8/SLSBApplication.x \
+common/SLMTAlarmManager.x common/SLMTAlarmStorage.x common/SLMTUserNotificationCenter.x common/SLAlarmManager.x common/SLEditAlarmViewController.xm \
+common/SLMTAAlarmEditViewController.xm common/SLMTABedtimeOptionsViewController.x common/SLMTABedtimeViewController.x common/SLSBClockDataProvider.x \
+common/SLSBLockScreenViewController.x common/SLSBLockScreenViewControllerBase.x common/SLSkipAlarmAlertItem.xm common/SLUNSNotificationSchedulingService.x SLAlarmPrefs.m \
 SLCompatibilityHelper.m SLEditDateViewController.m SLHolidaySelectionTableViewController.m SLPartialModalPresentationController.m \
 SLPickerTableViewController.m SLPrefsManager.m SLSkipDatesViewController.m SLSkipTimeViewController.m SLSnoozeTimeViewController.m
 $(TWEAK_NAME)_PRIVATE_FRAMEWORKS = MobileTimer

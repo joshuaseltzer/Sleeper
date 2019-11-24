@@ -8,10 +8,7 @@
 
 #import "../SLAppleSharedInterfaces.h"
 #import "../SLPrefsManager.h"
-#import "../SLLocalizedStrings.h"
 #import "../SLCompatibilityHelper.h"
-#import "../SLSnoozeTimeViewController.h"
-#import "../SLSkipTimeViewController.h"
 
 // define an enum to reference the sections of the table view
 typedef enum SLSleepDetailViewControllerSection : NSUInteger {
@@ -19,6 +16,13 @@ typedef enum SLSleepDetailViewControllerSection : NSUInteger {
     kSLSleepDetailViewControllerSectionDaysOfWeekActive,
     kSLSleepDetailViewControllerNumSections
 } SLSleepDetailViewControllerSection;
+
+@interface MTASleepDetailViewController : UITableViewController
+
+// define the data source, which will include the sleep alarm
+@property (retain, nonatomic) MTAlarmDataSource *dataSource;
+
+@end
 
 // custom interface for added properties to the options controller
 @interface MTASleepDetailViewController (Sleeper)
@@ -29,12 +33,30 @@ typedef enum SLSleepDetailViewControllerSection : NSUInteger {
 
 %hook MTASleepDetailViewController
 
+// the Sleeper preferences for the special sleep alarm
+%property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
+
+- (void)viewDidLoad
+{
+    // Load the preferences for the sleep alarm.  The only reason we need the alarm preferences for this controller is to
+    // potentially display the skip explanation string in the footer.
+    NSString *alarmId = [self.dataSource.sleepAlarm alarmIDString];
+    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+
+    %orig;
+}
+
+// Override with no implementation to prevent the footer string from being overridden.
+// As of iOS 13.2.2, this seems to be unused code / a bug since it is not shown unless we implement the
+// "titleForFooterInSection" delegate method.
+- (void)updateFooterWithSchedule:(NSInteger)schedule {}
+
 // potentially customize the footer text depending on whether or not the alarm is going to be skipped
 %new
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerTitle = nil;
-    if (section == kSLSleepDetailViewControllerSectionDaysOfWeekActive) {
+    if (self.SLAlarmPrefs != nil && section == kSLSleepDetailViewControllerSectionScheduleToggle) {
         footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
     }
     return footerTitle;

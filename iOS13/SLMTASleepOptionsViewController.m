@@ -39,10 +39,10 @@ typedef enum SLSleepOptionsViewControllerSleeperSectionRow : NSUInteger {
 @interface MTASleepOptionsViewController : MTASleepBaseTableViewController
 
 // define the data source, which will include the sleep alarm
-@property(retain, nonatomic) MTAlarmDataSource *dataSource;
+@property (retain, nonatomic) MTAlarmDataSource *dataSource;
 
 // the array containing strings signifying the section numbers of the table
-@property(retain, nonatomic) NSArray *sections;
+@property (retain, nonatomic) NSArray *sections;
 
 @end
 
