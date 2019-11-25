@@ -9,3 +9,4 @@ Description: Set custom snooze times and skip alarms with the Clock app using Sl
 Maintainer: Joshua Seltzer
 Author: Joshua Seltzer
 Section: Tweaks
+Icon: file:///Library/Application%20Support/Sleeper.bundle/icon.png
