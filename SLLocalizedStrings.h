@@ -14,8 +14,8 @@
 // the bundle path for the MobileTimer app
 #define kSLMobileTimerBundle                    [NSBundle bundleWithPath:@"/Applications/MobileTimer.app"]
 
-// the bundle path for the MobilePhone app
-#define kSLMobilePhoneBundle                    [NSBundle bundleWithPath:@"/Applications/MobilePhone.app"]
+// the bundle path for the MobileSafari app
+#define kSLMobileSafariBundle                   [NSBundle bundleWithPath:@"/Applications/MobileSafari.app"]
 
 // the snooze strings
 #define kSLSnoozeTimeString                     [kSLSleeperBundle localizedStringForKey:@"SNOOZE_TIME" value:@"Snooze Time" table:@"Localizable"]
@@ -28,7 +28,7 @@
 
 // the skip time strings
 #define kSLYesString                            [kSLPreferencesBundle localizedStringForKey:@"YES" value:@"Yes" table:@"Localizable"]
-#define kSLNoString                             [kSLPreferencesBundle localizedStringForKey:@"NO" value:@"Yes" table:@"Localizable"]
+#define kSLNoString                             [kSLPreferencesBundle localizedStringForKey:@"NO" value:@"No" table:@"Localizable"]
 #define kSLSkipString                           [kSLSleeperBundle localizedStringForKey:@"SKIP" value:@"Skip" table:@"Localizable"]
 #define kSLSkipTimeString                       [kSLSleeperBundle localizedStringForKey:@"SKIP_TIME" value:@"Skip Time" table:@"Localizable"]
 #define kSLSkipAlarmString                      [kSLSleeperBundle localizedStringForKey:@"SKIP_ALARM" value:@"Skip Alarm" table:@"Localizable"]
@@ -49,7 +49,7 @@
 #define kSLSkipDateExplanationString                [kSLSleeperBundle localizedStringForKey:@"SKIP_DATE_EXPLANATION" value:@"This alarm will be skipped on the dates selected." table:@"Localizable"]
 #define kSLHolidayExplanationString                 [kSLSleeperBundle localizedStringForKey:@"HOLIDAY_EXPLANATION" value:@"If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year." table:@"Localizable"]
 #define kSLAddNewDateString                         [kSLSleeperBundle localizedStringForKey:@"ADD_NEW_DATE" value:@"Add New Date..." table:@"Localizable"]
-#define kSLClearString                              [kSLMobilePhoneBundle localizedStringForKey:@"CLEAR" value:@"Clear" table:@"Voicemail"]
+#define kSLClearString                              [kSLMobileSafariBundle localizedStringForKey:@"Clear" value:@"Clear" table:@"Localizable"]
 #define kSLNumberSelectedString(numSelected)        [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"NUMBER_SELECTED" value:@"%ld Selected" table:@"Localizable"], (long)numSelected]
 #define kSLSkipReasonPopupString                    [kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_POPUP" value:@"You have decided to skip this alarm the next time it is set to fire.  This decision will be reset if you save the alarm." table:@"Localizable"]
 #define kSLSkipReasonDateString(date)               [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"SKIP_REASON_DATE" value:@"The next skip date you've selected for this alarm is %@." table:@"Localizable"], date]
