@@ -19,9 +19,9 @@
 
 // the snooze strings
 #define kSLSnoozeTimeString                     [kSLSleeperBundle localizedStringForKey:@"SNOOZE_TIME" value:@"Snooze Time" table:@"Localizable"]
-#define kSLHoursString                          [kSLMobileTimerBundle localizedStringForKey:@"hour[plural]" value:@"hours" table:@"Localizable"]
-#define kSLMinutesString                        [kSLMobileTimerBundle localizedStringForKey:@"min[plural]" value:@"min" table:@"Localizable"]
-#define kSLSecondsString                        [kSLMobileTimerBundle localizedStringForKey:@"sec[plural]" value:@"sec" table:@"Localizable"]
+#define kSLHoursString                          [kSLSleeperBundle localizedStringForKey:@"HOURS" value:@"hours" table:@"Localizable"]
+#define kSLMinutesString                        [kSLSleeperBundle localizedStringForKey:@"MINUTES" value:@"min" table:@"Localizable"]
+#define kSLSecondsString                        [kSLSleeperBundle localizedStringForKey:@"SECONDS" value:@"sec" table:@"Localizable"]
 #define kSLResetDefaultString                   [kSLSleeperBundle localizedStringForKey:@"RESET_DEFAULT" value:@"Reset Default" table:@"Localizable"]
 #define kSLDefaultSnoozeTimeString(time)        [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"DEFAULT_SNOOZE_TIME" value:@"The default snooze time is %@." table:@"Localizable"], time]
 #define kSLSleepAlarmString                     [kSLMobileTimerBundle localizedStringForKey:@"SLEEP_ALARM_SPOTLIGHT_KEYWORD" value:@"Sleep Alarm" table:@"Localizable"]
