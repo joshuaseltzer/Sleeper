@@ -92,6 +92,9 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // determines whether or not this alarm should be skipped today
 - (BOOL)shouldSkipToday;
 
+// determines whether or not the alarm should be skipped on a given date
+- (BOOL)shouldSkipOnDate:(NSDate *)date;
+
 // returns an explanation of why a given alarm will be skipped
 - (NSString *)skipReasonExplanation;
 
