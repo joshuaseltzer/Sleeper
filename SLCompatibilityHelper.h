@@ -9,27 +9,27 @@
 // define the core foundation version numbers if they have not already been defined
 // http://iphonedevwiki.net/index.php/CoreFoundation.framework
 #ifndef kCFCoreFoundationVersionNumber_iOS_8_0
-#define kCFCoreFoundationVersionNumber_iOS_8_0 1140.10
+#define kCFCoreFoundationVersionNumber_iOS_8_0 1100.00
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
-#define kCFCoreFoundationVersionNumber_iOS_9_0 1240.10
+#define kCFCoreFoundationVersionNumber_iOS_9_0 1200.00
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_10_0
-#define kCFCoreFoundationVersionNumber_iOS_10_0 1348.00
+#define kCFCoreFoundationVersionNumber_iOS_10_0 1300.00
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_11_0
-#define kCFCoreFoundationVersionNumber_iOS_11_0 1443.00
+#define kCFCoreFoundationVersionNumber_iOS_11_0 1400.00
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_12_0
-#define kCFCoreFoundationVersionNumber_iOS_12_0 1556.00
+#define kCFCoreFoundationVersionNumber_iOS_12_0 1500.00
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_13_0
-#define kCFCoreFoundationVersionNumber_iOS_13_0 1665.15
+#define kCFCoreFoundationVersionNumber_iOS_13_0 1600.00
 #endif
 
 // create definitions for the different versions of iOS that are supported by Sleeper
