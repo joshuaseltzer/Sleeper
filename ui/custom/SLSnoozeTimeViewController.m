@@ -7,9 +7,9 @@
 //
 
 #import "SLSnoozeTimeViewController.h"
-#import "../common/SLPrefsManager.h"
-#import "../common/SLLocalizedStrings.h"
-#import "../common/SLCompatibilityHelper.h"
+#import "../../common/SLPrefsManager.h"
+#import "../../common/SLLocalizedStrings.h"
+#import "../../common/SLCompatibilityHelper.h"
 
 @implementation SLSnoozeTimeViewController
 

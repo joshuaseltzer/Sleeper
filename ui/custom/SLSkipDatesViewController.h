@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "SLEditDateViewController.h"
 #import "SLHolidaySelectionTableViewController.h"
-#import "../common/SLAlarmPrefs.h"
+#import "../../common/SLAlarmPrefs.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

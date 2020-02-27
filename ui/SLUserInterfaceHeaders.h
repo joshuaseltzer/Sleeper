@@ -6,8 +6,8 @@
 //
 //
 
-#import "SLSkipTimeViewController.h"
-#import "SLSkipDatesViewController.h"
+#import "custom/SLSkipTimeViewController.h"
+#import "custom/SLSkipDatesViewController.h"
 
 // table view controller which configures the settings for the sleep alarm
 @interface MTABedtimeOptionsViewController : UITableViewController

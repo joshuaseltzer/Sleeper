@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "../common/SLPrefsManager.h"
+#import "../../common/SLPrefsManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

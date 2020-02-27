@@ -7,8 +7,8 @@
 //
 
 #import "SLPickerTableViewController.h"
-#import "../common/SLLocalizedStrings.h"
-#import "../common/SLCompatibilityHelper.h"
+#import "../../common/SLLocalizedStrings.h"
+#import "../../common/SLCompatibilityHelper.h"
 
 // define constants for the view dictionary when creating constraints
 static NSString *const kSLTimePickerViewKey =       @"timePickerView";

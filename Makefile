@@ -3,31 +3,33 @@ ARCHS=armv7 arm64 arm64e
 
 include theos/makefiles/common.mk
 
-TWEAK_NAME = SleeperCore SleeperCoreDaemon SleeperUI
+LIBRARY_NAME = libSleeper
+TWEAK_NAME = SleeperCore SleeperCoreLegacy SleeperUI
 
-SleeperCore_FILES = common/SLAlarmPrefs.m common/SLPrefsManager.m common/SLCompatibilityHelper.m \
-core/SLSkipAlarmAlertItem.xm core/SLSBDashBoardLockScreenEnvironment.x core/SLSBLockScreenViewControllerBase.x \
-core/SLAlarmManager.x core/SLSBApplication.x core/SLSBClockDataProvider.x core/SLSBLockScreenManager.x core/SLSBLockScreenViewController.x \
-core/SLSBLockScreenViewControllerBase.x core/SLUNLocalNotificationClient.x core/SLUNSNotificationSchedulingService.x
-SleeperCore_PRIVATE_FRAMEWORKS = MobileTimer
+libSleeper_FILES = $(wildcard common/*.m) $(wildcard common/*.xm)
+libSleeper_PRIVATE_FRAMEWORKS = MobileTimer
+libSleeper_OBJCFLAGS = -fobjc-arc
+libSleeper_LDFLAGS = -llockdown -weak-lMobileGestalt -lsubstrate -Wno-deprecated
+
+SleeperCore_LIBRARIES = Sleeper
+SleeperCore_FILES = $(wildcard core/*.x)
 SleeperCore_OBJCFLAGS = -fobjc-arc
+SleeperCore_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
 
-SleeperCoreDaemon_FILES = common/SLAlarmPrefs.m common/SLPrefsManager.m common/SLCompatibilityHelper.m \
-core_daemon/SLMTAlarmManager.x core_daemon/SLMTAlarmStorage.x core_daemon/SLMTUserNotificationCenter.x
-SleeperCoreDaemon_PRIVATE_FRAMEWORKS = MobileTimer
-SleeperCoreDaemon_OBJCFLAGS = -fobjc-arc
+SleeperCoreLegacy_LIBRARIES = Sleeper
+SleeperCoreLegacy_FILES = $(wildcard core_legacy/*.[x])
+SleeperCoreLegacy_OBJCFLAGS = -fobjc-arc
+SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
 
-SleeperUI_FILES = common/SLAlarmPrefs.m common/SLPrefsManager.m common/SLCompatibilityHelper.m \
-ui/SLEditDateViewController.m ui/SLHolidaySelectionTableViewController.m ui/SLPartialModalPresentationController.m \
-ui/SLPickerTableViewController.m ui/SLSkipDatesViewController.m ui/SLSkipTimeViewController.m ui/SLSnoozeTimeViewController.m \
-ui/SLEditAlarmViewController.x ui/SLMTAAlarmEditViewController.x ui/SLMTABedtimeOptionsViewController.x ui/SLMTABedtimeViewController.x \
-ui/SLMTASleepDetailViewController.x ui/SLMTASleepOptionsViewController.x ui/SLMTSleepAlarmOptionsController.x ui/SLMTSleepAlarmViewController.x
-SleeperUI_PRIVATE_FRAMEWORKS = MobileTimer
+SleeperUI_LIBRARIES = Sleeper
+SleeperUI_FILES = $(wildcard ui/*.x) $(wildcard ui/custom/*.m)
 SleeperUI_OBJCFLAGS = -fobjc-arc
+SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
 
-THEOS_PACKAGE_BASE_VERSION = 6.0.1
-_THEOS_INTERNAL_PACKAGE_VERSION = 6.0.1
+THEOS_PACKAGE_BASE_VERSION = 6.0.2
+_THEOS_INTERNAL_PACKAGE_VERSION = 6.0.2
 
+include $(THEOS_MAKE_PATH)/library.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::

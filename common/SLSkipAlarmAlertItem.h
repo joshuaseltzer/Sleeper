@@ -6,7 +6,7 @@
 //
 //
 
-#import "../common/SLCommonHeaders.h"
+#import "SLCommonHeaders.h"
 
 // a system alert item
 @interface SBAlertItem : NSObject

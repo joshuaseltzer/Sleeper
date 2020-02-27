@@ -7,9 +7,7 @@
 //
 
 #import "SLUserInterfaceHeaders.h"
-#import "SLSnoozeTimeViewController.h"
-#import "SLSkipDatesViewController.h"
-#import "SLSkipTimeViewController.h"
+#import "custom/SLSnoozeTimeViewController.h"
 #import "../common/SLPrefsManager.h"
 #import "../common/SLLocalizedStrings.h"
 #import "../common/SLCompatibilityHelper.h"

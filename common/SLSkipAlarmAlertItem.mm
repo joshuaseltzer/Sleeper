@@ -7,9 +7,9 @@
 //
 
 #import "SLSkipAlarmAlertItem.h"
-#import "../common/SLPrefsManager.h"
-#import "../common/SLLocalizedStrings.h"
-#import "../common/SLCompatibilityHelper.h"
+#import "SLPrefsManager.h"
+#import "SLLocalizedStrings.h"
+#import "SLCompatibilityHelper.h"
 
 // private interface definition to define some properties
 @interface SLSkipAlarmAlertItem (Sleeper)

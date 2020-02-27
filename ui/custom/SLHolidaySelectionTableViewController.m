@@ -8,8 +8,8 @@
 
 #import "SLHolidaySelectionTableViewController.h"
 #import "SLSkipDatesViewController.h"
-#import "../common/SLCompatibilityHelper.h"
-#import "../common/SLLocalizedStrings.h"
+#import "../../common/SLCompatibilityHelper.h"
+#import "../../common/SLLocalizedStrings.h"
 
 // define the reuse identifier for the cells in this table
 #define kSLHolidayTableViewCellIdentifier               @"SLHolidayTableViewCell"

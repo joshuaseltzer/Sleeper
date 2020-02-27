@@ -7,7 +7,7 @@
 //
 
 #import "SLSkipTimeViewController.h"
-#import "../common/SLLocalizedStrings.h"
+#import "../../common/SLLocalizedStrings.h"
 
 @implementation SLSkipTimeViewController
 

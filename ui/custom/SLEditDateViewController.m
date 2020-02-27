@@ -6,8 +6,8 @@
 //
 
 #import "SLEditDateViewController.h"
-#import "../common/SLCompatibilityHelper.h"
-#import "../common/SLLocalizedStrings.h"
+#import "../../common/SLCompatibilityHelper.h"
+#import "../../common/SLLocalizedStrings.h"
 
 // define constants for the view dictionary when creating constraints
 #define kSLDatePickerViewKey            @"datePickerView"

@@ -6,7 +6,7 @@
 //
 //
 
-#import "SLSkipAlarmAlertItem.h"
+#import "../common/SLSkipAlarmAlertItem.h"
 #import "../common/SLCompatibilityHelper.h"
 
 %hook SBLockScreenViewController

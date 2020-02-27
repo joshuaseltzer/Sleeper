@@ -9,6 +9,14 @@
 			<string>com.apple.springboard</string>
 			<string>com.apple.mobiletimer</string>
 		</array>
+		<key>Executables</key>
+		<array>
+			<string>mobiletimerd</string>
+		</array>
+		<key>CoreFoundationVersion</key>
+		<array>
+			<real>1500</real>
+		</array>
 	</dict>
 </dict>
 </plist>
