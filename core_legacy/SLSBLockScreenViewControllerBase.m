@@ -1,6 +1,6 @@
 //
 //  SLSBLockScreenViewControllerBase.x
-//  Hooks into this class allow for actions to be performed upon unlocking the device (iOS 11 and iOS 12).
+//  Hooks into this class allow for actions to be performed upon unlocking the device (iOS 11).
 //
 //  Created by Joshua Seltzer on 4/12/19.
 //
