@@ -9,25 +9,25 @@ TWEAK_NAME = SleeperCore SleeperCoreLegacy SleeperUI
 libSleeper_FILES = $(wildcard common/*.m) $(wildcard common/*.xm)
 libSleeper_PRIVATE_FRAMEWORKS = MobileTimer
 libSleeper_OBJCFLAGS = -fobjc-arc
-libSleeper_LDFLAGS = -llockdown -weak-lMobileGestalt -lsubstrate -Wno-deprecated
+libSleeper_LDFLAGS = -lsubstrate
 
-SleeperCore_LIBRARIES = Sleeper
 SleeperCore_FILES = $(wildcard core/*.x)
+SleeperCore_LIBRARIES = Sleeper
 SleeperCore_OBJCFLAGS = -fobjc-arc
-SleeperCore_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
+SleeperCore_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-SleeperCoreLegacy_LIBRARIES = Sleeper
 SleeperCoreLegacy_FILES = $(wildcard core_legacy/*.[x])
+SleeperCoreLegacy_LIBRARIES = Sleeper
 SleeperCoreLegacy_OBJCFLAGS = -fobjc-arc
-SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
+SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-SleeperUI_LIBRARIES = Sleeper
 SleeperUI_FILES = $(wildcard ui/*.x) $(wildcard ui/custom/*.m)
+SleeperUI_LIBRARIES = Sleeper
 SleeperUI_OBJCFLAGS = -fobjc-arc
-SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR) -Wno-deprecated
+SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-THEOS_PACKAGE_BASE_VERSION = 6.0.2
-_THEOS_INTERNAL_PACKAGE_VERSION = 6.0.2
+THEOS_PACKAGE_BASE_VERSION = 6.0.3
+_THEOS_INTERNAL_PACKAGE_VERSION = 6.0.3
 
 include $(THEOS_MAKE_PATH)/library.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
