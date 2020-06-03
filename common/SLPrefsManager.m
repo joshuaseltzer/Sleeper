@@ -12,10 +12,37 @@
 // the path of our settings that is used to store the alarm snooze times
 #define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
-// keep a single static instance of the date formatter that will be used to display the skip dates to the user
-static NSDateFormatter *sSLSkipDatesDateFormatter;
+// keep a single static instances of the date formatters that will be used to convert date objects to strings and vice versa
+static NSDateFormatter *sSLSkipDatesUIDateFormatter;
+static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 
 @implementation SLPrefsManager
+
+// returns the date formatter for displaying dates within the UI
++ (NSDateFormatter *)uiDateFormatter
+{
+    if (sSLSkipDatesUIDateFormatter == nil) {
+        sSLSkipDatesUIDateFormatter = [[NSDateFormatter alloc] init];
+        sSLSkipDatesUIDateFormatter.dateFormat = @"EEEE, MMMM d, yyyy";
+        sSLSkipDatesUIDateFormatter.locale = [NSLocale currentLocale];
+        sSLSkipDatesUIDateFormatter.timeZone = [NSTimeZone localTimeZone];
+    }
+    return sSLSkipDatesUIDateFormatter;
+}
+
+// returns the date formatter for converting to and from saving to the plist
++ (NSDateFormatter *)plistDateFormatter
+{
+    if (sSLSkipDatesPlistDateFormatter == nil) {
+        // as of Sleeper 6.0.4, dates will be stored in the following format as a string that needs to be converted when
+        // reading and storing to the plist
+        sSLSkipDatesPlistDateFormatter = [[NSDateFormatter alloc] init];
+        sSLSkipDatesPlistDateFormatter.dateFormat = @"yyyy-MM-dd";
+        sSLSkipDatesPlistDateFormatter.locale = [NSLocale currentLocale];
+        sSLSkipDatesPlistDateFormatter.timeZone = [NSTimeZone localTimeZone];
+    }
+    return sSLSkipDatesPlistDateFormatter;
+}
 
 // Return an SLAlarmPrefs object with alarm information for a given alarm Id.  Return nil if no alarm is found.
 + (SLAlarmPrefs *)alarmPrefsForAlarmId:(NSString *)alarmId
@@ -46,11 +73,26 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                 // check to see if the prefs contain any of the skip dates options (added in v4.1.0)
                 NSDictionary *skipDates = [alarm objectForKey:kSLSkipDatesKey];
                 if (skipDates != nil) {
-                    alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDatesKey];
+                    alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDateStringsKey];
                     alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
 
-                    // update the skip dates, by potentially adding ones from a new update or removing dates that might have passed
-                    [alarmPrefs updateCustomSkipDates];
+                    // As of Sleeper 6.0.4, new custom skip dates will be stored as strings instead of dates.  To maintain compatibility with older
+                    // preference files, check the old custom skip date key to see if any previous dates exist and convert them to strings.
+                    NSArray *oldCustomSkipDates = [skipDates objectForKey:kSLCustomSkipDatesKey];
+                    if (oldCustomSkipDates.count > 0) {
+                        NSMutableArray *combinedCustomSkipDates = [[NSMutableArray alloc] initWithCapacity:alarmPrefs.customSkipDates.count + oldCustomSkipDates.count];
+                        for (NSDate *skipDate in oldCustomSkipDates) {
+                            [combinedCustomSkipDates addObject:[[SLPrefsManager plistDateFormatter] stringFromDate:skipDate]];
+                        }
+                        if (alarmPrefs.customSkipDates != nil && alarmPrefs.customSkipDates.count > 0) {
+                            [combinedCustomSkipDates addObjectsFromArray:alarmPrefs.customSkipDates];
+                        }
+                        alarmPrefs.customSkipDates = combinedCustomSkipDates;
+                    }
+                    
+                    // use a predicate to remove any date strings which occur in the past
+                    NSPredicate *oldDatePredicate = [NSPredicate predicateWithFormat:@"SELF >= %@", [[SLPrefsManager plistDateFormatter] stringFromDate:[NSDate date]]];
+                    alarmPrefs.customSkipDates = [alarmPrefs.customSkipDates filteredArrayUsingPredicate:oldDatePredicate];
                 } else {
                     // if an alarm did not have a skip dates key in the preferences, we need to add the default
                     // holiday skip dates
@@ -104,7 +146,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                           forKey:kSLSkipSecondKey];
                 [alarm setObject:[NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown]
                           forKey:kSLSkipActivatedStatusKey];
-                [alarm setObject:@{kSLCustomSkipDatesKey:alarmPrefs.customSkipDates,
+                [alarm setObject:@{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates,
                                    kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}
                           forKey:kSLSkipDatesKey];
                 break;
@@ -124,7 +166,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
                                   [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
-                                  @{kSLCustomSkipDatesKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
+                                  @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
                                   nil];
         
         // add the object to the array
@@ -228,7 +270,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
 }
 
 // Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
-// This function will also remove any passed dates.
+// This function will also remove any dates which occurred in the past.
 + (NSDictionary *)holidayResourceForResourceName:(NSString *)resourceName
 {
     NSMutableDictionary *holidayResource = nil;
@@ -237,11 +279,14 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         // load the list of holidays from the file system
         holidayResource = [[NSMutableDictionary alloc] initWithContentsOfFile:resourcePath];
 
-        // remove any dates that might have already passed
+        // iterate through the various holidays and dates to potentially remove dates which have passed
         NSMutableArray *defaultHolidays = [holidayResource objectForKey:kSLHolidayHolidaysKey];
         for (NSMutableDictionary *holiday in defaultHolidays) {
             NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
-            NSArray *newDates = [SLPrefsManager removePassedDatesFromArray:dates];
+
+            // use a predicate to remove any date strings which occur in the past
+            NSPredicate *oldDatePredicate = [NSPredicate predicateWithFormat:@"SELF >= %@", [[SLPrefsManager plistDateFormatter] stringFromDate:[NSDate date]]];
+            NSArray *newDates = [dates filteredArrayUsingPredicate:oldDatePredicate];
             if (dates.count != newDates.count) {
                 [holiday setObject:newDates forKey:kSLHolidayDatesKey];
             }
@@ -249,19 +294,6 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
         [holidayResource setObject:[defaultHolidays copy] forKey:kSLHolidayHolidaysKey];
     }
     return [holidayResource copy];
-}
-
-// returns an array of new dates that removes any dates from the given array of dates that have passed
-+ (NSArray *)removePassedDatesFromArray:(NSArray *)dates
-{
-    NSMutableArray *newDates = [[NSMutableArray alloc] init];
-    for (NSDate *date in dates) {
-        NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
-        if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
-            [newDates addObject:date];
-        }
-    }
-    return [newDates copy];
 }
 
 // Returns the first available skip date for the given holiday name and country.  This function will not take into consideration any passed dates.
@@ -281,7 +313,8 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
             if ([holidayName isEqualToString:[holiday objectForKey:kSLHolidayNameKey]]) {
                 // get the dates for this holiday
                 NSArray *dates = [holiday objectForKey:kSLHolidayDatesKey];
-                for (NSDate *date in dates) {
+                for (NSString *dateString in dates) {
+                    NSDate *date = [[SLPrefsManager plistDateFormatter] dateFromString:(NSString *)dateString];
                     NSComparisonResult dateComparison = [[NSCalendar currentCalendar] compareDate:date toDate:[NSDate date] toUnitGranularity:NSCalendarUnitDay];
                     if (dateComparison == NSOrderedSame || dateComparison == NSOrderedDescending) {
                         return date;
@@ -457,12 +490,6 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString
 {
-    // create the date formatter that will be used to display the dates
-    if (sSLSkipDatesDateFormatter == nil) {
-        sSLSkipDatesDateFormatter = [[NSDateFormatter alloc] init];
-        sSLSkipDatesDateFormatter.dateFormat = @"EEEE, MMMM d, yyyy";
-    }
-    
     // check to see if a relative string can be shown instead of the date string
     if (showRelativeString) {
         if ([[NSCalendar currentCalendar] isDateInToday:date]) {
@@ -471,7 +498,7 @@ static NSDateFormatter *sSLSkipDatesDateFormatter;
             return kSLTomorrowString;
         }
     }
-    return [sSLSkipDatesDateFormatter stringFromDate:date];
+    return [[SLPrefsManager uiDateFormatter] stringFromDate:date];
 }
 
 @end

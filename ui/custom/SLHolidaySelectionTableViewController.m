@@ -134,8 +134,9 @@
 
     // get the corresponding holiday for this cell for display
     NSDictionary *holiday = [self.availableHolidays objectAtIndex:indexPath.row];
+    NSString *holidayDateString = [[holiday objectForKey:kSLHolidayDatesKey] objectAtIndex:0];
     holidayCell.textLabel.text = [holiday objectForKey:kSLHolidayNameKey];
-    holidayCell.detailTextLabel.text = [SLPrefsManager skipDateStringForDate:[[holiday objectForKey:kSLHolidayDatesKey] objectAtIndex:0] showRelativeString:NO];
+    holidayCell.detailTextLabel.text = [SLPrefsManager skipDateStringForDate:[[SLPrefsManager plistDateFormatter] dateFromString:holidayDateString] showRelativeString:NO];
     
     return holidayCell;
 }

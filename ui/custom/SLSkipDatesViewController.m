@@ -211,9 +211,9 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             [self updateSkipDateCellSelectionStyle:skipDateCell];
             
             // customize the cell by grabbing the corresponding skip date
-            NSDate *skipDate = [self.customSkipDates objectAtIndex:indexPath.row];
+            NSString *skipDateString = [self.customSkipDates objectAtIndex:indexPath.row];
             skipDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-            skipDateCell.textLabel.text = [SLPrefsManager skipDateStringForDate:skipDate showRelativeString:NO];
+            skipDateCell.textLabel.text = [SLPrefsManager skipDateStringForDate:[[SLPrefsManager plistDateFormatter] dateFromString:skipDateString] showRelativeString:NO];
             
             cell = skipDateCell;
             break;
@@ -398,7 +398,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // set some variables that may be used if editing or adding a new date
-    NSDate *editDate = nil;
+    NSString *editDateString = nil;
     self.editingIndexPath = nil;
     
     switch (indexPath.section) {
@@ -406,7 +406,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             // get the existing date to edit (intentionally do not break here to proceed to the next case)
             if (self.isEditing) {
                 self.editingIndexPath = indexPath;
-                editDate = [self.customSkipDates objectAtIndex:indexPath.row];
+                editDateString = [self.customSkipDates objectAtIndex:indexPath.row];
                 [self setEditing:NO animated:YES];
             } else {
                 // if we are not editing, do nothing when these cells are selected
@@ -417,7 +417,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
             
             // create the edit date controller which will be shown as a partial modal transition to allow
             // the user to pick a new date or edit an existing one
-            SLEditDateViewController *editDateViewController = [[SLEditDateViewController alloc] initWithInitialDate:editDate];
+            SLEditDateViewController *editDateViewController = [[SLEditDateViewController alloc] initWithInitialDate:[[SLPrefsManager plistDateFormatter] dateFromString:editDateString]];
             editDateViewController.delegate = self;
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editDateViewController];
             navController.modalPresentationStyle = UIModalPresentationCustom;
@@ -580,13 +580,14 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     BOOL tableNeedsRefresh = NO;
     if (self.editingIndexPath != nil) {
         // if an editing index path is set, then we are editing an existing date.
-        [self.customSkipDates replaceObjectAtIndex:self.editingIndexPath.row withObject:date];
+        [self.customSkipDates replaceObjectAtIndex:self.editingIndexPath.row withObject:[[SLPrefsManager plistDateFormatter] stringFromDate:date]];
         tableNeedsRefresh = YES;
         self.editingIndexPath = nil;
     } else {
         // check to see if the date has already been added (in this case, do not add a new date)
         BOOL containsDate = NO;
-        for (NSDate *skipDate in self.customSkipDates) {
+        for (NSString *skipDateString in self.customSkipDates) {
+            NSDate *skipDate = [[SLPrefsManager plistDateFormatter] dateFromString:skipDateString];
             if ([[NSCalendar currentCalendar] isDate:skipDate inSameDayAsDate:date]) {
                 containsDate = YES;
                 break;
@@ -594,7 +595,7 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
         }
         if (!containsDate) {
             // add a new date to the array of skip dates
-            [self.customSkipDates addObject:date];
+            [self.customSkipDates addObject:[[SLPrefsManager plistDateFormatter] stringFromDate:date]];
             tableNeedsRefresh = YES;
             
             // set the edit button to the right bar button if there are skip dates to remove

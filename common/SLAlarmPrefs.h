@@ -80,9 +80,6 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 // and default preferences
 - (instancetype)initWithAlarmId:(NSString *)alarmId;
 
-// updates all custom skip dates by potentially removing any past dates
-- (void)updateCustomSkipDates;
-
 // returns the total number of selected holidays to be skipped for the given alarm
 - (NSInteger)totalSelectedHolidays;
 

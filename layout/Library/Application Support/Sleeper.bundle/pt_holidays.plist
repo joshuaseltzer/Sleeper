@@ -11,37 +11,35 @@
 			<string>Ano Novo</string>
 			<key>dates</key>
 			<array>
-				<date>2019-01-01T05:00:00Z</date>
-				<date>2020-01-01T05:00:00Z</date>
-				<date>2021-01-01T05:00:00Z</date>
-				<date>2022-01-01T05:00:00Z</date>
-				<date>2023-01-01T05:00:00Z</date>
-				<date>2024-01-01T05:00:00Z</date>
-				<date>2025-01-01T05:00:00Z</date>
-				<date>2026-01-01T05:00:00Z</date>
-				<date>2027-01-01T05:00:00Z</date>
-				<date>2028-01-01T05:00:00Z</date>
-				<date>2029-01-01T05:00:00Z</date>
-				<date>2030-01-01T05:00:00Z</date>
-				<date>2031-01-01T05:00:00Z</date>
-				<date>2032-01-01T05:00:00Z</date>
-				<date>2033-01-01T05:00:00Z</date>
-				<date>2034-01-01T05:00:00Z</date>
-				<date>2035-01-01T05:00:00Z</date>
-				<date>2036-01-01T05:00:00Z</date>
-				<date>2037-01-01T05:00:00Z</date>
-				<date>2038-01-01T05:00:00Z</date>
-				<date>2039-01-01T05:00:00Z</date>
-				<date>2040-01-01T05:00:00Z</date>
-				<date>2041-01-01T05:00:00Z</date>
-				<date>2042-01-01T05:00:00Z</date>
-				<date>2043-01-01T05:00:00Z</date>
-				<date>2044-01-01T05:00:00Z</date>
-				<date>2045-01-01T05:00:00Z</date>
-				<date>2046-01-01T05:00:00Z</date>
-				<date>2047-01-01T05:00:00Z</date>
-				<date>2048-01-01T05:00:00Z</date>
-				<date>2049-01-01T05:00:00Z</date>
+				<string>2021-01-01</string>
+				<string>2022-01-01</string>
+				<string>2023-01-01</string>
+				<string>2024-01-01</string>
+				<string>2025-01-01</string>
+				<string>2026-01-01</string>
+				<string>2027-01-01</string>
+				<string>2028-01-01</string>
+				<string>2029-01-01</string>
+				<string>2030-01-01</string>
+				<string>2031-01-01</string>
+				<string>2032-01-01</string>
+				<string>2033-01-01</string>
+				<string>2034-01-01</string>
+				<string>2035-01-01</string>
+				<string>2036-01-01</string>
+				<string>2037-01-01</string>
+				<string>2038-01-01</string>
+				<string>2039-01-01</string>
+				<string>2040-01-01</string>
+				<string>2041-01-01</string>
+				<string>2042-01-01</string>
+				<string>2043-01-01</string>
+				<string>2044-01-01</string>
+				<string>2045-01-01</string>
+				<string>2046-01-01</string>
+				<string>2047-01-01</string>
+				<string>2048-01-01</string>
+				<string>2049-01-01</string>
 			</array>
 		</dict>
 		<dict>
@@ -49,37 +47,35 @@
 			<string>Carnaval</string>
 			<key>dates</key>
 			<array>
-				<date>2019-03-05T05:00:00Z</date>
-				<date>2020-02-25T05:00:00Z</date>
-				<date>2021-02-16T05:00:00Z</date>
-				<date>2022-03-01T05:00:00Z</date>
-				<date>2023-02-21T05:00:00Z</date>
-				<date>2024-02-13T05:00:00Z</date>
-				<date>2025-03-04T05:00:00Z</date>
-				<date>2026-02-17T05:00:00Z</date>
-				<date>2027-02-09T05:00:00Z</date>
-				<date>2028-02-29T05:00:00Z</date>
-				<date>2029-02-13T05:00:00Z</date>
-				<date>2030-03-05T05:00:00Z</date>
-				<date>2031-02-25T05:00:00Z</date>
-				<date>2032-02-10T05:00:00Z</date>
-				<date>2033-03-01T05:00:00Z</date>
-				<date>2034-02-21T05:00:00Z</date>
-				<date>2035-02-06T05:00:00Z</date>
-				<date>2036-02-26T05:00:00Z</date>
-				<date>2037-02-17T05:00:00Z</date>
-				<date>2038-03-09T05:00:00Z</date>
-				<date>2039-02-22T05:00:00Z</date>
-				<date>2040-02-14T05:00:00Z</date>
-				<date>2041-03-05T05:00:00Z</date>
-				<date>2042-02-18T05:00:00Z</date>
-				<date>2043-02-10T05:00:00Z</date>
-				<date>2044-03-01T05:00:00Z</date>
-				<date>2045-02-21T05:00:00Z</date>
-				<date>2046-02-06T05:00:00Z</date>
-				<date>2047-02-26T05:00:00Z</date>
-				<date>2048-02-18T05:00:00Z</date>
-				<date>2049-03-02T05:00:00Z</date>
+				<string>2021-02-16</string>
+				<string>2022-03-01</string>
+				<string>2023-02-21</string>
+				<string>2024-02-13</string>
+				<string>2025-03-04</string>
+				<string>2026-02-17</string>
+				<string>2027-02-09</string>
+				<string>2028-02-29</string>
+				<string>2029-02-13</string>
+				<string>2030-03-05</string>
+				<string>2031-02-25</string>
+				<string>2032-02-10</string>
+				<string>2033-03-01</string>
+				<string>2034-02-21</string>
+				<string>2035-02-06</string>
+				<string>2036-02-26</string>
+				<string>2037-02-17</string>
+				<string>2038-03-09</string>
+				<string>2039-02-22</string>
+				<string>2040-02-14</string>
+				<string>2041-03-05</string>
+				<string>2042-02-18</string>
+				<string>2043-02-10</string>
+				<string>2044-03-01</string>
+				<string>2045-02-21</string>
+				<string>2046-02-06</string>
+				<string>2047-02-26</string>
+				<string>2048-02-18</string>
+				<string>2049-03-02</string>
 			</array>
 		</dict>
 		<dict>
@@ -87,37 +83,35 @@
 			<string>Sexta-feira Santa</string>
 			<key>dates</key>
 			<array>
-				<date>2019-04-19T04:00:00Z</date>
-				<date>2020-04-10T04:00:00Z</date>
-				<date>2021-04-02T04:00:00Z</date>
-				<date>2022-04-15T04:00:00Z</date>
-				<date>2023-04-07T04:00:00Z</date>
-				<date>2024-03-29T04:00:00Z</date>
-				<date>2025-04-18T04:00:00Z</date>
-				<date>2026-04-03T04:00:00Z</date>
-				<date>2027-03-26T04:00:00Z</date>
-				<date>2028-04-14T04:00:00Z</date>
-				<date>2029-03-30T04:00:00Z</date>
-				<date>2030-04-19T04:00:00Z</date>
-				<date>2031-04-11T04:00:00Z</date>
-				<date>2032-03-26T04:00:00Z</date>
-				<date>2033-04-15T04:00:00Z</date>
-				<date>2034-04-07T04:00:00Z</date>
-				<date>2035-03-23T04:00:00Z</date>
-				<date>2036-04-11T04:00:00Z</date>
-				<date>2037-04-03T04:00:00Z</date>
-				<date>2038-04-23T04:00:00Z</date>
-				<date>2039-04-08T04:00:00Z</date>
-				<date>2040-03-30T04:00:00Z</date>
-				<date>2041-04-19T04:00:00Z</date>
-				<date>2042-04-04T04:00:00Z</date>
-				<date>2043-03-27T04:00:00Z</date>
-				<date>2044-04-15T04:00:00Z</date>
-				<date>2045-04-07T04:00:00Z</date>
-				<date>2046-03-23T04:00:00Z</date>
-				<date>2047-04-12T04:00:00Z</date>
-				<date>2048-04-03T04:00:00Z</date>
-				<date>2049-04-16T04:00:00Z</date>
+				<string>2021-04-02</string>
+				<string>2022-04-15</string>
+				<string>2023-04-07</string>
+				<string>2024-03-29</string>
+				<string>2025-04-18</string>
+				<string>2026-04-03</string>
+				<string>2027-03-26</string>
+				<string>2028-04-14</string>
+				<string>2029-03-30</string>
+				<string>2030-04-19</string>
+				<string>2031-04-11</string>
+				<string>2032-03-26</string>
+				<string>2033-04-15</string>
+				<string>2034-04-07</string>
+				<string>2035-03-23</string>
+				<string>2036-04-11</string>
+				<string>2037-04-03</string>
+				<string>2038-04-23</string>
+				<string>2039-04-08</string>
+				<string>2040-03-30</string>
+				<string>2041-04-19</string>
+				<string>2042-04-04</string>
+				<string>2043-03-27</string>
+				<string>2044-04-15</string>
+				<string>2045-04-07</string>
+				<string>2046-03-23</string>
+				<string>2047-04-12</string>
+				<string>2048-04-03</string>
+				<string>2049-04-16</string>
 			</array>
 		</dict>
 		<dict>
@@ -125,37 +119,35 @@
 			<string>Páscoa</string>
 			<key>dates</key>
 			<array>
-				<date>2019-04-21T04:00:00Z</date>
-				<date>2020-04-12T04:00:00Z</date>
-				<date>2021-04-04T04:00:00Z</date>
-				<date>2022-04-17T04:00:00Z</date>
-				<date>2023-04-09T04:00:00Z</date>
-				<date>2024-03-31T04:00:00Z</date>
-				<date>2025-04-20T04:00:00Z</date>
-				<date>2026-04-05T04:00:00Z</date>
-				<date>2027-03-28T04:00:00Z</date>
-				<date>2028-04-16T04:00:00Z</date>
-				<date>2029-04-01T04:00:00Z</date>
-				<date>2030-04-21T04:00:00Z</date>
-				<date>2031-04-13T04:00:00Z</date>
-				<date>2032-03-28T04:00:00Z</date>
-				<date>2033-04-17T04:00:00Z</date>
-				<date>2034-04-09T04:00:00Z</date>
-				<date>2035-03-25T04:00:00Z</date>
-				<date>2036-04-13T04:00:00Z</date>
-				<date>2037-04-05T04:00:00Z</date>
-				<date>2038-04-25T04:00:00Z</date>
-				<date>2039-04-10T04:00:00Z</date>
-				<date>2040-04-01T04:00:00Z</date>
-				<date>2041-04-21T04:00:00Z</date>
-				<date>2042-04-06T04:00:00Z</date>
-				<date>2043-03-29T04:00:00Z</date>
-				<date>2044-04-17T04:00:00Z</date>
-				<date>2045-04-09T04:00:00Z</date>
-				<date>2046-03-25T04:00:00Z</date>
-				<date>2047-04-14T04:00:00Z</date>
-				<date>2048-04-05T04:00:00Z</date>
-				<date>2049-04-18T04:00:00Z</date>
+				<string>2021-04-04</string>
+				<string>2022-04-17</string>
+				<string>2023-04-09</string>
+				<string>2024-03-31</string>
+				<string>2025-04-20</string>
+				<string>2026-04-05</string>
+				<string>2027-03-28</string>
+				<string>2028-04-16</string>
+				<string>2029-04-01</string>
+				<string>2030-04-21</string>
+				<string>2031-04-13</string>
+				<string>2032-03-28</string>
+				<string>2033-04-17</string>
+				<string>2034-04-09</string>
+				<string>2035-03-25</string>
+				<string>2036-04-13</string>
+				<string>2037-04-05</string>
+				<string>2038-04-25</string>
+				<string>2039-04-10</string>
+				<string>2040-04-01</string>
+				<string>2041-04-21</string>
+				<string>2042-04-06</string>
+				<string>2043-03-29</string>
+				<string>2044-04-17</string>
+				<string>2045-04-09</string>
+				<string>2046-03-25</string>
+				<string>2047-04-14</string>
+				<string>2048-04-05</string>
+				<string>2049-04-18</string>
 			</array>
 		</dict>
 		<dict>
@@ -163,37 +155,35 @@
 			<string>Dia da Liberdade</string>
 			<key>dates</key>
 			<array>
-				<date>2019-04-25T04:00:00Z</date>
-				<date>2020-04-25T04:00:00Z</date>
-				<date>2021-04-25T04:00:00Z</date>
-				<date>2022-04-25T04:00:00Z</date>
-				<date>2023-04-25T04:00:00Z</date>
-				<date>2024-04-25T04:00:00Z</date>
-				<date>2025-04-25T04:00:00Z</date>
-				<date>2026-04-25T04:00:00Z</date>
-				<date>2027-04-25T04:00:00Z</date>
-				<date>2028-04-25T04:00:00Z</date>
-				<date>2029-04-25T04:00:00Z</date>
-				<date>2030-04-25T04:00:00Z</date>
-				<date>2031-04-25T04:00:00Z</date>
-				<date>2032-04-25T04:00:00Z</date>
-				<date>2033-04-25T04:00:00Z</date>
-				<date>2034-04-25T04:00:00Z</date>
-				<date>2035-04-25T04:00:00Z</date>
-				<date>2036-04-25T04:00:00Z</date>
-				<date>2037-04-25T04:00:00Z</date>
-				<date>2038-04-25T04:00:00Z</date>
-				<date>2039-04-25T04:00:00Z</date>
-				<date>2040-04-25T04:00:00Z</date>
-				<date>2041-04-25T04:00:00Z</date>
-				<date>2042-04-25T04:00:00Z</date>
-				<date>2043-04-25T04:00:00Z</date>
-				<date>2044-04-25T04:00:00Z</date>
-				<date>2045-04-25T04:00:00Z</date>
-				<date>2046-04-25T04:00:00Z</date>
-				<date>2047-04-25T04:00:00Z</date>
-				<date>2048-04-25T04:00:00Z</date>
-				<date>2049-04-25T04:00:00Z</date>
+				<string>2021-04-25</string>
+				<string>2022-04-25</string>
+				<string>2023-04-25</string>
+				<string>2024-04-25</string>
+				<string>2025-04-25</string>
+				<string>2026-04-25</string>
+				<string>2027-04-25</string>
+				<string>2028-04-25</string>
+				<string>2029-04-25</string>
+				<string>2030-04-25</string>
+				<string>2031-04-25</string>
+				<string>2032-04-25</string>
+				<string>2033-04-25</string>
+				<string>2034-04-25</string>
+				<string>2035-04-25</string>
+				<string>2036-04-25</string>
+				<string>2037-04-25</string>
+				<string>2038-04-25</string>
+				<string>2039-04-25</string>
+				<string>2040-04-25</string>
+				<string>2041-04-25</string>
+				<string>2042-04-25</string>
+				<string>2043-04-25</string>
+				<string>2044-04-25</string>
+				<string>2045-04-25</string>
+				<string>2046-04-25</string>
+				<string>2047-04-25</string>
+				<string>2048-04-25</string>
+				<string>2049-04-25</string>
 			</array>
 		</dict>
 		<dict>
@@ -201,37 +191,35 @@
 			<string>Dia do Trabalhador</string>
 			<key>dates</key>
 			<array>
-				<date>2019-05-01T04:00:00Z</date>
-				<date>2020-05-01T04:00:00Z</date>
-				<date>2021-05-01T04:00:00Z</date>
-				<date>2022-05-01T04:00:00Z</date>
-				<date>2023-05-01T04:00:00Z</date>
-				<date>2024-05-01T04:00:00Z</date>
-				<date>2025-05-01T04:00:00Z</date>
-				<date>2026-05-01T04:00:00Z</date>
-				<date>2027-05-01T04:00:00Z</date>
-				<date>2028-05-01T04:00:00Z</date>
-				<date>2029-05-01T04:00:00Z</date>
-				<date>2030-05-01T04:00:00Z</date>
-				<date>2031-05-01T04:00:00Z</date>
-				<date>2032-05-01T04:00:00Z</date>
-				<date>2033-05-01T04:00:00Z</date>
-				<date>2034-05-01T04:00:00Z</date>
-				<date>2035-05-01T04:00:00Z</date>
-				<date>2036-05-01T04:00:00Z</date>
-				<date>2037-05-01T04:00:00Z</date>
-				<date>2038-05-01T04:00:00Z</date>
-				<date>2039-05-01T04:00:00Z</date>
-				<date>2040-05-01T04:00:00Z</date>
-				<date>2041-05-01T04:00:00Z</date>
-				<date>2042-05-01T04:00:00Z</date>
-				<date>2043-05-01T04:00:00Z</date>
-				<date>2044-05-01T04:00:00Z</date>
-				<date>2045-05-01T04:00:00Z</date>
-				<date>2046-05-01T04:00:00Z</date>
-				<date>2047-05-01T04:00:00Z</date>
-				<date>2048-05-01T04:00:00Z</date>
-				<date>2049-05-01T04:00:00Z</date>
+				<string>2021-05-01</string>
+				<string>2022-05-01</string>
+				<string>2023-05-01</string>
+				<string>2024-05-01</string>
+				<string>2025-05-01</string>
+				<string>2026-05-01</string>
+				<string>2027-05-01</string>
+				<string>2028-05-01</string>
+				<string>2029-05-01</string>
+				<string>2030-05-01</string>
+				<string>2031-05-01</string>
+				<string>2032-05-01</string>
+				<string>2033-05-01</string>
+				<string>2034-05-01</string>
+				<string>2035-05-01</string>
+				<string>2036-05-01</string>
+				<string>2037-05-01</string>
+				<string>2038-05-01</string>
+				<string>2039-05-01</string>
+				<string>2040-05-01</string>
+				<string>2041-05-01</string>
+				<string>2042-05-01</string>
+				<string>2043-05-01</string>
+				<string>2044-05-01</string>
+				<string>2045-05-01</string>
+				<string>2046-05-01</string>
+				<string>2047-05-01</string>
+				<string>2048-05-01</string>
+				<string>2049-05-01</string>
 			</array>
 		</dict>
 		<dict>
@@ -239,37 +227,36 @@
 			<string>Dia de Portugal</string>
 			<key>dates</key>
 			<array>
-				<date>2019-06-10T04:00:00Z</date>
-				<date>2020-06-10T04:00:00Z</date>
-				<date>2021-06-10T04:00:00Z</date>
-				<date>2022-06-10T04:00:00Z</date>
-				<date>2023-06-10T04:00:00Z</date>
-				<date>2024-06-10T04:00:00Z</date>
-				<date>2025-06-10T04:00:00Z</date>
-				<date>2026-06-10T04:00:00Z</date>
-				<date>2027-06-10T04:00:00Z</date>
-				<date>2028-06-10T04:00:00Z</date>
-				<date>2029-06-10T04:00:00Z</date>
-				<date>2030-06-10T04:00:00Z</date>
-				<date>2031-06-10T04:00:00Z</date>
-				<date>2032-06-10T04:00:00Z</date>
-				<date>2033-06-10T04:00:00Z</date>
-				<date>2034-06-10T04:00:00Z</date>
-				<date>2035-06-10T04:00:00Z</date>
-				<date>2036-06-10T04:00:00Z</date>
-				<date>2037-06-10T04:00:00Z</date>
-				<date>2038-06-10T04:00:00Z</date>
-				<date>2039-06-10T04:00:00Z</date>
-				<date>2040-06-10T04:00:00Z</date>
-				<date>2041-06-10T04:00:00Z</date>
-				<date>2042-06-10T04:00:00Z</date>
-				<date>2043-06-10T04:00:00Z</date>
-				<date>2044-06-10T04:00:00Z</date>
-				<date>2045-06-10T04:00:00Z</date>
-				<date>2046-06-10T04:00:00Z</date>
-				<date>2047-06-10T04:00:00Z</date>
-				<date>2048-06-10T04:00:00Z</date>
-				<date>2049-06-10T04:00:00Z</date>
+				<string>2020-06-10</string>
+				<string>2021-06-10</string>
+				<string>2022-06-10</string>
+				<string>2023-06-10</string>
+				<string>2024-06-10</string>
+				<string>2025-06-10</string>
+				<string>2026-06-10</string>
+				<string>2027-06-10</string>
+				<string>2028-06-10</string>
+				<string>2029-06-10</string>
+				<string>2030-06-10</string>
+				<string>2031-06-10</string>
+				<string>2032-06-10</string>
+				<string>2033-06-10</string>
+				<string>2034-06-10</string>
+				<string>2035-06-10</string>
+				<string>2036-06-10</string>
+				<string>2037-06-10</string>
+				<string>2038-06-10</string>
+				<string>2039-06-10</string>
+				<string>2040-06-10</string>
+				<string>2041-06-10</string>
+				<string>2042-06-10</string>
+				<string>2043-06-10</string>
+				<string>2044-06-10</string>
+				<string>2045-06-10</string>
+				<string>2046-06-10</string>
+				<string>2047-06-10</string>
+				<string>2048-06-10</string>
+				<string>2049-06-10</string>
 			</array>
 		</dict>
 		<dict>
@@ -277,37 +264,36 @@
 			<string>Dia de Santo António</string>
 			<key>dates</key>
 			<array>
-				<date>2019-06-13T04:00:00Z</date>
-				<date>2020-06-13T04:00:00Z</date>
-				<date>2021-06-13T04:00:00Z</date>
-				<date>2022-06-13T04:00:00Z</date>
-				<date>2023-06-13T04:00:00Z</date>
-				<date>2024-06-13T04:00:00Z</date>
-				<date>2025-06-13T04:00:00Z</date>
-				<date>2026-06-13T04:00:00Z</date>
-				<date>2027-06-13T04:00:00Z</date>
-				<date>2028-06-13T04:00:00Z</date>
-				<date>2029-06-13T04:00:00Z</date>
-				<date>2030-06-13T04:00:00Z</date>
-				<date>2031-06-13T04:00:00Z</date>
-				<date>2032-06-13T04:00:00Z</date>
-				<date>2033-06-13T04:00:00Z</date>
-				<date>2034-06-13T04:00:00Z</date>
-				<date>2035-06-13T04:00:00Z</date>
-				<date>2036-06-13T04:00:00Z</date>
-				<date>2037-06-13T04:00:00Z</date>
-				<date>2038-06-13T04:00:00Z</date>
-				<date>2039-06-13T04:00:00Z</date>
-				<date>2040-06-13T04:00:00Z</date>
-				<date>2041-06-13T04:00:00Z</date>
-				<date>2042-06-13T04:00:00Z</date>
-				<date>2043-06-13T04:00:00Z</date>
-				<date>2044-06-13T04:00:00Z</date>
-				<date>2045-06-13T04:00:00Z</date>
-				<date>2046-06-13T04:00:00Z</date>
-				<date>2047-06-13T04:00:00Z</date>
-				<date>2048-06-13T04:00:00Z</date>
-				<date>2049-06-13T04:00:00Z</date>
+				<string>2020-06-13</string>
+				<string>2021-06-13</string>
+				<string>2022-06-13</string>
+				<string>2023-06-13</string>
+				<string>2024-06-13</string>
+				<string>2025-06-13</string>
+				<string>2026-06-13</string>
+				<string>2027-06-13</string>
+				<string>2028-06-13</string>
+				<string>2029-06-13</string>
+				<string>2030-06-13</string>
+				<string>2031-06-13</string>
+				<string>2032-06-13</string>
+				<string>2033-06-13</string>
+				<string>2034-06-13</string>
+				<string>2035-06-13</string>
+				<string>2036-06-13</string>
+				<string>2037-06-13</string>
+				<string>2038-06-13</string>
+				<string>2039-06-13</string>
+				<string>2040-06-13</string>
+				<string>2041-06-13</string>
+				<string>2042-06-13</string>
+				<string>2043-06-13</string>
+				<string>2044-06-13</string>
+				<string>2045-06-13</string>
+				<string>2046-06-13</string>
+				<string>2047-06-13</string>
+				<string>2048-06-13</string>
+				<string>2049-06-13</string>
 			</array>
 		</dict>
 		<dict>
@@ -315,37 +301,36 @@
 			<string>Corpo de Deus</string>
 			<key>dates</key>
 			<array>
-				<date>2019-06-20T04:00:00Z</date>
-				<date>2020-06-11T04:00:00Z</date>
-				<date>2021-06-03T04:00:00Z</date>
-				<date>2022-06-16T04:00:00Z</date>
-				<date>2023-06-08T04:00:00Z</date>
-				<date>2024-05-30T04:00:00Z</date>
-				<date>2025-06-19T04:00:00Z</date>
-				<date>2026-06-04T04:00:00Z</date>
-				<date>2027-05-27T04:00:00Z</date>
-				<date>2028-06-15T04:00:00Z</date>
-				<date>2029-05-31T04:00:00Z</date>
-				<date>2030-06-20T04:00:00Z</date>
-				<date>2031-06-12T04:00:00Z</date>
-				<date>2032-05-27T04:00:00Z</date>
-				<date>2033-06-16T04:00:00Z</date>
-				<date>2034-06-08T04:00:00Z</date>
-				<date>2035-05-24T04:00:00Z</date>
-				<date>2036-06-12T04:00:00Z</date>
-				<date>2037-06-04T04:00:00Z</date>
-				<date>2038-06-24T04:00:00Z</date>
-				<date>2039-06-09T04:00:00Z</date>
-				<date>2040-05-31T04:00:00Z</date>
-				<date>2041-06-20T04:00:00Z</date>
-				<date>2042-06-05T04:00:00Z</date>
-				<date>2043-05-28T04:00:00Z</date>
-				<date>2044-06-16T04:00:00Z</date>
-				<date>2045-06-08T04:00:00Z</date>
-				<date>2046-05-24T04:00:00Z</date>
-				<date>2047-06-13T04:00:00Z</date>
-				<date>2048-06-04T04:00:00Z</date>
-				<date>2049-06-17T04:00:00Z</date>
+				<string>2020-06-11</string>
+				<string>2021-06-03</string>
+				<string>2022-06-16</string>
+				<string>2023-06-08</string>
+				<string>2024-05-30</string>
+				<string>2025-06-19</string>
+				<string>2026-06-04</string>
+				<string>2027-05-27</string>
+				<string>2028-06-15</string>
+				<string>2029-05-31</string>
+				<string>2030-06-20</string>
+				<string>2031-06-12</string>
+				<string>2032-05-27</string>
+				<string>2033-06-16</string>
+				<string>2034-06-08</string>
+				<string>2035-05-24</string>
+				<string>2036-06-12</string>
+				<string>2037-06-04</string>
+				<string>2038-06-24</string>
+				<string>2039-06-09</string>
+				<string>2040-05-31</string>
+				<string>2041-06-20</string>
+				<string>2042-06-05</string>
+				<string>2043-05-28</string>
+				<string>2044-06-16</string>
+				<string>2045-06-08</string>
+				<string>2046-05-24</string>
+				<string>2047-06-13</string>
+				<string>2048-06-04</string>
+				<string>2049-06-17</string>
 			</array>
 		</dict>
 		<dict>
@@ -353,37 +338,36 @@
 			<string>Assunção de Nossa Senhora</string>
 			<key>dates</key>
 			<array>
-				<date>2019-08-15T04:00:00Z</date>
-				<date>2020-08-15T04:00:00Z</date>
-				<date>2021-08-15T04:00:00Z</date>
-				<date>2022-08-15T04:00:00Z</date>
-				<date>2023-08-15T04:00:00Z</date>
-				<date>2024-08-15T04:00:00Z</date>
-				<date>2025-08-15T04:00:00Z</date>
-				<date>2026-08-15T04:00:00Z</date>
-				<date>2027-08-15T04:00:00Z</date>
-				<date>2028-08-15T04:00:00Z</date>
-				<date>2029-08-15T04:00:00Z</date>
-				<date>2030-08-15T04:00:00Z</date>
-				<date>2031-08-15T04:00:00Z</date>
-				<date>2032-08-15T04:00:00Z</date>
-				<date>2033-08-15T04:00:00Z</date>
-				<date>2034-08-15T04:00:00Z</date>
-				<date>2035-08-15T04:00:00Z</date>
-				<date>2036-08-15T04:00:00Z</date>
-				<date>2037-08-15T04:00:00Z</date>
-				<date>2038-08-15T04:00:00Z</date>
-				<date>2039-08-15T04:00:00Z</date>
-				<date>2040-08-15T04:00:00Z</date>
-				<date>2041-08-15T04:00:00Z</date>
-				<date>2042-08-15T04:00:00Z</date>
-				<date>2043-08-15T04:00:00Z</date>
-				<date>2044-08-15T04:00:00Z</date>
-				<date>2045-08-15T04:00:00Z</date>
-				<date>2046-08-15T04:00:00Z</date>
-				<date>2047-08-15T04:00:00Z</date>
-				<date>2048-08-15T04:00:00Z</date>
-				<date>2049-08-15T04:00:00Z</date>
+				<string>2020-08-15</string>
+				<string>2021-08-15</string>
+				<string>2022-08-15</string>
+				<string>2023-08-15</string>
+				<string>2024-08-15</string>
+				<string>2025-08-15</string>
+				<string>2026-08-15</string>
+				<string>2027-08-15</string>
+				<string>2028-08-15</string>
+				<string>2029-08-15</string>
+				<string>2030-08-15</string>
+				<string>2031-08-15</string>
+				<string>2032-08-15</string>
+				<string>2033-08-15</string>
+				<string>2034-08-15</string>
+				<string>2035-08-15</string>
+				<string>2036-08-15</string>
+				<string>2037-08-15</string>
+				<string>2038-08-15</string>
+				<string>2039-08-15</string>
+				<string>2040-08-15</string>
+				<string>2041-08-15</string>
+				<string>2042-08-15</string>
+				<string>2043-08-15</string>
+				<string>2044-08-15</string>
+				<string>2045-08-15</string>
+				<string>2046-08-15</string>
+				<string>2047-08-15</string>
+				<string>2048-08-15</string>
+				<string>2049-08-15</string>
 			</array>
 		</dict>
 		<dict>
@@ -391,37 +375,36 @@
 			<string>Implantação da República</string>
 			<key>dates</key>
 			<array>
-				<date>2019-10-05T04:00:00Z</date>
-				<date>2020-10-05T04:00:00Z</date>
-				<date>2021-10-05T04:00:00Z</date>
-				<date>2022-10-05T04:00:00Z</date>
-				<date>2023-10-05T04:00:00Z</date>
-				<date>2024-10-05T04:00:00Z</date>
-				<date>2025-10-05T04:00:00Z</date>
-				<date>2026-10-05T04:00:00Z</date>
-				<date>2027-10-05T04:00:00Z</date>
-				<date>2028-10-05T04:00:00Z</date>
-				<date>2029-10-05T04:00:00Z</date>
-				<date>2030-10-05T04:00:00Z</date>
-				<date>2031-10-05T04:00:00Z</date>
-				<date>2032-10-05T04:00:00Z</date>
-				<date>2033-10-05T04:00:00Z</date>
-				<date>2034-10-05T04:00:00Z</date>
-				<date>2035-10-05T04:00:00Z</date>
-				<date>2036-10-05T04:00:00Z</date>
-				<date>2037-10-05T04:00:00Z</date>
-				<date>2038-10-05T04:00:00Z</date>
-				<date>2039-10-05T04:00:00Z</date>
-				<date>2040-10-05T04:00:00Z</date>
-				<date>2041-10-05T04:00:00Z</date>
-				<date>2042-10-05T04:00:00Z</date>
-				<date>2043-10-05T04:00:00Z</date>
-				<date>2044-10-05T04:00:00Z</date>
-				<date>2045-10-05T04:00:00Z</date>
-				<date>2046-10-05T04:00:00Z</date>
-				<date>2047-10-05T04:00:00Z</date>
-				<date>2048-10-05T04:00:00Z</date>
-				<date>2049-10-05T04:00:00Z</date>
+				<string>2020-10-05</string>
+				<string>2021-10-05</string>
+				<string>2022-10-05</string>
+				<string>2023-10-05</string>
+				<string>2024-10-05</string>
+				<string>2025-10-05</string>
+				<string>2026-10-05</string>
+				<string>2027-10-05</string>
+				<string>2028-10-05</string>
+				<string>2029-10-05</string>
+				<string>2030-10-05</string>
+				<string>2031-10-05</string>
+				<string>2032-10-05</string>
+				<string>2033-10-05</string>
+				<string>2034-10-05</string>
+				<string>2035-10-05</string>
+				<string>2036-10-05</string>
+				<string>2037-10-05</string>
+				<string>2038-10-05</string>
+				<string>2039-10-05</string>
+				<string>2040-10-05</string>
+				<string>2041-10-05</string>
+				<string>2042-10-05</string>
+				<string>2043-10-05</string>
+				<string>2044-10-05</string>
+				<string>2045-10-05</string>
+				<string>2046-10-05</string>
+				<string>2047-10-05</string>
+				<string>2048-10-05</string>
+				<string>2049-10-05</string>
 			</array>
 		</dict>
 		<dict>
@@ -429,37 +412,36 @@
 			<string>Dia de Todos os Santos</string>
 			<key>dates</key>
 			<array>
-				<date>2019-11-01T04:00:00Z</date>
-				<date>2020-11-01T04:00:00Z</date>
-				<date>2021-11-01T04:00:00Z</date>
-				<date>2022-11-01T04:00:00Z</date>
-				<date>2023-11-01T04:00:00Z</date>
-				<date>2024-11-01T04:00:00Z</date>
-				<date>2025-11-01T04:00:00Z</date>
-				<date>2026-11-01T04:00:00Z</date>
-				<date>2027-11-01T04:00:00Z</date>
-				<date>2028-11-01T04:00:00Z</date>
-				<date>2029-11-01T04:00:00Z</date>
-				<date>2030-11-01T04:00:00Z</date>
-				<date>2031-11-01T04:00:00Z</date>
-				<date>2032-11-01T04:00:00Z</date>
-				<date>2033-11-01T04:00:00Z</date>
-				<date>2034-11-01T04:00:00Z</date>
-				<date>2035-11-01T04:00:00Z</date>
-				<date>2036-11-01T04:00:00Z</date>
-				<date>2037-11-01T04:00:00Z</date>
-				<date>2038-11-01T04:00:00Z</date>
-				<date>2039-11-01T04:00:00Z</date>
-				<date>2040-11-01T04:00:00Z</date>
-				<date>2041-11-01T04:00:00Z</date>
-				<date>2042-11-01T04:00:00Z</date>
-				<date>2043-11-01T04:00:00Z</date>
-				<date>2044-11-01T04:00:00Z</date>
-				<date>2045-11-01T04:00:00Z</date>
-				<date>2046-11-01T04:00:00Z</date>
-				<date>2047-11-01T04:00:00Z</date>
-				<date>2048-11-01T04:00:00Z</date>
-				<date>2049-11-01T04:00:00Z</date>
+				<string>2020-11-01</string>
+				<string>2021-11-01</string>
+				<string>2022-11-01</string>
+				<string>2023-11-01</string>
+				<string>2024-11-01</string>
+				<string>2025-11-01</string>
+				<string>2026-11-01</string>
+				<string>2027-11-01</string>
+				<string>2028-11-01</string>
+				<string>2029-11-01</string>
+				<string>2030-11-01</string>
+				<string>2031-11-01</string>
+				<string>2032-11-01</string>
+				<string>2033-11-01</string>
+				<string>2034-11-01</string>
+				<string>2035-11-01</string>
+				<string>2036-11-01</string>
+				<string>2037-11-01</string>
+				<string>2038-11-01</string>
+				<string>2039-11-01</string>
+				<string>2040-11-01</string>
+				<string>2041-11-01</string>
+				<string>2042-11-01</string>
+				<string>2043-11-01</string>
+				<string>2044-11-01</string>
+				<string>2045-11-01</string>
+				<string>2046-11-01</string>
+				<string>2047-11-01</string>
+				<string>2048-11-01</string>
+				<string>2049-11-01</string>
 			</array>
 		</dict>
 		<dict>
@@ -467,37 +449,36 @@
 			<string>Restauração da Independência</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-01T05:00:00Z</date>
-				<date>2020-12-01T05:00:00Z</date>
-				<date>2021-12-01T05:00:00Z</date>
-				<date>2022-12-01T05:00:00Z</date>
-				<date>2023-12-01T05:00:00Z</date>
-				<date>2024-12-01T05:00:00Z</date>
-				<date>2025-12-01T05:00:00Z</date>
-				<date>2026-12-01T05:00:00Z</date>
-				<date>2027-12-01T05:00:00Z</date>
-				<date>2028-12-01T05:00:00Z</date>
-				<date>2029-12-01T05:00:00Z</date>
-				<date>2030-12-01T05:00:00Z</date>
-				<date>2031-12-01T05:00:00Z</date>
-				<date>2032-12-01T05:00:00Z</date>
-				<date>2033-12-01T05:00:00Z</date>
-				<date>2034-12-01T05:00:00Z</date>
-				<date>2035-12-01T05:00:00Z</date>
-				<date>2036-12-01T05:00:00Z</date>
-				<date>2037-12-01T05:00:00Z</date>
-				<date>2038-12-01T05:00:00Z</date>
-				<date>2039-12-01T05:00:00Z</date>
-				<date>2040-12-01T05:00:00Z</date>
-				<date>2041-12-01T05:00:00Z</date>
-				<date>2042-12-01T05:00:00Z</date>
-				<date>2043-12-01T05:00:00Z</date>
-				<date>2044-12-01T05:00:00Z</date>
-				<date>2045-12-01T05:00:00Z</date>
-				<date>2046-12-01T05:00:00Z</date>
-				<date>2047-12-01T05:00:00Z</date>
-				<date>2048-12-01T05:00:00Z</date>
-				<date>2049-12-01T05:00:00Z</date>
+				<string>2020-12-01</string>
+				<string>2021-12-01</string>
+				<string>2022-12-01</string>
+				<string>2023-12-01</string>
+				<string>2024-12-01</string>
+				<string>2025-12-01</string>
+				<string>2026-12-01</string>
+				<string>2027-12-01</string>
+				<string>2028-12-01</string>
+				<string>2029-12-01</string>
+				<string>2030-12-01</string>
+				<string>2031-12-01</string>
+				<string>2032-12-01</string>
+				<string>2033-12-01</string>
+				<string>2034-12-01</string>
+				<string>2035-12-01</string>
+				<string>2036-12-01</string>
+				<string>2037-12-01</string>
+				<string>2038-12-01</string>
+				<string>2039-12-01</string>
+				<string>2040-12-01</string>
+				<string>2041-12-01</string>
+				<string>2042-12-01</string>
+				<string>2043-12-01</string>
+				<string>2044-12-01</string>
+				<string>2045-12-01</string>
+				<string>2046-12-01</string>
+				<string>2047-12-01</string>
+				<string>2048-12-01</string>
+				<string>2049-12-01</string>
 			</array>
 		</dict>
 		<dict>
@@ -505,37 +486,36 @@
 			<string>Imaculada Conceição</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-08T05:00:00Z</date>
-				<date>2020-12-08T05:00:00Z</date>
-				<date>2021-12-08T05:00:00Z</date>
-				<date>2022-12-08T05:00:00Z</date>
-				<date>2023-12-08T05:00:00Z</date>
-				<date>2024-12-08T05:00:00Z</date>
-				<date>2025-12-08T05:00:00Z</date>
-				<date>2026-12-08T05:00:00Z</date>
-				<date>2027-12-08T05:00:00Z</date>
-				<date>2028-12-08T05:00:00Z</date>
-				<date>2029-12-08T05:00:00Z</date>
-				<date>2030-12-08T05:00:00Z</date>
-				<date>2031-12-08T05:00:00Z</date>
-				<date>2032-12-08T05:00:00Z</date>
-				<date>2033-12-08T05:00:00Z</date>
-				<date>2034-12-08T05:00:00Z</date>
-				<date>2035-12-08T05:00:00Z</date>
-				<date>2036-12-08T05:00:00Z</date>
-				<date>2037-12-08T05:00:00Z</date>
-				<date>2038-12-08T05:00:00Z</date>
-				<date>2039-12-08T05:00:00Z</date>
-				<date>2040-12-08T05:00:00Z</date>
-				<date>2041-12-08T05:00:00Z</date>
-				<date>2042-12-08T05:00:00Z</date>
-				<date>2043-12-08T05:00:00Z</date>
-				<date>2044-12-08T05:00:00Z</date>
-				<date>2045-12-08T05:00:00Z</date>
-				<date>2046-12-08T05:00:00Z</date>
-				<date>2047-12-08T05:00:00Z</date>
-				<date>2048-12-08T05:00:00Z</date>
-				<date>2049-12-08T05:00:00Z</date>
+				<string>2020-12-08</string>
+				<string>2021-12-08</string>
+				<string>2022-12-08</string>
+				<string>2023-12-08</string>
+				<string>2024-12-08</string>
+				<string>2025-12-08</string>
+				<string>2026-12-08</string>
+				<string>2027-12-08</string>
+				<string>2028-12-08</string>
+				<string>2029-12-08</string>
+				<string>2030-12-08</string>
+				<string>2031-12-08</string>
+				<string>2032-12-08</string>
+				<string>2033-12-08</string>
+				<string>2034-12-08</string>
+				<string>2035-12-08</string>
+				<string>2036-12-08</string>
+				<string>2037-12-08</string>
+				<string>2038-12-08</string>
+				<string>2039-12-08</string>
+				<string>2040-12-08</string>
+				<string>2041-12-08</string>
+				<string>2042-12-08</string>
+				<string>2043-12-08</string>
+				<string>2044-12-08</string>
+				<string>2045-12-08</string>
+				<string>2046-12-08</string>
+				<string>2047-12-08</string>
+				<string>2048-12-08</string>
+				<string>2049-12-08</string>
 			</array>
 		</dict>
 		<dict>
@@ -543,37 +523,36 @@
 			<string>Vespera de Natal</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-24T05:00:00Z</date>
-				<date>2020-12-24T05:00:00Z</date>
-				<date>2021-12-24T05:00:00Z</date>
-				<date>2022-12-24T05:00:00Z</date>
-				<date>2023-12-24T05:00:00Z</date>
-				<date>2024-12-24T05:00:00Z</date>
-				<date>2025-12-24T05:00:00Z</date>
-				<date>2026-12-24T05:00:00Z</date>
-				<date>2027-12-24T05:00:00Z</date>
-				<date>2028-12-24T05:00:00Z</date>
-				<date>2029-12-24T05:00:00Z</date>
-				<date>2030-12-24T05:00:00Z</date>
-				<date>2031-12-24T05:00:00Z</date>
-				<date>2032-12-24T05:00:00Z</date>
-				<date>2033-12-24T05:00:00Z</date>
-				<date>2034-12-24T05:00:00Z</date>
-				<date>2035-12-24T05:00:00Z</date>
-				<date>2036-12-24T05:00:00Z</date>
-				<date>2037-12-24T05:00:00Z</date>
-				<date>2038-12-24T05:00:00Z</date>
-				<date>2039-12-24T05:00:00Z</date>
-				<date>2040-12-24T05:00:00Z</date>
-				<date>2041-12-24T05:00:00Z</date>
-				<date>2042-12-24T05:00:00Z</date>
-				<date>2043-12-24T05:00:00Z</date>
-				<date>2044-12-24T05:00:00Z</date>
-				<date>2045-12-24T05:00:00Z</date>
-				<date>2046-12-24T05:00:00Z</date>
-				<date>2047-12-24T05:00:00Z</date>
-				<date>2048-12-24T05:00:00Z</date>
-				<date>2049-12-24T05:00:00Z</date>
+				<string>2020-12-24</string>
+				<string>2021-12-24</string>
+				<string>2022-12-24</string>
+				<string>2023-12-24</string>
+				<string>2024-12-24</string>
+				<string>2025-12-24</string>
+				<string>2026-12-24</string>
+				<string>2027-12-24</string>
+				<string>2028-12-24</string>
+				<string>2029-12-24</string>
+				<string>2030-12-24</string>
+				<string>2031-12-24</string>
+				<string>2032-12-24</string>
+				<string>2033-12-24</string>
+				<string>2034-12-24</string>
+				<string>2035-12-24</string>
+				<string>2036-12-24</string>
+				<string>2037-12-24</string>
+				<string>2038-12-24</string>
+				<string>2039-12-24</string>
+				<string>2040-12-24</string>
+				<string>2041-12-24</string>
+				<string>2042-12-24</string>
+				<string>2043-12-24</string>
+				<string>2044-12-24</string>
+				<string>2045-12-24</string>
+				<string>2046-12-24</string>
+				<string>2047-12-24</string>
+				<string>2048-12-24</string>
+				<string>2049-12-24</string>
 			</array>
 		</dict>
 		<dict>
@@ -581,37 +560,36 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-25T05:00:00Z</date>
-				<date>2020-12-25T05:00:00Z</date>
-				<date>2021-12-25T05:00:00Z</date>
-				<date>2022-12-25T05:00:00Z</date>
-				<date>2023-12-25T05:00:00Z</date>
-				<date>2024-12-25T05:00:00Z</date>
-				<date>2025-12-25T05:00:00Z</date>
-				<date>2026-12-25T05:00:00Z</date>
-				<date>2027-12-25T05:00:00Z</date>
-				<date>2028-12-25T05:00:00Z</date>
-				<date>2029-12-25T05:00:00Z</date>
-				<date>2030-12-25T05:00:00Z</date>
-				<date>2031-12-25T05:00:00Z</date>
-				<date>2032-12-25T05:00:00Z</date>
-				<date>2033-12-25T05:00:00Z</date>
-				<date>2034-12-25T05:00:00Z</date>
-				<date>2035-12-25T05:00:00Z</date>
-				<date>2036-12-25T05:00:00Z</date>
-				<date>2037-12-25T05:00:00Z</date>
-				<date>2038-12-25T05:00:00Z</date>
-				<date>2039-12-25T05:00:00Z</date>
-				<date>2040-12-25T05:00:00Z</date>
-				<date>2041-12-25T05:00:00Z</date>
-				<date>2042-12-25T05:00:00Z</date>
-				<date>2043-12-25T05:00:00Z</date>
-				<date>2044-12-25T05:00:00Z</date>
-				<date>2045-12-25T05:00:00Z</date>
-				<date>2046-12-25T05:00:00Z</date>
-				<date>2047-12-25T05:00:00Z</date>
-				<date>2048-12-25T05:00:00Z</date>
-				<date>2049-12-25T05:00:00Z</date>
+				<string>2020-12-25</string>
+				<string>2021-12-25</string>
+				<string>2022-12-25</string>
+				<string>2023-12-25</string>
+				<string>2024-12-25</string>
+				<string>2025-12-25</string>
+				<string>2026-12-25</string>
+				<string>2027-12-25</string>
+				<string>2028-12-25</string>
+				<string>2029-12-25</string>
+				<string>2030-12-25</string>
+				<string>2031-12-25</string>
+				<string>2032-12-25</string>
+				<string>2033-12-25</string>
+				<string>2034-12-25</string>
+				<string>2035-12-25</string>
+				<string>2036-12-25</string>
+				<string>2037-12-25</string>
+				<string>2038-12-25</string>
+				<string>2039-12-25</string>
+				<string>2040-12-25</string>
+				<string>2041-12-25</string>
+				<string>2042-12-25</string>
+				<string>2043-12-25</string>
+				<string>2044-12-25</string>
+				<string>2045-12-25</string>
+				<string>2046-12-25</string>
+				<string>2047-12-25</string>
+				<string>2048-12-25</string>
+				<string>2049-12-25</string>
 			</array>
 		</dict>
 		<dict>
@@ -619,37 +597,36 @@
 			<string>26 de Dezembro</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-26T05:00:00Z</date>
-				<date>2020-12-26T05:00:00Z</date>
-				<date>2021-12-26T05:00:00Z</date>
-				<date>2022-12-26T05:00:00Z</date>
-				<date>2023-12-26T05:00:00Z</date>
-				<date>2024-12-26T05:00:00Z</date>
-				<date>2025-12-26T05:00:00Z</date>
-				<date>2026-12-26T05:00:00Z</date>
-				<date>2027-12-26T05:00:00Z</date>
-				<date>2028-12-26T05:00:00Z</date>
-				<date>2029-12-26T05:00:00Z</date>
-				<date>2030-12-26T05:00:00Z</date>
-				<date>2031-12-26T05:00:00Z</date>
-				<date>2032-12-26T05:00:00Z</date>
-				<date>2033-12-26T05:00:00Z</date>
-				<date>2034-12-26T05:00:00Z</date>
-				<date>2035-12-26T05:00:00Z</date>
-				<date>2036-12-26T05:00:00Z</date>
-				<date>2037-12-26T05:00:00Z</date>
-				<date>2038-12-26T05:00:00Z</date>
-				<date>2039-12-26T05:00:00Z</date>
-				<date>2040-12-26T05:00:00Z</date>
-				<date>2041-12-26T05:00:00Z</date>
-				<date>2042-12-26T05:00:00Z</date>
-				<date>2043-12-26T05:00:00Z</date>
-				<date>2044-12-26T05:00:00Z</date>
-				<date>2045-12-26T05:00:00Z</date>
-				<date>2046-12-26T05:00:00Z</date>
-				<date>2047-12-26T05:00:00Z</date>
-				<date>2048-12-26T05:00:00Z</date>
-				<date>2049-12-26T05:00:00Z</date>
+				<string>2020-12-26</string>
+				<string>2021-12-26</string>
+				<string>2022-12-26</string>
+				<string>2023-12-26</string>
+				<string>2024-12-26</string>
+				<string>2025-12-26</string>
+				<string>2026-12-26</string>
+				<string>2027-12-26</string>
+				<string>2028-12-26</string>
+				<string>2029-12-26</string>
+				<string>2030-12-26</string>
+				<string>2031-12-26</string>
+				<string>2032-12-26</string>
+				<string>2033-12-26</string>
+				<string>2034-12-26</string>
+				<string>2035-12-26</string>
+				<string>2036-12-26</string>
+				<string>2037-12-26</string>
+				<string>2038-12-26</string>
+				<string>2039-12-26</string>
+				<string>2040-12-26</string>
+				<string>2041-12-26</string>
+				<string>2042-12-26</string>
+				<string>2043-12-26</string>
+				<string>2044-12-26</string>
+				<string>2045-12-26</string>
+				<string>2046-12-26</string>
+				<string>2047-12-26</string>
+				<string>2048-12-26</string>
+				<string>2049-12-26</string>
 			</array>
 		</dict>
 		<dict>
@@ -657,37 +634,36 @@
 			<string>Vespera de Ano novo</string>
 			<key>dates</key>
 			<array>
-				<date>2019-12-31T05:00:00Z</date>
-				<date>2020-12-31T05:00:00Z</date>
-				<date>2021-12-31T05:00:00Z</date>
-				<date>2022-12-31T05:00:00Z</date>
-				<date>2023-12-31T05:00:00Z</date>
-				<date>2024-12-31T05:00:00Z</date>
-				<date>2025-12-31T05:00:00Z</date>
-				<date>2026-12-31T05:00:00Z</date>
-				<date>2027-12-31T05:00:00Z</date>
-				<date>2028-12-31T05:00:00Z</date>
-				<date>2029-12-31T05:00:00Z</date>
-				<date>2030-12-31T05:00:00Z</date>
-				<date>2031-12-31T05:00:00Z</date>
-				<date>2032-12-31T05:00:00Z</date>
-				<date>2033-12-31T05:00:00Z</date>
-				<date>2034-12-31T05:00:00Z</date>
-				<date>2035-12-31T05:00:00Z</date>
-				<date>2036-12-31T05:00:00Z</date>
-				<date>2037-12-31T05:00:00Z</date>
-				<date>2038-12-31T05:00:00Z</date>
-				<date>2039-12-31T05:00:00Z</date>
-				<date>2040-12-31T05:00:00Z</date>
-				<date>2041-12-31T05:00:00Z</date>
-				<date>2042-12-31T05:00:00Z</date>
-				<date>2043-12-31T05:00:00Z</date>
-				<date>2044-12-31T05:00:00Z</date>
-				<date>2045-12-31T05:00:00Z</date>
-				<date>2046-12-31T05:00:00Z</date>
-				<date>2047-12-31T05:00:00Z</date>
-				<date>2048-12-31T05:00:00Z</date>
-				<date>2049-12-31T05:00:00Z</date>
+				<string>2020-12-31</string>
+				<string>2021-12-31</string>
+				<string>2022-12-31</string>
+				<string>2023-12-31</string>
+				<string>2024-12-31</string>
+				<string>2025-12-31</string>
+				<string>2026-12-31</string>
+				<string>2027-12-31</string>
+				<string>2028-12-31</string>
+				<string>2029-12-31</string>
+				<string>2030-12-31</string>
+				<string>2031-12-31</string>
+				<string>2032-12-31</string>
+				<string>2033-12-31</string>
+				<string>2034-12-31</string>
+				<string>2035-12-31</string>
+				<string>2036-12-31</string>
+				<string>2037-12-31</string>
+				<string>2038-12-31</string>
+				<string>2039-12-31</string>
+				<string>2040-12-31</string>
+				<string>2041-12-31</string>
+				<string>2042-12-31</string>
+				<string>2043-12-31</string>
+				<string>2044-12-31</string>
+				<string>2045-12-31</string>
+				<string>2046-12-31</string>
+				<string>2047-12-31</string>
+				<string>2048-12-31</string>
+				<string>2049-12-31</string>
 			</array>
 		</dict>
 	</array>

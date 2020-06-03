@@ -32,16 +32,6 @@
     return self;
 }
 
-// updates all custom skip dates by potentially removing any past dates
-- (void)updateCustomSkipDates
-{
-    // remove any passed dates from the custom skip dates
-    NSArray *newCustomSkipDates = [SLPrefsManager removePassedDatesFromArray:self.customSkipDates];
-    if (self.customSkipDates.count != newCustomSkipDates.count) {
-        self.customSkipDates = newCustomSkipDates;
-    }
-}
-
 // returns the total number of selected holidays to be skipped for the given alarm
 - (NSInteger)totalSelectedHolidays
 {
@@ -115,7 +105,8 @@
 // determines whether or not the alarm will be skipped from a custom skip date in a particular date
 - (BOOL)shouldSkipFromSelectedDatesOnDate:(NSDate *)date
 {
-    for (NSDate *skipDate in self.customSkipDates) {
+    for (NSString *skipDateString in self.customSkipDates) {
+        NSDate *skipDate = [[SLPrefsManager plistDateFormatter] dateFromString:skipDateString];
         if ([[NSCalendar currentCalendar] isDate:skipDate inSameDayAsDate:date]) {
             return YES;
         }
@@ -155,7 +146,8 @@
     // check to see if there are any custom skip dates to display
     if (self.customSkipDates != nil && self.customSkipDates.count > 0) {
         // append or create the skip explanation string
-        NSString *skipExplanationDateString = kSLSkipReasonDateString([SLPrefsManager skipDateStringForDate:[self.customSkipDates objectAtIndex:0] showRelativeString:YES]);
+        NSDate *skipDate = [[SLPrefsManager plistDateFormatter] dateFromString:[self.customSkipDates objectAtIndex:0]];
+        NSString *skipExplanationDateString = kSLSkipReasonDateString([SLPrefsManager skipDateStringForDate:skipDate showRelativeString:YES]);
         if (skipExplanation != nil) {
             [skipExplanation appendString:@"\n\n"];
             [skipExplanation appendString:skipExplanationDateString];

@@ -26,6 +26,7 @@ static NSString *const kSLSkipActivatedStatusKey =      @"skipActivatedStatus";
 static NSString *const kSLSkipDatesKey =                @"skipDates";
 static NSString *const kSLHolidaySkipDatesKey =         @"holidaySkipDates";
 static NSString *const kSLCustomSkipDatesKey =          @"customSkipDates";
+static NSString *const kSLCustomSkipDateStringsKey =    @"customSkipDateStrings";
 static NSString *const kSLHolidayHolidaysKey =          @"holidays";
 static NSString *const kSLHolidayNameKey =              @"name";
 static NSString *const kSLHolidayDatesKey =             @"dates";
@@ -34,6 +35,9 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
 @interface SLPrefsManager : NSObject
+
+// returns the date formatter for converting to and from saving to the plist
++ (NSDateFormatter *)plistDateFormatter;
 
 // Return an SLAlarmPrefs object with alarm information for a given alarm Id.  Return nil if no alarm is found.
 + (SLAlarmPrefs *)alarmPrefsForAlarmId:(NSString *)alarmId;
@@ -47,9 +51,6 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
-
-// returns an array of new dates that removes any dates from the given array of dates that have passed
-+ (NSArray *)removePassedDatesFromArray:(NSArray *)dates;
 
 // Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
 // This function will also remove any passed dates.
