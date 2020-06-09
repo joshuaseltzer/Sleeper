@@ -73,8 +73,16 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 // check to see if the prefs contain any of the skip dates options (added in v4.1.0)
                 NSDictionary *skipDates = [alarm objectForKey:kSLSkipDatesKey];
                 if (skipDates != nil) {
+                    // initialize the two keys which should exist inside the skip dates.  If for some reason this key does not contain the
+                    // subkeys for skip dates, create empty datasets
                     alarmPrefs.customSkipDates = [skipDates objectForKey:kSLCustomSkipDateStringsKey];
+                    if (alarmPrefs.customSkipDates == nil) {
+                        alarmPrefs.customSkipDates = [[NSArray alloc] init];
+                    }
                     alarmPrefs.holidaySkipDates = [skipDates objectForKey:kSLHolidaySkipDatesKey];
+                    if (alarmPrefs.holidaySkipDates == nil) {
+                        alarmPrefs.holidaySkipDates = [[NSDictionary alloc] init];
+                    }
 
                     // As of Sleeper 6.0.4, new custom skip dates will be stored as strings instead of dates.  To maintain compatibility with older
                     // preference files, check the old custom skip date key to see if any previous dates exist and convert them to strings.
@@ -84,18 +92,18 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                         for (NSDate *skipDate in oldCustomSkipDates) {
                             [combinedCustomSkipDates addObject:[[SLPrefsManager plistDateFormatter] stringFromDate:skipDate]];
                         }
-                        if (alarmPrefs.customSkipDates != nil && alarmPrefs.customSkipDates.count > 0) {
+                        if (alarmPrefs.customSkipDates.count > 0) {
                             [combinedCustomSkipDates addObjectsFromArray:alarmPrefs.customSkipDates];
                         }
-                        alarmPrefs.customSkipDates = combinedCustomSkipDates;
+                        alarmPrefs.customSkipDates = [combinedCustomSkipDates copy];
                     }
                     
                     // use a predicate to remove any date strings which occur in the past
-                    NSPredicate *oldDatePredicate = [NSPredicate predicateWithFormat:@"SELF >= %@", [[SLPrefsManager plistDateFormatter] stringFromDate:[NSDate date]]];
-                    alarmPrefs.customSkipDates = [alarmPrefs.customSkipDates filteredArrayUsingPredicate:oldDatePredicate];
+                    if (alarmPrefs.customSkipDates.count > 0) {
+                        NSPredicate *oldDatePredicate = [NSPredicate predicateWithFormat:@"SELF >= %@", [[SLPrefsManager plistDateFormatter] stringFromDate:[NSDate date]]];
+                        alarmPrefs.customSkipDates = [alarmPrefs.customSkipDates filteredArrayUsingPredicate:oldDatePredicate];
+                    }
                 } else {
-                    // if an alarm did not have a skip dates key in the preferences, we need to add the default
-                    // holiday skip dates
                     alarmPrefs.customSkipDates = [[NSArray alloc] init];
                     alarmPrefs.holidaySkipDates = [[NSDictionary alloc] init];
                 }
