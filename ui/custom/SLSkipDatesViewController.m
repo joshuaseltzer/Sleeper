@@ -656,13 +656,13 @@ static NSString *sSLTomorrowDateString;
                 // clear out all of the saved dates
                 [self.customSkipDates removeAllObjects];
                 
-                // reload the section responsible for showing the dates
+                // end editing mode on the controller
                 [tableView beginUpdates];
+                [self setEditing:NO animated:YES];
+
+                // reload the section responsible for showing the dates
                 [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
                               withRowAnimation:UITableViewRowAnimationFade];
-                
-                // end editing mode on the controller
-                [self setEditing:NO animated:YES];
                 [tableView endUpdates];
                 self.navigationItem.rightBarButtonItem = nil;
             } else {
@@ -835,9 +835,10 @@ static NSString *sSLTomorrowDateString;
         NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
         dateComponents.day = 1;
         NSDate *dayAfterDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
-        dateComponents.day = 0;
+        dateComponents.day = -1;
         dateComponents.weekOfYear = 1;
         NSDate *weekFromDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
+        dateComponents.day = 0;
         dateComponents.weekOfYear = 0;
         dateComponents.month = 1;
         NSDate *monthFromDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
