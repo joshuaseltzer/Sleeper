@@ -57,4 +57,5 @@
 #define kSLAllHolidaysString                        [kSLSleeperBundle localizedStringForKey:@"ALL_HOLIDAYS" value:@"All Holidays" table:@"Localizable"]
 #define kSLRecommendedHolidaysExplanationString     [kSLSleeperBundle localizedStringForKey:@"RECOMMENDED_HOLIDAYS_EXPLANATION" value:@"These are the recommended holidays based on your device's current locale." table:@"Localizable"]
 #define kSLTodayString                              [kSLMobileTimerBundle localizedStringForKey:@"TODAY" value:@"Today" table:@"Localizable"]
-#define kSLTomorrowString                           [kSLMobileTimerBundle localizedStringForKey:@"TOMORROW" value:@"Today" table:@"Localizable"]
+#define kSLTomorrowString                           [kSLMobileTimerBundle localizedStringForKey:@"TOMORROW" value:@"Tomorrow" table:@"Localizable"]
+#define kSLCustomDateString                         [kSLSleeperBundle localizedStringForKey:@"CUSTOM_DATE" value:@"Custom Date" table:@"Localizable"]

@@ -34,3 +34,4 @@
 "SKIP_REASON_HOLIDAY" = "The next holiday you've selected for this alarm is %@ (%@).";
 "ALL_HOLIDAYS" = "All Holidays";
 "RECOMMENDED_HOLIDAYS_EXPLANATION" = "These are the recommended holidays based on your device's current locale.";
+"CUSTOM_DATE" = "Custom Date";
