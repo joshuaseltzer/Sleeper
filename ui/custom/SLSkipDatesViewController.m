@@ -51,6 +51,15 @@ static NSString *sSLTomorrowDateString;
 // the device might optionally have a holiday country used to show the recommended holidays
 @property (nonatomic) SLHolidayCountry deviceHolidayCountry;
 
+// indicates that the user is currently selecting the start date when adding a date range to the custom skip dates
+@property (nonatomic) BOOL isSelectingStartDate;
+
+// indicates that the user is currently selecting the end date when adding a date range to the custom skip dates
+@property (nonatomic) BOOL isSelectingEndDate;
+
+// the start date that will be saved when the user is adding a range of dates to the custom skip dates
+@property (nonatomic, strong) NSDate *selectedStartDate;
+
 @end
 
 @implementation SLSkipDatesViewController
@@ -110,8 +119,8 @@ static NSString *sSLTomorrowDateString;
     [super setEditing:editing animated:animated];
     
     // update the sections that are either displayed or not displayed when edit mode is toggled
-    NSRange sectionUpdateRange = NSMakeRange(kSLSkipDatesViewControllerSectionAddDate,
-                                             kSLSkipDatesViewControllerSectionNumSections - 1);
+    NSRange sectionUpdateRange = NSMakeRange(kSLSkipDatesViewControllerSectionRecommendedHolidays,
+                                             kSLSkipDatesViewControllerSectionNumSections - 2);
     if (self.editing) {
         [self.tableView deleteSections:[NSIndexSet indexSetWithIndexesInRange:sectionUpdateRange]
                       withRowAnimation:UITableViewRowAnimationFade];
@@ -119,12 +128,16 @@ static NSString *sSLTomorrowDateString;
         [self.tableView insertSections:[NSIndexSet indexSetWithIndexesInRange:sectionUpdateRange]
                       withRowAnimation:UITableViewRowAnimationFade];
     }
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionAddDate]
+                  withRowAnimation:UITableViewRowAnimationFade];
     [self.navigationItem setHidesBackButton:self.editing animated:YES];
     
     // update the state of the selection style for all skip date cells when editing mode is toggled
-    for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
-        if (indexPath.section == kSLSkipDatesViewControllerSectionDates) {
-            [self updateSkipDateCellSelectionStyle:[self.tableView cellForRowAtIndexPath:indexPath]];
+    if (self.customSkipDates.count > 0) {
+        for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+            if (indexPath.section == kSLSkipDatesViewControllerSectionDates) {
+                [self updateSkipDateCellSelectionStyle:[self.tableView cellForRowAtIndexPath:indexPath]];
+            }
         }
     }
 }
@@ -179,10 +192,10 @@ static NSString *sSLTomorrowDateString;
     if (![self.customSkipDates containsObject:sSLTodayDateString]) {
         // create an action that will let the user quickly add today as a skip date
         UIAlertAction *skipTodayAlertAction = [UIAlertAction actionWithTitle:kSLTodayString
-                                                                      style:UIAlertActionStyleDefault
-                                                                    handler:^(UIAlertAction * _Nonnull action) {
-                                                                        // add the today string to the list of custom skip dates
-                                                                        [self updateCustomSkipDatesWithSkipDateString:sSLTodayDateString];
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                                         // add the today string to the list of custom skip dates
+                                                                         [self updateCustomSkipDatesWithSkipDateString:sSLTodayDateString];
                                                                     }];
         [selectDateAlertController addAction:skipTodayAlertAction];
     }
@@ -200,13 +213,25 @@ static NSString *sSLTomorrowDateString;
     }
 
     // create an action that will let the user pick a single date
-    UIAlertAction *skipSingleDateAlertAction = [UIAlertAction actionWithTitle:kSLCustomDateString
-                                                                          style:UIAlertActionStyleDefault
-                                                                        handler:^(UIAlertAction * _Nonnull action) {
-                                                                            // invoke the controller that will allow the user to pick a single custom date
-                                                                            [self presentEditDateViewControllerWithInitialDate:nil];
-                                                                        }];
+    UIAlertAction *skipSingleDateAlertAction = [UIAlertAction actionWithTitle:kSLSingleDateString
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:^(UIAlertAction * _Nonnull action) {
+                                                                          // invoke the controller that will allow the user to pick a single custom date
+                                                                          [self presentEditDateViewControllerWithTitle:kSLSelectNewDateString initialDate:nil minimumDate:nil maximumDate:nil];
+                                                                    }];
     [selectDateAlertController addAction:skipSingleDateAlertAction];
+
+    // create an action that will let the user a date range
+    UIAlertAction *skipDateRangeAlertAction = [UIAlertAction actionWithTitle:kSLDateRangeString
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                                         // indicate that the user is selecting the start date in a date range so another edit date picker can be shown afterward for the end date
+                                                                         self.isSelectingStartDate = YES;
+
+                                                                         // invoke the controller that will allow the user to pick a date range
+                                                                         [self presentEditDateViewControllerWithTitle:kSLSelectStartDateString initialDate:nil minimumDate:nil maximumDate:nil];
+                                                                    }];
+    [selectDateAlertController addAction:skipDateRangeAlertAction];
 
     // create an action that will close the alert
     UIAlertAction *closeAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
@@ -218,12 +243,11 @@ static NSString *sSLTomorrowDateString;
     [self presentViewController:selectDateAlertController animated:YES completion:nil];
 }
 
-// creates and presents the edit date view controller with the selected initial date
-- (void)presentEditDateViewControllerWithInitialDate:(NSDate *)initialDate
+// creates and presents the edit date view controller with the various options
+- (void)presentEditDateViewControllerWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate
 {
-    // create the edit date controller which will be shown as a partial modal transition to allow
-    // the user to pick a new date or edit an existing one
-    SLEditDateViewController *editDateViewController = [[SLEditDateViewController alloc] initWithInitialDate:initialDate];
+    // create the edit date controller which will be shown as a partial modal transition to allow the user to pick a new date or edit an existing one
+    SLEditDateViewController *editDateViewController = [[SLEditDateViewController alloc] initWithTitle:title initialDate:initialDate minimumDate:minimumDate maximumDate:maximumDate];
     editDateViewController.delegate = self;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editDateViewController];
     navController.modalPresentationStyle = UIModalPresentationCustom;
@@ -253,11 +277,6 @@ static NSString *sSLTomorrowDateString;
             // add a new date to the array of skip dates
             [self.customSkipDates addObject:skipDateString];
             tableNeedsRefresh = YES;
-            
-            // set the edit button to the right bar button if there are skip dates to remove
-            if (self.customSkipDates.count > 0) {
-                self.navigationItem.rightBarButtonItem = self.editButtonItem;
-            }
         }
     }
     // refresh the table if necessary
@@ -278,6 +297,72 @@ static NSString *sSLTomorrowDateString;
                                           animated:YES];
         }
     }
+
+    // set the edit button to the right bar button if there are skip dates to remove
+    if (self.customSkipDates.count > 0) {
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
+        [self.tableView setEditing:NO animated:NO];
+    }
+}
+
+// logic that will be used to update the data source and UI (i.e. table view) with a range of dates using the given end date
+- (void)updateCustomSkipDateRangeWithEndDate:(NSDate *)endDate
+{
+    BOOL tableNeedsRefresh = NO;
+
+    // iterate through all of the dates from the start date to the end date
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.day = 1;
+    NSDate *workingDate = self.selectedStartDate;
+    NSComparisonResult dateComparison = [calendar compareDate:workingDate toDate:endDate toUnitGranularity:NSCalendarUnitDay];
+    while (dateComparison == NSOrderedAscending || dateComparison == NSOrderedSame) {
+        // convert the current working date to a skip date string
+        NSString *workingSkipDateString = [[SLPrefsManager plistDateFormatter] stringFromDate:workingDate];
+
+        // check to see if the date has already been added (in this case, do not add a new date)
+        BOOL containsDate = NO;
+        for (NSString *existingSkipDateString in self.customSkipDates) {
+            if ([existingSkipDateString isEqualToString:workingSkipDateString]) {
+                containsDate = YES;
+                break;
+            }
+        }
+        if (!containsDate) {
+            // add a new date to the array of skip dates
+            [self.customSkipDates addObject:workingSkipDateString];
+            tableNeedsRefresh = YES;
+        }
+
+        // increment the working date by a day
+        workingDate = [calendar dateByAddingComponents:dateComponents toDate:workingDate options:0];
+        dateComparison = [calendar compareDate:workingDate toDate:endDate toUnitGranularity:NSCalendarUnitDay];
+    }
+    
+    // refresh the table if necessary
+    if (tableNeedsRefresh) {
+        // sort the custom skip dates
+        [self.customSkipDates sortUsingSelector:@selector(compare:)];
+
+        // reload the section with the custom skip dates
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
+                      withRowAnimation:UITableViewRowAnimationFade];
+
+        // scroll to the first skip date which was added in the range
+        NSUInteger rowIndex = [self.customSkipDates indexOfObject:[[SLPrefsManager plistDateFormatter] stringFromDate:self.selectedStartDate]];
+        if (rowIndex != NSNotFound) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowIndex
+                                                                      inSection:kSLSkipDatesViewControllerSectionDates]
+                                  atScrollPosition:UITableViewScrollPositionMiddle
+                                          animated:YES];
+        }
+    }
+
+    // set the edit button to the right bar button if there are skip dates to remove
+    if (self.customSkipDates.count > 0) {
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
+        [self.tableView setEditing:NO animated:NO];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -287,7 +372,7 @@ static NSString *sSLTomorrowDateString;
     // the number of sections displayed in the table view varies depending on whether or not we are in editing mode
     NSInteger numSections = 0;
     if (self.editing) {
-        numSections = 1;
+        numSections = 2;
     } else {
         numSections = kSLSkipDatesViewControllerSectionNumSections;
     }
@@ -348,21 +433,27 @@ static NSString *sSLTomorrowDateString;
             break;
         }
         case kSLSkipDatesViewControllerSectionAddDate: {
-            UITableViewCell *addNewDateCell = [tableView dequeueReusableCellWithIdentifier:kSLAddNewDateTableViewCellIdentifier];
-            if (addNewDateCell == nil) {
-                addNewDateCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                        reuseIdentifier:kSLAddNewDateTableViewCellIdentifier];
-                addNewDateCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                addNewDateCell.selectionStyle = UITableViewCellSelectionStyleDefault;
-                addNewDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
-                [self setBackgroundColorsForCell:addNewDateCell];
+            // configure this cell differently if we are in edit mode
+            if (self.editing) {
+                cell = [self tableView:tableView resetDefaultCellForIndexPath:indexPath];
+            } else {
+                UITableViewCell *addNewDateCell = [tableView dequeueReusableCellWithIdentifier:kSLAddNewDateTableViewCellIdentifier];
+                if (addNewDateCell == nil) {
+                    addNewDateCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                            reuseIdentifier:kSLAddNewDateTableViewCellIdentifier];
+                    addNewDateCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    addNewDateCell.selectionStyle = UITableViewCellSelectionStyleDefault;
+                    addNewDateCell.textLabel.textAlignment = NSTextAlignmentLeft;
+                    [self setBackgroundColorsForCell:addNewDateCell];
+                }
+                
+                // customize the cell
+                addNewDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+                addNewDateCell.textLabel.text = kSLAddNewDateString;
+                
+                cell = addNewDateCell;
             }
             
-            // customize the cell
-            addNewDateCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
-            addNewDateCell.textLabel.text = kSLAddNewDateString;
-            
-            cell = addNewDateCell;
             break;
         }
         case kSLSkipDatesViewControllerSectionRecommendedHolidays:
@@ -372,26 +463,32 @@ static NSString *sSLTomorrowDateString;
             cell = [self tableView:tableView countryCellForHolidayCountry:[self offsetHolidayCountryIndexForIndex:indexPath.row increase:YES]];
             break;
         case kSLSkipDatesViewControllerSectionResetDefault: {
-            UITableViewCell *resetDefaultCell = [tableView dequeueReusableCellWithIdentifier:kSLResetDefaultTableViewCellIdentifier];
-            if (resetDefaultCell == nil) {
-                resetDefaultCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                          reuseIdentifier:kSLResetDefaultTableViewCellIdentifier];
-                resetDefaultCell.accessoryType = UITableViewCellAccessoryNone;
-                resetDefaultCell.selectionStyle = UITableViewCellSelectionStyleDefault;
-                resetDefaultCell.textLabel.textAlignment = NSTextAlignmentCenter;
-                [self setBackgroundColorsForCell:resetDefaultCell];
-            }
-            
-            // customize the cell
-            resetDefaultCell.textLabel.textColor = [SLCompatibilityHelper destructiveLabelColor];
-            resetDefaultCell.textLabel.text = kSLResetDefaultString;
-            
-            cell = resetDefaultCell;
+            cell = [self tableView:tableView resetDefaultCellForIndexPath:indexPath];
             break;
         }
     }
     
     return cell;
+}
+
+// creates and returns a cell that is used to reset the default state of a part of the table
+- (UITableViewCell *)tableView:(UITableView *)tableView resetDefaultCellForIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *resetDefaultCell = [tableView dequeueReusableCellWithIdentifier:kSLResetDefaultTableViewCellIdentifier];
+    if (resetDefaultCell == nil) {
+        resetDefaultCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                    reuseIdentifier:kSLResetDefaultTableViewCellIdentifier];
+        resetDefaultCell.accessoryType = UITableViewCellAccessoryNone;
+        resetDefaultCell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        resetDefaultCell.textLabel.textAlignment = NSTextAlignmentCenter;
+        [self setBackgroundColorsForCell:resetDefaultCell];
+    }
+    
+    // customize the cell
+    resetDefaultCell.textLabel.textColor = [SLCompatibilityHelper destructiveLabelColor];
+    resetDefaultCell.textLabel.text = kSLResetDefaultString;
+
+    return resetDefaultCell;
 }
 
 // creates and returns a cell that is used to display a holiday country for the given holiday country identifier
@@ -490,9 +587,14 @@ static NSString *sSLTomorrowDateString;
             footerTitle = kSLSkipDateExplanationString;
             break;
         case kSLSkipDatesViewControllerSectionAddDate:
-            // use a single space for the footer so that the delegate method for the height is called and effectively hidden
-            if (self.deviceHolidayCountry == -1) {
-                footerTitle = @" ";
+            // display a different footer depending on if the table is in editing mode
+            if (self.editing) {
+                footerTitle = kSLDefaultSkipDatesString;
+            } else {
+                // use a single space for the footer so that the delegate method for the height is called and effectively hidden
+                if (self.deviceHolidayCountry == -1) {
+                    footerTitle = @" ";
+                }
             }
             break;
         case kSLSkipDatesViewControllerSectionRecommendedHolidays:
@@ -504,7 +606,7 @@ static NSString *sSLTomorrowDateString;
             }
             break;
         case kSLSkipDatesViewControllerSectionResetDefault:
-            footerTitle = kSLDefaultSkipDatesString;
+            footerTitle = kSLDefaultSkipDatesAndHolidaysString;
             break;
     }
     return footerTitle;
@@ -539,7 +641,7 @@ static NSString *sSLTomorrowDateString;
                 [self setEditing:NO animated:YES];
 
                 // display the edit date controller
-                [self presentEditDateViewControllerWithInitialDate:[[SLPrefsManager plistDateFormatter] dateFromString:editDateString]];
+                [self presentEditDateViewControllerWithTitle:kSLEditExistingDateString initialDate:[[SLPrefsManager plistDateFormatter] dateFromString:editDateString] minimumDate:nil maximumDate:nil];
 
                 break;
             } else {
@@ -549,8 +651,24 @@ static NSString *sSLTomorrowDateString;
         case kSLSkipDatesViewControllerSectionAddDate: {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
             
-            // show the alert controller (i.e. action sheet) that will allow the user to add a new custom skip date
-            [self presentSkipDateAlertController];
+            // handle the cell selection for this row differently if we are in edit mode
+            if (self.editing) {
+                // clear out all of the saved dates
+                [self.customSkipDates removeAllObjects];
+                
+                // reload the section responsible for showing the dates
+                [tableView beginUpdates];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
+                              withRowAnimation:UITableViewRowAnimationFade];
+                
+                // end editing mode on the controller
+                [self setEditing:NO animated:YES];
+                [tableView endUpdates];
+                self.navigationItem.rightBarButtonItem = nil;
+            } else {
+                // show the alert controller (i.e. action sheet) that will allow the user to add a new custom skip date
+                [self presentSkipDateAlertController];
+            }
             break;
         }
         case kSLSkipDatesViewControllerSectionRecommendedHolidays: {
@@ -668,7 +786,7 @@ static NSString *sSLTomorrowDateString;
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     CGFloat height = UITableViewAutomaticDimension;
-    if (self.deviceHolidayCountry == -1 && (section == kSLSkipDatesViewControllerSectionRecommendedHolidays || section == kSLSkipDatesViewControllerSectionAddDate)) {
+    if (!self.editing && self.deviceHolidayCountry == -1 && (section == kSLSkipDatesViewControllerSectionRecommendedHolidays || section == kSLSkipDatesViewControllerSectionAddDate)) {
         height = 0.1;
     }
     return height;
@@ -703,10 +821,49 @@ static NSString *sSLTomorrowDateString;
 #pragma mark - SLEditDateViewControllerDelegate
 
 // invoked when the edit date view controller saves a date
-- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didUpdateDate:(NSDate *)date
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didSaveDate:(NSDate *)date
 {
-    // invoke the logic that will add or update the date in our array and table
-    [self updateCustomSkipDatesWithSkipDateString:[[SLPrefsManager plistDateFormatter] stringFromDate:date]];
+    // check if the user invoked the edit date controller from selecting a date range
+    if (self.isSelectingStartDate) {
+        // save the date as the start date that will be used when adding the range of dates
+        self.selectedStartDate = date;
+        self.isSelectingStartDate = NO;
+        self.isSelectingEndDate = YES;
+
+        // create some new dates that will be used to restrict the user when the second edit date controller is shown
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        dateComponents.day = 1;
+        NSDate *dayAfterDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
+        dateComponents.day = 0;
+        dateComponents.weekOfYear = 1;
+        NSDate *weekFromDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
+        dateComponents.weekOfYear = 0;
+        dateComponents.month = 1;
+        NSDate *monthFromDate = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:date] options:0];
+
+        // invoke the controller that will allow the user to pick the end date of the date range
+        [self presentEditDateViewControllerWithTitle:kSLSelectEndDateString initialDate:weekFromDate minimumDate:dayAfterDate maximumDate:monthFromDate];
+    } else if (self.isSelectingEndDate) {
+        // add the range of dates to the custom skip dates array and update the table accordingly
+        [self updateCustomSkipDateRangeWithEndDate:date];
+
+        // clear/reset the date range properties
+        self.isSelectingEndDate = NO;
+        self.selectedStartDate = nil;
+    } else {
+        // invoke the logic that will add or update the selected date in our array and table
+        [self updateCustomSkipDatesWithSkipDateString:[[SLPrefsManager plistDateFormatter] stringFromDate:date]];
+    }
+}
+
+// invoked when the date selection was cancelled
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didCancelDate:(NSDate *)date
+{
+    // in the case of selecting a date range, clear/reset the saved properties
+    self.isSelectingStartDate = NO;
+    self.isSelectingEndDate = NO;
+    self.selectedStartDate = nil;
 }
 
 #pragma mark - SLHolidaySelectionDelegate

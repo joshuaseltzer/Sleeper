@@ -25,19 +25,28 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 // the picker view which is responsible for showing the minutes and seconds for picking a time
 @property (nonatomic, strong) UIDatePicker *datePickerView;
 
-// the optional initial date that is loaded with this controller
+// the optional initial date
 @property (nonatomic, strong) NSDate *initialDate;
+
+// the optional minimum date
+@property (nonatomic, strong) NSDate *minimumDate;
+
+// the optional maximum date
+@property (nonatomic, strong) NSDate *maximumDate;
 
 @end
 
 @implementation SLEditDateViewController
 
-// initialize this controller with an optional initial date
-- (instancetype)initWithInitialDate:(NSDate *)initialDate
+// initialize this controller with a required title and optional dates
+- (instancetype)initWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate
 {
     self = [super init];
     if (self) {
+        self.navigationItem.title = title;
         self.initialDate = initialDate;
+        self.minimumDate = minimumDate;
+        self.maximumDate = maximumDate;
     }
     return self;
 }
@@ -46,12 +55,17 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 {
     [super viewDidLoad];
     
-    self.navigationItem.title = kSLSelectDateString;
-    
     // create and customize the date picker
     self.datePickerView = [[UIDatePicker alloc] initWithFrame:CGRectZero];
     self.datePickerView.datePickerMode = UIDatePickerModeDate;
-    [self.datePickerView setMinimumDate:[NSDate date]];
+    if (self.minimumDate != nil) {
+        [self.datePickerView setMinimumDate:self.minimumDate];
+    } else {
+        [self.datePickerView setMinimumDate:[NSDate date]];
+    }
+    if (self.maximumDate != nil) {
+        [self.datePickerView setMaximumDate:self.maximumDate];
+    }
     if (self.initialDate != nil) {
         self.datePickerView.date = self.initialDate;
     }
@@ -106,20 +120,27 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 }
 
 // invoked when the user presses the cancel button
-- (void)cancelButtonPressed:(UIBarButtonItem *)doneButton
+- (void)cancelButtonPressed:(UIBarButtonItem *)cancelButton
 {
     // dismiss the controller
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        // tell the delegate that the date selection was cancelled
+        if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
+            [self.delegate SLEditDateViewController:self didCancelDate:self.datePickerView.date];
+        }
+    }];
 }
 
 // invoked when the user presses the save button
-- (void)saveButtonPressed:(UIBarButtonItem *)doneButton
+- (void)saveButtonPressed:(UIBarButtonItem *)saveButton
 {
-    // tell the delegate about the updated date selection
-    if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
-        [self.delegate SLEditDateViewController:self didUpdateDate:self.datePickerView.date];
-    }
-    [self cancelButtonPressed:nil];
+    // dismiss the controller
+    [self dismissViewControllerAnimated:YES completion:^{
+        // tell the delegate about the saved selected date
+        if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
+            [self.delegate SLEditDateViewController:self didSaveDate:self.datePickerView.date];
+        }
+    }];
 }
 
 @end

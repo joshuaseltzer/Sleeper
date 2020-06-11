@@ -16,17 +16,19 @@
 // delegate for the edit date controller
 @protocol SLEditDateViewControllerDelegate <NSObject>
 
-// notify the delegate that the date was updated
-- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController
-                   didUpdateDate:(NSDate *)date;
+// notify the delegate that the date was saved
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didSaveDate:(NSDate *)date;
+
+// notify the delegate that the date selection was cancelled
+- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didCancelDate:(NSDate *)date;
 
 @end
 
 // customized view controller which simply contains a date picker view
 @interface SLEditDateViewController : UIViewController
 
-// initialize this controller with an optional initial date
-- (instancetype)initWithInitialDate:(NSDate *)initialDate;
+// initialize this controller with a required title and optional dates
+- (instancetype)initWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate;
 
 // the delegate of this view controller
 @property (nonatomic, weak) id <SLEditDateViewControllerDelegate> delegate;
