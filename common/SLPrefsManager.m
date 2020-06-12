@@ -25,7 +25,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         sSLSkipDatesUIDateFormatter = [[NSDateFormatter alloc] init];
         sSLSkipDatesUIDateFormatter.dateFormat = @"EEEE, MMMM d, yyyy";
         sSLSkipDatesUIDateFormatter.locale = [NSLocale currentLocale];
-        sSLSkipDatesUIDateFormatter.timeZone = [NSTimeZone localTimeZone];
     }
     return sSLSkipDatesUIDateFormatter;
 }
@@ -38,8 +37,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         // reading and storing to the plist
         sSLSkipDatesPlistDateFormatter = [[NSDateFormatter alloc] init];
         sSLSkipDatesPlistDateFormatter.dateFormat = @"yyyy-MM-dd";
-        sSLSkipDatesPlistDateFormatter.locale = [NSLocale currentLocale];
-        sSLSkipDatesPlistDateFormatter.timeZone = [NSTimeZone localTimeZone];
+        sSLSkipDatesPlistDateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
     }
     return sSLSkipDatesPlistDateFormatter;
 }

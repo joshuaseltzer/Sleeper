@@ -28,7 +28,9 @@
 "NUM_DATES" = "%ld Dates";
 "NUM_DATE" = "%ld Date";
 "DEFAULT_SKIP_DATES" = "Remove all skip dates for this alarm.";
+"CONFIRM_DEFAULT_SKIP_DATES" = "Are you sure you want to remove all of the skip dates for this alarm?";
 "DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Remove all skip dates, including any holiday selections, for this alarm.";
+"CONFIRM_DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Are you sure you want to remove all of the skip dates and holiday selections for this alarm?";
 "SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
 "HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
 "ADD_NEW_DATE" = "Add New Date...";

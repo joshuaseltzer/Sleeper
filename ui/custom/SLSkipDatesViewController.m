@@ -169,7 +169,7 @@ static NSString *sSLTomorrowDateString;
 }
 
 // presents the alert controller which dynamic options depending on which skip dates are already included for this alarm
-- (void)presentSkipDateAlertController
+- (void)presentSkipDateAlertControllerFromIndexPath:(NSIndexPath *)indexPath
 {
     // create an alert controller (shown as an action sheet) that will be used to allow the user to add various dates
     UIAlertController *selectDateAlertController = [UIAlertController alertControllerWithTitle:kSLAddNewDateString
@@ -239,6 +239,18 @@ static NSString *sSLTomorrowDateString;
                                                              handler:nil];
     [selectDateAlertController addAction:closeAlertAction];
 
+    // if the popover presentation controller exists, then we require one for this device (iPad)
+    if (selectDateAlertController.popoverPresentationController != nil && indexPath != nil) {
+        // grab the cell that invoked this method
+        UITableViewCell *addDateCell = [self.tableView cellForRowAtIndexPath:indexPath];
+
+        // set the popover presentation controller view
+        if (addDateCell != nil) {
+            selectDateAlertController.popoverPresentationController.sourceView = addDateCell.contentView;
+            selectDateAlertController.popoverPresentationController.sourceRect = addDateCell.contentView.bounds;
+        }
+    }
+
     // present the alert
     [self presentViewController:selectDateAlertController animated:YES completion:nil];
 }
@@ -253,6 +265,93 @@ static NSString *sSLTomorrowDateString;
     navController.modalPresentationStyle = UIModalPresentationCustom;
     navController.transitioningDelegate = self;
     [self presentViewController:navController animated:YES completion:nil];
+}
+
+// creates and presents a confirmation alert that asks the user if they'd really like to clear the skip dates / holidays
+- (void)presentConfirmationAlertControllerWithMessage:(NSString *)message includeHolidays:(BOOL)includeHolidays
+{
+    // create an alert that lets the user decide if they would like to clear the skip dates
+    UIAlertController *confirmationAlertController = [UIAlertController alertControllerWithTitle:kSLResetDefaultString
+                                                                                         message:message
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+
+    // create an action that will clear the dates (and optionally holidays)
+    UIAlertAction *yesAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", nil)
+                                                             style:UIAlertActionStyleDestructive
+                                                           handler:^(UIAlertAction * _Nonnull action) {
+                                                                // add the today string to the list of custom skip dates
+                                                                [self clearSkipDatesIncludingHolidaySelections:includeHolidays];
+
+                                                                // after a short delay (to allow the table to animate its changes), scroll the table to the top
+                                                                // but only if we are removing the skip dates
+                                                                if (!includeHolidays) {
+                                                                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
+                                                                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                                                                        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0
+                                                                                                                                  inSection:kSLSkipDatesViewControllerSectionAddDate]
+                                                                                              atScrollPosition:UITableViewScrollPositionMiddle
+                                                                                                      animated:YES];
+                                                                    });
+                                                                }
+                                                            }];
+    [confirmationAlertController addAction:yesAlertAction];
+
+    // create an action that will close the alert
+    UIAlertAction *noAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil)
+                                                            style:UIAlertActionStyleCancel
+                                                          handler:nil];
+    [confirmationAlertController addAction:noAlertAction];
+
+    // present the alert
+    [self presentViewController:confirmationAlertController animated:YES completion:nil];
+}
+
+// removes all of the skip dates and optionally the holiday selections as well
+- (void)clearSkipDatesIncludingHolidaySelections:(BOOL)includeHolidaySelections
+{
+    [self.tableView beginUpdates];
+
+    // clear out all of the saved dates after saving how many rows will need to be cleared
+    [self.customSkipDates removeAllObjects];
+    
+    // reload the section with the custom skip dates
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
+                  withRowAnimation:UITableViewRowAnimationFade];
+
+    // remove the edit button from the controller since there are no dates to edit
+    self.navigationItem.rightBarButtonItem = nil;
+
+    // clear out any of the selected holidays if necessary
+    if (includeHolidaySelections) {
+        NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
+        for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
+            // get the holidays that correspond to the country's particular resource
+            NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
+            NSMutableArray *selectedHolidayNames = [[NSMutableArray alloc] initWithArray:[self.holidaySkipDates objectForKey:resourceName]];
+            if (selectedHolidayNames != nil && selectedHolidayNames.count > 0) {
+                // remove all selected holidays
+                [selectedHolidayNames removeAllObjects];
+                [self.holidaySkipDates setObject:selectedHolidayNames forKey:resourceName];
+
+                // add the corresponding index path to update
+                if (holidayCountry == self.deviceHolidayCountry) {
+                    [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:0
+                                                                                    inSection:kSLSkipDatesViewControllerSectionRecommendedHolidays]];
+                } else {
+                    [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
+                                                                                    inSection:kSLSkipDatesViewControllerSectionAllHolidays]];
+                }
+            }
+        }
+
+        // reload any of the country holiday rows in the table
+        if (updatedHolidayCountryIndexPaths.count > 0) {
+            [self.tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
+                                  withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
+
+    [self.tableView endUpdates];
 }
 
 // logic that will be used to update the data source and UI (i.e. table view) with the given custom skip date string
@@ -453,7 +552,6 @@ static NSString *sSLTomorrowDateString;
                 
                 cell = addNewDateCell;
             }
-            
             break;
         }
         case kSLSkipDatesViewControllerSectionRecommendedHolidays:
@@ -653,21 +751,14 @@ static NSString *sSLTomorrowDateString;
             
             // handle the cell selection for this row differently if we are in edit mode
             if (self.editing) {
-                // clear out all of the saved dates
-                [self.customSkipDates removeAllObjects];
-                
-                // end editing mode on the controller
-                [tableView beginUpdates];
-                [self setEditing:NO animated:YES];
+                // present the user with an alert that asks if they are sure they would like to remove the custom skip dates
+                [self presentConfirmationAlertControllerWithMessage:kSLConfirmDefaultSkipDatesString includeHolidays:NO];
 
-                // reload the section responsible for showing the dates
-                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kSLSkipDatesViewControllerSectionDates]
-                              withRowAnimation:UITableViewRowAnimationFade];
-                [tableView endUpdates];
-                self.navigationItem.rightBarButtonItem = nil;
+                // end editing on the table
+                [self setEditing:NO animated:YES];
             } else {
                 // show the alert controller (i.e. action sheet) that will allow the user to add a new custom skip date
-                [self presentSkipDateAlertController];
+                [self presentSkipDateAlertControllerFromIndexPath:indexPath];
             }
             break;
         }
@@ -683,56 +774,9 @@ static NSString *sSLTomorrowDateString;
         }
         case kSLSkipDatesViewControllerSectionResetDefault: {
             [tableView deselectRowAtIndexPath:indexPath animated:YES];
-            
-            // clear out all of the saved dates after saving how many rows will need to be cleared
-            NSInteger rowsToRemove = self.customSkipDates.count;
-            [self.customSkipDates removeAllObjects];
-            
-            // update the UI to indicate the changes by removing all of the rows in the custom skip dates section
-            NSMutableArray *customSkipDatesIndexPaths = [[NSMutableArray alloc] initWithCapacity:rowsToRemove];
-            for (NSInteger i = 0; i < rowsToRemove; i++) {
-                [customSkipDatesIndexPaths addObject:[NSIndexPath indexPathForRow:i
-                                                                        inSection:kSLSkipDatesViewControllerSectionDates]];
-            }
 
-            // remove any custom skip dates from the table
-            [tableView beginUpdates];
-            if (customSkipDatesIndexPaths.count > 0) {
-                [tableView deleteRowsAtIndexPaths:customSkipDatesIndexPaths
-                                 withRowAnimation:UITableViewRowAnimationFade];
-            }
-
-            // clear out any of the selected holidays
-            NSMutableArray *updatedHolidayCountryIndexPaths = [[NSMutableArray alloc] init];
-            for (SLHolidayCountry holidayCountry = 0; holidayCountry < kSLHolidayCountryNumCountries; holidayCountry++) {
-                // get the holidays that correspond to the country's particular resource
-                NSString *resourceName = [SLPrefsManager resourceNameForHolidayCountry:holidayCountry];
-                NSMutableArray *selectedHolidayNames = [[NSMutableArray alloc] initWithArray:[self.holidaySkipDates objectForKey:resourceName]];
-                if (selectedHolidayNames != nil && selectedHolidayNames.count > 0) {
-                    // remove all selected holidays
-                    [selectedHolidayNames removeAllObjects];
-                    [self.holidaySkipDates setObject:selectedHolidayNames forKey:resourceName];
-
-                    // add the corresponding index path to update
-                    if (holidayCountry == self.deviceHolidayCountry) {
-                        [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:0
-                                                                                      inSection:kSLSkipDatesViewControllerSectionRecommendedHolidays]];
-                    } else {
-                        [updatedHolidayCountryIndexPaths addObject:[NSIndexPath indexPathForRow:holidayCountry
-                                                                                      inSection:kSLSkipDatesViewControllerSectionAllHolidays]];
-                    }
-                }
-            }
-
-            // reload any of the country holiday rows in the table
-            if (updatedHolidayCountryIndexPaths.count > 0) {
-                [tableView reloadRowsAtIndexPaths:updatedHolidayCountryIndexPaths
-                                withRowAnimation:UITableViewRowAnimationFade];
-            }
-            [tableView endUpdates];
-            
-            // remove the edit button from the controller since there are no dates to edit
-            self.navigationItem.rightBarButtonItem = nil;
+            // present the user with an alert that asks if they are sure they would like to remove the custom skip dates
+            [self presentConfirmationAlertControllerWithMessage:kSLConfirmDefaultSkipDatesAndHolidaysString includeHolidays:YES];
             break;
         }
     }
