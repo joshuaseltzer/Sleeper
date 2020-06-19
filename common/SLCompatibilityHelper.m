@@ -20,12 +20,38 @@
 
 @end
 
+// define an extension to UIView to allow for customization of a UIAlertController's background colors using associated objects
+@interface UIView (AssociatedObject)
+
+@property (nonatomic, strong) id subviewsBackgroundColor;
+
+@end
+
+@implementation UIView (AssociatedObject)
+@dynamic subviewsBackgroundColor;
+
+- (id)subviewsBackgroundColor
+{
+    return objc_getAssociatedObject(self, @selector(subviewsBackgroundColor));
+}
+- (void)setSubviewsBackgroundColor:(id)color
+{
+    objc_setAssociatedObject(self, @selector(subviewsBackgroundColor), color, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    for (UIView *subview in self.subviews) {
+        subview.backgroundColor = color;
+    }
+}
+
+@end
+
 // define some static color objects that will be used throughout the UI
 static UIColor *sSLPickerViewBackgroundColor = nil;
 static UIColor *sSLDefaultLabelColor = nil;
 static UIColor *sSLDestructiveLabelColor = nil;
 static UIColor *sSLTableViewCellBackgroundColor = nil;
 static UIColor *sSLTableViewCellSelectedBackgroundColor = nil;
+static UIColor *sSLAlertControllerDarkBackgroundColor = nil;
+static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
 
 @implementation SLCompatibilityHelper
 
@@ -291,6 +317,78 @@ static UIColor *sSLTableViewCellSelectedBackgroundColor = nil;
         }
     }
     return sSLTableViewCellSelectedBackgroundColor;
+}
+
+// iOS 10, iOS 11, iOS 12: returns the custom background color applied to some of the subviews contained in a UIAlertController to mimic the dark appearance
+// Note this is not necessary in iOS 13 since the alert controller uses the native dark mode APIs
++ (UIColor *)alertControllerDarkBackgroundColor
+{
+    if (!sSLAlertControllerDarkBackgroundColor) {
+        sSLAlertControllerDarkBackgroundColor = [UIColor colorWithRed:41.0 / 255.0
+                                                                green:41.0 / 255.0
+                                                                 blue:41.0 / 255.0
+                                                                alpha:1.0];
+    }
+    return sSLAlertControllerDarkBackgroundColor;
+}
+
+// iOS 10, iOS 11, iOS 12: returns the custom background color for the line separators that are used in UIAlertControllers
+// Note this is not necessary in iOS 13 since the alert controller uses the native dark mode APIs
++ (UIColor *)alertControllerDarkLineSeparatorColor
+{
+    if (!sSLAlertControllerDarkLineSeparatorColor) {
+        sSLAlertControllerDarkLineSeparatorColor = [UIColor colorWithRed:101.0 / 255.0
+                                                                   green:101.0 / 255.0
+                                                                    blue:101.0 / 255.0
+                                                                   alpha:1.0];
+    }
+    return sSLAlertControllerDarkLineSeparatorColor;
+}
+
+// modifies an alert controller's subviews appropriately if necessary for the current version of iOS
++ (void)updateSubviewsForAlertController:(UIAlertController *)alertController
+{
+    // iterate through the alert controller's subviews to set the background color of the action buttons (not including the cancel buttons)
+    UIView *firstSubview = alertController.view.subviews.firstObject;
+    if (firstSubview != nil && firstSubview.subviews.count > 0) {
+        UIView *secondSubview = firstSubview.subviews.firstObject;
+        for (UIView *subview in secondSubview.subviews) {
+            subview.backgroundColor = [SLCompatibilityHelper alertControllerDarkBackgroundColor];
+        }
+    }
+
+    // for alert styles of UIAlertController, update the title and message font color
+    if (alertController.preferredStyle == UIAlertControllerStyleAlert) {
+        // modify the title and message text with the correct foreground color
+        NSMutableAttributedString *modifiedTitle = [[NSMutableAttributedString alloc] initWithString:alertController.title];
+        [modifiedTitle addAttribute:NSForegroundColorAttributeName value:[SLCompatibilityHelper defaultLabelColor] range:NSMakeRange(0, alertController.title.length)];
+        [modifiedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17.0] range:NSMakeRange(0, alertController.title.length)];
+        [alertController setValue:modifiedTitle forKey:@"attributedTitle"];
+        NSMutableAttributedString *modifiedMessage = [[NSMutableAttributedString alloc] initWithString:alertController.message];
+        [modifiedMessage addAttribute:NSForegroundColorAttributeName value:[SLCompatibilityHelper defaultLabelColor] range:NSMakeRange(0, alertController.message.length)];
+        [modifiedMessage addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13.0] range:NSMakeRange(0, alertController.message.length)];
+        [alertController setValue:modifiedMessage forKey:@"attributedMessage"];
+    }
+}
+
+// Uses the appearance API to modify the look and feel of a UIAlertController's various views for the current version of iOS
+// This method will take care of coloring the header of the alert (only for action sheet alerts), the cancel button, and the separator lines
++ (void)updateDefaultUIAlertControllerAppearance
+{
+    // modify the header view of an alert controller (only applicable to UIAlertControllerStyleActionSheet)
+    ((UIView *)[NSClassFromString(@"_UIInterfaceActionGroupHeaderScrollView") appearance]).subviewsBackgroundColor = [SLCompatibilityHelper alertControllerDarkBackgroundColor];
+    
+    // modify the cancel button's background view
+    ((UIView *)[NSClassFromString(@"_UIAlertControlleriOSActionSheetCancelBackgroundView") appearance]).subviewsBackgroundColor = [SLCompatibilityHelper alertControllerDarkBackgroundColor];
+
+    // modify the colors of various views to display the selection of the action correctly
+    ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIInterfaceActionCustomViewRepresentationView"), nil]).backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+    ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIAlertControlleriOSActionSheetCancelBackgroundView"), nil]).alpha = 0.95;
+    ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIInterfaceActionCustomViewRepresentationView"), nil]).subviewsBackgroundColor = [UIColor clearColor];
+
+    // modify the separator line colors
+    ((UIView *)[NSClassFromString(@"_UIInterfaceActionItemSeparatorView_iOS") appearance]).backgroundColor = [SLCompatibilityHelper alertControllerDarkLineSeparatorColor];
+    ((UIView *)[NSClassFromString(@"_UIInterfaceActionItemSeparatorView_iOS") appearance]).subviewsBackgroundColor = [UIColor clearColor];
 }
 
 // iOS 8 / iOS 9: helper function that will investigate an alarm local notification and alarm Id to see if it is skippable

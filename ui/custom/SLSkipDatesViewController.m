@@ -100,6 +100,11 @@ static NSString *sSLTomorrowDateString;
     [super viewDidLoad];
     
     self.title = kSLSkipDatesString;
+
+    // update the appearance for all UIAlertControllers which might be shown in this view controller for the necessary versions of iOS
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+        [SLCompatibilityHelper updateDefaultUIAlertControllerAppearance];
+    }
     
     // create and customize the table
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStyleGrouped];
@@ -251,6 +256,11 @@ static NSString *sSLTomorrowDateString;
         }
     }
 
+    // modify the subviews of the alert controller if necessary
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+        [SLCompatibilityHelper updateSubviewsForAlertController:selectDateAlertController];
+    }
+
     // present the alert
     [self presentViewController:selectDateAlertController animated:YES completion:nil];
 }
@@ -301,6 +311,11 @@ static NSString *sSLTomorrowDateString;
                                                             style:UIAlertActionStyleCancel
                                                           handler:nil];
     [confirmationAlertController addAction:noAlertAction];
+
+    // modify the subviews of the alert controller if necessary
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+        [SLCompatibilityHelper updateSubviewsForAlertController:confirmationAlertController];
+    }
 
     // present the alert
     [self presentViewController:confirmationAlertController animated:YES completion:nil];

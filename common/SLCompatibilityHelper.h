@@ -86,4 +86,10 @@
 // iOS 10, iOS 11, iOS 12, iOS 13: returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor;
 
+// modifies an alert controller's subviews appropriately if necessary for the current version of iOS
++ (void)updateSubviewsForAlertController:(UIAlertController *)alertController;
+
+// uses the appearance API to modify the look and feel of a UIAlertController's various views for the current version of iOS
++ (void)updateDefaultUIAlertControllerAppearance;
+
 @end
