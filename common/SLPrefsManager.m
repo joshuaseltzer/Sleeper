@@ -376,6 +376,12 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountryDenmark:
             countryCode = @"dk";
             break;
+        case kSLHolidayCountryDominicanRepublic:
+            countryCode = @"do";
+            break;
+        case kSLHolidayCountryEgypt:
+            countryCode = @"eg";
+            break;
         case kSLHolidayCountryEstonia:
             countryCode = @"ee";
             break;
@@ -400,6 +406,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountryIreland:
             countryCode = @"ie";
             break;
+        case kSLHolidayCountryIsrael:
+            countryCode = @"il";
+            break;
         case kSLHolidayCountryItaly:
             countryCode = @"it";
             break;
@@ -408,6 +417,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
             break;
         case kSLHolidayCountryKenya:
             countryCode = @"ke";
+            break;
+        case kSLHolidayCountryKorea:
+            countryCode = @"kr";
             break;
         case kSLHolidayCountryLithuania:
             countryCode = @"lt";
@@ -418,14 +430,26 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountryMexico:
             countryCode = @"mx";
             break;
+        case kSLHolidayCountryMorocco:
+            countryCode = @"ma";
+            break;
         case kSLHolidayCountryNetherlands:
             countryCode = @"nl";
             break;
         case kSLHolidayCountryNewZealand:
             countryCode = @"nz";
             break;
+        case kSLHolidayCountryNicaragua:
+            countryCode = @"ni";
+            break;
+        case kSLHolidayCountryNigeria:
+            countryCode = @"ng";
+            break;
         case kSLHolidayCountryNorway:
             countryCode = @"no";
+            break;
+        case kSLHolidayCountryParaguay:
+            countryCode = @"py";
             break;
         case kSLHolidayCountryPeru:
             countryCode = @"pe";
@@ -438,6 +462,12 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
             break;
         case kSLHolidayCountryRussia:
             countryCode = @"ru";
+            break;
+        case kSLHolidayCountrySerbia:
+            countryCode = @"rs";
+            break;
+        case kSLHolidayCountrySingapore:
+            countryCode = @"sg";
             break;
         case kSLHolidayCountrySlovakia:
             countryCode = @"sk";
@@ -457,6 +487,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountrySwitzerland:
             countryCode = @"ch";
             break;
+        case kSLHolidayCountryTurkey:
+            countryCode = @"tr";
+            break;
         case kSLHolidayCountryUkraine:
             countryCode = @"ua";
             break;
@@ -465,6 +498,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
             break;
         case kSLHolidayCountryUnitedStates:
             countryCode = @"us";
+            break;
+        case kSLHolidayCountryVietnam:
+            countryCode = @"vn";
             break;
         case kSLHolidayCountryNumCountries:
             // this is in invalid country to provide, do nothing
@@ -488,8 +524,15 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country
 {
-    return [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
-                                                 value:[SLPrefsManager countryCodeForHolidayCountry:country]];
+    // Check to see if the string returned from displayNameForKey is nil.  This happens on iOS versions that are
+    // deployed using Coolbooter for some odd reason.  Default to en_US locale in that situation.
+    NSString *countryName = [[NSLocale currentLocale] displayNameForKey:NSLocaleCountryCode
+                                                                  value:[SLPrefsManager countryCodeForHolidayCountry:country]];
+    if (countryName == nil) {
+        countryName = [[NSLocale localeWithLocaleIdentifier:@"en_US"] displayNameForKey:NSLocaleCountryCode
+                                                                                  value:[SLPrefsManager countryCodeForHolidayCountry:country]];
+    }
+    return countryName;
 }
 
 // Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,

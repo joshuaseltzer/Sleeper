@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>dateCreated</key>
-	<date>2019-10-20T21:02:59Z</date>
+	<date>2020-06-19T14:42:45Z</date>
 	<key>holidays</key>
 	<array>
 		<dict>
 			<key>name</key>
-			<string>New Year&apos;s Day</string>
+			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
 				<string>2021-01-01</string>
@@ -80,7 +80,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Washington&apos;s Birthday</string>
+			<string>Washington's Birthday</string>
 			<key>dates</key>
 			<array>
 				<string>2021-02-15</string>
@@ -415,24 +415,24 @@
 			<key>dates</key>
 			<array>
 				<string>2020-12-25</string>
-				<string>2021-12-25</string>
+				<string>2021-12-24</string>
 				<string>2022-12-26</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
-				<string>2027-12-25</string>
+				<string>2027-12-24</string>
 				<string>2028-12-25</string>
 				<string>2029-12-25</string>
 				<string>2030-12-25</string>
 				<string>2031-12-25</string>
-				<string>2032-12-25</string>
+				<string>2032-12-24</string>
 				<string>2033-12-26</string>
 				<string>2034-12-25</string>
 				<string>2035-12-25</string>
 				<string>2036-12-25</string>
 				<string>2037-12-25</string>
-				<string>2038-12-25</string>
+				<string>2038-12-24</string>
 				<string>2039-12-26</string>
 				<string>2040-12-25</string>
 				<string>2041-12-25</string>
@@ -443,12 +443,12 @@
 				<string>2046-12-25</string>
 				<string>2047-12-25</string>
 				<string>2048-12-25</string>
-				<string>2049-12-25</string>
+				<string>2049-12-24</string>
 			</array>
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>New Year&apos;s Eve</string>
+			<string>New Year's Eve</string>
 			<key>dates</key>
 			<array>
 				<string>2020-12-31</string>

@@ -8,7 +8,7 @@ import holidays
 import plistlib
 
 # years which will be generated for any given country
-START_YEAR = 2019
+START_YEAR = 2020
 END_YEAR = 2050
 
 # constants used to modify holidays upon generation
@@ -91,16 +91,25 @@ def gen_country_holidays(country_code):
                     dates.append(date_time)
                 holiday_map.update({name:dates})
 
+    # get the current datetime in UTC timezone
+    now = datetime.datetime.now().astimezone(datetime.timezone.utc)
+
     # generate the plist
     for name in holiday_map.keys():
         # get all of the parts for the dictionary that will be added to the plist
         dates = holiday_map.get(name)
 
+        # convert the datetime objects to date strings and remove any past dates
+        date_strings = []
+        for date in dates:
+            if date >= now:
+                date_strings.append(date.strftime('%Y-%m-%d'))
+
         # add a new entry to the plist
-        country_holidays.append({NAME_KEY:name, DATES_KEY:dates})
+        country_holidays.append({NAME_KEY:name, DATES_KEY:date_strings})
 
     # create the root of the plist
-    plist_root = {DATE_CREATED_KEY:datetime.datetime.now().astimezone(datetime.timezone.utc), "holidays":country_holidays}
+    plist_root = {DATE_CREATED_KEY:now, "holidays":country_holidays}
 
     # write the final plist to file
     plist_file_path = os.path.join(SLEEPER_BUNDLE_PATH, "{0}_holidays.plist".format(country_code.lower()))

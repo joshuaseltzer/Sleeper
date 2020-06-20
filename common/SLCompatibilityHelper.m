@@ -383,7 +383,7 @@ static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
 
     // modify the colors of various views to display the selection of the action correctly
     ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIInterfaceActionCustomViewRepresentationView"), nil]).backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-    ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIAlertControlleriOSActionSheetCancelBackgroundView"), nil]).alpha = 0.95;
+    ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIAlertControlleriOSActionSheetCancelBackgroundView"), nil]).alpha = 0.92;
     ((UIView *)[NSClassFromString(@"_UIBlendingHighlightView") appearanceWhenContainedIn:NSClassFromString(@"_UIInterfaceActionCustomViewRepresentationView"), nil]).subviewsBackgroundColor = [UIColor clearColor];
 
     // modify the separator line colors
