@@ -18,3 +18,29 @@
 "SKIP_ALARM" = "Wecker-Überspringen";
 "SKIP_QUESTION" = "Möchtest du \"%@\" überspringen, der in %@ losgehen wird?";
 "SKIP_TIME_EXPLANATION" = "Wähle eine Zeitspanne in der du abgefragt wirst den Wecker zu überspringen, bevor er ausgelöst wird.";
+
+// German (translation provided by 100k_Jahresgehalt)
+"SKIP_DATES" = "Ausgelassene Tage";
+"SELECT_NEW_DATE" = "Wähle neues Datum";
+"SELECT_START_DATE" = "Wähle das Startdatum";
+"SELECT_END_DATE" = "Wähle das Enddatum";
+"EDIT_EXISTING_DATE" = "Vorhandenes Datum bearbeiten";
+"NUM_HOLIDAYS" = "%ld Feiertage";
+"NUM_HOLIDAY" = "%ld Feiertag";
+"NUM_DATES" = "%ld Tage";
+"NUM_DATE" = "%ld Tag";
+"DEFAULT_SKIP_DATES" = "Alle ausgelassene Tage für diesen Wecker entfernen.";
+"CONFIRM_DEFAULT_SKIP_DATES" = "Bist du sicher, dass du alle ausgelassene Tage für diesen Alarm entfernen möchtest?";
+"DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Alle ausgelassenen Tage, einschließlich aller Feiertagsauswahlen, für diesen Wecker entfernen.";
+"CONFIRM_DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Bist du sicher, dass du alle ausgelassenen Tage und Feiertagsauswahlen für diesen Wecker entfernen möchtest?";
+"SKIP_DATE_EXPLANATION" = "Dieser Wecker wird an den ausgewählten Tagen übersprungen.";
+"HOLIDAY_EXPLANATION" = "Wenn in diesem Land beobachtete Feiertage anerkannt werden und der Feiertag auf ein Wochenende fällt, wird das beobachtete Datum verwendet.  Sobald ein Feiertag ausgewählt wurde, wird er auch weiterhin jedes Jahr übersprungen.";
+"ADD_NEW_DATE" = "Neues Datum hinzufügen...";
+"NUMBER_SELECTED" = "%ld Ausgewählt";
+"SKIP_REASON_POPUP" = "Du hast dich entschieden, diesen Wecker zu überspringen, wenn er das nächste Mal ausgelöst wird.  Beim Speichern des Weckers wird diese Einstellung zurückgesetzt.";
+"SKIP_REASON_DATE" = "Das nächste Übersprungsdatum, das Sie für diesen Alarm ausgewählt haben, ist %@.";
+"SKIP_REASON_HOLIDAY" = "Der nächste Feiertag, den Sie für diesen Wecker ausgewählt haben, ist %@ (%@).";
+"ALL_HOLIDAYS" = "Alle Feiertage";
+"RECOMMENDED_HOLIDAYS_EXPLANATION" = "Diese Feiertage werden auf der Grundlage des aktuellen Standorts des Geräts empfohlen.";
+"SINGLE_DATE" = "Einzeldatum";
+"DATE_RANGE" = "Datumsbereich";

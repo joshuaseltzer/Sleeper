@@ -32,7 +32,7 @@
 "DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Remove all skip dates, including any holiday selections, for this alarm.";
 "CONFIRM_DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Are you sure you want to remove all of the skip dates and holiday selections for this alarm?";
 "SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
+"HOLIDAY_EXPLANATION" = "If this country recognizes observed holidays and the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
 "ADD_NEW_DATE" = "Add New Date...";
 "NUMBER_SELECTED" = "%ld Selected";
 "SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire.  This decision will be reset if you save the alarm.";

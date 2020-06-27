@@ -73,9 +73,9 @@ static NSDateFormatter *sSLSAlertDateFormatter;
     self.alertController.title = kSLSkipAlarmString;
     self.alertController.message = kSLSkipQuestionString(self.SLTitle, [sSLSAlertDateFormatter stringFromDate:self.SLAlertFireDate]);
 
-    // add yes and no actions to the alert controller
+    // add yes, no, and cancel actions to the alert controller
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:kSLYesString
-                                                        style:UIAlertActionStyleDefault
+                                                        style:UIAlertActionStyleDestructive
                                                       handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
                                                          [SLPrefsManager setSkipActivatedStatusForAlarmId:self.SLAlarmId
@@ -83,17 +83,23 @@ static NSDateFormatter *sSLSAlertDateFormatter;
                                                          [self dismiss];
                                                       }];
     UIAlertAction *noAction = [UIAlertAction actionWithTitle:kSLNoString
-                                                       style:UIAlertActionStyleCancel
+                                                       style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                          // save the alarm's skip activation state to our preferences
                                                          [SLPrefsManager setSkipActivatedStatusForAlarmId:self.SLAlarmId
                                                                                       skipActivatedStatus:kSLSkipActivatedStatusDisabled];
                                                          [self dismiss];
                                                      }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:kSLCancelString
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+                                                             [self dismiss];
+                                                     }];
     
     // add the actions to the alert controller
     [self.alertController addAction:yesAction];
     [self.alertController addAction:noAction];
+    [self.alertController addAction:cancelAction];
 
     // if the alert still exists, be sure to dismiss the alert just before the alarm will fire
     __weak typeof(self) weakSelf = self;

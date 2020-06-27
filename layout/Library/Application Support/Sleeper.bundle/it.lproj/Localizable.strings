@@ -6,15 +6,39 @@
 
 */
 
-// Italian (translation provided by Not_My_Usrname and Agru007)
-"SNOOZE_TIME" = "Ritarda di:";
+// Italian (translation provided by Agru007)
+"ADD_NEW_DATE" = "Aggiungi nuova data...";
+"ALL_HOLIDAYS" = "Tutte le festività";
+"CONFIRM_DEFAULT_SKIP_DATES" = "Sei sicuro di voler eliminare tutte le date in cui saltare questa sveglia?";
+"CONFIRM_DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Sei sicuro di voler eliminare tutte le date e le festività in cui saltare questa sveglia?";
+"DATE_RANGE" = "Intervallo di date";
+"DEFAULT_SKIP_DATES" = "Elimina tutte le date in cui saltare questa sveglia.";
+"DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Elimina tutte le date, incluse le festività, in cui saltare questa sveglia.";
+"DEFAULT_SNOOZE_TIME" = "Il ritardo predefinito è %@.";
+"EDIT_EXISTING_DATE" = "Modifica data esistente";
+"HOLIDAY_EXPLANATION" = "Se il paese scelto supporta il cambio di data per le festività che cadono nel weekend, Sleeper silenzierà la sveglia nel giorno feriale corrispondente. Quando viene scelta una festività, essa resta valida ogni anno.";
 "HOURS" = "ore";
 "MINUTES" = "min";
-"SECONDS" = "sec";
+"NUMBER_SELECTED" = "%ld selezionato";
+"NUM_DATE" = "%ld data";
+"NUM_DATES" = "%ld date";
+"NUM_HOLIDAY" = "%ld festività";
+"NUM_HOLIDAYS" = "%ld festività";
+"RECOMMENDED_HOLIDAYS_EXPLANATION" = "Queste sono le festività raccomandate in base alla località geografica impostata sul tuo telefono.";
 "RESET_DEFAULT" = "Ripristina valori predefiniti";
-"DEFAULT_SNOOZE_TIME" = "Il ritardo predefinito è %@.";
-"SKIP" = "Consenti salto";
-"SKIP_TIME" = "Orario del salto";
-"SKIP_ALARM" = "Salta Sveglia";
-"SKIP_QUESTION" = "Vuoi saltare \"%@,\" programmata per le %@?";
-"SKIP_TIME_EXPLANATION" = "Scegli il periodo di tempo prima della sveglia in cui ti verrà chiesto se saltarla.";
+"SECONDS" = "sec";
+"SELECT_END_DATE" = "Seleziona data finale";
+"SELECT_NEW_DATE" = "Seleziona nuova data";
+"SELECT_START_DATE" = "Seleziona data iniziale";
+"SINGLE_DATE" = "Singola data";
+"SKIP" = "Proponi salto";
+"SKIP_ALARM" = "Salta sveglia";
+"SKIP_DATES" = "Salta in data:";
+"SKIP_DATE_EXPLANATION" = "Questa sveglia verrà saltata nelle date selezionate";
+"SKIP_QUESTION" = "Vuoi saltare la sveglia \"%@\", programmata per le ore %@?";
+"SKIP_REASON_DATE" = "La prossima data in cui saltare questa sveglia è %@.";
+"SKIP_REASON_HOLIDAY" = "La prossima festività in cui saltare questa sveglia è %@ (%@).";
+"SKIP_REASON_POPUP" = "Hai scelto di saltare questa sveglia la prossima volta che scatterà. Questa scelta verrà dimenticata se salvi la sveglia.";
+"SKIP_TIME" = "Chiedi quando manca:";
+"SKIP_TIME_EXPLANATION" = "Scegli il lasso di tempo prima della sveglia in cui ti verrà proposto se saltarla.";
+"SNOOZE_TIME" = "Ritarda di:";
