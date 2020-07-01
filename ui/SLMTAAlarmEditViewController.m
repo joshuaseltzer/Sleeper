@@ -16,6 +16,7 @@
 // define an enum to reference the sections of the table view
 typedef enum SLMTAAlarmEditViewControllerSection : NSUInteger {
     kSLMTAAlarmEditViewControllerSectionAttribute,
+    kSLMTAAlarmEditViewControllerSectionSun,
     kSLMTAAlarmEditViewControllerSectionDelete,
     kSLMTAAlarmEditViewControllerNumSections
 } SLMTAAlarmEditViewControllerSection;
@@ -32,10 +33,6 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
     kSLMTAAlarmEditViewControllerAttributeSectionRowSkipDates,
     kSLMTAAlarmEditViewControllerAttributeSectionNumRows
 } SLMTAAlarmEditViewControllerAttributeSectionRow;
-
-// the custom cell used to display information when editing an alarm
-@interface MoreInfoTableViewCell : UITableViewCell
-@end
 
 // the editing alarm view which contains the main tableview for this controller
 @interface MTAAlarmEditView : UIView
@@ -115,8 +112,16 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     %orig;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // add a section for the sunrise/sunset option
+    return %orig + 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // Grab the number of rows originally returned for this table.  The sunrise/sunset section and delete sections will
+    // both have 1 row, so we only need to modify the attribute section.
     NSInteger numRows = %orig;
     
     // add custom rows to allow the user to edit the snooze time and configure skipping
@@ -129,11 +134,14 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // grab the original cell that is defined for this table
-    MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
+    // forward declare the cell that is to be returned
+    UITableViewCell *cell = nil;
     
     // configure the custom cells
     if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAttribute) {
+        // grab the original cell that is defined for this section
+        cell = %orig;
+
         // if we are not editing the snooze alarm switch row, we must destroy the accessory view for the
         // cell so that it is not reused on the wrong cell
         if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeToggle) {
@@ -176,6 +184,12 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
             // customize the detail text label depending on whether or not we have skip dates enabled
             cell.detailTextLabel.text = [self.SLAlarmPrefs totalSelectedDatesString];
         }
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSun) {
+        // grab a cell from the attribute section
+        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAttribute]);
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionDelete) {
+        // grab the cell that would originally be returned for the delete section
+        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSun]);
     }
     
     return cell;
@@ -207,8 +221,11 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
         } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             %orig;
         }
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSun) {
+        
     } else {
-        %orig;
+        // perform the logic that was originally for the delete section
+        %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSun]);
     }
 }
 

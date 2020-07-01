@@ -56,8 +56,8 @@
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
             // create and display the custom alert item
             SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
-                                                                                            alarmId:alarmId
-                                                                                        nextFireDate:nextFireDate];
+                                                                                               alarmId:alarmId
+                                                                                          nextFireDate:nextFireDate];
             [(SBAlertItemsController *)[objc_getClass("SBAlertItemsController") sharedInstance] activateAlertItem:alert animated:YES];
         });
     }

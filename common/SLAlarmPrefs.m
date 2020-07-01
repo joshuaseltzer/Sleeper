@@ -26,6 +26,7 @@
         self.skipTimeMinute = kSLDefaultSkipMinute;
         self.skipTimeSecond = kSLDefaultSkipSecond;
         self.skipActivationStatus = kSLDefaultSkipActivatedStatus;
+        self.sunOption = kSLDefaultSunOption;
         self.customSkipDates = [[NSArray alloc] init];
         self.holidaySkipDates = [[NSDictionary alloc] init];
     }

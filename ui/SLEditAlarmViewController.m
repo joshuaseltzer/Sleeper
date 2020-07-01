@@ -31,10 +31,6 @@ typedef enum SLEditAlarmViewAttributeSectionRow : NSUInteger {
     kSLEditAlarmViewAttributeSectionNumRows
 } SLEditAlarmViewAttributeSectionRow;
 
-// the custom cell used to display information when editing an alarm
-@interface MoreInfoTableViewCell : UITableViewCell
-@end
-
 // the editing alarm view which contains the main tableview for this controller
 @interface EditAlarmView : UIView
 
@@ -120,7 +116,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // grab the original cell that is defined for this table
-    MoreInfoTableViewCell *cell = (MoreInfoTableViewCell *)%orig;
+    UITableViewCell *cell = %orig;
     
     // configure the custom cells
     if (indexPath.section == kSLEditAlarmViewAttributeSection) {

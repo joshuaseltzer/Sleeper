@@ -69,11 +69,18 @@ typedef enum SLHolidayCountry : NSInteger {
 } SLHolidayCountry;
 
 // enum to define the different options that can be returned for the alarm's skip activation
-typedef enum SLPrefsSkipActivatedStatus : NSInteger {
+typedef enum SLSkipActivatedStatus : NSInteger {
     kSLSkipActivatedStatusUnknown,
     kSLSkipActivatedStatusActivated,
     kSLSkipActivatedStatusDisabled
-} SLPrefsSkipActivatedStatus;
+} SLSkipActivatedStatus;
+
+// enum to define the options for whether or not an alarm has the sunrise/sunset option enabled
+typedef enum SLSunOption : NSInteger {
+    kSLSunOptionDisabled,
+    kSLSunOptionSunrise,
+    kSLSunOptionSunset
+} SLSunOption;
 
 // constants that define the default values
 static NSInteger const kSLDefaultSnoozeHour =           0;
@@ -84,6 +91,7 @@ static NSInteger const kSLDefaultSkipHour =             0;
 static NSInteger const kSLDefaultSkipMinute =           30;
 static NSInteger const kSLDefaultSkipSecond =           0;
 static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUnknown;
+static NSInteger const kSLDefaultSunOption =            kSLSunOptionDisabled;
 
 // Sleeper preferences specific to an alarm
 @interface SLAlarmPrefs : NSObject
@@ -132,7 +140,10 @@ static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUn
 @property (nonatomic) NSInteger skipTimeSecond;
 
 // the skip activation status
-@property (nonatomic) SLPrefsSkipActivatedStatus skipActivationStatus;
+@property (nonatomic) SLSkipActivatedStatus skipActivationStatus;
+
+// the sunrise/sunset option
+@property (nonatomic) SLSunOption sunOption;
 
 // an array of NSDate objects that represent the custom skip dates for this alarm
 @property (nonatomic, strong) NSArray *customSkipDates;

@@ -124,6 +124,8 @@
 // signifies whether or not this alarm is snozoed
 @property (readonly, nonatomic, getter=isSnoozed) BOOL snoozed;
 
+- (void)setHour:(unsigned long long)arg1;
+
 // returns a string representation of the alarm Id
 - (NSString *)alarmIDString;
 
@@ -144,8 +146,11 @@
 
 @end
 
-// manager that governs all alarms on the system (iOS 12)
+// manager that governs all alarms on the system (iOS 12 - iOS 13)
 @interface MTAlarmManager : NSObject
+
+// invoked when an alarm is saved
+- (id)updateAlarm:(MTMutableAlarm *)mutableAlarm;
 
 // returns an array of MTAlarm objects for the given date and 
 - (NSArray *)nextAlarmsForDateSync:(NSDate *)date maxCount:(int)maxCount includeSleepAlarm:(BOOL)includeSleepAlarm includeBedtimeNotification:(BOOL)includeBedtimeNotification;

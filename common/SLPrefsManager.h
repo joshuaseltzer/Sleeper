@@ -30,6 +30,9 @@ static NSString *const kSLCustomSkipDateStringsKey =    @"customSkipDateStrings"
 static NSString *const kSLHolidayHolidaysKey =          @"holidays";
 static NSString *const kSLHolidayNameKey =              @"name";
 static NSString *const kSLHolidayDatesKey =             @"dates";
+static NSString *const kSLSunOptionKey =                @"sunOption";
+static NSString *const kSLSunriseAlarmsKey =            @"SunriseAlarms";
+static NSString *const kSLSunsetAlarmsKey =             @"SunsetAlarms";
 
 @class SLAlarmPrefs;
 
@@ -47,7 +50,7 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 
 // save the skip activation status for a given alarm
 + (void)setSkipActivatedStatusForAlarmId:(NSString *)alarmId
-                     skipActivatedStatus:(SLPrefsSkipActivatedStatus)skipActivatedStatus;
+                     skipActivatedStatus:(SLSkipActivatedStatus)skipActivatedStatus;
 
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
@@ -74,5 +77,8 @@ static NSString *const kSLHolidayDatesKey =             @"dates";
 // Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString;
+
+// return a dictionary containing arrays of the sunrise and sunset alarms
++ (NSDictionary *)sunriseAndSunsetAlarms;
 
 @end
