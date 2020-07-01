@@ -21,7 +21,7 @@ SleeperCoreLegacy_LIBRARIES = Sleeper
 SleeperCoreLegacy_OBJCFLAGS = -fobjc-arc
 SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-SleeperUI_FILES = $(wildcard ui/*.x) $(wildcard ui/custom/*.m)
+SleeperUI_FILES = $(wildcard ui/*.x) $(wildcard ui/*.xm) $(wildcard ui/custom/*.m)
 SleeperUI_LIBRARIES = Sleeper
 SleeperUI_OBJCFLAGS = -fobjc-arc
 SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR)

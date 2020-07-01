@@ -26,7 +26,10 @@
         self.skipTimeMinute = kSLDefaultSkipMinute;
         self.skipTimeSecond = kSLDefaultSkipSecond;
         self.skipActivationStatus = kSLDefaultSkipActivatedStatus;
-        self.sunOption = kSLDefaultSunOption;
+        self.autoSetOption = kSLDefaultAutoSetOption;
+        self.autoSetOffsetOption = kSLDefaultAutoSetOffsetOption;
+        self.autoSetOffsetHour = kSLDefaultAutoSetOffsetHour;
+        self.autoSetOffsetMinute = kSLDefaultAutoSetOffsetMinute;
         self.customSkipDates = [[NSArray alloc] init];
         self.holidaySkipDates = [[NSDictionary alloc] init];
     }
@@ -187,6 +190,16 @@
     }
 
     return [skipExplanation copy];
+}
+
+// returns an explanation regarding the use of the auto-set option
+- (NSString *)autoSetExplanation
+{
+    NSString *autoSetExplanation = nil;
+    if (self.autoSetOption == kSLAutoSetOptionOff) {
+        autoSetExplanation = kSLAutoSetOffExplanationString;
+    }
+    return autoSetExplanation;
 }
 
 @end

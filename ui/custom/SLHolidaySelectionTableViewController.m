@@ -1,6 +1,6 @@
 //
 //  SLHolidaySelectionTableViewController.m
-//  sleeper-test
+//  Table view controller that allows the user to pick from a list of holidays.
 //
 //  Created by Joshua Seltzer on 1/12/19.
 //  Copyright © 2019 Joshua Seltzer. All rights reserved.
@@ -86,7 +86,7 @@
 - (void)willMoveToParentViewController:(UIViewController *)parent
 {
     // if the parent is nil, we know we are popping this view controller
-    if (!parent && self.delegate) {
+    if (!parent && self.delegate && [self.delegate conformsToProtocol:@protocol(SLHolidaySelectionDelegate)]) {
         // tell the delegate about the updated skip dates
         [self.delegate SLHolidaySelectionTableViewController:self
                                    didUpdateSelectedHolidays:[self.selectedHolidays copy]

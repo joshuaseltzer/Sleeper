@@ -92,4 +92,7 @@
 // uses the appearance API to modify the look and feel of a UIAlertController's various views for the current version of iOS
 + (void)updateDefaultUIAlertControllerAppearance;
 
+// returns the checkmark image used to indicate selection throughout the UI
++ (UIImage *)checkmarkImage;
+
 @end

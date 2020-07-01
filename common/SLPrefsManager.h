@@ -30,9 +30,10 @@ static NSString *const kSLCustomSkipDateStringsKey =    @"customSkipDateStrings"
 static NSString *const kSLHolidayHolidaysKey =          @"holidays";
 static NSString *const kSLHolidayNameKey =              @"name";
 static NSString *const kSLHolidayDatesKey =             @"dates";
-static NSString *const kSLSunOptionKey =                @"sunOption";
-static NSString *const kSLSunriseAlarmsKey =            @"SunriseAlarms";
-static NSString *const kSLSunsetAlarmsKey =             @"SunsetAlarms";
+static NSString *const kSLAutoSetOptionKey =            @"autoSetOption";
+static NSString *const kSLAutoSetOffsetOptionKey =      @"autoSetOffsetOption";
+static NSString *const kSLAutoSetOffsetHourKey =        @"autoSetOffsetHour";
+static NSString *const kSLAutoSetOffsetMinuteKey =      @"autoSetOffsetMinute";
 
 @class SLAlarmPrefs;
 
@@ -74,11 +75,14 @@ static NSString *const kSLSunsetAlarmsKey =             @"SunsetAlarms";
 // returns the localized, friendly name to be displayed for the given country
 + (NSString *)friendlyNameForHolidayCountry:(SLHolidayCountry)country;
 
+// returns the localized, friendly name to be displayed for an auto-set option
++ (NSString *)friendlyNameForAutoSetOption:(SLAutoSetOption)autoSetOption;
+
+// returns the localized, friendly name to be displayed for an auto-set offset option
++ (NSString *)friendlyNameForAutoSetOffsetOption:(SLAutoSetOffsetOption)autoSetOffsetOption;
+
 // Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString;
-
-// return a dictionary containing arrays of the sunrise and sunset alarms
-+ (NSDictionary *)sunriseAndSunsetAlarms;
 
 @end

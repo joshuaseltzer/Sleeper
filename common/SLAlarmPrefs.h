@@ -75,12 +75,18 @@ typedef enum SLSkipActivatedStatus : NSInteger {
     kSLSkipActivatedStatusDisabled
 } SLSkipActivatedStatus;
 
-// enum to define the options for whether or not an alarm has the sunrise/sunset option enabled
-typedef enum SLSunOption : NSInteger {
-    kSLSunOptionDisabled,
-    kSLSunOptionSunrise,
-    kSLSunOptionSunset
-} SLSunOption;
+// enum to define the options for whether or not an alarm has the auto-set option enabled
+typedef enum SLAutoSetOption : NSInteger {
+    kSLAutoSetOptionOff,
+    kSLAutoSetOptionSunrise,
+    kSLAutoSetOptionSunset
+} SLAutoSetOption;
+
+// enum to define the offset options for the auto-set feature when it is enabled
+typedef enum SLAutoSetOffsetOption : NSInteger {
+    kSLAutoSetOffsetOptionBefore,
+    kSLAutoSetOffsetOptionAfter
+} SLAutoSetOffsetOption;
 
 // constants that define the default values
 static NSInteger const kSLDefaultSnoozeHour =           0;
@@ -91,7 +97,10 @@ static NSInteger const kSLDefaultSkipHour =             0;
 static NSInteger const kSLDefaultSkipMinute =           30;
 static NSInteger const kSLDefaultSkipSecond =           0;
 static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUnknown;
-static NSInteger const kSLDefaultSunOption =            kSLSunOptionDisabled;
+static NSInteger const kSLDefaultAutoSetOption =        kSLAutoSetOptionOff;
+static NSInteger const kSLDefaultAutoSetOffsetOption =  kSLAutoSetOffsetOptionBefore;
+static NSInteger const kSLDefaultAutoSetOffsetHour =    0;
+static NSInteger const kSLDefaultAutoSetOffsetMinute =  0;
 
 // Sleeper preferences specific to an alarm
 @interface SLAlarmPrefs : NSObject
@@ -114,6 +123,9 @@ static NSInteger const kSLDefaultSunOption =            kSLSunOptionDisabled;
 
 // returns an explanation of why a given alarm will be skipped
 - (NSString *)skipReasonExplanation;
+
+// returns an explanation regarding the use of the auto-set option
+- (NSString *)autoSetExplanation;
 
 // alarm Id associated with this preference object
 @property (nonatomic, strong) NSString *alarmId;
@@ -142,8 +154,17 @@ static NSInteger const kSLDefaultSunOption =            kSLSunOptionDisabled;
 // the skip activation status
 @property (nonatomic) SLSkipActivatedStatus skipActivationStatus;
 
-// the sunrise/sunset option
-@property (nonatomic) SLSunOption sunOption;
+// the auto-set option
+@property (nonatomic) SLAutoSetOption autoSetOption;
+
+// the auto-set offset option
+@property (nonatomic) SLAutoSetOffsetOption autoSetOffsetOption;
+
+// the auto-set offset hour
+@property (nonatomic) NSInteger autoSetOffsetHour;
+
+// the auto-set offset minute
+@property (nonatomic) NSInteger autoSetOffsetMinute;
 
 // an array of NSDate objects that represent the custom skip dates for this alarm
 @property (nonatomic, strong) NSArray *customSkipDates;

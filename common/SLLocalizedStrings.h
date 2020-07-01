@@ -66,3 +66,12 @@
 #define kSLTomorrowString                           [kSLMobileTimerBundle localizedStringForKey:@"TOMORROW" value:@"Tomorrow" table:@"Localizable"]
 #define kSLSingleDateString                         [kSLSleeperBundle localizedStringForKey:@"SINGLE_DATE" value:@"Single Date" table:@"Localizable"]
 #define kSLDateRangeString                          [kSLSleeperBundle localizedStringForKey:@"DATE_RANGE" value:@"Date Range" table:@"Localizable"]
+
+// the auto-set strings
+#define kSLAutoSetString                            [kSLSleeperBundle localizedStringForKey:@"AUTO_SET" value:@"Auto-Set" table:@"Localizable"]
+#define kSLAutoSetOffExplanationString              [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_OFF_EXPLANATION" value:@"You can use the auto-set feature to have this alarm automatically adjust its time based on various parameters." table:@"Localizable"]
+#define kSLBeforeString                             [kSLSleeperBundle localizedStringForKey:@"BEFORE" value:@"Before" table:@"Localizable"]
+#define kSLAfterString                              [kSLSleeperBundle localizedStringForKey:@"AFTER" value:@"After" table:@"Localizable"]
+#define kSLSunriseString                            [kSLMobileTimerBundle localizedStringForKey:@"SUNRISE" value:@"Sunrise" table:@"Localizable"]
+#define kSLSunsetString                             [kSLMobileTimerBundle localizedStringForKey:@"SUNSET" value:@"Sunset" table:@"Localizable"]
+#define kSLOffString                                [kSLMobileTimerBundle localizedStringForKey:@"ALARM_OFF" value:@"Off" table:@"Localizable"]

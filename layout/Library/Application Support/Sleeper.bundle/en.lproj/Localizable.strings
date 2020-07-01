@@ -42,3 +42,7 @@
 "RECOMMENDED_HOLIDAYS_EXPLANATION" = "These are the recommended holidays based on your device's current locale.";
 "SINGLE_DATE" = "Single Date";
 "DATE_RANGE" = "Date Range";
+"AUTO_SET" = "Auto-Set";
+"AUTO_SET_OFF_EXPLANATION" = "You can use the auto-set feature to have this alarm automatically adjust its time based on various parameters.";
+"BEFORE" = "Before";
+"AFTER" = "After";

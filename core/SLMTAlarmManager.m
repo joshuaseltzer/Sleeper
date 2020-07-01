@@ -8,7 +8,7 @@
 
 #import "../common/SLCompatibilityHelper.h"
 #import "../common/SLPrefsManager.h"
-#import "../common/SLSunManager.h"
+#import "../common/SLAutoSetManager.h"
 
 // alarm manager used in modern versions of iOS
 %hook MTAlarmManager
@@ -45,7 +45,7 @@
     if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
         %init();
 
-        // create the sun manager instance to potentially start monitoring changes for the sunrise/sunset
-        [[SLSunManager sharedInstance] startMonitoringForSunChangesIfNecessary];
+        // create the auto-set manager instance to potentially start updating the alarms automatically
+        [[SLAutoSetManager sharedInstance] startMonitoringForSunChangesIfNecessary];
     }
 }

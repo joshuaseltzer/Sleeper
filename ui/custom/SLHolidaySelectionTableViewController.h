@@ -1,6 +1,6 @@
 //
 //  SLHolidaySelectionTableViewController.h
-//  sleeper-test
+//  Table view controller that allows the user to pick from a list of holidays.
 //
 //  Created by Joshua Seltzer on 1/12/19.
 //  Copyright © 2019 Joshua Seltzer. All rights reserved.

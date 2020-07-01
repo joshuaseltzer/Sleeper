@@ -11,6 +11,9 @@
 #import "SLPrefsManager.h"
 #import <objc/runtime.h>
 
+// the name of the image file as it exists in the bundle
+#define kSLCheckmarkImageName           @"checkmark"
+
 // define some properties that are defined in the iOS 13 SDK for UIColor
 @interface UIColor (iOS13)
 
@@ -52,6 +55,9 @@ static UIColor *sSLTableViewCellBackgroundColor = nil;
 static UIColor *sSLTableViewCellSelectedBackgroundColor = nil;
 static UIColor *sSLAlertControllerDarkBackgroundColor = nil;
 static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
+
+// keep a single, static instance of the UIImages used throughout the UI
+static UIImage *sSLCheckmarkImage;
 
 @implementation SLCompatibilityHelper
 
@@ -443,6 +449,17 @@ static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
         skippable = [nextFireDate compare:thresholdDate] == NSOrderedAscending;
     }
     return skippable;
+}
+
+// returns the checkmark image used to indicate selection throughout the UI
++ (UIImage *)checkmarkImage
+{
+    if (!sSLCheckmarkImage) {
+        sSLCheckmarkImage = [[UIImage imageNamed:kSLCheckmarkImageName
+                                        inBundle:kSLSleeperBundle
+                   compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return sSLCheckmarkImage;
 }
 
 @end

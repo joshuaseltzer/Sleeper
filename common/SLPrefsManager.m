@@ -10,9 +10,9 @@
 #import "SLLocalizedStrings.h"
 
 // the path of our settings that is used to store the alarm snooze times
-#define SETTINGS_PATH    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
+#define kSLSettingsFile         [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
-// keep a single static instances of the date formatters that will be used to convert date objects to strings and vice versa
+// keep a single, static instances of the date formatters that will be used to convert date objects to strings and vice versa
 static NSDateFormatter *sSLSkipDatesUIDateFormatter;
 static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 
@@ -46,7 +46,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 + (SLAlarmPrefs *)alarmPrefsForAlarmId:(NSString *)alarmId
 {
     // grab the preferences plist
-    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
+    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
     // if the alarm preferences exist, attempt to get the alarms
     if (prefs) {
@@ -67,7 +67,10 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 alarmPrefs.skipTimeMinute = [[alarm objectForKey:kSLSkipMinuteKey] integerValue];
                 alarmPrefs.skipTimeSecond = [[alarm objectForKey:kSLSkipSecondKey] integerValue];
                 alarmPrefs.skipActivationStatus = [[alarm objectForKey:kSLSkipActivatedStatusKey] integerValue];
-                alarmPrefs.sunOption = [[alarm objectForKey:kSLSunOptionKey] integerValue];
+                alarmPrefs.autoSetOption = [[alarm objectForKey:kSLAutoSetOptionKey] integerValue];
+                alarmPrefs.autoSetOffsetOption = [[alarm objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
+                alarmPrefs.autoSetOffsetHour = [[alarm objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                alarmPrefs.autoSetOffsetMinute = [[alarm objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
                 
                 // check to see if the prefs contain any of the skip dates options (added in v4.1.0)
                 NSDictionary *skipDates = [alarm objectForKey:kSLSkipDatesKey];
@@ -118,7 +121,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
     // if no preferences exist, create a new mutable dictionary now
     if (!prefs) {
@@ -153,8 +156,14 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                           forKey:kSLSkipSecondKey];
                 [alarm setObject:[NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown]
                           forKey:kSLSkipActivatedStatusKey];
-                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.sunOption]
-                          forKey:kSLSunOptionKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.autoSetOption]
+                          forKey:kSLAutoSetOptionKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption]
+                          forKey:kSLAutoSetOffsetOptionKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour]
+                          forKey:kSLAutoSetOffsetHourKey];
+                [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute]
+                          forKey:kSLAutoSetOffsetMinuteKey];
                 [alarm setObject:@{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates,
                                    kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}
                           forKey:kSLSkipDatesKey];
@@ -175,7 +184,10 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
                                   [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
                                   [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.sunOption], kSLSunOptionKey,
+                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOption], kSLAutoSetOptionKey,
+                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption], kSLAutoSetOffsetOptionKey,
+                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour], kSLAutoSetOffsetHourKey,
+                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
                                   @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
                                   nil];
         
@@ -187,7 +199,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     [prefs setObject:alarms forKey:kSLAlarmsKey];
     
     // write the updated preferences
-    [prefs writeToFile:SETTINGS_PATH atomically:YES];
+    [prefs writeToFile:kSLSettingsFile atomically:YES];
 }
 
 // save the skip activation status for a given alarm
@@ -195,7 +207,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                      skipActivatedStatus:(SLSkipActivatedStatus)skipActivatedStatus
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
     // if the clock preferences don't exist, create a new mutable dictionary now
     if (!prefs) {
@@ -236,14 +248,14 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     [prefs setObject:alarms forKey:kSLAlarmsKey];
     
     // write the updated preferences
-    [prefs writeToFile:SETTINGS_PATH atomically:YES];
+    [prefs writeToFile:kSLSettingsFile atomically:YES];
 }
 
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId
 {
     // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
     // only continue trying to delete the alarm if our preferences exist
     if (prefs) {
@@ -273,7 +285,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 [prefs setObject:alarms forKey:kSLAlarmsKey];
                 
                 // write the updated preferences
-                [prefs writeToFile:SETTINGS_PATH atomically:YES];
+                [prefs writeToFile:kSLSettingsFile atomically:YES];
             }
         }
     }
@@ -539,6 +551,39 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     return countryName;
 }
 
+// returns the localized, friendly name to be displayed for an auto-set option
++ (NSString *)friendlyNameForAutoSetOption:(SLAutoSetOption)autoSetOption
+{
+    NSString *autoSetOptionName = nil;
+    switch (autoSetOption) {
+        case kSLAutoSetOptionOff:
+            autoSetOptionName = kSLOffString;
+            break;
+        case kSLAutoSetOptionSunrise:
+            autoSetOptionName = kSLSunriseString;
+            break;
+        case kSLAutoSetOptionSunset:
+            autoSetOptionName = kSLSunsetString;
+            break;
+    }
+    return autoSetOptionName;
+}
+
+// returns the localized, friendly name to be displayed for an auto-set offset option
++ (NSString *)friendlyNameForAutoSetOffsetOption:(SLAutoSetOffsetOption)autoSetOffsetOption
+{
+    NSString *autoSetOffsetOptionName = nil;
+    switch (autoSetOffsetOption) {
+        case kSLAutoSetOffsetOptionBefore:
+            autoSetOffsetOptionName = kSLBeforeString;
+            break;
+        case kSLAutoSetOffsetOptionAfter:
+            autoSetOffsetOptionName = kSLAfterString;
+            break;
+    }
+    return autoSetOffsetOptionName;
+}
+
 // Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString
@@ -552,37 +597,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         }
     }
     return [[SLPrefsManager uiDateFormatter] stringFromDate:date];
-}
-
-// return a dictionary containing arrays of the sunrise and sunset alarms
-+ (NSDictionary *)sunriseAndSunsetAlarms
-{
-    // forward declare the arrays of sunrise and sunset alarms
-    NSArray *sunriseAlarms = nil;
-    NSArray *sunsetAlarms = nil;
-
-    // grab the preferences plist
-    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:SETTINGS_PATH];
-    
-    // if no preferences exist, simply return a dictionary with blank arrays
-    if (!prefs) {
-        sunriseAlarms = [[NSArray alloc] init];
-        sunsetAlarms = [[NSArray alloc] init];
-    } else {
-        // check to see if sunrise alarms exists in the file
-        sunriseAlarms = [prefs objectForKey:kSLSunriseAlarmsKey];
-        if (!sunriseAlarms) {
-            sunriseAlarms = [[NSArray alloc] init];
-        }
-
-        // check to see if sunset alarms exists in the file
-        sunsetAlarms = [prefs objectForKey:kSLSunsetAlarmsKey];
-        if (!sunsetAlarms) {
-            sunsetAlarms = [[NSArray alloc] init];
-        }
-    }
-
-    return @{kSLSunriseAlarmsKey:sunriseAlarms, kSLSunsetAlarmsKey:sunsetAlarms};
 }
 
 @end

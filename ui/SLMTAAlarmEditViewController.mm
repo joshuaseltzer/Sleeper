@@ -9,6 +9,7 @@
 #import "custom/SLSnoozeTimeViewController.h"
 #import "custom/SLSkipTimeViewController.h"
 #import "custom/SLSkipDatesViewController.h"
+#import "custom/SLAutoSetOptionsTableViewController.h"
 #import "../common/SLPrefsManager.h"
 #import "../common/SLLocalizedStrings.h"
 #import "../common/SLCompatibilityHelper.h"
@@ -16,7 +17,7 @@
 // define an enum to reference the sections of the table view
 typedef enum SLMTAAlarmEditViewControllerSection : NSUInteger {
     kSLMTAAlarmEditViewControllerSectionAttribute,
-    kSLMTAAlarmEditViewControllerSectionSun,
+    kSLMTAAlarmEditViewControllerSectionAutoSet,
     kSLMTAAlarmEditViewControllerSectionDelete,
     kSLMTAAlarmEditViewControllerNumSections
 } SLMTAAlarmEditViewControllerSection;
@@ -34,18 +35,20 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
     kSLMTAAlarmEditViewControllerAttributeSectionNumRows
 } SLMTAAlarmEditViewControllerAttributeSectionRow;
 
-// the editing alarm view which contains the main tableview for this controller
+// the editing alarm view which contains the main tableview and date picker for this controller
 @interface MTAAlarmEditView : UIView
 
-// the tableview for displaying the settings
-@property(readonly, nonatomic) UITableView *settingsTable;
+// the date picker used to set the alarm
+@property(readonly, nonatomic) UIDatePicker *timePicker;
 
 @end
 
 // The primary view controller which recieves the ability to edit the snooze time.  This view controller
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
-SLPickerSelectionDelegate, SLSkipDatesDelegate>
+SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
+    MTAAlarmEditView *_editAlarmView;
+}
 
 // the edited alarm object for this view controller (iOS 12)
 @property (retain, nonatomic) MTMutableAlarm *editedAlarm;
@@ -60,6 +63,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 @property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
+
+- (void)SLUpdateTimePickerEnabled;
 
 @end
 
@@ -90,6 +95,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
         self.SLAlarmPrefsChanged = NO;
     }
 
+    // update the enabled status of the time picker, which will depend on the auto-set option
+    [self SLUpdateTimePickerEnabled];
+
     %orig;
 }
 
@@ -99,6 +107,21 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     self.SLAlarmPrefs = nil;
 
     %orig;
+}
+
+// updates the ability for the user to interact with the time picker that is included in this controller
+%new
+- (void)SLUpdateTimePickerEnabled
+{
+    // grab the edit alarm view which contains the timer picker
+    MTAAlarmEditView *editAlarmView = MSHookIvar<MTAAlarmEditView *>(self, "_editAlarmView");
+
+    // the time picker will be disabled if any auto-set option is selected
+    if (self.SLAlarmPrefs.autoSetOption == kSLAutoSetOptionOff) {
+        editAlarmView.timePicker.enabled = YES;
+    } else {
+        editAlarmView.timePicker.enabled = NO;
+    }
 }
 
 - (void)_doneButtonClicked:(id)doneButton
@@ -184,12 +207,16 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
             // customize the detail text label depending on whether or not we have skip dates enabled
             cell.detailTextLabel.text = [self.SLAlarmPrefs totalSelectedDatesString];
         }
-    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSun) {
-        // grab a cell from the attribute section
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
+        // grab a cell from the attribute section to customize
         cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAttribute]);
+
+        // customize the cell that will be used to allow the user to customize the sun options
+        cell.textLabel.text = kSLAutoSetString;
+        cell.detailTextLabel.text = [SLPrefsManager friendlyNameForAutoSetOption:self.SLAlarmPrefs.autoSetOption];
     } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionDelete) {
         // grab the cell that would originally be returned for the delete section
-        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSun]);
+        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);
     }
     
     return cell;
@@ -221,11 +248,17 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
         } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             %orig;
         }
-    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSun) {
-        
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
+        // create a custom view controller which will display the auto-set options
+        SLAutoSetOptionsTableViewController *autoSetOptionsController = [[SLAutoSetOptionsTableViewController alloc] initWithAutoSetOption:self.SLAlarmPrefs.autoSetOption
+                                                                                                                       autoSetOffsetOption:self.SLAlarmPrefs.autoSetOffsetOption
+                                                                                                                         autoSetOffsetHour:self.SLAlarmPrefs.autoSetOffsetHour
+                                                                                                                       autoSetOffsetMinute:self.SLAlarmPrefs.autoSetOffsetMinute];
+        autoSetOptionsController.delegate = self;
+        [self.navigationController pushViewController:autoSetOptionsController animated:YES];
     } else {
         // perform the logic that was originally for the delete section
-        %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSun]);
+        %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);
     }
 }
 
@@ -236,6 +269,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
     NSString *footerTitle = nil;
     if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
         footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
+    } else if (section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
+        footerTitle = [self.SLAlarmPrefs autoSetExplanation];
     }
     return footerTitle;
 }
@@ -295,6 +330,28 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate>
 {
     self.SLAlarmPrefs.customSkipDates = customSkipDates;
     self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
+
+    // signify that changes were made to the Sleeper preferences
+    self.SLAlarmPrefsChanged = YES;
+}
+
+#pragma mark - SLAutoSetOptionsDelegate
+
+// update this alarm's preferences with the selections from the auto-set options controller
+%new
+- (void)SLAutoSetOptionsTableViewController:(SLAutoSetOptionsTableViewController *)autoSetOptionsTableViewController
+                     didUpdateAutoSetOption:(SLAutoSetOption)autoSetOption
+                    withAutoSetOffsetOption:(SLAutoSetOffsetOption)autoSetOffsetOption
+                      withAutoSetOffsetHour:(NSInteger)autoSetOffsetHour
+                    withAutoSetOffsetMinute:(NSInteger)autoSetOffsetMinute
+{
+    self.SLAlarmPrefs.autoSetOption = autoSetOption;
+    self.SLAlarmPrefs.autoSetOffsetOption = autoSetOffsetOption;
+    self.SLAlarmPrefs.autoSetOffsetHour = autoSetOffsetHour;
+    self.SLAlarmPrefs.autoSetOffsetMinute = autoSetOffsetMinute;
+
+    // update the enabled status of the time picker, which will depend on the auto-set option
+    [self SLUpdateTimePickerEnabled];
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
