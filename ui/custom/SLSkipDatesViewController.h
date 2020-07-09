@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SLEditDateViewController.h"
+#import "SLEditDateTimeViewController.h"
 #import "SLHolidaySelectionTableViewController.h"
 #import "../../common/SLAlarmPrefs.h"
 
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface SLSkipDatesViewController : UITableViewController <SLEditDateViewControllerDelegate, SLHolidaySelectionDelegate, UIViewControllerTransitioningDelegate>
+@interface SLSkipDatesViewController : UITableViewController <SLEditDateTimeViewControllerDelegate, SLHolidaySelectionDelegate, UIViewControllerTransitioningDelegate>
 
 // initialize this controller with the preferences for the given alarm
 - (instancetype)initWithAlarmPrefs:(SLAlarmPrefs *)alarmPrefs;

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SLEditDateTimeViewController.h"
 #import "../../common/SLPrefsManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface SLAutoSetOptionsTableViewController : UITableViewController
+@interface SLAutoSetOptionsTableViewController : UITableViewController <SLEditDateTimeViewControllerDelegate, UIViewControllerTransitioningDelegate>
 
 // initialize this controller with the selected auto-set settings
 - (instancetype)initWithAutoSetOption:(SLAutoSetOption)autoSetOption

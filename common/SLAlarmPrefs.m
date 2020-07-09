@@ -198,6 +198,31 @@
     NSString *autoSetExplanation = nil;
     if (self.autoSetOption == kSLAutoSetOptionOff) {
         autoSetExplanation = kSLAutoSetOffExplanationString;
+    } else {
+        // determine the type of auto-set this timer is using
+        NSString *sunTypeString = nil;
+        if (self.autoSetOption == kSLAutoSetOptionSunrise) {
+            sunTypeString = kSLSunriseString;
+        } else if (self.autoSetOption == kSLAutoSetOptionSunset) {
+            sunTypeString = kSLSunsetString;
+        }
+
+        // check to see if any offset is being used
+        NSString *offsetTypeString = nil;
+        if (self.autoSetOffsetOption != kSLAutoSetOffsetOptionOff && (self.autoSetOffsetHour > 0 || self.autoSetOffsetMinute > 0)) {
+            if (self.autoSetOffsetOption == kSLAutoSetOffsetOptionBefore) {
+                offsetTypeString = kSLBeforeString;
+            } else if (self.autoSetOffsetOption == kSLAutoSetOffsetOptionAfter) {
+                offsetTypeString = kSLAfterString;
+            }
+        }
+        
+        // construct the final string depending on the various auto-set options
+        if (offsetTypeString != nil) {
+            autoSetExplanation = kSLAutoSetOnWithOffsetExplanationString(self.autoSetOffsetHour, self.autoSetOffsetMinute, offsetTypeString, sunTypeString);
+        } else {
+            autoSetExplanation = kSLAutoSetOnExplanationString(sunTypeString);
+        }
     }
     return autoSetExplanation;
 }

@@ -124,7 +124,11 @@
 // signifies whether or not this alarm is snozoed
 @property (readonly, nonatomic, getter=isSnoozed) BOOL snoozed;
 
-- (void)setHour:(unsigned long long)arg1;
+// updates the hour property of the alarm
+- (void)setHour:(NSInteger)hour;
+
+// updates the minute property of the alarm
+- (void)setMinute:(NSInteger)minute;
 
 // returns a string representation of the alarm Id
 - (NSString *)alarmIDString;
@@ -154,6 +158,9 @@
 
 // returns an array of MTAlarm objects for the given date and 
 - (NSArray *)nextAlarmsForDateSync:(NSDate *)date maxCount:(int)maxCount includeSleepAlarm:(BOOL)includeSleepAlarm includeBedtimeNotification:(BOOL)includeBedtimeNotification;
+
+// returns an alarm object given the corresponding alarm Id string
+- (MTAlarm *)alarmWithIDString:(NSString *)alarmId;
 
 @end
 

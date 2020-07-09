@@ -56,6 +56,11 @@ static NSString *const kSLAutoSetOffsetMinuteKey =      @"autoSetOffsetMinute";
 // delete an alarm from our settings
 + (void)deleteAlarmForAlarmId:(NSString *)alarmId;
 
+// Provides the caller with a dictionary containing all of the auto-set alarms using the auto-set option as the key for the dictionary.
+// The value for each key will be an array containing dictionaries with the alarm information.
+// Returns nil when no auto-set alarms exist.
++ (NSDictionary *)allAutoSetAlarms;
+
 // Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
 // This function will also remove any passed dates.
 + (NSDictionary *)holidayResourceForResourceName:(NSString *)resourceName;
@@ -84,5 +89,7 @@ static NSString *const kSLAutoSetOffsetMinuteKey =      @"autoSetOffsetMinute";
 // Returns a string that represents a date that is going to be skipped.  If showRelativeString is enabled,
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString;
+
++ (void)debugWriteForecastUpdateToFile:(NSDictionary *)forecastUpdate;
 
 @end

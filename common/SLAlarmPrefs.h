@@ -84,6 +84,7 @@ typedef enum SLAutoSetOption : NSInteger {
 
 // enum to define the offset options for the auto-set feature when it is enabled
 typedef enum SLAutoSetOffsetOption : NSInteger {
+    kSLAutoSetOffsetOptionOff,
     kSLAutoSetOffsetOptionBefore,
     kSLAutoSetOffsetOptionAfter
 } SLAutoSetOffsetOption;
@@ -98,8 +99,8 @@ static NSInteger const kSLDefaultSkipMinute =           30;
 static NSInteger const kSLDefaultSkipSecond =           0;
 static NSInteger const kSLDefaultSkipActivatedStatus =  kSLSkipActivatedStatusUnknown;
 static NSInteger const kSLDefaultAutoSetOption =        kSLAutoSetOptionOff;
-static NSInteger const kSLDefaultAutoSetOffsetOption =  kSLAutoSetOffsetOptionBefore;
-static NSInteger const kSLDefaultAutoSetOffsetHour =    0;
+static NSInteger const kSLDefaultAutoSetOffsetOption =  kSLAutoSetOffsetOptionOff;
+static NSInteger const kSLDefaultAutoSetOffsetHour =    1;
 static NSInteger const kSLDefaultAutoSetOffsetMinute =  0;
 
 // Sleeper preferences specific to an alarm

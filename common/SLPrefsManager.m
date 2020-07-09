@@ -12,6 +12,8 @@
 // the path of our settings that is used to store the alarm snooze times
 #define kSLSettingsFile         [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
+#define kSLForecastDebugFile    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.forecasts.plist"]
+
 // keep a single, static instances of the date formatters that will be used to convert date objects to strings and vice versa
 static NSDateFormatter *sSLSkipDatesUIDateFormatter;
 static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
@@ -120,6 +122,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 // save the specific alarm preferences object
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs
 {
+    // keep track if the auto-set option has changed and needs to notify any listeners
+    BOOL shouldNotifyAutoSetOptionsUpdated = NO;
+
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
@@ -139,6 +144,16 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         // otherwise attempt to find the desired alarm in the array
         for (alarm in alarms) {
             if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmPrefs.alarmId]) {
+                // check to see if the auto-set options were updated
+                SLAutoSetOption oldAutoSetOption = [[alarm objectForKey:kSLAutoSetOptionKey] integerValue];
+                SLAutoSetOffsetOption oldAutoSetOffSetOption = [[alarm objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
+                NSInteger oldAutoSetOffsetHour = [[alarm objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                NSInteger oldAutoSetOffsetMinute = [[alarm objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                if (oldAutoSetOption != alarmPrefs.autoSetOption || oldAutoSetOffSetOption != alarmPrefs.autoSetOffsetOption ||
+                    oldAutoSetOffsetHour != alarmPrefs.autoSetOffsetHour || oldAutoSetOffsetMinute != alarmPrefs.autoSetOffsetMinute) {
+                    shouldNotifyAutoSetOptionsUpdated = YES;
+                }
+
                 // update the alarm dictionary with the values given
                 [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour]
                           forKey:kSLSnoozeHourKey];
@@ -190,6 +205,11 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                                   [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
                                   @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
                                   nil];
+
+        // check to see if the auto-set option was enabled for this new alarm
+        if (alarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
+            shouldNotifyAutoSetOptionsUpdated = YES;
+        }
         
         // add the object to the array
         [alarms addObject:newAlarm];
@@ -199,7 +219,10 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     [prefs setObject:alarms forKey:kSLAlarmsKey];
     
     // write the updated preferences
-    [prefs writeToFile:kSLSettingsFile atomically:YES];
+    if ([prefs writeToFile:kSLSettingsFile atomically:YES] && shouldNotifyAutoSetOptionsUpdated) {
+        // notify any observers that the auto-set options for this alarm have changed
+
+    }
 }
 
 // save the skip activation status for a given alarm
@@ -264,6 +287,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         
         // only continue if any Alarms exist in the preferences
         if (alarms) {
+            // keep track if the auto-set option has changed and needs to notify any listeners
+            BOOL shouldNotifyAutoSetOptionsUpdated = NO;
+
             // iterate through all of the alarms until we find the one we desire
             BOOL alarmFound = NO;
             for (int i = 0; i < alarms.count; i++) {
@@ -272,6 +298,11 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 
                 // check if this is the desired alarm
                 if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmId]) {
+                    // check to see if this alarm had the auto-set option enabled
+                    if ([[alarm objectForKey:kSLAutoSetOptionKey] integerValue] != kSLAutoSetOptionOff) {
+                        shouldNotifyAutoSetOptionsUpdated = YES;
+                    }
+
                     // remove the alarm from the array
                     [alarms removeObjectAtIndex:i];
                     alarmFound = YES;
@@ -285,10 +316,60 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 [prefs setObject:alarms forKey:kSLAlarmsKey];
                 
                 // write the updated preferences
-                [prefs writeToFile:kSLSettingsFile atomically:YES];
+                if ([prefs writeToFile:kSLSettingsFile atomically:YES] && shouldNotifyAutoSetOptionsUpdated) {
+                    // notify any observers that the auto-set options for this alarm have changed
+
+                }
             }
         }
     }
+}
+
+// Provides the caller with a dictionary containing all of the auto-set alarms using the auto-set option as the key for the dictionary.
+// The value for each key will be an array containing the alarm IDs that correspond to the auto-set option.
+// Returns nil when no auto-set alarms exist.
++ (NSDictionary *)allAutoSetAlarms
+{
+    // forward declare the dictionary to return
+    NSDictionary *autoSetAlarms = nil;
+
+    // grab the preferences plist
+    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
+    
+    // if the alarm preferences exist, attempt to get the alarms
+    if (prefs) {
+        // get the array of dictionaries of all of the alarms
+        NSArray *alarms = [prefs objectForKey:kSLAlarmsKey];
+
+        // if any alarms exist, continue
+        if (alarms && alarms.count > 0) {
+            // declare the arrays that will hold the sunrise and sunset alarms
+            NSMutableArray *sunriseAlarms = [[NSMutableArray alloc] init];
+            NSMutableArray *sunsetAlarms = [[NSMutableArray alloc] init];
+
+            // iterate through the alarms until we the find any with an auto-set option
+            for (NSDictionary *alarm in alarms) {
+                // check to see the auto-set setting for the alarm
+                SLAutoSetOption autoSetOption = [[alarm objectForKey:kSLAutoSetOptionKey] integerValue];
+                if (autoSetOption == kSLAutoSetOptionSunrise) {
+                    [sunriseAlarms addObject:alarm];
+                } else if (autoSetOption == kSLAutoSetOptionSunset) {
+                    [sunsetAlarms addObject:alarm];
+                }
+            }
+
+            // if any sunrise/sunset alarms existed, add them to the dictionary
+            if (sunriseAlarms.count > 0 && sunsetAlarms.count > 0) {
+                autoSetAlarms = @{[NSNumber numberWithInteger:kSLAutoSetOptionSunrise]:[sunriseAlarms copy],
+                                  [NSNumber numberWithInteger:kSLAutoSetOptionSunset]:[sunsetAlarms copy]};
+            } else if (sunriseAlarms.count > 0) {
+                autoSetAlarms = @{[NSNumber numberWithInteger:kSLAutoSetOptionSunrise]:[sunriseAlarms copy]};
+            } else if (sunsetAlarms.count > 0) {
+                autoSetAlarms = @{[NSNumber numberWithInteger:kSLAutoSetOptionSunset]:[sunsetAlarms copy]};
+            }
+        }           
+    }
+    return autoSetAlarms;
 }
 
 // Returns a dictionary that corresponds to the default holiday source for the given holiday resource name.
@@ -574,6 +655,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 {
     NSString *autoSetOffsetOptionName = nil;
     switch (autoSetOffsetOption) {
+        case kSLAutoSetOffsetOptionOff:
+            autoSetOffsetOptionName = kSLOffString;
+            break;
         case kSLAutoSetOffsetOptionBefore:
             autoSetOffsetOptionName = kSLBeforeString;
             break;
@@ -597,6 +681,30 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         }
     }
     return [[SLPrefsManager uiDateFormatter] stringFromDate:date];
+}
+
++ (void)debugWriteForecastUpdateToFile:(NSDictionary *)forecastUpdate
+{
+    // grab the preferences plist
+    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLForecastDebugFile];
+    
+    // if no preferences exist, create a new mutable dictionary now
+    if (!prefs) {
+        prefs = [[NSMutableDictionary alloc] initWithCapacity:1];
+    }
+    
+    NSMutableArray *forecasts = [prefs objectForKey:@"forecasts"];
+    if (!forecasts) {
+        forecasts = [[NSMutableArray alloc] initWithCapacity:1];
+    }
+
+    [forecasts addObject:forecastUpdate];
+
+    // add the alarms array to the preferences dictionary
+    [prefs setObject:forecasts forKey:@"forecasts"];
+    
+    // write the updated preferences
+    [prefs writeToFile:kSLForecastDebugFile atomically:YES];
 }
 
 @end

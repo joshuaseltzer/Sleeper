@@ -269,7 +269,7 @@ static NSString *sSLTomorrowDateString;
 - (void)presentEditDateViewControllerWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate
 {
     // create the edit date controller which will be shown as a partial modal transition to allow the user to pick a new date or edit an existing one
-    SLEditDateViewController *editDateViewController = [[SLEditDateViewController alloc] initWithTitle:title initialDate:initialDate minimumDate:minimumDate maximumDate:maximumDate];
+    SLEditDateTimeViewController *editDateViewController = [[SLEditDateTimeViewController alloc] initWithTitle:title initialDate:initialDate minimumDate:minimumDate maximumDate:maximumDate];
     editDateViewController.delegate = self;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editDateViewController];
     navController.modalPresentationStyle = UIModalPresentationCustom;
@@ -868,7 +868,7 @@ static NSString *sSLTomorrowDateString;
         // for older iOS versions, add some additional padding
         safeAreaInsets = 30.0;
     }
-    CGFloat partialModalPercentage = ceilf((kSLEditDatePickerViewHeight + [UIApplication sharedApplication].statusBarFrame.size.height) / (source.view.frame.size.height - safeAreaInsets) * 100) / 100;
+    CGFloat partialModalPercentage = ceilf((kSLEditDateTimePickerViewHeight + [UIApplication sharedApplication].statusBarFrame.size.height) / (source.view.frame.size.height - safeAreaInsets) * 100) / 100;
     
     // return the custom presentation controller
     return [[SLPartialModalPresentationController alloc] initWithPresentedViewController:presented
@@ -877,10 +877,10 @@ static NSString *sSLTomorrowDateString;
                                                                      allowSwipeDismissal:NO];
 }
 
-#pragma mark - SLEditDateViewControllerDelegate
+#pragma mark - SLEditDateTimeViewControllerDelegate
 
 // invoked when the edit date view controller saves a date
-- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didSaveDate:(NSDate *)date
+- (void)SLEditDateTimeViewController:(SLEditDateTimeViewController *)editDateTimeViewController didSaveDate:(NSDate *)date
 {
     // check if the user invoked the edit date controller from selecting a date range
     if (self.isSelectingStartDate) {
@@ -918,7 +918,7 @@ static NSString *sSLTomorrowDateString;
 }
 
 // invoked when the date selection was cancelled
-- (void)SLEditDateViewController:(SLEditDateViewController *)editDateViewController didCancelDate:(NSDate *)date
+- (void)SLEditDateTimeViewControllerDidCancelSelection:(SLEditDateTimeViewController *)editDateTimeViewController
 {
     // in the case of selecting a date range, clear/reset the saved properties
     self.isSelectingStartDate = NO;

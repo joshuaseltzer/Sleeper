@@ -502,7 +502,7 @@ static NSInteger const kSLSecondComponent = 4;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     // set a single space for the so that the delegate method asking for the height is called
-    return @" ";;
+    return @" ";
 }
 
 #pragma mark - UITableViewDelegate

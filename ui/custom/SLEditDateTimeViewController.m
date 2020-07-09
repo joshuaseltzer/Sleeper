@@ -1,29 +1,24 @@
 //
-//  SLEditDateViewController.m
+//  SLEditDateTimeViewController.m
 //
 //  Created by Joshua Seltzer on 1/3/19.
 //  Copyright © 2019 Joshua Seltzer. All rights reserved.
 //
 
-#import "SLEditDateViewController.h"
+#import "SLEditDateTimeViewController.h"
 #import "../../common/SLCompatibilityHelper.h"
 #import "../../common/SLLocalizedStrings.h"
 
 // define constants for the view dictionary when creating constraints
 #define kSLDatePickerViewKey            @"datePickerView"
 
-// enum that defines the selectable components in the time picker
-typedef enum XFTEditTimePickerViewComponent : NSInteger {
-    kXFTEditTimePickerViewComponentMinutes,
-    kXFTEditTimePickerViewComponentSeconds,
-    kXFTEditTimePickerViewComponentHidden,
-    kXFTEditTimePickerViewNumComponents
-} XFTEditTimePickerViewComponent;
+@interface SLEditDateTimeViewController ()
 
-@interface SLEditDateViewController ()
-
-// the picker view which is responsible for showing the minutes and seconds for picking a time
+// the picker view which is responsible for showing the date or hours/minutes
 @property (nonatomic, strong) UIDatePicker *datePickerView;
+
+// the mode that the picker will be using
+@property (nonatomic) UIDatePickerMode datePickerMode;
 
 // the optional initial date
 @property (nonatomic, strong) NSDate *initialDate;
@@ -34,11 +29,23 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 // the optional maximum date
 @property (nonatomic, strong) NSDate *maximumDate;
 
+// the optional initial hours
+@property (nonatomic) NSInteger initialHours;
+
+// the optional initial minutes
+@property (nonatomic) NSInteger initialMinutes;
+
+// the optional maximum hours
+@property (nonatomic) NSInteger maximumHours;
+
+// the optional maximum minutes
+@property (nonatomic) NSInteger maximumMinutes;
+
 @end
 
-@implementation SLEditDateViewController
+@implementation SLEditDateTimeViewController
 
-// initialize this controller with a required title and optional dates
+// Initialize this controller with a required title and optional dates.  Using this initilizer will put the picker in date mode.
 - (instancetype)initWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate
 {
     self = [super init];
@@ -47,6 +54,22 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
         self.initialDate = initialDate;
         self.minimumDate = minimumDate;
         self.maximumDate = maximumDate;
+        self.datePickerMode = UIDatePickerModeDate;
+    }
+    return self;
+}
+
+// Initialize this controller with a required title and optional hour/minutes.  Using this initilizer will put the picker in countdown timer mode.
+- (instancetype)initWithTitle:(NSString *)title initialHours:(NSInteger)initialHours initialMinutes:(NSInteger)initialMinutes maximumHours:(NSInteger)maximumHours maximumMinutes:(NSInteger)maximumMinutes
+{
+    self = [super init];
+    if (self) {
+        self.navigationItem.title = title;
+        self.initialHours = initialHours;
+        self.initialMinutes = initialMinutes;
+        self.maximumHours = maximumHours;
+        self.maximumMinutes = maximumMinutes;
+        self.datePickerMode = UIDatePickerModeCountDownTimer;
     }
     return self;
 }
@@ -55,20 +78,9 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 {
     [super viewDidLoad];
     
-    // create and customize the date picker
+    // create and customize the date picker's view
     self.datePickerView = [[UIDatePicker alloc] initWithFrame:CGRectZero];
-    self.datePickerView.datePickerMode = UIDatePickerModeDate;
-    if (self.minimumDate != nil) {
-        [self.datePickerView setMinimumDate:self.minimumDate];
-    } else {
-        [self.datePickerView setMinimumDate:[NSDate date]];
-    }
-    if (self.maximumDate != nil) {
-        [self.datePickerView setMaximumDate:self.maximumDate];
-    }
-    if (self.initialDate != nil) {
-        self.datePickerView.date = self.initialDate;
-    }
+    self.datePickerView.datePickerMode = self.datePickerMode;
     self.datePickerView.backgroundColor = [SLCompatibilityHelper pickerViewBackgroundColor];
     self.view.backgroundColor = [SLCompatibilityHelper pickerViewBackgroundColor];
     [self.datePickerView setValue:[SLCompatibilityHelper defaultLabelColor] forKey:@"textColor"];
@@ -82,7 +94,7 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
                                                                                      toItem:nil
                                                                                   attribute:NSLayoutAttributeNotAnAttribute
                                                                                  multiplier:1.0
-                                                                                   constant:kSLEditDatePickerViewHeight];
+                                                                                   constant:kSLEditDateTimePickerViewHeight];
     NSLayoutConstraint *pickerViewYConstraint = [NSLayoutConstraint constraintWithItem:self.datePickerView
                                                                              attribute:NSLayoutAttributeBottom
                                                                              relatedBy:NSLayoutRelationEqual
@@ -98,6 +110,23 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
                                                                             multiplier:1.0
                                                                               constant:0.0];
     [self.view addConstraints:@[pickerViewHeightConstraint, pickerViewYConstraint, pickerViewXConstraint]];
+
+    // configure the date picker either with the supplied date properties or hour/minute properties
+    if (self.datePickerMode == UIDatePickerModeDate) {
+        if (self.minimumDate != nil) {
+            [self.datePickerView setMinimumDate:self.minimumDate];
+        } else {
+            [self.datePickerView setMinimumDate:[NSDate date]];
+        }
+        if (self.maximumDate != nil) {
+            [self.datePickerView setMaximumDate:self.maximumDate];
+        }
+        if (self.initialDate != nil) {
+            self.datePickerView.date = self.initialDate;
+        }
+    } else if (self.datePickerMode == UIDatePickerModeCountDownTimer) {
+
+    }
     
     // create a cancel button to dismiss changes
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:kSLCancelString
@@ -125,8 +154,8 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
     // dismiss the controller
     [self dismissViewControllerAnimated:YES completion:^{
         // tell the delegate that the date selection was cancelled
-        if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
-            [self.delegate SLEditDateViewController:self didCancelDate:self.datePickerView.date];
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(SLEditDateTimeViewControllerDidCancelSelection:)]) {
+            [self.delegate SLEditDateTimeViewControllerDidCancelSelection:self];
         }
     }];
 }
@@ -136,9 +165,14 @@ typedef enum XFTEditTimePickerViewComponent : NSInteger {
 {
     // dismiss the controller
     [self dismissViewControllerAnimated:YES completion:^{
-        // tell the delegate about the saved selected date
-        if (self.delegate != nil && [self.delegate conformsToProtocol:@protocol(SLEditDateViewControllerDelegate)]) {
-            [self.delegate SLEditDateViewController:self didSaveDate:self.datePickerView.date];
+        if (self.delegate != nil) {
+            if (self.datePickerMode == UIDatePickerModeDate && [self.delegate respondsToSelector:@selector(SLEditDateTimeViewController:didSaveDate:)]) {
+                // tell the delegate about the selected date
+                [self.delegate SLEditDateTimeViewController:self didSaveDate:self.datePickerView.date];
+            } else if (self.datePickerMode == UIDatePickerModeCountDownTimer && [self.delegate respondsToSelector:@selector(SLEditDateTimeViewController:didSaveHours:andMinutes:)]) {
+                // tell the delegate about the selected hours/minutes
+                [self.delegate SLEditDateTimeViewController:self didSaveHours:6 andMinutes:30];
+            }
         }
     }];
 }
