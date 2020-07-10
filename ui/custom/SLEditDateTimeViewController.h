@@ -31,13 +31,13 @@
 @end
 
 // customized view controller which simply contains a date or time picker view
-@interface SLEditDateTimeViewController : UIViewController
+@interface SLEditDateTimeViewController : UIViewController <UIPickerViewDataSource>
 
 // Initialize this controller with a required title and optional dates.  Using this initilizer will put the picker in date mode.
 - (instancetype)initWithTitle:(NSString *)title initialDate:(NSDate *)initialDate minimumDate:(NSDate *)minimumDate maximumDate:(NSDate *)maximumDate;
 
 // Initialize this controller with a required title and optional hour/minutes.  Using this initilizer will put the picker in countdown timer mode.
-- (instancetype)initWithTitle:(NSString *)title initialHours:(NSInteger)initialHours initialMinutes:(NSInteger)initialMinutes maximumHours:(NSInteger)maximumHours maximumMinutes:(NSInteger)maximumMinutes;
+- (instancetype)initWithTitle:(NSString *)title initialHours:(NSInteger)initialHours initialMinutes:(NSInteger)initialMinutes maximumHours:(NSInteger)maximumHours;
 
 // the delegate of this view controller
 @property (nonatomic, weak) id <SLEditDateTimeViewControllerDelegate> delegate;

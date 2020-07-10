@@ -211,16 +211,10 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         autoSetOptionSelectionCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
         autoSetOptionSelectionCell.textLabel.numberOfLines = 0;
         
-
         // on newer versions of iOS, we need to set the background views for the cell
         if (kSLSystemVersioniOS13) {
             autoSetOptionSelectionCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
-
-        // set the background color of the cell to clear to remove the selection color
-        UIView *backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor clearColor];
-        autoSetOptionSelectionCell.selectedBackgroundView = backgroundView;
     }
     return autoSetOptionSelectionCell;
 }
@@ -284,8 +278,7 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
             SLEditDateTimeViewController *editTimeViewController = [[SLEditDateTimeViewController alloc] initWithTitle:kSLOffsetTimeString
                                                                                                           initialHours:self.autoSetOffsetHour
                                                                                                         initialMinutes:self.autoSetOffsetMinute
-                                                                                                          maximumHours:6
-                                                                                                        maximumMinutes:59];
+                                                                                                          maximumHours:6];
             editTimeViewController.delegate = self;
             UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editTimeViewController];
             navController.modalPresentationStyle = UIModalPresentationCustom;
@@ -335,8 +328,13 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
 // invoked when the hours and minutes are updated from the edit time view controller
 - (void)SLEditDateTimeViewController:(SLEditDateTimeViewController *)editDateTimeViewController didSaveHours:(NSInteger)hours andMinutes:(NSInteger)minutes
 {
+    // update the offset hours and minutes
+    self.autoSetOffsetMinute = minutes;
+    self.autoSetOffsetHour = hours;
 
+    // reload the cell which displays the hours/minutes
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:self.offsetSectionNumRows - 1 inSection:kSLAutoSetOptionsTableViewControllerSectionOffset]]
+                          withRowAnimation:UITableViewRowAnimationFade];
 }
-
 
 @end

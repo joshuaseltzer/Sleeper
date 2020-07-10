@@ -202,18 +202,18 @@
         // determine the type of auto-set this timer is using
         NSString *sunTypeString = nil;
         if (self.autoSetOption == kSLAutoSetOptionSunrise) {
-            sunTypeString = kSLSunriseString;
+            sunTypeString = [kSLSunriseString lowercaseString];
         } else if (self.autoSetOption == kSLAutoSetOptionSunset) {
-            sunTypeString = kSLSunsetString;
+            sunTypeString = [kSLSunsetString lowercaseString];
         }
 
         // check to see if any offset is being used
         NSString *offsetTypeString = nil;
         if (self.autoSetOffsetOption != kSLAutoSetOffsetOptionOff && (self.autoSetOffsetHour > 0 || self.autoSetOffsetMinute > 0)) {
             if (self.autoSetOffsetOption == kSLAutoSetOffsetOptionBefore) {
-                offsetTypeString = kSLBeforeString;
+                offsetTypeString = [kSLBeforeString lowercaseString];
             } else if (self.autoSetOffsetOption == kSLAutoSetOffsetOptionAfter) {
-                offsetTypeString = kSLAfterString;
+                offsetTypeString = [kSLAfterString lowercaseString];
             }
         }
         
