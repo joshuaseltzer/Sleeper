@@ -44,7 +44,7 @@
 "DATE_RANGE" = "Date Range";
 "AUTO_SET" = "Auto-Set";
 "AUTO_SET_EXPLANATION" = "Choose an auto-set option to have this alarm automatically update its fire time.\n\nThe time for these options will be determined using the primary location set in the Weather application.  The system will routinely update all auto-set alarms using the most up-to-date location information at midnight and noon each day.";
-"AUTO_SET_OFFSET_EXPLANATION" = "When enabled, the offset hours and minutes will be applied either before or after the selected auto-set time.\n\nFor example, if the sunrise auto-set option is selected with a 1-hour-before offset option, the alarm will be set to fire 1 hour before the actual sunrise occurs.";
+"AUTO_SET_OFFSET_EXPLANATION" = "When enabled, the offset hours and minutes will be applied either before or after the selected auto-set time.\n\nFor example, if the sunrise auto-set option is selected with a 1-hour-before offset, the alarm will be set to fire 1 hour before the actual sunrise occurs.";
 "AUTO_SET_OFF_EXPLANATION" = "You can use the auto-set feature to have this alarm automatically set its time based on various parameters.";
 "AUTO_SET_ON_EXPLANATION" = "This alarm's fire time will be automatically set to the %@.";
 "AUTO_SET_ON_WITH_OFFSET_EXPLANATION" = "This alarm's fire time will be automatically set to %ld hour(s) and %ld minute(s) %@ the %@.";
