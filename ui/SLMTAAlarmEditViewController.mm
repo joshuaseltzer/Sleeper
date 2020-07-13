@@ -18,19 +18,10 @@
 // define an enum to reference the sections of the table view
 typedef enum SLMTAAlarmEditViewControllerSection : NSUInteger {
     kSLMTAAlarmEditViewControllerSectionAttribute,
-    kSLMTAAlarmEditViewControllerSectionSkip,
     kSLMTAAlarmEditViewControllerSectionAutoSet,
     kSLMTAAlarmEditViewControllerSectionDelete,
     kSLMTAAlarmEditViewControllerNumSections
 } SLMTAAlarmEditViewControllerSection;
-
-// define an enum to reference the rows in kSLMTAAlarmEditViewControllerSectionSkip
-typedef enum SLMTAAlarmEditViewControllerSkipSectionRow : NSUInteger {
-    kSLMTAAlarmEditViewControllerSkipSectionRowSkipToggle,
-    kSLMTAAlarmEditViewControllerSkipSectionRowSkipTime,
-    kSLMTAAlarmEditViewControllerSkipSectionRowSkipDates,
-    kSLMTAAlarmEditViewControllerSkipSectionNumRows
-} SLMTAAlarmEditViewControllerSkipSectionRow;
 
 // define an enum to reference the rows in kSLMTAAlarmEditViewControllerSectionAttribute
 typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
@@ -39,6 +30,9 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
     kSLMTAAlarmEditViewControllerAttributeSectionRowSound,
     kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeToggle,
     kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeTime,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime,
+    kSLMTAAlarmEditViewControllerAttributeSectionRowSkipDates,
     kSLMTAAlarmEditViewControllerAttributeSectionNumRows
 } SLMTAAlarmEditViewControllerAttributeSectionRow;
 
@@ -144,8 +138,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // add sections for the skip and sunrise/sunset option
-    return %orig + 2;
+    // add a section for the sunrise/sunset option
+    return %orig + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -155,9 +149,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
     NSInteger numRows = %orig;
     
     // add custom rows to allow the user to edit the snooze time and configure skipping
-    if (section == kSLMTAAlarmEditViewControllerSectionSkip) {
-        numRows = kSLMTAAlarmEditViewControllerSkipSectionNumRows;
-    } else if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
+    if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
         numRows = kSLMTAAlarmEditViewControllerAttributeSectionNumRows;
     }
     
@@ -181,7 +173,6 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
 
-        // customize the snooze time cell
         if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSnoozeTime) {
             cell.textLabel.text = kSLSnoozeTimeString;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -189,13 +180,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             // format the cell of the text with the snooze time values
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.snoozeTimeHour,
                                         (long)self.SLAlarmPrefs.snoozeTimeMinute, (long)self.SLAlarmPrefs.snoozeTimeSecond];
-        }
-    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSkip) {
-        // grab a cell from the attribute section to customize
-        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAttribute]);
-
-        // customize the skip cells
-        if (indexPath.row == kSLMTAAlarmEditViewControllerSkipSectionRowSkipToggle) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
             cell.textLabel.text = kSLSkipString;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.detailTextLabel.text = nil;
@@ -209,14 +194,14 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             
             // set the switch to the custom view in the cell
             cell.accessoryView = skipControl;
-        } else if (indexPath.row == kSLMTAAlarmEditViewControllerSkipSectionRowSkipTime) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime) {
             cell.textLabel.text = kSLSkipTimeString;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             
             // format the cell of the text with the skip time values
             cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.skipTimeHour,
                                         (long)self.SLAlarmPrefs.skipTimeMinute, (long)self.SLAlarmPrefs.skipTimeSecond];
-        } else if (indexPath.row == kSLMTAAlarmEditViewControllerSkipSectionRowSkipDates) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipDates) {
             cell.textLabel.text = kSLSkipDatesString;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -232,7 +217,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
         cell.detailTextLabel.text = [SLPrefsManager friendlyNameForAutoSetOption:self.SLAlarmPrefs.autoSetOption];
     } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionDelete) {
         // grab the cell that would originally be returned for the delete section
-        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSkip]);
+        cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);
     }
     
     return cell;
@@ -249,22 +234,20 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
                                                                                                      seconds:self.SLAlarmPrefs.snoozeTimeSecond];
             snoozeController.delegate = self;
             [self.navigationController pushViewController:snoozeController animated:YES];
-        } else {
-            %orig;
-        }
-    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionSkip) {
-        if (indexPath.row == kSLMTAAlarmEditViewControllerSkipSectionRowSkipTime) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipTime) {
             // create a custom view controller which will decide the skip time
             SLSkipTimeViewController *skipTimeController = [[SLSkipTimeViewController alloc] initWithHours:self.SLAlarmPrefs.skipTimeHour
                                                                                                    minutes:self.SLAlarmPrefs.skipTimeMinute
                                                                                                    seconds:self.SLAlarmPrefs.skipTimeSecond];
             skipTimeController.delegate = self;
             [self.navigationController pushViewController:skipTimeController animated:YES];
-        } else if (indexPath.row == kSLMTAAlarmEditViewControllerSkipSectionRowSkipDates) {
+        } else if (indexPath.row == kSLMTAAlarmEditViewControllerAttributeSectionRowSkipDates) {
             // create a custom view controller which will display the skip dates for this alarm
             SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithAlarmPrefs:self.SLAlarmPrefs];
             skipDatesController.delegate = self;
             [self.navigationController pushViewController:skipDatesController animated:YES];
+        } else if (indexPath.row != kSLMTAAlarmEditViewControllerAttributeSectionRowSkipToggle) {
+            %orig;
         }
     } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
         // create a custom view controller which will display the auto-set options
@@ -276,7 +259,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
         [self.navigationController pushViewController:autoSetOptionsController animated:YES];
     } else {
         // perform the logic that was originally for the delete section
-        %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionSkip]);
+        %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);
     }
 }
 
@@ -285,7 +268,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerTitle = nil;
-    if (section == kSLMTAAlarmEditViewControllerSectionSkip) {
+    if (section == kSLMTAAlarmEditViewControllerSectionAttribute) {
         footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
     } else if (section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
         footerTitle = [self.SLAlarmPrefs autoSetExplanation];
