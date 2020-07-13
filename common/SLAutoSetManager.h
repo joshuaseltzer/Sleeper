@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "SLAlarmPrefs.h"
 
+static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptionsUpdated";
+
 // the location object that will be associated with a forecast model
 @interface WFLocation : NSObject
 
@@ -68,7 +70,11 @@
 // return a singleton instance of this manager
 + (instancetype)sharedInstance;
 
-// invoked whenever an alarm's preferences is updated to potentially start or stop monitoring for auto-set changes
-- (void)alarmsWithAutoSetUpdated;
+// Routine that will update the dictionary of multiple auto-set alarms.  This method is meant to be ran on a scheduled basis to check all auto-set alarms at once.
+// The dictionary of alarms is keyed by the auto-set option as a number.
+- (void)bulkUpdateAutoSetAlarms:(NSDictionary *)autoSetAlarms;
+
+// routine to update to a single alarm object that has updated auto-set settings
+- (void)updateAutoSetAlarm:(NSDictionary *)alarmDict;
 
 @end

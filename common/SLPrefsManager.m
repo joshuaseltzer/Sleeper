@@ -6,8 +6,10 @@
 //  Copyright (c) 2014 Joshua Seltzer. All rights reserved.
 //
 
+#import <Foundation/NSDistributedNotificationCenter.h>
 #import "SLPrefsManager.h"
 #import "SLLocalizedStrings.h"
+#import "SLAutoSetManager.h"
 
 // the path of our settings that is used to store the alarm snooze times
 #define kSLSettingsFile         [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
@@ -122,9 +124,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
 // save the specific alarm preferences object
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs
 {
-    // keep track if the auto-set option has changed and needs to notify any listeners
-    BOOL shouldNotifyAutoSetOptionsUpdated = NO;
-
     // grab the preferences plist
     NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
     
@@ -144,16 +143,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         // otherwise attempt to find the desired alarm in the array
         for (alarm in alarms) {
             if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmPrefs.alarmId]) {
-                // check to see if the auto-set options were updated
-                SLAutoSetOption oldAutoSetOption = [[alarm objectForKey:kSLAutoSetOptionKey] integerValue];
-                SLAutoSetOffsetOption oldAutoSetOffSetOption = [[alarm objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
-                NSInteger oldAutoSetOffsetHour = [[alarm objectForKey:kSLAutoSetOffsetHourKey] integerValue];
-                NSInteger oldAutoSetOffsetMinute = [[alarm objectForKey:kSLAutoSetOffsetHourKey] integerValue];
-                if (oldAutoSetOption != alarmPrefs.autoSetOption || oldAutoSetOffSetOption != alarmPrefs.autoSetOffsetOption ||
-                    oldAutoSetOffsetHour != alarmPrefs.autoSetOffsetHour || oldAutoSetOffsetMinute != alarmPrefs.autoSetOffsetMinute) {
-                    shouldNotifyAutoSetOptionsUpdated = YES;
-                }
-
                 // update the alarm dictionary with the values given
                 [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour]
                           forKey:kSLSnoozeHourKey];
@@ -190,38 +179,33 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     // check if the alarm was found, if not add a new one
     if (!alarm) {
         // create a new alarm with the given attributes
-        NSDictionary *newAlarm = [NSDictionary dictionaryWithObjectsAndKeys:alarmPrefs.alarmId, kSLAlarmIdKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour], kSLSnoozeHourKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute], kSLSnoozeMinuteKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond], kSLSnoozeSecondKey,
-                                  [NSNumber numberWithBool:alarmPrefs.skipEnabled], kSLSkipEnabledKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.skipTimeHour], kSLSkipHourKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
-                                  [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOption], kSLAutoSetOptionKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption], kSLAutoSetOffsetOptionKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour], kSLAutoSetOffsetHourKey,
-                                  [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
-                                  @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
-                                  nil];
+        alarm = [NSMutableDictionary dictionaryWithObjectsAndKeys:alarmPrefs.alarmId, kSLAlarmIdKey,
+                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour], kSLSnoozeHourKey,
+                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute], kSLSnoozeMinuteKey,
+                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond], kSLSnoozeSecondKey,
+                [NSNumber numberWithBool:alarmPrefs.skipEnabled], kSLSkipEnabledKey,
+                [NSNumber numberWithInteger:alarmPrefs.skipTimeHour], kSLSkipHourKey,
+                [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
+                [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
+                [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
+                [NSNumber numberWithInteger:alarmPrefs.autoSetOption], kSLAutoSetOptionKey,
+                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption], kSLAutoSetOffsetOptionKey,
+                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour], kSLAutoSetOffsetHourKey,
+                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
+                @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
+                nil];
 
-        // check to see if the auto-set option was enabled for this new alarm
-        if (alarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
-            shouldNotifyAutoSetOptionsUpdated = YES;
-        }
-        
         // add the object to the array
-        [alarms addObject:newAlarm];
+        [alarms addObject:alarm];
     }
     
     // add the alarms array to the preferences dictionary
     [prefs setObject:alarms forKey:kSLAlarmsKey];
     
     // write the updated preferences
-    if ([prefs writeToFile:kSLSettingsFile atomically:YES] && shouldNotifyAutoSetOptionsUpdated) {
-        // notify any observers that the auto-set options for this alarm have changed
-
+    if ([prefs writeToFile:kSLSettingsFile atomically:YES] && alarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
+        // if the alarm has an auto-set option enabled, notify the auto-set manager upon saving the alarm
+        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kSLAutoSetOptionsUpdatedNotification object:nil userInfo:alarm];
     }
 }
 
@@ -287,9 +271,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         
         // only continue if any Alarms exist in the preferences
         if (alarms) {
-            // keep track if the auto-set option has changed and needs to notify any listeners
-            BOOL shouldNotifyAutoSetOptionsUpdated = NO;
-
             // iterate through all of the alarms until we find the one we desire
             BOOL alarmFound = NO;
             for (int i = 0; i < alarms.count; i++) {
@@ -298,11 +279,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 
                 // check if this is the desired alarm
                 if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmId]) {
-                    // check to see if this alarm had the auto-set option enabled
-                    if ([[alarm objectForKey:kSLAutoSetOptionKey] integerValue] != kSLAutoSetOptionOff) {
-                        shouldNotifyAutoSetOptionsUpdated = YES;
-                    }
-
                     // remove the alarm from the array
                     [alarms removeObjectAtIndex:i];
                     alarmFound = YES;
@@ -316,10 +292,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 [prefs setObject:alarms forKey:kSLAlarmsKey];
                 
                 // write the updated preferences
-                if ([prefs writeToFile:kSLSettingsFile atomically:YES] && shouldNotifyAutoSetOptionsUpdated) {
-                    // notify any observers that the auto-set options for this alarm have changed
-
-                }
+                [prefs writeToFile:kSLSettingsFile atomically:YES];
             }
         }
     }

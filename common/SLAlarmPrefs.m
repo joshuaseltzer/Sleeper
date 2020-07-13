@@ -140,11 +140,12 @@
 - (NSString *)skipReasonExplanation
 {
     // declare the skip explanation strings that will potentially be concatinated and displayed
-    NSMutableString *skipExplanation = nil;
+    NSMutableString *skipExplanation = [NSMutableString stringWithString:kSLSkipExplanationString];
 
     // if the skip decision has been activated, add that to the string
     if ([self shouldSkipFromPopupDecision]) {
-        skipExplanation = [NSMutableString stringWithString:kSLSkipReasonPopupString];
+        [skipExplanation appendString:@"\n\n"];
+        [skipExplanation appendString:kSLSkipReasonPopupString];
     }
 
     // check to see if there are any custom skip dates to display
@@ -219,7 +220,19 @@
         
         // construct the final string depending on the various auto-set options
         if (offsetTypeString != nil) {
-            autoSetExplanation = kSLAutoSetOnWithOffsetExplanationString(self.autoSetOffsetHour, self.autoSetOffsetMinute, offsetTypeString, sunTypeString);
+            NSString *numHours = nil;
+            NSString *numMinutes = nil;
+            if (self.autoSetOffsetHour == 1) {
+                numHours = kSLNumHourString([@(self.autoSetOffsetHour) stringValue]);
+            } else {
+                numHours = kSLNumHoursString([@(self.autoSetOffsetHour) stringValue]);
+            }
+            if (self.autoSetOffsetMinute == 1) {
+                numMinutes = kSLNumMinuteString([@(self.autoSetOffsetMinute) stringValue]);
+            } else {
+                numMinutes = kSLNumMinutesString([@(self.autoSetOffsetMinute) stringValue]);
+            }
+            autoSetExplanation = kSLAutoSetOnWithOffsetExplanationString([numHours lowercaseString], [numMinutes lowercaseString], offsetTypeString, sunTypeString);
         } else {
             autoSetExplanation = kSLAutoSetOnExplanationString(sunTypeString);
         }

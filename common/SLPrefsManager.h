@@ -35,6 +35,9 @@ static NSString *const kSLAutoSetOffsetOptionKey =      @"autoSetOffsetOption";
 static NSString *const kSLAutoSetOffsetHourKey =        @"autoSetOffsetHour";
 static NSString *const kSLAutoSetOffsetMinuteKey =      @"autoSetOffsetMinute";
 
+// define the key that will be used in the notification sent to observers when auto-set alarms are updated
+static NSString *const kSLUpdatedAutoSetAlarmNotificationKey = @"updatedAutoSetAlarm";
+
 @class SLAlarmPrefs;
 
 // manager that manages the retrieval, saving, and deleting of custom snooze times
