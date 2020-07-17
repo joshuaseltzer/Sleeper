@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SLAlarmPrefs.h"
 
+// the notification key that will be fired when the auto-set options are updated for a specific alarm
 static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptionsUpdated";
 
 // the location object that will be associated with a forecast model
@@ -49,6 +50,8 @@ static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptions
 // adds or removes an observer to the updating location model
 - (void)addObserver:(id)observer;
 - (void)removeObserver:(id)observer;
+
+-(void)performDelayedUpdatesForObserver:(id)arg1;
 
 // the forecast model that is associated with this today model
 @property (nonatomic, retain) WAForecastModel *forecastModel;

@@ -37,6 +37,70 @@
 
 %end
 
+%hook WATodayModel
+
++(id)autoupdatingLocationModelWithPreferences:(id)arg1 effectiveBundleIdentifier:(id)arg2
+{
+     NSLog(@"SELTZER - autoupdatingLocationModelWithPreferences");
+    %log;
+
+    return %orig;
+}
+
+-(void)_executeForecastRetrievalForLocation:(id)arg1 completion:(id)arg2
+{
+    NSLog(@"SELTZER - _executeForecastRetrievalForLocation");
+    %log;
+
+    %orig;
+}
+
+-(BOOL)executeModelUpdateWithCompletion:(id)arg1
+{
+    NSLog(@"SELTZER - executeModelUpdateWithCompletion");
+    %log;
+
+    return %orig;
+}
+
+-(void)_fireTodayModelWantsUpdate
+{
+    NSLog(@"SELTZER - _fireTodayModelWantsUpdate");
+    %log;
+
+    %orig;
+}
+
+%end
+
+%hook WATodayAutoupdatingLocationModel
+
+-(void)_executeLocationUpdateForLocalWeatherCityWithCompletion:(id)arg1
+{
+    NSLog(@"SELTZER - _executeLocationUpdateForLocalWeatherCityWithCompletion");
+    %log;
+
+    %orig;
+}
+
+-(void)_executeLocationUpdateForFirstWeatherCityWithCompletion:(id)arg1 
+{
+    NSLog(@"SELTZER - _executeLocationUpdateForFirstWeatherCityWithCompletion");
+    %log;
+
+    %orig;
+}
+
+-(void)_executeLocationUpdateWithCompletion:(id)arg1 
+{
+    NSLog(@"SELTZER - _executeLocationUpdateWithCompletion");
+    %log;
+
+    %orig;
+}
+
+%end
+
 %ctor {
     // only initialize this file for particular versions
     if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {

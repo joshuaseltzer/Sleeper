@@ -11,14 +11,37 @@
 #import "SLCommonHeaders.h"
 #import <objc/runtime.h>
 
+// this is a timer that will be able to fire even when SpringBoard is backgrounded
+@interface PCSimpleTimer : NSObject
+
+// initializer that will be used to create a persistent timer
+- (id)initWithFireDate:(NSDate *)fireDate serviceIdentifier:(NSString *)serviceIdentifier target:(id)target selector:(SEL)selector userInfo:(NSDictionary *)userInfo;
+
+// just like NSTimer, this will invalidate the timer object
+- (void)invalidate;
+
+// schedules the timer in the specified run loop
+- (void)scheduleInRunLoop:(NSRunLoop *)runLoop;
+
+@end
+
 // this is the today model which will be instantiated when the singleton class is created
 @interface WATodayAutoupdatingLocationModel : WATodayModel
+
+-(void)checkIfNeedsToUpdate;
+
+-(BOOL)_reloadForecastData:(BOOL)arg1;
+
 @end
 
 @interface SLAutoSetManager ()
 
 // the today model which will be used to observe for changes to the sunrise/sunset times
 @property (nonatomic, strong) WATodayAutoupdatingLocationModel *autoupdatingTodayModel;
+
+// the persistent timers that will be used to periodically update the auto-set alarms
+@property (nonatomic, strong) PCSimpleTimer *startOfDayTimer;
+@property (nonatomic, strong) PCSimpleTimer *midDayTimer;
 
 // the last sunrise hour and minute components that were obtained from the today model
 @property (nonatomic) NSInteger lastSunriseHour;
@@ -68,6 +91,87 @@
     return self;
 }
 
+// invoked when one of the persistent timers is fired
+- (void)persistentTimerFired:(PCSimpleTimer *)timer
+{
+    NSLog(@"SELTZER - persistentTimerFired %@", timer);
+
+    // force a reload of the forecast data with the today model
+    BOOL hasUpdatedAutoSetTimes = [self.autoupdatingTodayModel _reloadForecastData:YES];
+
+    // re-create the timer that was fired to be scheduled for the next day
+    if ([timer isEqual:self.startOfDayTimer]) {
+        [self createStartOfDayTimer];
+    } else if ([timer isEqual:self.midDayTimer]) {
+        [self createMidDayTimer];
+    }
+
+    NSDictionary *forecast = @{@"FromWhichCall":@"persistentTimerFired", @"_reloadForecastData":[NSNumber numberWithBool:hasUpdatedAutoSetTimes], @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
+    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
+}
+
+// creates the start of day timer for the following day and potentially invalidating/destroying the previous timer
+- (void)createStartOfDayTimer
+{
+    // check to see if the start of day timer was already created
+    if (self.startOfDayTimer) {
+        [self.startOfDayTimer invalidate];
+        self.startOfDayTimer = nil;
+    }
+
+    // create the date and timer that will fire at the start of the day tomorrow
+    NSDate *today = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *adjustDateComponents = [[NSDateComponents alloc] init];
+    adjustDateComponents.day = 1;
+    adjustDateComponents.minute = arc4random_uniform(5) + 1;
+    adjustDateComponents.second = arc4random_uniform(59) + 1;
+    NSDate *startOfDayDate = [calendar dateByAddingComponents:adjustDateComponents toDate:[calendar startOfDayForDate:today] options:0];
+
+    // as a sanity check, ensure that the new date that was calculated is in the future since we end up in an infinite loop otherwise
+    if ([today compare:startOfDayDate] == NSOrderedAscending) {
+        self.startOfDayTimer = [[objc_getClass("PCSimpleTimer") alloc] initWithFireDate:startOfDayDate
+                                                                      serviceIdentifier:kSLBundleIdentifier
+                                                                                 target:self
+                                                                               selector:@selector(persistentTimerFired:)
+                                                                               userInfo:nil];
+        [self.startOfDayTimer scheduleInRunLoop:[NSRunLoop mainRunLoop]];
+    }
+}
+
+// creates the mid-day timer and potentially invalidating/destroying the previous timer
+- (void)createMidDayTimer
+{
+    // check to see if the mid-day timer was already created
+    if (self.midDayTimer) {
+        [self.midDayTimer invalidate];
+        self.midDayTimer = nil;
+    }
+
+    // create the date for the middle of the day either for the current day or the next day
+    NSDate *today = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *adjustDateComponents = [[NSDateComponents alloc] init];
+    adjustDateComponents.hour = 12;
+    adjustDateComponents.minute = arc4random_uniform(5) + 1;
+    adjustDateComponents.second = arc4random_uniform(59) + 1;
+    NSDateComponents *todayDateComponents = [calendar components:NSCalendarUnitHour fromDate:today];
+    if (todayDateComponents.hour > 11) {
+        adjustDateComponents.day = 1;
+    }
+    NSDate *midDayDate = [calendar dateByAddingComponents:adjustDateComponents toDate:[calendar startOfDayForDate:today] options:0];
+
+    // as a sanity check, ensure that the new date that was calculated is in the future since we end up in an infinite loop otherwise
+    if ([today compare:midDayDate] == NSOrderedAscending) {
+        self.midDayTimer = [[objc_getClass("PCSimpleTimer") alloc] initWithFireDate:midDayDate
+                                                                  serviceIdentifier:kSLBundleIdentifier
+                                                                             target:self
+                                                                           selector:@selector(persistentTimerFired:)
+                                                                           userInfo:nil];
+        [self.midDayTimer scheduleInRunLoop:[NSRunLoop mainRunLoop]];
+    }
+}
+
 // Routine that will update the dictionary of multiple auto-set alarms.  This method is meant to be ran on a scheduled basis to check all auto-set alarms at once.
 // The dictionary of alarms is keyed by the auto-set option as a number.
 - (void)bulkUpdateAutoSetAlarms:(NSDictionary *)autoSetAlarms
@@ -98,8 +202,17 @@
         // if the today model was already created but no auto-set alarms exist, we can destroy it now
         [self.autoupdatingTodayModel removeObserver:self];
         self.autoupdatingTodayModel = nil;
+
+        // destroy the persistent timers that are scheduled to fire
+        if (self.startOfDayTimer) {
+            [self.startOfDayTimer invalidate];
+            self.startOfDayTimer = nil;
+        }
+        if (self.midDayTimer) {
+            [self.midDayTimer invalidate];
+            self.midDayTimer = nil;
+        }
     }
-    
 }
 
 // routine to update to a single alarm object that has updated auto-set settings
@@ -140,9 +253,16 @@
         // create the autoupdating today model object to retrieve the sunrise/sunset times
         self.autoupdatingTodayModel = [objc_getClass("WATodayModel") autoupdatingLocationModelWithPreferences:[objc_getClass("WeatherPreferences") sharedPreferences] effectiveBundleIdentifier:nil];
         [self.autoupdatingTodayModel addObserver:self];
-        NSLog(@"SELTZER - creating autoupdatingTodayModel %@", self.autoupdatingTodayModel);
 
-        // create the persistent timers that will be used to update all of the auto-set timers twice per day
+        NSLog(@"SELTZER - creating autoupdatingTodayModel %@", self.autoupdatingTodayModel);
+    }
+
+    // if the persistent timers are not running, create them now to periodically update all of the auto-set alarms
+    if (self.startOfDayTimer == nil) {
+        [self createStartOfDayTimer];
+    }
+    if (self.midDayTimer == nil) {
+        [self createMidDayTimer];
     }
 
     // grab some information from the today model's forecast model if it exists
@@ -232,10 +352,10 @@
     // ensure that our today model has the correct and updated information needed to update the alarms
     if ([self hasUpdatedAutoSetTimes]) {
         [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
-
-        NSDictionary *forecast = @{@"FromWhichCall":@"forecastWasUpdated", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
-        [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
     }
+
+    NSDictionary *forecast = @{@"FromWhichCall":@"todayModelWantsUpdate", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
+    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
 }
 
 // invoked whenever the forecast model is updated (from within the Weather application)
@@ -247,10 +367,10 @@
     // ensure that our today model has the correct and updated information needed to update the alarms
     if ([self hasUpdatedAutoSetTimes]) {
         [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
-
-        NSDictionary *forecast = @{@"FromWhichCall":@"forecastWasUpdated", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
-        [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
     }
+
+    NSDictionary *forecast = @{@"FromWhichCall":@"forecastWasUpdated", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
+    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
 }
 
 @end

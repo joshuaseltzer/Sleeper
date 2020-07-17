@@ -12,6 +12,9 @@
 // the bundle path which includes some custom preference files needed for the tweak
 #define kSLSleeperBundle                                [NSBundle bundleWithPath:@"/Library/Application Support/Sleeper.bundle"]
 
+// define the bundle identifier for the tweak
+static NSString *const kSLBundleIdentifier =            @"com.joshuaseltzer.sleeper";
+
 // constant keys for the values we are going to add to the preferences file
 static NSString *const kSLAlarmsKey =                   @"Alarms";
 static NSString *const kSLAlarmIdKey =                  @"alarmId";
