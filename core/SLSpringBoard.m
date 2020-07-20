@@ -16,8 +16,6 @@
 %new
 - (void)SLAutoSetOptionsUpdated:(NSNotification *)notification
 {
-    NSLog(@"SELTZER - Notification received!!");
-    NSLog(@"SELTZER - userInfo: %@", [notification userInfo]);
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // notify the auto-set manager that an alarm has updated auto-set options
 		[[SLAutoSetManager sharedInstance] updateAutoSetAlarm:[notification userInfo]];
@@ -33,70 +31,6 @@
 
     // observe changes from the auto-set manager to update alarms with updated auto-set options
     [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(SLAutoSetOptionsUpdated:) name:kSLAutoSetOptionsUpdatedNotification object:nil];
-}
-
-%end
-
-%hook WATodayModel
-
-+(id)autoupdatingLocationModelWithPreferences:(id)arg1 effectiveBundleIdentifier:(id)arg2
-{
-     NSLog(@"SELTZER - autoupdatingLocationModelWithPreferences");
-    %log;
-
-    return %orig;
-}
-
--(void)_executeForecastRetrievalForLocation:(id)arg1 completion:(id)arg2
-{
-    NSLog(@"SELTZER - _executeForecastRetrievalForLocation");
-    %log;
-
-    %orig;
-}
-
--(BOOL)executeModelUpdateWithCompletion:(id)arg1
-{
-    NSLog(@"SELTZER - executeModelUpdateWithCompletion");
-    %log;
-
-    return %orig;
-}
-
--(void)_fireTodayModelWantsUpdate
-{
-    NSLog(@"SELTZER - _fireTodayModelWantsUpdate");
-    %log;
-
-    %orig;
-}
-
-%end
-
-%hook WATodayAutoupdatingLocationModel
-
--(void)_executeLocationUpdateForLocalWeatherCityWithCompletion:(id)arg1
-{
-    NSLog(@"SELTZER - _executeLocationUpdateForLocalWeatherCityWithCompletion");
-    %log;
-
-    %orig;
-}
-
--(void)_executeLocationUpdateForFirstWeatherCityWithCompletion:(id)arg1 
-{
-    NSLog(@"SELTZER - _executeLocationUpdateForFirstWeatherCityWithCompletion");
-    %log;
-
-    %orig;
-}
-
--(void)_executeLocationUpdateWithCompletion:(id)arg1 
-{
-    NSLog(@"SELTZER - _executeLocationUpdateWithCompletion");
-    %log;
-
-    %orig;
 }
 
 %end

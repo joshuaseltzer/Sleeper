@@ -28,9 +28,8 @@
 // this is the today model which will be instantiated when the singleton class is created
 @interface WATodayAutoupdatingLocationModel : WATodayModel
 
--(void)checkIfNeedsToUpdate;
-
--(BOOL)_reloadForecastData:(BOOL)arg1;
+// forces the location model to update it's forecast data
+- (BOOL)_reloadForecastData:(BOOL)reload;
 
 @end
 

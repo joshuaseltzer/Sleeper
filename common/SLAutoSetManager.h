@@ -51,8 +51,6 @@ static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptions
 - (void)addObserver:(id)observer;
 - (void)removeObserver:(id)observer;
 
--(void)performDelayedUpdatesForObserver:(id)arg1;
-
 // the forecast model that is associated with this today model
 @property (nonatomic, retain) WAForecastModel *forecastModel;
 
