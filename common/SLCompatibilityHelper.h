@@ -95,4 +95,8 @@
 // returns the checkmark image used to indicate selection throughout the UI
 + (UIImage *)checkmarkImage;
 
+// Updates the given alarms (represented as SLAlarmPref dictionaries) with the base hour and base minute.
+// The implementation of updating the alarms will differ depending on which iOS is currently running.
+- (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute;
+
 @end

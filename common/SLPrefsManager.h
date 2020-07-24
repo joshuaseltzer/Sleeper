@@ -96,6 +96,4 @@ static NSString *const kSLUpdatedAutoSetAlarmNotificationKey = @"updatedAutoSetA
 // a relative string is shown instead (i.e. Today, Tomorrow)
 + (NSString *)skipDateStringForDate:(NSDate *)date showRelativeString:(BOOL)showRelativeString;
 
-+ (void)debugWriteForecastUpdateToFile:(NSDictionary *)forecastUpdate;
-
 @end

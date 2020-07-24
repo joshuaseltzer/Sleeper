@@ -66,7 +66,7 @@ static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptions
 @end
 
 // manager that will be used to automatically update alarms based on the user preferences
-@interface SLAutoSetManager : NSObject <WATodayModelObserver>
+@interface SLAutoSetManager : NSObject// <WATodayModelObserver>
 
 // return a singleton instance of this manager
 + (instancetype)sharedInstance;

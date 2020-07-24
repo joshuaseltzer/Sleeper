@@ -93,10 +93,9 @@
 // invoked when one of the persistent timers is fired
 - (void)persistentTimerFired:(PCSimpleTimer *)timer
 {
-    NSLog(@"SELTZER - persistentTimerFired %@", timer);
-
-    // force a reload of the forecast data with the today model
-    BOOL hasUpdatedAutoSetTimes = [self.autoupdatingTodayModel _reloadForecastData:YES];
+    // Force a reload of the forecast data with the today model.  If there are any updates, this object will receive them via
+    // the delegate methods of the observer.
+    [self.autoupdatingTodayModel _reloadForecastData:YES];
 
     // re-create the timer that was fired to be scheduled for the next day
     if ([timer isEqual:self.startOfDayTimer]) {
@@ -104,9 +103,6 @@
     } else if ([timer isEqual:self.midDayTimer]) {
         [self createMidDayTimer];
     }
-
-    NSDictionary *forecast = @{@"FromWhichCall":@"persistentTimerFired", @"_reloadForecastData":[NSNumber numberWithBool:hasUpdatedAutoSetTimes], @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
-    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
 }
 
 // creates the start of day timer for the following day and potentially invalidating/destroying the previous timer
@@ -175,8 +171,6 @@
 // The dictionary of alarms is keyed by the auto-set option as a number.
 - (void)bulkUpdateAutoSetAlarms:(NSDictionary *)autoSetAlarms
 {
-    NSLog(@"SELTZER - updating all auto-set alarms");
-
     // only proceed if auto-set alarms exist
     if (autoSetAlarms != nil) {
         // check to ensure that the sunrise/sunset times were set appropriately
@@ -217,8 +211,6 @@
 // routine to update to a single alarm object that has updated auto-set settings
 - (void)updateAutoSetAlarm:(NSDictionary *)alarmDict
 {
-    NSLog(@"SELTZER - updating a single auto-set alarm");
-
     // check to ensure a valid alarm dictionary object was passed
     if (alarmDict != nil) {
         NSNumber *autoSetOptionNum = [alarmDict objectForKey:kSLAutoSetOptionKey];
@@ -252,8 +244,6 @@
         // create the autoupdating today model object to retrieve the sunrise/sunset times
         self.autoupdatingTodayModel = [objc_getClass("WATodayModel") autoupdatingLocationModelWithPreferences:[objc_getClass("WeatherPreferences") sharedPreferences] effectiveBundleIdentifier:nil];
         [self.autoupdatingTodayModel addObserver:self];
-
-        NSLog(@"SELTZER - creating autoupdatingTodayModel %@", self.autoupdatingTodayModel);
     }
 
     // if the persistent timers are not running, create them now to periodically update all of the auto-set alarms
@@ -345,31 +335,19 @@
 // called when a today model is asking for an update
 - (void)todayModelWantsUpdate:(id)todayModel
 {
-    NSLog(@"SELTZER - todayModelWantsUpdate");
-    NSLog(@"SELTZER - forecastModel %@", self.autoupdatingTodayModel.forecastModel);
-
     // ensure that our today model has the correct and updated information needed to update the alarms
     if ([self hasUpdatedAutoSetTimes]) {
         [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
     }
-
-    NSDictionary *forecast = @{@"FromWhichCall":@"todayModelWantsUpdate", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
-    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
 }
 
 // invoked whenever the forecast model is updated (from within the Weather application)
 - (void)todayModel:(id)todayModel forecastWasUpdated:(WAForecastModel *)forecastModel
 {
-    NSLog(@"SELTZER - forecastWasUpdated");
-    NSLog(@"SELTZER - forecastModel %@", forecastModel);
-
     // ensure that our today model has the correct and updated information needed to update the alarms
     if ([self hasUpdatedAutoSetTimes]) {
         [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
     }
-
-    NSDictionary *forecast = @{@"FromWhichCall":@"forecastWasUpdated", @"Sunrise":self.autoupdatingTodayModel.forecastModel.sunrise, @"Sunset":self.autoupdatingTodayModel.forecastModel.sunset, @"LocationDescription":self.autoupdatingTodayModel.forecastModel.location.description, @"ForecastModelDescription":self.autoupdatingTodayModel.forecastModel.description};
-    [SLPrefsManager debugWriteForecastUpdateToFile:forecast];
 }
 
 @end

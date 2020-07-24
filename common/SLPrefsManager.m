@@ -14,8 +14,6 @@
 // the path of our settings that is used to store the alarm snooze times
 #define kSLSettingsFile         [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.plist"]
 
-#define kSLForecastDebugFile    [NSHomeDirectory() stringByAppendingPathComponent:@"/Library/Preferences/com.joshuaseltzer.sleeper.forecasts.plist"]
-
 // keep a single, static instances of the date formatters that will be used to convert date objects to strings and vice versa
 static NSDateFormatter *sSLSkipDatesUIDateFormatter;
 static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
@@ -654,30 +652,6 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         }
     }
     return [[SLPrefsManager uiDateFormatter] stringFromDate:date];
-}
-
-+ (void)debugWriteForecastUpdateToFile:(NSDictionary *)forecastUpdate
-{
-    // grab the preferences plist
-    NSMutableDictionary *prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kSLForecastDebugFile];
-    
-    // if no preferences exist, create a new mutable dictionary now
-    if (!prefs) {
-        prefs = [[NSMutableDictionary alloc] initWithCapacity:1];
-    }
-    
-    NSMutableArray *forecasts = [prefs objectForKey:@"forecasts"];
-    if (!forecasts) {
-        forecasts = [[NSMutableArray alloc] initWithCapacity:1];
-    }
-
-    [forecasts addObject:forecastUpdate];
-
-    // add the alarms array to the preferences dictionary
-    [prefs setObject:forecasts forKey:@"forecasts"];
-    
-    // write the updated preferences
-    [prefs writeToFile:kSLForecastDebugFile atomically:YES];
 }
 
 @end
