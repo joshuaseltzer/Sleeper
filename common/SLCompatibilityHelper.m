@@ -464,9 +464,93 @@ static UIImage *sSLCheckmarkImage;
 
 // Updates the given alarms (represented as SLAlarmPref dictionaries) with the base hour and base minute.
 // The implementation of updating the alarms will differ depending on which iOS is currently running.
-- (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute
++ (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute
 {
-    
+    // updating the alarms will differ depending on which version of iOS we are on
+    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
+        // create an instance of the alarm manager that will get us the actual alarm objects
+        MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
+
+        // update alarms using the auto-set date passed, along with any offset that might be required for the alarm
+        for (NSDictionary *alarmDict in alarms) {
+            // grab the alarm Id from the alarm dictionary so that we can create a system alarm object
+            NSString *alarmId = [alarmDict objectForKey:kSLAlarmIdKey];
+            MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId];
+            if (alarm != nil) {
+                // create a mutable copy of the alarm
+                MTMutableAlarm *mutableAlarm = [alarm mutableCopy];
+                if (mutableAlarm != nil) {
+                    // adjust the hour and minute based on the offset preferences
+                    SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
+                    NSInteger offsetHour = 0;
+                    NSInteger offsetMinute = 0;
+                    if (offsetOption != kSLAutoSetOffsetOptionOff) {
+                        offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                        offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
+                        if (offsetOption == kSLAutoSetOffsetOptionBefore) {
+                            offsetHour = offsetHour * -1;
+                            offsetMinute = offsetMinute * -1;
+                        }
+                    }
+
+                    // update the alarm's hour and minute with the appropriate, adjusted time
+                    [mutableAlarm setHour:baseHour + offsetHour];
+                    [mutableAlarm setMinute:baseMinute + offsetMinute];
+
+                    // persist the changes to the system
+                    [alarmManager updateAlarm:mutableAlarm];
+                }
+            } else {
+                // use this as an opportunity to remove the preferences for this alarm since it no longer exists
+                [SLPrefsManager deleteAlarmForAlarmId:alarmId];
+            }
+        }
+    } else if (kSLSystemVersioniOS11 || kSLSystemVersioniOS10 || kSLSystemVersioniOS9 || kSLSystemVersioniOS8) {
+        // grab the shared alarm manager instance
+        AlarmManager *alarmManager = (AlarmManager *)[objc_getClass("AlarmManager") sharedManager];
+        [alarmManager loadAlarms];
+
+        // update alarms using the auto-set date passed, along with any offset that might be required for the alarm
+        for (NSDictionary *alarmDict in alarms) {
+            // grab the alarm Id from the alarm dictionary so that we can create a system alarm object
+            NSString *alarmId = [alarmDict objectForKey:kSLAlarmIdKey];
+            Alarm *alarm = [alarmManager alarmWithId:alarmId];
+            if (alarm != nil) {
+                // get an editing proxy for the alarm
+                [alarm prepareEditingProxy];
+                Alarm *editingProxy = [alarm editingProxy];
+                if (editingProxy != nil) {
+                    // adjust the hour and minute based on the offset preferences
+                    SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
+                    NSInteger offsetHour = 0;
+                    NSInteger offsetMinute = 0;
+                    if (offsetOption != kSLAutoSetOffsetOptionOff) {
+                        offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                        offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
+                        if (offsetOption == kSLAutoSetOffsetOptionBefore) {
+                            offsetHour = offsetHour * -1;
+                            offsetMinute = offsetMinute * -1;
+                        }
+                    }
+
+                    // modify the alarm after a small delay since this could happen right after an alarm was just saved
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC));
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                        // update the alarm's hour and minute with the appropriate, adjusted time
+                        [editingProxy setHour:baseHour + offsetHour];
+                        [editingProxy setMinute:baseMinute + offsetMinute];
+                        [alarm applyChangesFromEditingProxy];
+
+                        // persist changes to the system
+                        [alarmManager updateAlarm:alarm active:[alarm isActive]];
+                    });
+                }
+            } else {
+                // use this as an opportunity to remove the preferences for this alarm since it no longer exists
+                [SLPrefsManager deleteAlarmForAlarmId:alarmId];
+            }
+        }
+    }
 }
 
 @end

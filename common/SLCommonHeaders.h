@@ -65,7 +65,7 @@
 // iOS 10 / iOS 11: notification object used for snooze/alarm notifications
 @interface UNNotification : NSObject
 
-@property (nonatomic,copy,readonly) UNNotificationRequest * request;
+@property (nonatomic, copy, readonly) UNNotificationRequest *request;
 
 @end
 
@@ -93,10 +93,31 @@
 // iOS 10 / iOS 11: determines whether or not the alarm is the sleep/bedtime alarm
 - (BOOL)isSleepAlarm;
 
+// updates the hour property of the alarm
+- (void)setHour:(NSUInteger)hour;
+
+// updates the minute property of the alarm
+- (void)setMinute:(NSUInteger)minute;
+
+// whether or not the alarm is active
+- (BOOL)isActive;
+
+// populates the editing proxy for the alarm
+- (void)prepareEditingProxy;
+
+// returns the editing proxy for this alarm
+- (Alarm *)editingProxy;
+
+// applies any changes to the editing proxy to the alarm itself
+- (void)applyChangesFromEditingProxy;
+
 @end
 
 // iOS 8 - iOS 11: manager that governs all alarms on the system
 @interface AlarmManager : NSObject
+
+// iOS 10 / iOS 11: the special sleep alarm (i.e. Bedtime alarm)
+@property (nonatomic, readonly) Alarm *sleepAlarm;
 
 // the shared alarm manager
 + (id)sharedManager;
@@ -110,8 +131,8 @@
 // returns an alarm object from a given alarm Id
 - (Alarm *)alarmWithId:(NSString *)alarmId;
 
-// iOS 10 / iOS 11: the special sleep alarm (i.e. Bedtime alarm)
-@property (nonatomic, readonly) Alarm *sleepAlarm;
+// updates a given alarm
+- (void)updateAlarm:(Alarm *)alarm active:(BOOL)active;
 
 @end
 

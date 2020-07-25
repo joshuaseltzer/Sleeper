@@ -134,12 +134,12 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     NSMutableArray *alarms = [prefs objectForKey:kSLAlarmsKey];
     
     // if the alarms do not exist in our preferences, create the alarms array now
-    NSMutableDictionary *alarm = nil;
+    NSMutableDictionary *alarmToSave = nil;
     if (!alarms) {
         alarms = [[NSMutableArray alloc] initWithCapacity:1];
     } else {
         // otherwise attempt to find the desired alarm in the array
-        for (alarm in alarms) {
+        for (NSMutableDictionary *alarm in alarms) {
             if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmPrefs.alarmId]) {
                 // update the alarm dictionary with the values given
                 [alarm setObject:[NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour]
@@ -169,32 +169,33 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
                 [alarm setObject:@{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates,
                                    kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}
                           forKey:kSLSkipDatesKey];
+                alarmToSave = alarm;
                 break;
             }
         }
     }
     
     // check if the alarm was found, if not add a new one
-    if (!alarm) {
+    if (!alarmToSave) {
         // create a new alarm with the given attributes
-        alarm = [NSMutableDictionary dictionaryWithObjectsAndKeys:alarmPrefs.alarmId, kSLAlarmIdKey,
-                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour], kSLSnoozeHourKey,
-                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute], kSLSnoozeMinuteKey,
-                [NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond], kSLSnoozeSecondKey,
-                [NSNumber numberWithBool:alarmPrefs.skipEnabled], kSLSkipEnabledKey,
-                [NSNumber numberWithInteger:alarmPrefs.skipTimeHour], kSLSkipHourKey,
-                [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
-                [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
-                [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
-                [NSNumber numberWithInteger:alarmPrefs.autoSetOption], kSLAutoSetOptionKey,
-                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption], kSLAutoSetOffsetOptionKey,
-                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour], kSLAutoSetOffsetHourKey,
-                [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
-                @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
-                nil];
+        alarmToSave = [NSMutableDictionary dictionaryWithObjectsAndKeys:alarmPrefs.alarmId, kSLAlarmIdKey,
+                      [NSNumber numberWithInteger:alarmPrefs.snoozeTimeHour], kSLSnoozeHourKey,
+                      [NSNumber numberWithInteger:alarmPrefs.snoozeTimeMinute], kSLSnoozeMinuteKey,
+                      [NSNumber numberWithInteger:alarmPrefs.snoozeTimeSecond], kSLSnoozeSecondKey,
+                      [NSNumber numberWithBool:alarmPrefs.skipEnabled], kSLSkipEnabledKey,
+                      [NSNumber numberWithInteger:alarmPrefs.skipTimeHour], kSLSkipHourKey,
+                      [NSNumber numberWithInteger:alarmPrefs.skipTimeMinute], kSLSkipMinuteKey,
+                      [NSNumber numberWithInteger:alarmPrefs.skipTimeSecond], kSLSkipSecondKey,
+                      [NSNumber numberWithInteger:kSLSkipActivatedStatusUnknown], kSLSkipActivatedStatusKey,
+                      [NSNumber numberWithInteger:alarmPrefs.autoSetOption], kSLAutoSetOptionKey,
+                      [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetOption], kSLAutoSetOffsetOptionKey,
+                      [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetHour], kSLAutoSetOffsetHourKey,
+                      [NSNumber numberWithInteger:alarmPrefs.autoSetOffsetMinute], kSLAutoSetOffsetMinuteKey,
+                      @{kSLCustomSkipDateStringsKey:alarmPrefs.customSkipDates, kSLHolidaySkipDatesKey:alarmPrefs.holidaySkipDates}, kSLSkipDatesKey,
+                      nil];
 
         // add the object to the array
-        [alarms addObject:alarm];
+        [alarms addObject:alarmToSave];
     }
     
     // add the alarms array to the preferences dictionary
@@ -203,7 +204,7 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     // write the updated preferences
     if ([prefs writeToFile:kSLSettingsFile atomically:YES] && alarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
         // if the alarm has an auto-set option enabled, notify the auto-set manager upon saving the alarm
-        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kSLAutoSetOptionsUpdatedNotification object:nil userInfo:alarm];
+        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kSLAutoSetOptionsUpdatedNotification object:nil userInfo:alarmToSave];
     }
 }
 

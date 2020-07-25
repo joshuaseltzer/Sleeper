@@ -39,7 +39,7 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 // the editing alarm view which contains the main tableview and date picker for this controller
 @interface MTAAlarmEditView : UIView
 
-// the date picker used to set the alarm
+// the date picker used to set the alarm's time
 @property(readonly, nonatomic) UIDatePicker *timePicker;
 
 @end
@@ -257,7 +257,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
                                                                                                                        autoSetOffsetMinute:self.SLAlarmPrefs.autoSetOffsetMinute];
         autoSetOptionsController.delegate = self;
         [self.navigationController pushViewController:autoSetOptionsController animated:YES];
-    } else {
+    } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionDelete) {
         // perform the logic that was originally for the delete section
         %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);
     }

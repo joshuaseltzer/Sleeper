@@ -6,7 +6,7 @@ include theos/makefiles/common.mk
 LIBRARY_NAME = libSleeper
 TWEAK_NAME = SleeperCore SleeperCoreLegacy SleeperUI
 
-libSleeper_FILES = $(wildcard common/*.m) $(wildcard common/*.xm)
+libSleeper_FILES = $(filter-out common/SLSpringBoard.m, $(wildcard common/*.m)) $(wildcard common/*.xm ) $(wildcard common/*.x)
 libSleeper_PRIVATE_FRAMEWORKS = MobileTimer
 libSleeper_OBJCFLAGS = -fobjc-arc
 libSleeper_LDFLAGS = -lsubstrate
@@ -16,7 +16,7 @@ SleeperCore_LIBRARIES = Sleeper
 SleeperCore_OBJCFLAGS = -fobjc-arc
 SleeperCore_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-SleeperCoreLegacy_FILES = $(wildcard core_legacy/*.[x])
+SleeperCoreLegacy_FILES = $(wildcard core_legacy/*.x)
 SleeperCoreLegacy_LIBRARIES = Sleeper
 SleeperCoreLegacy_OBJCFLAGS = -fobjc-arc
 SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR)

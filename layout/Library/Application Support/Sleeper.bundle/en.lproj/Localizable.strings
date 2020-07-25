@@ -48,7 +48,7 @@
 "AUTO_SET_OFFSET_EXPLANATION" = "When enabled, the offset hours and minutes will be applied either before or after the selected auto-set time.\n\nFor example, if the sunrise auto-set option is selected with a 1-hour-before offset, the alarm will be set to fire 1 hour before the actual sunrise occurs.";
 "AUTO_SET_OFF_EXPLANATION" = "You can use the auto-set feature to have this alarm automatically set its time based on various parameters.";
 "AUTO_SET_ON_EXPLANATION" = "This alarm's fire time will automatically be set to %@.";
-"AUTO_SET_ON_WITH_OFFSET_EXPLANATION" = "This alarm's fire time will automatically be set to %@ and %@ %@ %@.";
+"AUTO_SET_ON_WITH_OFFSET_EXPLANATION" = "This alarm's fire time will automatically be set to %@ %@ %@.";
 "BEFORE" = "Before";
 "AFTER" = "After";
 "OFFSET" = "Offset";

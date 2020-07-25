@@ -9,6 +9,7 @@
 #import "SLAutoSetManager.h"
 #import "SLPrefsManager.h"
 #import "SLCommonHeaders.h"
+#import "SLCompatibilityHelper.h"
 #import <objc/runtime.h>
 
 // this is a timer that will be able to fire even when SpringBoard is backgrounded
@@ -179,15 +180,12 @@
             NSArray *sunriseAlarms = [autoSetAlarms objectForKey:[NSNumber numberWithInteger:kSLAutoSetOptionSunrise]];
             NSArray *sunsetAlarms = [autoSetAlarms objectForKey:[NSNumber numberWithInteger:kSLAutoSetOptionSunset]];
             if (sunriseAlarms.count > 0 || sunsetAlarms.count > 0) {
-                // create an instance of the alarm manager that will get us the actual alarm objects
-                MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
-
                 // update the alarms with the approprate date
                 if (sunriseAlarms.count > 0) {
-                    [self updateAlarms:sunriseAlarms usingAlarmManager:alarmManager withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
+                    [SLCompatibilityHelper updateAlarms:sunriseAlarms withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
                 }
                 if (sunsetAlarms.count > 0) {
-                    [self updateAlarms:sunsetAlarms usingAlarmManager:alarmManager withBaseHour:self.lastSunsetHour withBaseMinute:self.lastSunsetMinute];
+                    [SLCompatibilityHelper updateAlarms:sunsetAlarms withBaseHour:self.lastSunsetHour withBaseMinute:self.lastSunsetMinute];
                 }
             }
         }
@@ -212,21 +210,18 @@
 - (void)updateAutoSetAlarm:(NSDictionary *)alarmDict
 {
     // check to ensure a valid alarm dictionary object was passed
-    if (alarmDict != nil) {
+    if (alarmDict != nil && self.lastSunriseHour != -1 && self.lastSunriseMinute != -1 && self.lastSunsetHour != -1 && self.lastSunsetMinute != -1) {
         NSNumber *autoSetOptionNum = [alarmDict objectForKey:kSLAutoSetOptionKey];
         if (autoSetOptionNum != nil) {
-            // create an instance of the alarm manager that will get us the actual alarm objects
-            MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
-
             // check to ensure we are using the latest auto-set times from the today model (we do not care about the return value here)
             [self hasUpdatedAutoSetTimes];
 
             // update the alarm according to the auto-set option
             SLAutoSetOption autoSetOption = [autoSetOptionNum integerValue];
             if (autoSetOption == kSLAutoSetOptionSunrise) {
-                [self updateAlarms:@[alarmDict] usingAlarmManager:alarmManager withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
+                [SLCompatibilityHelper updateAlarms:@[alarmDict] withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
             } else if (autoSetOption == kSLAutoSetOptionSunset) {
-                [self updateAlarms:@[alarmDict] usingAlarmManager:alarmManager withBaseHour:self.lastSunsetHour withBaseMinute:self.lastSunsetMinute];
+                [SLCompatibilityHelper updateAlarms:@[alarmDict] withBaseHour:self.lastSunsetHour withBaseMinute:self.lastSunsetMinute];
             }
         } 
     }
@@ -289,45 +284,6 @@
     }
 
     return hasUpdatedAutoSetTime;
-}
-
-// updates an array of alarms (in dictionary format) using the provided alarm manager with the last saved components
-- (void)updateAlarms:(NSArray *)alarms usingAlarmManager:(MTAlarmManager *)alarmManager withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute
-{
-    // update alarms using the auto-set date passed, along with any offset that might be required for the alarm
-    for (NSDictionary *alarmDict in alarms) {
-        // grab the alarm Id from the alarm dictionary so that we can create a system alarm object
-        NSString *alarmId = [alarmDict objectForKey:kSLAlarmIdKey];
-        MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId];
-        if (alarm != nil) {
-            // create a mutable copy of the alarm
-            MTMutableAlarm *mutableAlarm = [alarm mutableCopy];
-            if (mutableAlarm != nil) {
-                // adjust the hour and minute based on the offset preferences
-                SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
-                NSInteger offsetHour = 0;
-                NSInteger offsetMinute = 0;
-                if (offsetOption != kSLAutoSetOffsetOptionOff) {
-                    offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
-                    offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
-                    if (offsetOption == kSLAutoSetOffsetOptionBefore) {
-                        offsetHour = offsetHour * -1;
-                        offsetMinute = offsetMinute * -1;
-                    }
-                }
-
-                // update the alarm's hour and minute with the appropriate, adjusted time
-                [mutableAlarm setHour:baseHour + offsetHour];
-                [mutableAlarm setMinute:baseMinute + offsetMinute];
-
-                // persist the changes
-                [alarmManager updateAlarm:mutableAlarm];
-            }
-        } else {
-            // use this as an opportunity to remove the preferences for this alarm since it likely no longer exists
-            [SLPrefsManager deleteAlarmForAlarmId:alarmId];
-        }
-    }
 }
 
 #pragma mark - WATodayModelObserver

@@ -140,12 +140,11 @@
 - (NSString *)skipReasonExplanation
 {
     // declare the skip explanation strings that will potentially be concatinated and displayed
-    NSMutableString *skipExplanation = [NSMutableString stringWithString:kSLSkipExplanationString];
+    NSMutableString *skipExplanation = nil;
 
     // if the skip decision has been activated, add that to the string
     if ([self shouldSkipFromPopupDecision]) {
-        [skipExplanation appendString:@"\n\n"];
-        [skipExplanation appendString:kSLSkipReasonPopupString];
+        skipExplanation = [NSMutableString stringWithString:kSLSkipReasonPopupString];
     }
 
     // check to see if there are any custom skip dates to display
@@ -190,6 +189,11 @@
         }
     }
 
+    // if there is no skip explanation up to this point, display the default skip explanation string
+    if (skipExplanation == nil) {
+        skipExplanation = [NSMutableString stringWithString:kSLSkipExplanationString];
+    }
+
     return [skipExplanation copy];
 }
 
@@ -224,15 +228,23 @@
             NSString *numMinutes = nil;
             if (self.autoSetOffsetHour == 1) {
                 numHours = kSLNumHourString([@(self.autoSetOffsetHour) stringValue]);
-            } else {
+            } else if (self.autoSetOffsetHour > 1) {
                 numHours = kSLNumHoursString([@(self.autoSetOffsetHour) stringValue]);
             }
             if (self.autoSetOffsetMinute == 1) {
                 numMinutes = kSLNumMinuteString([@(self.autoSetOffsetMinute) stringValue]);
-            } else {
+            } else if (self.autoSetOffsetMinute > 1) {
                 numMinutes = kSLNumMinutesString([@(self.autoSetOffsetMinute) stringValue]);
             }
-            autoSetExplanation = kSLAutoSetOnWithOffsetExplanationString([numHours lowercaseString], [numMinutes lowercaseString], offsetTypeString, sunTypeString);
+            NSString *numHoursAndMinutes = @"";
+            if (numHours != nil && numMinutes != nil) {
+                numHoursAndMinutes = [NSString stringWithFormat:@"%@, %@", numHours, numMinutes];
+            } else if (numHours != nil) {
+                numHoursAndMinutes = numHours;
+            } else if (numMinutes != nil) {
+                numHoursAndMinutes = numMinutes;
+            }
+            autoSetExplanation = kSLAutoSetOnWithOffsetExplanationString([numHoursAndMinutes lowercaseString], offsetTypeString, sunTypeString);
         } else {
             autoSetExplanation = kSLAutoSetOnExplanationString(sunTypeString);
         }
