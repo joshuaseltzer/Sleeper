@@ -22,17 +22,21 @@
 
 - (id)updateAlarm:(MTMutableAlarm *)alarm
 {
-    // check if we have alarm preferences for this alarm
-    NSString *alarmId = [alarm alarmIDString];
-    SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-    if (alarmPrefs && alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
-        // reset the skip activation status for this alarm
-        [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                     skipActivatedStatus:kSLSkipActivatedStatusUnknown];
-    } else if (!alarmPrefs) {
-        alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-        [SLPrefsManager saveAlarmPrefs:alarmPrefs];
+    // proceed to potentially update the alarm's Sleeper preferences if the update wasn't initiated by the tweak itself
+    if (!alarm.SLWasUpdatedBySleeper) {
+        // check if we have alarm preferences for this alarm
+        NSString *alarmId = [alarm alarmIDString];
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        if (alarmPrefs && alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
+            // reset the skip activation status for this alarm
+            [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
+                                        skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+        } else if (!alarmPrefs) {
+            alarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
+            [SLPrefsManager saveAlarmPrefs:alarmPrefs];
+        }
     }
+    
 
     return %orig;
 }
@@ -41,7 +45,7 @@
 
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
         %init();
     }
 }

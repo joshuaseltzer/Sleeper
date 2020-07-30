@@ -39,6 +39,7 @@
 #define kSLCancelString                             [kSLMobileTimerBundle localizedStringForKey:@"CANCEL" value:@"Cancel" table:@"Localizable"]
 #define kSLSaveString                               [kSLMobileTimerBundle localizedStringForKey:@"SAVE" value:@"Save" table:@"Localizable"]
 #define kSLNoneString                               [kSLMobileTimerBundle localizedStringForKey:@"NONE" value:@"None" table:@"Localizable"]
+#define kSLOkString                                 [kSLMobileTimerBundle localizedStringForKey:@"OK" value:@"OK" table:@"Localizable"]
 #define kSLSkipDatesString                          [kSLSleeperBundle localizedStringForKey:@"SKIP_DATES" value:@"Skip Dates" table:@"Localizable"]
 #define kSLSelectNewDateString                      [kSLSleeperBundle localizedStringForKey:@"SELECT_NEW_DATE" value:@"Select New Date" table:@"Localizable"]
 #define kSLSelectStartDateString                    [kSLSleeperBundle localizedStringForKey:@"SELECT_START_DATE" value:@"Select Start Date" table:@"Localizable"]
@@ -70,7 +71,8 @@
 
 // the auto-set strings
 #define kSLAutoSetString                            [kSLSleeperBundle localizedStringForKey:@"AUTO_SET" value:@"Auto-Set" table:@"Localizable"]
-#define kSLAutoSetExplanationString                 [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_EXPLANATION" value:@"Choose an auto-set option to have this alarm automatically update its fire time.\n\nThe time for these options will be determined using the primary location set in the Weather application.  The system will routinely update all auto-set alarms using the most up-to-date location information at midnight and noon each day." table:@"Localizable"]
+#define kSLAutoSetDisabledExplanationString         [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_DISABLED_EXPLANATION" value:@"The auto-set feature cannot be enabled on this device because the Weather application is not installed.  Please install and configure the Weather application from the App Store and try again." table:@"Localizable"]
+#define kSLAutoSetExplanationString                 [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_EXPLANATION" value:@"Choose an auto-set option to have this alarm automatically update its fire time.\n\nThe time for these options will be determined using the primary location set in the Weather application." table:@"Localizable"]
 #define kSLAutoSetOffsetExplanationString           [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_OFFSET_EXPLANATION" value:@"When enabled, the offset hours and minutes will be applied either before or after the selected auto-set time.\n\nFor example, if the sunrise auto-set option is selected with a 1-hour-before offset, the alarm will be set to fire 1 hour before the actual sunrise occurs." table:@"Localizable"]
 #define kSLAutoSetOffExplanationString              [kSLSleeperBundle localizedStringForKey:@"AUTO_SET_OFF_EXPLANATION" value:@"You can use the auto-set feature to have this alarm automatically set its time based on various parameters." table:@"Localizable"]
 #define kSLAutoSetOnExplanationString(sunType)                                              [NSString stringWithFormat:[kSLSleeperBundle localizedStringForKey:@"AUTO_SET_ON_EXPLANATION" value:@"This alarm's fire time will automatically be set to %@." table:@"Localizable"], sunType]

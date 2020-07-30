@@ -14,6 +14,14 @@
 // the name of the image file as it exists in the bundle
 #define kSLCheckmarkImageName           @"checkmark"
 
+@interface LSApplicationProxy : NSObject
+
++ (LSApplicationProxy *)applicationProxyForIdentifier:(NSString *)identifier;
+
+- (BOOL)isInstalled;
+
+@end
+
 // define some properties that are defined in the iOS 13 SDK for UIColor
 @interface UIColor (iOS13)
 
@@ -58,6 +66,9 @@ static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
 
 // keep a single, static instance of the UIImages used throughout the UI
 static UIImage *sSLCheckmarkImage;
+
+// define the bundle identifier used for the weather application (required for auto-set)
+static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 
 @implementation SLCompatibilityHelper
 
@@ -462,6 +473,18 @@ static UIImage *sSLCheckmarkImage;
     return sSLCheckmarkImage;
 }
 
+// returns whether or not the device is in a state that can use the auto-set feature
++ (BOOL)canEnableAutoSet
+{
+    // attempt to get the application proxy for the weather application
+    LSApplicationProxy *weatherAppProxy = [objc_getClass("LSApplicationProxy") applicationProxyForIdentifier:kSLWeatherAppBundleId];
+    if (weatherAppProxy != nil && [weatherAppProxy isInstalled]) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 // Updates the given alarms (represented as SLAlarmPref dictionaries) with the base hour and base minute.
 // The implementation of updating the alarms will differ depending on which iOS is currently running.
 + (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute
@@ -472,7 +495,10 @@ static UIImage *sSLCheckmarkImage;
         MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
 
         // update alarms using the auto-set date passed, along with any offset that might be required for the alarm
+        NSInteger alarmCount = 0;
         for (NSDictionary *alarmDict in alarms) {
+            ++alarmCount;
+
             // grab the alarm Id from the alarm dictionary so that we can create a system alarm object
             NSString *alarmId = [alarmDict objectForKey:kSLAlarmIdKey];
             MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId];
@@ -482,23 +508,44 @@ static UIImage *sSLCheckmarkImage;
                 if (mutableAlarm != nil) {
                     // adjust the hour and minute based on the offset preferences
                     SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
-                    NSInteger offsetHour = 0;
-                    NSInteger offsetMinute = 0;
+                    NSInteger updatedHour = baseHour;
+                    NSInteger updatedMinute = baseMinute;
                     if (offsetOption != kSLAutoSetOffsetOptionOff) {
-                        offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
-                        offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
+                        NSInteger offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                        NSInteger offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
                         if (offsetOption == kSLAutoSetOffsetOptionBefore) {
                             offsetHour = offsetHour * -1;
                             offsetMinute = offsetMinute * -1;
                         }
+
+                        // check to see if the hours or minutes need to be adjusted
+                        updatedHour = baseHour + offsetHour;
+                        updatedMinute = baseMinute + offsetMinute;
+                        if (updatedMinute < 0) {
+                            --updatedHour;
+                            updatedMinute = 60 + updatedMinute;
+                        } else if (updatedMinute > 60) {
+                            ++updatedHour;
+                            updatedMinute = updatedMinute - 60;
+                        }
+                        if (updatedHour < 0) {
+                            updatedHour = 23 + updatedHour;
+                        } else if (updatedHour > 23) {
+                            updatedHour = updatedHour - 23;
+                        }
                     }
 
-                    // update the alarm's hour and minute with the appropriate, adjusted time
-                    [mutableAlarm setHour:baseHour + offsetHour];
-                    [mutableAlarm setMinute:baseMinute + offsetMinute];
+                    // modify the alarm after a small delay since this could happen right after an alarm was just saved
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1 + alarmCount) * NSEC_PER_SEC));
+                    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                        // update the alarm's hour and minute with the appropriate, adjusted time
+                        [mutableAlarm setHour:updatedHour];
+                        [mutableAlarm setMinute:updatedMinute];
+                        mutableAlarm.SLWasUpdatedBySleeper = YES;
 
-                    // persist the changes to the system
-                    [alarmManager updateAlarm:mutableAlarm];
+                        // persist the changes to the system
+                        [alarmManager updateAlarm:mutableAlarm];
+                    });
                 }
             } else {
                 // use this as an opportunity to remove the preferences for this alarm since it no longer exists
@@ -511,7 +558,10 @@ static UIImage *sSLCheckmarkImage;
         [alarmManager loadAlarms];
 
         // update alarms using the auto-set date passed, along with any offset that might be required for the alarm
+        NSInteger alarmCount = 0;
         for (NSDictionary *alarmDict in alarms) {
+            ++alarmCount;
+
             // grab the alarm Id from the alarm dictionary so that we can create a system alarm object
             NSString *alarmId = [alarmDict objectForKey:kSLAlarmIdKey];
             Alarm *alarm = [alarmManager alarmWithId:alarmId];
@@ -522,23 +572,39 @@ static UIImage *sSLCheckmarkImage;
                 if (editingProxy != nil) {
                     // adjust the hour and minute based on the offset preferences
                     SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
-                    NSInteger offsetHour = 0;
-                    NSInteger offsetMinute = 0;
+                    NSInteger updatedHour = baseHour;
+                    NSInteger updatedMinute = baseMinute;
                     if (offsetOption != kSLAutoSetOffsetOptionOff) {
-                        offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
-                        offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
+                        NSInteger offsetHour = [[alarmDict objectForKey:kSLAutoSetOffsetHourKey] integerValue];
+                        NSInteger offsetMinute = [[alarmDict objectForKey:kSLAutoSetOffsetMinuteKey] integerValue];
                         if (offsetOption == kSLAutoSetOffsetOptionBefore) {
                             offsetHour = offsetHour * -1;
                             offsetMinute = offsetMinute * -1;
                         }
+
+                        // check to see if the hours or minutes need to be adjusted
+                        updatedHour = baseHour + offsetHour;
+                        updatedMinute = baseMinute + offsetMinute;
+                        if (updatedMinute < 0) {
+                            --updatedHour;
+                            updatedMinute = 60 + updatedMinute;
+                        } else if (updatedMinute > 60) {
+                            ++updatedHour;
+                            updatedMinute = updatedMinute - 60;
+                        }
+                        if (updatedHour < 0) {
+                            updatedHour = 23 + updatedHour;
+                        } else if (updatedHour > 23) {
+                            updatedHour = updatedHour - 23;
+                        }
                     }
 
                     // modify the alarm after a small delay since this could happen right after an alarm was just saved
-                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC));
+                    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((5 + alarmCount) * NSEC_PER_SEC));
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                         // update the alarm's hour and minute with the appropriate, adjusted time
-                        [editingProxy setHour:baseHour + offsetHour];
-                        [editingProxy setMinute:baseMinute + offsetMinute];
+                        [editingProxy setHour:updatedHour];
+                        [editingProxy setMinute:updatedMinute];
                         [alarm applyChangesFromEditingProxy];
 
                         // persist changes to the system

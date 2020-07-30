@@ -239,7 +239,7 @@ static NSString *sSLTomorrowDateString;
     [selectDateAlertController addAction:skipDateRangeAlertAction];
 
     // create an action that will close the alert
-    UIAlertAction *closeAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
+    UIAlertAction *closeAlertAction = [UIAlertAction actionWithTitle:kSLCancelString
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
     [selectDateAlertController addAction:closeAlertAction];
@@ -286,7 +286,7 @@ static NSString *sSLTomorrowDateString;
                                                                                   preferredStyle:UIAlertControllerStyleAlert];
 
     // create an action that will clear the dates (and optionally holidays)
-    UIAlertAction *yesAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", nil)
+    UIAlertAction *yesAlertAction = [UIAlertAction actionWithTitle:kSLYesString
                                                              style:UIAlertActionStyleDestructive
                                                            handler:^(UIAlertAction * _Nonnull action) {
                                                                 // add the today string to the list of custom skip dates
@@ -307,7 +307,7 @@ static NSString *sSLTomorrowDateString;
     [confirmationAlertController addAction:yesAlertAction];
 
     // create an action that will close the alert
-    UIAlertAction *noAlertAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil)
+    UIAlertAction *noAlertAction = [UIAlertAction actionWithTitle:kSLNoString
                                                             style:UIAlertActionStyleCancel
                                                           handler:nil];
     [confirmationAlertController addAction:noAlertAction];

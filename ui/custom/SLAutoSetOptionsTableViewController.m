@@ -190,9 +190,11 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         }
 
         // set the background color of the cell to clear to remove the selection color
-        UIView *backgroundView = [[UIView alloc] init];
-        backgroundView.backgroundColor = [UIColor clearColor];
-        autoSetOptionCheckmarkCell.selectedBackgroundView = backgroundView;
+        if (@available(iOS 10.0, *)) {
+            UIView *backgroundView = [[UIView alloc] init];
+            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+            autoSetOptionCheckmarkCell.selectedBackgroundView = backgroundView;
+        }
     }
     return autoSetOptionCheckmarkCell;
 }
@@ -214,6 +216,13 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         // on newer versions of iOS, we need to set the background views for the cell
         if (kSLSystemVersioniOS13) {
             autoSetOptionSelectionCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
+        }
+
+        // set the background color of the cell to clear to remove the selection color
+        if (@available(iOS 10.0, *)) {
+            UIView *backgroundView = [[UIView alloc] init];
+            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+            autoSetOptionSelectionCell.selectedBackgroundView = backgroundView;
         }
     }
     return autoSetOptionSelectionCell;

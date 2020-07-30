@@ -55,7 +55,9 @@
         if (kSLSystemVersioniOS13) {
             cell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
-        if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+
+        // set the background color of the cell to clear to remove the selection color
+        if (@available(iOS 10.0, *)) {
             UIView *backgroundView = [[UIView alloc] init];
             backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
             cell.selectedBackgroundView = backgroundView;

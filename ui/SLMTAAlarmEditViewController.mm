@@ -64,6 +64,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 @property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
+@property (nonatomic, assign) BOOL SLCanEnableAutoSet;
 
 - (void)SLUpdateTimePickerEnabled;
 
@@ -77,6 +78,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 // boolean property to signify whether or not changes were made to the Sleeper preferences
 %property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
+// boolean that indicates whether or not auto-set can be enabled for this alarm
+%property (nonatomic, assign) BOOL SLCanEnableAutoSet;
+
 - (void)viewDidLoad
 {
     // get the alarm Id from the alarm for this controller
@@ -87,13 +91,22 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
         alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
     }
 
+    // check whether or not we can enable auto-set
+    self.SLCanEnableAutoSet = [SLCompatibilityHelper canEnableAutoSet];
+
     // load the preferences for the alarm
     self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (self.SLAlarmPrefs == nil) {
         self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
         self.SLAlarmPrefsChanged = YES;
     } else {
-        self.SLAlarmPrefsChanged = NO;
+        // if auto-set was enabled for this alarm but it cannot be enabled, disable it
+        if (!self.SLCanEnableAutoSet && self.SLAlarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
+            self.SLAlarmPrefs.autoSetOption = kSLAutoSetOptionOff;
+            self.SLAlarmPrefsChanged = YES;
+        } else {
+            self.SLAlarmPrefsChanged = NO;
+        }
     }
 
     // update the enabled status of the time picker, which will depend on the auto-set option
@@ -128,6 +141,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 - (void)_doneButtonClicked:(id)doneButton
 {
     // save our preferences
+    self.editedAlarm.SLWasUpdatedBySleeper = YES;
     if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
         self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
         [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];
@@ -250,13 +264,37 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             %orig;
         }
     } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionAutoSet) {
-        // create a custom view controller which will display the auto-set options
-        SLAutoSetOptionsTableViewController *autoSetOptionsController = [[SLAutoSetOptionsTableViewController alloc] initWithAutoSetOption:self.SLAlarmPrefs.autoSetOption
-                                                                                                                       autoSetOffsetOption:self.SLAlarmPrefs.autoSetOffsetOption
-                                                                                                                         autoSetOffsetHour:self.SLAlarmPrefs.autoSetOffsetHour
-                                                                                                                       autoSetOffsetMinute:self.SLAlarmPrefs.autoSetOffsetMinute];
-        autoSetOptionsController.delegate = self;
-        [self.navigationController pushViewController:autoSetOptionsController animated:YES];
+        // check to see if the user can enable auto-set before proceeding
+        if (self.SLCanEnableAutoSet) {
+            // create a custom view controller which will display the auto-set options
+            SLAutoSetOptionsTableViewController *autoSetOptionsController = [[SLAutoSetOptionsTableViewController alloc] initWithAutoSetOption:self.SLAlarmPrefs.autoSetOption
+                                                                                                                           autoSetOffsetOption:self.SLAlarmPrefs.autoSetOffsetOption
+                                                                                                                             autoSetOffsetHour:self.SLAlarmPrefs.autoSetOffsetHour
+                                                                                                                           autoSetOffsetMinute:self.SLAlarmPrefs.autoSetOffsetMinute];
+            autoSetOptionsController.delegate = self;
+            [self.navigationController pushViewController:autoSetOptionsController animated:YES];
+        } else {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+            // display an alert notifying the user that the Weather application is required to enable auto-set
+            UIAlertController *autoSetDisabledAlertController = [UIAlertController alertControllerWithTitle:kSLAutoSetString
+                                                                                                    message:kSLAutoSetDisabledExplanationString
+                                                                                             preferredStyle:UIAlertControllerStyleAlert];
+
+            // create an action that will close the alert
+            UIAlertAction *okAlertAction = [UIAlertAction actionWithTitle:kSLOkString
+                                                                    style:UIAlertActionStyleCancel
+                                                                  handler:nil];
+            [autoSetDisabledAlertController addAction:okAlertAction];
+            
+            // modify the subviews of the alert controller if necessary
+            if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+                [SLCompatibilityHelper updateSubviewsForAlertController:autoSetDisabledAlertController];
+            }
+
+            // present the alert
+            [self presentViewController:autoSetDisabledAlertController animated:YES completion:nil];
+        }
     } else if (indexPath.section == kSLMTAAlarmEditViewControllerSectionDelete) {
         // perform the logic that was originally for the delete section
         %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLMTAAlarmEditViewControllerSectionAutoSet]);

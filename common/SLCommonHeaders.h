@@ -163,6 +163,14 @@
 @interface MTMutableAlarm : MTAlarm
 @end
 
+// custom interface for added properties
+@interface MTMutableAlarm (Sleeper)
+
+// flag which indicates whether or not the alarm was updated by this tweak or not
+@property (nonatomic, assign) BOOL SLWasUpdatedBySleeper;
+
+@end
+
 // iOS 12+: the data source corresponding to a particular alarm
 @interface MTAlarmDataSource : NSObject
 
