@@ -140,8 +140,12 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 - (void)_doneButtonClicked:(id)doneButton
 {
+    // for modern alarms, signify that the alarm was edited so it isn't updated again once it is updated
+    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
+        self.editedAlarm.SLWasUpdatedBySleeper = YES;
+    }
+    
     // save our preferences
-    self.editedAlarm.SLWasUpdatedBySleeper = YES;
     if (self.SLAlarmPrefsChanged || self.SLAlarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
         self.SLAlarmPrefs.skipActivationStatus = kSLSkipActivatedStatusUnknown;
         [SLPrefsManager saveAlarmPrefs:self.SLAlarmPrefs];

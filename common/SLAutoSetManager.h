@@ -71,10 +71,6 @@ static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptions
 // return a singleton instance of this manager
 + (instancetype)sharedInstance;
 
-// Routine that will update the dictionary of multiple auto-set alarms.  This method is meant to be ran on a scheduled basis to check all auto-set alarms at once.
-// The dictionary of alarms is keyed by the auto-set option as a number.
-- (void)bulkUpdateAutoSetAlarms:(NSDictionary *)autoSetAlarms;
-
 // routine to update to a single alarm object that has updated auto-set settings
 - (void)updateAutoSetAlarm:(NSDictionary *)alarmDict;
 

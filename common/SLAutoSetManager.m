@@ -80,16 +80,8 @@ static NSInteger const kSLDefaultHourMinute = -1;
         self.lastSunsetHour = kSLDefaultHourMinute;
         self.lastSunsetMinute = kSLDefaultHourMinute;
 
-        // grab all of the auto-set alarms from the preferences file
-        NSDictionary *autoSetAlarms = [SLPrefsManager allAutoSetAlarms];
-
-        // if there are no auto-set alarms, do not create the today model
-        if (autoSetAlarms != nil) {
-            // update all of the auto-set alarms upon initialization
-            if ([self hasUpdatedAutoSetTimes]) {
-                [self bulkUpdateAutoSetAlarms:autoSetAlarms];
-            }
-        }
+        // attempt to update all of the auto-set alarms
+        [self updateAllAutoSetAlarms];
     }
     return self;
 }
@@ -174,28 +166,31 @@ static NSInteger const kSLDefaultHourMinute = -1;
 // creates the today model if it wasn't already running and new persistent timers
 - (void)setupAutoupdatingTodayModel
 {
-    // Check if the today model exists, but the forecast does not.  In this situation, destroy the model
-    // and then re-create it to get an updated forecast.
-    if (self.autoupdatingTodayModel != nil && self.autoupdatingTodayModel.forecastModel == nil) {
-        [self teardownAutoupdatingTodayModel];
-    }
+    // check to see if auto set can be enabled
+    if ([SLCompatibilityHelper canEnableAutoSet]) {
+        // Check if the today model exists, but the forecast does not.  In this situation, destroy the model
+        // and then re-create it to get an updated forecast.
+        if (self.autoupdatingTodayModel != nil && self.autoupdatingTodayModel.forecastModel == nil) {
+            [self teardownAutoupdatingTodayModel];
+        }
 
-    // if the today model is not running, create it now
-    if (self.autoupdatingTodayModel == nil) {
-        // create the autoupdating today model object to retrieve the sunrise/sunset times
-        self.autoupdatingTodayModel = [objc_getClass("WATodayModel") autoupdatingLocationModelWithPreferences:[objc_getClass("WeatherPreferences") sharedPreferences] effectiveBundleIdentifier:nil];
-        [self.autoupdatingTodayModel addObserver:self];
+        // if the today model is not running, create it now
+        if (self.autoupdatingTodayModel == nil) {
+            // create the autoupdating today model object to retrieve the sunrise/sunset times
+            self.autoupdatingTodayModel = [objc_getClass("WATodayModel") autoupdatingLocationModelWithPreferences:[objc_getClass("WeatherPreferences") sharedPreferences] effectiveBundleIdentifier:nil];
+            [self.autoupdatingTodayModel addObserver:self];
+        }
+
+        // if the persistent timers are not running, create them now to periodically update all of the auto-set alarms
+        if (self.startOfDayTimer == nil) {
+            [self createStartOfDayTimer];
+        }
+        if (self.midDayTimer == nil) {
+            [self createMidDayTimer];
+        }
     } else {
-        // force a reload of the forecast data if the today model already existed
-        [self.autoupdatingTodayModel _reloadForecastData:YES];
-    }
-
-    // if the persistent timers are not running, create them now to periodically update all of the auto-set alarms
-    if (self.startOfDayTimer == nil) {
-        [self createStartOfDayTimer];
-    }
-    if (self.midDayTimer == nil) {
-        [self createMidDayTimer];
+        // if the auto-set feature cannot be enabled, ensure that the today model is destroyed
+        [self teardownAutoupdatingTodayModel];
     }
 }
 
@@ -243,9 +238,6 @@ static NSInteger const kSLDefaultHourMinute = -1;
                 [SLCompatibilityHelper updateAlarms:sunsetAlarms withBaseHour:self.lastSunsetHour withBaseMinute:self.lastSunsetMinute];
             }
         }
-    } else {
-        // attempt to teardown the today model
-        [self teardownAutoupdatingTodayModel];
     }
 }
 
@@ -256,11 +248,20 @@ static NSInteger const kSLDefaultHourMinute = -1;
     if (alarmDict != nil) {
         NSNumber *autoSetOptionNum = [alarmDict objectForKey:kSLAutoSetOptionKey];
         if (autoSetOptionNum != nil) {
-            // check to ensure we are using the latest auto-set times from the today model (we do not care about the return value here)
-            [self hasUpdatedAutoSetTimes];
+            BOOL alarmNeedsUpdate = NO;
+            if (![self.autoupdatingTodayModel _reloadForecastData:YES]) {
+                // check to make sure the today model is running before updating the alarm
+                if (self.autoupdatingTodayModel == nil || self.autoupdatingTodayModel.forecastModel == nil) {
+                    [self setupAutoupdatingTodayModel];
+                }
 
+                // ensure we are using the latest auto-set times from the today model (we do not care about the return value here)
+                [self hasUpdatedAutoSetTimes];
+                alarmNeedsUpdate = YES;
+            }
+            
             // update the alarm according to the auto-set option as long as valid times were generated
-            if (self.lastSunriseHour != -1 && self.lastSunriseMinute != -1 && self.lastSunsetHour != -1 && self.lastSunsetMinute != -1) {
+            if (alarmNeedsUpdate && self.lastSunriseHour != -1 && self.lastSunriseMinute != -1 && self.lastSunsetHour != -1 && self.lastSunsetMinute != -1) {
                 SLAutoSetOption autoSetOption = [autoSetOptionNum integerValue];
                 if (autoSetOption == kSLAutoSetOptionSunrise) {
                     [SLCompatibilityHelper updateAlarms:@[alarmDict] withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
@@ -279,50 +280,62 @@ static NSInteger const kSLDefaultHourMinute = -1;
     // by default, assume there are no changes
     BOOL hasUpdatedAutoSetTime = NO;
 
-    // check to see if auto-set can be enabled before continuing
-    if ([SLCompatibilityHelper canEnableAutoSet]) {
-        // attempt to setup the today model if it wasn't already
-        [self setupAutoupdatingTodayModel];
+    // grab some information from the today model's forecast model if it exists
+    if (self.autoupdatingTodayModel != nil && self.autoupdatingTodayModel.forecastModel != nil && self.autoupdatingTodayModel.forecastModel.location != nil) {
+        NSDate *sunriseDate = self.autoupdatingTodayModel.forecastModel.sunrise;
+        NSDate *sunsetDate = self.autoupdatingTodayModel.forecastModel.sunset;
+        NSTimeZone *timeZone = self.autoupdatingTodayModel.forecastModel.location.timeZone;
 
-        // grab some information from the today model's forecast model if it exists
-        if (self.autoupdatingTodayModel.forecastModel != nil && self.autoupdatingTodayModel.forecastModel.location != nil) {
-            NSDate *sunriseDate = self.autoupdatingTodayModel.forecastModel.sunrise;
-            NSDate *sunsetDate = self.autoupdatingTodayModel.forecastModel.sunset;
-            NSTimeZone *timeZone = self.autoupdatingTodayModel.forecastModel.location.timeZone;
+        // as long as the appropriate information from the forecast model exists, continue checking the times
+        if (sunriseDate != nil && sunsetDate != nil && timeZone != nil) {
+            // define the calendar with the given time zone
+            NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+            [calendar setTimeZone:timeZone];
 
-            // as long as the appropriate information from the forecast model exists, continue checking the times
-            if (sunriseDate != nil && sunsetDate != nil && timeZone != nil) {
-                // define the calendar with the given time zone
-                NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-                [calendar setTimeZone:timeZone];
-
-                // check the date components for the sunrise date
-                NSDateComponents *dateComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:sunriseDate];
-                NSInteger newSunriseHour = [dateComponents hour];
-                NSInteger newSunriseMinute = [dateComponents minute];
-                if (newSunriseHour != self.lastSunriseHour || newSunriseMinute != self.lastSunriseMinute) {
-                    self.lastSunriseHour = newSunriseHour;
-                    self.lastSunriseMinute = newSunriseMinute;
-                    hasUpdatedAutoSetTime = YES;
-                }
-                
-                // check the date components for the sunset date
-                dateComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:sunsetDate];
-                NSInteger newSunsetHour = [dateComponents hour];
-                NSInteger newSunsetMinute = [dateComponents minute];
-                if (newSunsetHour != self.lastSunsetHour || newSunsetMinute != self.lastSunsetMinute) {
-                    self.lastSunsetHour = newSunsetHour;
-                    self.lastSunsetMinute = newSunsetMinute;
-                    hasUpdatedAutoSetTime = YES;
-                }
+            // check the date components for the sunrise date
+            NSDateComponents *dateComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:sunriseDate];
+            NSInteger newSunriseHour = [dateComponents hour];
+            NSInteger newSunriseMinute = [dateComponents minute];
+            if (newSunriseHour != self.lastSunriseHour || newSunriseMinute != self.lastSunriseMinute) {
+                self.lastSunriseHour = newSunriseHour;
+                self.lastSunriseMinute = newSunriseMinute;
+                hasUpdatedAutoSetTime = YES;
+            }
+            
+            // check the date components for the sunset date
+            dateComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:sunsetDate];
+            NSInteger newSunsetHour = [dateComponents hour];
+            NSInteger newSunsetMinute = [dateComponents minute];
+            if (newSunsetHour != self.lastSunsetHour || newSunsetMinute != self.lastSunsetMinute) {
+                self.lastSunsetHour = newSunsetHour;
+                self.lastSunsetMinute = newSunsetMinute;
+                hasUpdatedAutoSetTime = YES;
             }
         }
-    } else {
-        // teardown the today model if it was already created
-        [self teardownAutoupdatingTodayModel];
     }
 
     return hasUpdatedAutoSetTime;
+}
+
+// updates all auto-set alarms if necessary
+- (void)updateAllAutoSetAlarms
+{
+    // Update all auto-set alarms that might exist.  If there are no auto-set alarms, do not create the today model.
+    NSDictionary *autoSetAlarms = [SLPrefsManager allAutoSetAlarms];
+    if (autoSetAlarms != nil) {
+        // if the today model hasn't been initiated yet, create it now
+        if (self.autoupdatingTodayModel == nil) {
+            [self setupAutoupdatingTodayModel];
+        }
+
+        // update all of the auto-set alarms upon initialization
+        if ([self hasUpdatedAutoSetTimes]) {
+            [self bulkUpdateAutoSetAlarms:autoSetAlarms];
+        }
+    } else {
+        // attempt to teardown the today model
+        [self teardownAutoupdatingTodayModel];
+    }
 }
 
 #pragma mark - WATodayModelObserver
@@ -330,19 +343,15 @@ static NSInteger const kSLDefaultHourMinute = -1;
 // called when a today model is asking for an update
 - (void)todayModelWantsUpdate:(id)todayModel
 {
-    // ensure that our today model has the correct and updated information needed to update the alarms
-    if ([self hasUpdatedAutoSetTimes]) {
-        [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
-    }
+    // attempt to update all of the auto-set alarms
+    [self updateAllAutoSetAlarms];
 }
 
-// invoked whenever the forecast model is updated (from within the Weather application)
+// invoked whenever the forecast model is updated
 - (void)todayModel:(id)todayModel forecastWasUpdated:(WAForecastModel *)forecastModel
 {
-    // ensure that our today model has the correct and updated information needed to update the alarms
-    if ([self hasUpdatedAutoSetTimes]) {
-        [self bulkUpdateAutoSetAlarms:[SLPrefsManager allAutoSetAlarms]];
-    }
+    // attempt to update all of the auto-set alarms
+    [self updateAllAutoSetAlarms];
 }
 
 @end
