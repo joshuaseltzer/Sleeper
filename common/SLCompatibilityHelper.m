@@ -506,7 +506,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
                 // create a mutable copy of the alarm
                 MTMutableAlarm *mutableAlarm = [alarm mutableCopy];
                 if (mutableAlarm != nil) {
-                    // adjust the hour and minute based on the offset preferences
+                    // adjust the hour and minute based on the optional offset preferences
                     SLAutoSetOffsetOption offsetOption = [[alarmDict objectForKey:kSLAutoSetOffsetOptionKey] integerValue];
                     NSInteger updatedHour = baseHour;
                     NSInteger updatedMinute = baseMinute;
@@ -524,7 +524,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
                         if (updatedMinute < 0) {
                             --updatedHour;
                             updatedMinute = 60 + updatedMinute;
-                        } else if (updatedMinute > 60) {
+                        } else if (updatedMinute > 59) {
                             ++updatedHour;
                             updatedMinute = updatedMinute - 60;
                         }
@@ -588,7 +588,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
                         if (updatedMinute < 0) {
                             --updatedHour;
                             updatedMinute = 60 + updatedMinute;
-                        } else if (updatedMinute > 60) {
+                        } else if (updatedMinute > 59) {
                             ++updatedHour;
                             updatedMinute = updatedMinute - 60;
                         }
