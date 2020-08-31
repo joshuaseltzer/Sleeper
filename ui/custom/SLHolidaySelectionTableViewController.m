@@ -127,11 +127,9 @@
         }
 
         // set the background color of the cell to clear to remove the selection color
-        if (@available(iOS 10.0, *)) {
-            UIView *backgroundView = [[UIView alloc] init];
-            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
-            holidayCell.selectedBackgroundView = backgroundView;
-        }
+        UIView *backgroundView = [[UIView alloc] init];
+        backgroundView.backgroundColor = [UIColor clearColor];
+        holidayCell.selectedBackgroundView = backgroundView;
     }
 
     // get the corresponding holiday for this cell for display

@@ -95,8 +95,14 @@
 // returns the checkmark image used to indicate selection throughout the UI
 + (UIImage *)checkmarkImage;
 
+// returns the "open in" image
++ (UIImage *)openInImage;
+
 // returns whether or not the device is in a state that can use the auto-set feature
 + (BOOL)canEnableAutoSet;
+
+// navigates the user to the Weather application
++ (void)openWeatherApplication;
 
 // Updates the given alarms (represented as SLAlarmPref dictionaries) with the base hour and base minute.
 // The implementation of updating the alarms will differ depending on which iOS is currently running.

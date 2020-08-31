@@ -47,26 +47,13 @@ static NSString *const kSLAutoSetOptionsUpdatedNotification = @"SLAutoSetOptions
 + (id)autoupdatingLocationModelWithPreferences:(WeatherPreferences *)weatherPreferences
                      effectiveBundleIdentifier:(NSString *)bundleIdentifier;
 
-// adds or removes an observer to the updating location model
-- (void)addObserver:(id)observer;
-- (void)removeObserver:(id)observer;
-
 // the forecast model that is associated with this today model
 @property (nonatomic, retain) WAForecastModel *forecastModel;
 
 @end
 
-// the observer defined for the today model which will be implemented by the auto-set manager to observe changes for sunrise/sunset
-@protocol WATodayModelObserver <NSObject>
-
-@required
-- (void)todayModelWantsUpdate:(id)todayModel;
-- (void)todayModel:(id)todayModel forecastWasUpdated:(WAForecastModel *)forecastModel;
-
-@end
-
 // manager that will be used to automatically update alarms based on the user preferences
-@interface SLAutoSetManager : NSObject// <WATodayModelObserver>
+@interface SLAutoSetManager : NSObject
 
 // return a singleton instance of this manager
 + (instancetype)sharedInstance;

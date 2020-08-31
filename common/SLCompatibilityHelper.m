@@ -11,14 +11,27 @@
 #import "SLPrefsManager.h"
 #import <objc/runtime.h>
 
-// the name of the image file as it exists in the bundle
+// the name of the image files as it exists in the bundle
 #define kSLCheckmarkImageName           @"checkmark"
+#define kSLOpenInImageName              @"open_in"
 
 @interface LSApplicationProxy : NSObject
 
+// returns an application proxy object that corresponds to the given bundle identifier
 + (LSApplicationProxy *)applicationProxyForIdentifier:(NSString *)identifier;
 
+// returns weather or not the application corresponding to this application proxy is installed on the device
 - (BOOL)isInstalled;
+
+@end
+
+@interface LSApplicationWorkspace : NSObject
+
+// returns the default app workspace for the device (i.e. shared instance)
++ (id)defaultWorkspace;
+
+// opens the application on the device corresponding to the given bundle identifier
+- (BOOL)openApplicationWithBundleID:(NSString *)bundleId;
 
 @end
 
@@ -66,6 +79,7 @@ static UIColor *sSLAlertControllerDarkLineSeparatorColor = nil;
 
 // keep a single, static instance of the UIImages used throughout the UI
 static UIImage *sSLCheckmarkImage;
+static UIImage *sSLOpenInImage;
 
 // define the bundle identifier used for the weather application (required for auto-set)
 static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
@@ -473,15 +487,35 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
     return sSLCheckmarkImage;
 }
 
+// returns the "open in" image
++ (UIImage *)openInImage
+{
+    if (!sSLOpenInImage) {
+        sSLOpenInImage = [[UIImage imageNamed:kSLOpenInImageName
+                                     inBundle:kSLSleeperBundle
+                compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
+    return sSLOpenInImage;
+}
+
 // returns whether or not the device is in a state that can use the auto-set feature
 + (BOOL)canEnableAutoSet
 {
     // attempt to get the application proxy for the weather application
     LSApplicationProxy *weatherAppProxy = [objc_getClass("LSApplicationProxy") applicationProxyForIdentifier:kSLWeatherAppBundleId];
-    if (weatherAppProxy != nil && [weatherAppProxy isInstalled]) {
+    if (weatherAppProxy != nil && [weatherAppProxy respondsToSelector:@selector(isInstalled)] && [weatherAppProxy isInstalled]) {
         return YES;
     } else {
         return NO;
+    }
+}
+
+// navigates the user to the Weather application
++ (void)openWeatherApplication
+{
+    LSApplicationWorkspace *appWorkspace = [objc_getClass("LSApplicationWorkspace") defaultWorkspace];
+    if (appWorkspace != nil && [appWorkspace respondsToSelector:@selector(openApplicationWithBundleID:)]) {
+        [appWorkspace openApplicationWithBundleID:kSLWeatherAppBundleId];
     }
 }
 

@@ -45,7 +45,9 @@
 "SKIP_EXPLANATION" = "Use the skip feature to temporarily disable alarms based on selected away dates/holidays or by setting a time in which the system will prompt you upon unlocking the device to skip the alarm before it fires.";
 "AUTO_SET" = "Auto-Set";
 "AUTO_SET_DISABLED_EXPLANATION" = "The auto-set feature cannot be enabled on this device because the Weather application is not installed.  Please install and configure the Weather application from the App Store and try again.";
-"AUTO_SET_EXPLANATION" = "Choose an auto-set option to have this alarm automatically update its fire time.\n\nThe time for these options will be determined using the primary location set in the Weather application.";
+"AUTO_SET_WEATHER_EXPLANATION" = "The auto-set times will be determined by the first location set in the Weather application.\n\nIf the first location is determined using your device's location, then the Weather app will need to be opened any time the device is rebooted or SpringBoard is restarted to refresh the first location.\n\nTo ensure the auto-set feature is always functioning properly, please also set a secondary location manually in the Weather application.";
+"AUTO_SET_OPEN_WEATHER_APP" = "Open Weather App";
+"AUTO_SET_EXPLANATION" = "Choose an auto-set option to have this alarm automatically update its fire time.";
 "AUTO_SET_OFFSET_EXPLANATION" = "When enabled, the offset hours and minutes will be applied either before or after the selected auto-set time.\n\nFor example, if the sunrise auto-set option is selected with a 1-hour-before offset, the alarm will be set to fire 1 hour before the actual sunrise occurs.";
 "AUTO_SET_OFF_EXPLANATION" = "You can use the auto-set feature to have this alarm automatically set its time based on various parameters.";
 "AUTO_SET_ON_EXPLANATION" = "This alarm's fire time will automatically be set to %@.";

@@ -89,9 +89,9 @@ static NSInteger const kSLDefaultHourMinute = -1;
 // invoked when one of the persistent timers is fired
 - (void)persistentTimerFired:(PCSimpleTimer *)timer
 {
-    // Force a reload of the forecast data with the today model.  If there are any updates, this object will receive them via
-    // the delegate methods of the observer.
+    // force a reload of the forecast data with the today model and then update all alarms
     [self.autoupdatingTodayModel _reloadForecastData:YES];
+    [self updateAllAutoSetAlarms];
 
     // re-create the timer that was fired to be scheduled for the next day
     if ([timer isEqual:self.startOfDayTimer]) {
@@ -178,7 +178,6 @@ static NSInteger const kSLDefaultHourMinute = -1;
         if (self.autoupdatingTodayModel == nil) {
             // create the autoupdating today model object to retrieve the sunrise/sunset times
             self.autoupdatingTodayModel = [objc_getClass("WATodayModel") autoupdatingLocationModelWithPreferences:[objc_getClass("WeatherPreferences") sharedPreferences] effectiveBundleIdentifier:nil];
-            [self.autoupdatingTodayModel addObserver:self];
         }
 
         // if the persistent timers are not running, create them now to periodically update all of the auto-set alarms
@@ -199,7 +198,6 @@ static NSInteger const kSLDefaultHourMinute = -1;
 {
     // if the today model was already created but no auto-set alarms exist, we can destroy it now
     if (self.autoupdatingTodayModel != nil) {
-        [self.autoupdatingTodayModel removeObserver:self];
         self.autoupdatingTodayModel = nil;
     }
 
@@ -248,20 +246,16 @@ static NSInteger const kSLDefaultHourMinute = -1;
     if (alarmDict != nil) {
         NSNumber *autoSetOptionNum = [alarmDict objectForKey:kSLAutoSetOptionKey];
         if (autoSetOptionNum != nil) {
-            BOOL alarmNeedsUpdate = NO;
-            if (![self.autoupdatingTodayModel _reloadForecastData:YES]) {
-                // check to make sure the today model is running before updating the alarm
-                if (self.autoupdatingTodayModel == nil || self.autoupdatingTodayModel.forecastModel == nil) {
-                    [self setupAutoupdatingTodayModel];
-                }
-
-                // ensure we are using the latest auto-set times from the today model (we do not care about the return value here)
-                [self hasUpdatedAutoSetTimes];
-                alarmNeedsUpdate = YES;
+            if (![self.autoupdatingTodayModel _reloadForecastData:YES] && (self.autoupdatingTodayModel == nil || self.autoupdatingTodayModel.forecastModel == nil)) {
+                // ensure that the today model is created and running properly before trying to update an alarm
+                [self setupAutoupdatingTodayModel];
             }
+
+            // ensure we are using the latest auto-set times from the today model (we do not care about the return value here)
+            [self hasUpdatedAutoSetTimes];
             
             // update the alarm according to the auto-set option as long as valid times were generated
-            if (alarmNeedsUpdate && self.lastSunriseHour != -1 && self.lastSunriseMinute != -1 && self.lastSunsetHour != -1 && self.lastSunsetMinute != -1) {
+            if (self.lastSunriseHour != -1 && self.lastSunriseMinute != -1 && self.lastSunsetHour != -1 && self.lastSunsetMinute != -1) {
                 SLAutoSetOption autoSetOption = [autoSetOptionNum integerValue];
                 if (autoSetOption == kSLAutoSetOptionSunrise) {
                     [SLCompatibilityHelper updateAlarms:@[alarmDict] withBaseHour:self.lastSunriseHour withBaseMinute:self.lastSunriseMinute];
@@ -336,22 +330,6 @@ static NSInteger const kSLDefaultHourMinute = -1;
         // attempt to teardown the today model
         [self teardownAutoupdatingTodayModel];
     }
-}
-
-#pragma mark - WATodayModelObserver
-
-// called when a today model is asking for an update
-- (void)todayModelWantsUpdate:(id)todayModel
-{
-    // attempt to update all of the auto-set alarms
-    [self updateAllAutoSetAlarms];
-}
-
-// invoked whenever the forecast model is updated
-- (void)todayModel:(id)todayModel forecastWasUpdated:(WAForecastModel *)forecastModel
-{
-    // attempt to update all of the auto-set alarms
-    [self updateAllAutoSetAlarms];
 }
 
 @end

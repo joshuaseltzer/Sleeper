@@ -12,11 +12,13 @@
 #import "../../common/SLLocalizedStrings.h"
 
 // define the reuse identifier for the cells in this table
+#define kSLAutoSetOptionOpenInTableViewCellIdentifier           @"SLAutoSetOptionOpenInTableViewCell"
 #define kSLAutoSetOptionCheckmarkTableViewCellIdentifier        @"SLAutoSetOptionCheckmarkTableViewCell"
 #define kSLAutoSetOptionSelectionTableViewCellIdentifier        @"SLAutoSetOptionSelectionTableViewCell"
 
 // define an enum for the available sections in this table
 typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
+    kSLAutoSetOptionsTableViewControllerSectionWeather,
     kSLAutoSetOptionsTableViewControllerSectionOption,
     kSLAutoSetOptionsTableViewControllerSectionOffset,
     kSLAutoSetOptionsTableViewControllerNumSections
@@ -83,6 +85,8 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
     }
 }
 
+// updates a given cell's accessory view visibility based on the selected aut
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -98,13 +102,20 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numRows = 0;
-    if (section == kSLAutoSetOptionsTableViewControllerSectionOption) {
-        // the number of rows for the auto-set options section corresponds to the last auto-set option
-        numRows = kSLAutoSetOptionSunset + 1;
-    } else if (section == kSLAutoSetOptionsTableViewControllerSectionOffset) {
-        // the number of rows for the offset options section corresponds to the last auto-set option with an additional
-        // row added to let the user select the time
-        numRows = self.offsetSectionNumRows;
+    switch (section) {
+        case kSLAutoSetOptionsTableViewControllerSectionWeather:
+            // a single row is displayed to allow the user to open the Weather application
+            numRows = 1;
+            break;
+        case kSLAutoSetOptionsTableViewControllerSectionOption:
+            // the number of rows for the auto-set options section corresponds to the last auto-set option
+            numRows = kSLAutoSetOptionSunset + 1;
+            break;
+        case kSLAutoSetOptionsTableViewControllerSectionOffset:
+            // the number of rows for the offset options section corresponds to the last auto-set option with an additional
+            // row added to let the user select the time
+            numRows = self.offsetSectionNumRows;
+            break;
     }
     return numRows;
 }
@@ -113,61 +124,103 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
 {
     UITableViewCell *cell = nil;
 
-    // get the text corresponding to the auto set option corresponding to the row
-    if (indexPath.section == kSLAutoSetOptionsTableViewControllerSectionOption) {
-        UITableViewCell *autoSetOptionCheckmarkCell = [self tableView:tableView checkmarkCellForRowAtIndexPath:indexPath];
+    switch (indexPath.section) {
+        case kSLAutoSetOptionsTableViewControllerSectionWeather: {
+            // create an open in cell and configure it to allow the user to go to the weather app
+            UITableViewCell *weatherOpenInCell = [self tableView:tableView openInCellForRowAtIndexPath:indexPath];
+            weatherOpenInCell.textLabel.text = kSLAutoSetOpenWeatherAppString;
 
-        // set the text of the checkmark cell to the appropriate auto-set option
-        autoSetOptionCheckmarkCell.textLabel.text = [SLPrefsManager friendlyNameForAutoSetOption:indexPath.row];
-
-        // check to see if this cell's accessory view should be shown or not based on the selected auto-set option
-        if (self.autoSetOption == indexPath.row) {
-            autoSetOptionCheckmarkCell.accessoryView.hidden = NO;
-        } else {
-            autoSetOptionCheckmarkCell.accessoryView.hidden = YES;
+            cell = weatherOpenInCell;
+            break;
         }
-
-        cell = autoSetOptionCheckmarkCell;
-    } else if (indexPath.section == kSLAutoSetOptionsTableViewControllerSectionOffset) {
-        if (indexPath.row == self.offsetSectionNumRows - 1) {
-            UITableViewCell *autoSetOptionSelectionCell = [self tableView:tableView selectionCellForRowAtIndexPath:indexPath];
-
-            // configure the text of this cell
-            autoSetOptionSelectionCell.textLabel.text = kSLTimeString;
-            NSString *numHours = nil;
-            NSString *numMinutes = nil;
-            if (self.autoSetOffsetHour == 1) {
-                numHours = kSLNumHourString([@(self.autoSetOffsetHour) stringValue]);
-            } else {
-                numHours = kSLNumHoursString([@(self.autoSetOffsetHour) stringValue]);
-            }
-            if (self.autoSetOffsetMinute == 1) {
-                numMinutes = kSLNumMinuteString([@(self.autoSetOffsetMinute) stringValue]);
-            } else {
-                numMinutes = kSLNumMinutesString([@(self.autoSetOffsetMinute) stringValue]);
-            }
-            autoSetOptionSelectionCell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", numHours, numMinutes];
-
-            cell = autoSetOptionSelectionCell;
-        } else {
+        case kSLAutoSetOptionsTableViewControllerSectionOption: {
             UITableViewCell *autoSetOptionCheckmarkCell = [self tableView:tableView checkmarkCellForRowAtIndexPath:indexPath];
 
-            // set the text of the checkmark cell to the appropriate offset option
-            autoSetOptionCheckmarkCell.textLabel.text = [SLPrefsManager friendlyNameForAutoSetOffsetOption:indexPath.row];
+            // set the text of the checkmark cell to the appropriate auto-set option
+            autoSetOptionCheckmarkCell.textLabel.text = [SLPrefsManager friendlyNameForAutoSetOption:indexPath.row];
 
-            // check to see if this cell's accessory view should be shown or not based on the selected offset option
-            if (self.autoSetOffsetOption == indexPath.row) {
+            // check to see if this cell's accessory view should be shown or not based on the selected auto-set option
+            if (self.autoSetOption == indexPath.row) {
                 autoSetOptionCheckmarkCell.accessoryView.hidden = NO;
             } else {
                 autoSetOptionCheckmarkCell.accessoryView.hidden = YES;
             }
 
             cell = autoSetOptionCheckmarkCell;
+            break;
         }
-        
+        case kSLAutoSetOptionsTableViewControllerSectionOffset: {
+            if (indexPath.row == self.offsetSectionNumRows - 1) {
+                UITableViewCell *autoSetOptionSelectionCell = [self tableView:tableView selectionCellForRowAtIndexPath:indexPath];
+
+                // configure the text of this cell
+                autoSetOptionSelectionCell.textLabel.text = kSLTimeString;
+                NSString *numHours = nil;
+                NSString *numMinutes = nil;
+                if (self.autoSetOffsetHour == 1) {
+                    numHours = kSLNumHourString([@(self.autoSetOffsetHour) stringValue]);
+                } else {
+                    numHours = kSLNumHoursString([@(self.autoSetOffsetHour) stringValue]);
+                }
+                if (self.autoSetOffsetMinute == 1) {
+                    numMinutes = kSLNumMinuteString([@(self.autoSetOffsetMinute) stringValue]);
+                } else {
+                    numMinutes = kSLNumMinutesString([@(self.autoSetOffsetMinute) stringValue]);
+                }
+                autoSetOptionSelectionCell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", numHours, numMinutes];
+
+                cell = autoSetOptionSelectionCell;
+            } else {
+                UITableViewCell *autoSetOptionCheckmarkCell = [self tableView:tableView checkmarkCellForRowAtIndexPath:indexPath];
+
+                // set the text of the checkmark cell to the appropriate offset option
+                autoSetOptionCheckmarkCell.textLabel.text = [SLPrefsManager friendlyNameForAutoSetOffsetOption:indexPath.row];
+
+                // check to see if this cell's accessory view should be shown or not based on the selected offset option
+                if (self.autoSetOffsetOption == indexPath.row) {
+                    autoSetOptionCheckmarkCell.accessoryView.hidden = NO;
+                } else {
+                    autoSetOptionCheckmarkCell.accessoryView.hidden = YES;
+                }
+
+                cell = autoSetOptionCheckmarkCell;
+            }
+            break;
+        }
     }
 
     return cell;
+}
+
+// returns a cell that, when selected, will navigate the user to another applicastion
+- (UITableViewCell *)tableView:(UITableView *)tableView openInCellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // dequeue the cell and create one if needed
+    UITableViewCell *autoSetOptionOpenInCell = [tableView dequeueReusableCellWithIdentifier:kSLAutoSetOptionOpenInTableViewCellIdentifier];
+    if (autoSetOptionOpenInCell == nil) {
+        autoSetOptionOpenInCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                         reuseIdentifier:kSLAutoSetOptionOpenInTableViewCellIdentifier];
+        autoSetOptionOpenInCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        autoSetOptionOpenInCell.accessoryView = nil;
+        autoSetOptionOpenInCell.imageView.image = [SLCompatibilityHelper openInImage];
+        autoSetOptionOpenInCell.textLabel.textAlignment = NSTextAlignmentLeft;
+        autoSetOptionOpenInCell.textLabel.textColor = [SLCompatibilityHelper defaultLabelColor];
+        autoSetOptionOpenInCell.textLabel.numberOfLines = 0;
+        autoSetOptionOpenInCell.detailTextLabel.text = nil;
+        
+        // on newer versions of iOS, we need to set the background views for the cell
+        if (kSLSystemVersioniOS13) {
+            autoSetOptionOpenInCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
+        }
+
+        // set the background color of the cell to clear to remove the selection color
+        if (@available(iOS 10.0, *)) {
+            UIView *backgroundView = [[UIView alloc] init];
+            backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
+            autoSetOptionOpenInCell.selectedBackgroundView = backgroundView;
+        }
+    }
+    return autoSetOptionOpenInCell;
 }
 
 // returns a checkmark cell that will be used in this table
@@ -231,10 +284,16 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
     NSString *footerTitle = nil;
-    if (section == kSLAutoSetOptionsTableViewControllerSectionOption) {
-        footerTitle = kSLAutoSetExplanationString;
-    } else if (section == kSLAutoSetOptionsTableViewControllerSectionOffset) {
-        footerTitle = kSLAutoSetOffsetExplanationString;
+    switch (section) {
+        case kSLAutoSetOptionsTableViewControllerSectionWeather:
+            footerTitle = kSLAutoSetWeatherExplanationString;
+            break;
+        case kSLAutoSetOptionsTableViewControllerSectionOption:
+            footerTitle = kSLAutoSetExplanationString;
+            break;
+        case kSLAutoSetOptionsTableViewControllerSectionOffset:
+            footerTitle = kSLAutoSetOffsetExplanationString;
+            break;
     }
     return footerTitle;
 }
@@ -256,58 +315,61 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
     // animate the deselection of the cell
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    if (indexPath.section == kSLAutoSetOptionsTableViewControllerSectionOption) {
-        // check to see if the selected cell's row corresponds to the currently selected auto-set option
-        if (self.autoSetOption != indexPath.row) {
-            // capture the previously selected auto-set option (i.e. row)
-            NSInteger previousAutoSetOption = self.autoSetOption;
-
-            // update the auto-set option to the selected row
-            self.autoSetOption = indexPath.row;
-
-            // check to see if the offset section should be added or removed based on the newly selected auto-set option
-            [tableView beginUpdates];
-            if (previousAutoSetOption == kSLAutoSetOptionOff) {
-                [tableView insertSections:[NSIndexSet indexSetWithIndex:kSLAutoSetOptionsTableViewControllerSectionOffset]
-                         withRowAnimation:UITableViewRowAnimationFade];
-            } else if (self.autoSetOption == kSLAutoSetOptionOff) {
-                [tableView deleteSections:[NSIndexSet indexSetWithIndex:kSLAutoSetOptionsTableViewControllerSectionOffset]
-                         withRowAnimation:UITableViewRowAnimationFade];
-            }
-
-            // reload the necessary auto-set option cells
-            [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:previousAutoSetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOption],
-                                                [NSIndexPath indexPathForRow:indexPath.row inSection:kSLAutoSetOptionsTableViewControllerSectionOption]]
-                              withRowAnimation:UITableViewRowAnimationNone];
-            [tableView endUpdates];
+    switch (indexPath.section) {
+        case kSLAutoSetOptionsTableViewControllerSectionWeather: {
+            // navigate the user to the weather application
+            [SLCompatibilityHelper openWeatherApplication];
+            break;
         }
-    } else if (indexPath.section == kSLAutoSetOptionsTableViewControllerSectionOffset) {
-        if (indexPath.row == self.offsetSectionNumRows - 1) {
-            // create the edit time controller which will be shown as a partial modal transition to allow the user to edit the hours/minutes
-            SLEditDateTimeViewController *editTimeViewController = [[SLEditDateTimeViewController alloc] initWithTitle:kSLOffsetTimeString
-                                                                                                          initialHours:self.autoSetOffsetHour
-                                                                                                        initialMinutes:self.autoSetOffsetMinute
-                                                                                                          maximumHours:6];
-            editTimeViewController.delegate = self;
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editTimeViewController];
-            navController.modalPresentationStyle = UIModalPresentationCustom;
-            navController.transitioningDelegate = self;
-            [self presentViewController:navController animated:YES completion:nil];
-        } else {
-            // check to see if the selected cell's row corresponds to the currently selected offset option
-            if (self.autoSetOffsetOption != indexPath.row) {
-                // capture the previously selected offset option (i.e. row)
-                NSInteger previousAutoSetOffsetOption = self.autoSetOffsetOption;
+        case kSLAutoSetOptionsTableViewControllerSectionOption:
+            // check to see if the selected cell's row corresponds to the currently selected auto-set option
+            if (self.autoSetOption != indexPath.row) {
+                // update the visibility of the accessory view of the previously selected cell
+                SLAutoSetOption previousAutoSetOption = self.autoSetOption;
+                [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:previousAutoSetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOption]].accessoryView.hidden = YES;
 
-                // update the offset option to the selected row
-                self.autoSetOffsetOption = indexPath.row;
+                // update the auto-set option to the selected row
+                self.autoSetOption = indexPath.row;
 
-                // reload the necessary auto-set option cells
-                [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:previousAutoSetOffsetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOffset],
-                                                    [NSIndexPath indexPathForRow:indexPath.row inSection:kSLAutoSetOptionsTableViewControllerSectionOffset]]
-                                 withRowAnimation:UITableViewRowAnimationNone];
+                // update the accessory view of the newly selected cell
+                [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.autoSetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOption]].accessoryView.hidden = NO;
+
+                // check to see if the offset section should be added or removed based on the newly selected auto-set option
+                if (previousAutoSetOption == kSLAutoSetOptionOff) {
+                    [tableView insertSections:[NSIndexSet indexSetWithIndex:kSLAutoSetOptionsTableViewControllerSectionOffset]
+                            withRowAnimation:UITableViewRowAnimationFade];
+                } else if (self.autoSetOption == kSLAutoSetOptionOff) {
+                    [tableView deleteSections:[NSIndexSet indexSetWithIndex:kSLAutoSetOptionsTableViewControllerSectionOffset]
+                            withRowAnimation:UITableViewRowAnimationFade];
+                }
             }
-        }
+            break;
+        case kSLAutoSetOptionsTableViewControllerSectionOffset:
+            if (indexPath.row == self.offsetSectionNumRows - 1) {
+                // create the edit time controller which will be shown as a partial modal transition to allow the user to edit the hours/minutes
+                SLEditDateTimeViewController *editTimeViewController = [[SLEditDateTimeViewController alloc] initWithTitle:kSLOffsetTimeString
+                                                                                                            initialHours:self.autoSetOffsetHour
+                                                                                                            initialMinutes:self.autoSetOffsetMinute
+                                                                                                            maximumHours:6];
+                editTimeViewController.delegate = self;
+                UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:editTimeViewController];
+                navController.modalPresentationStyle = UIModalPresentationCustom;
+                navController.transitioningDelegate = self;
+                [self presentViewController:navController animated:YES completion:nil];
+            } else {
+                // check to see if the selected cell's row corresponds to the currently selected offset option
+                if (self.autoSetOffsetOption != indexPath.row) {
+                    // update the visibility of the accessory view of the previously selected cell
+                    [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.autoSetOffsetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOffset]].accessoryView.hidden = YES;
+
+                    // update the offset option to the selected row
+                    self.autoSetOffsetOption = indexPath.row;
+
+                    // update the accessory view of the newly selected cell
+                    [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.autoSetOffsetOption inSection:kSLAutoSetOptionsTableViewControllerSectionOffset]].accessoryView.hidden = NO;
+                }
+            }
+            break;
     }
 }
 
