@@ -246,7 +246,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 {
     // check the version of iOS that the device is running to determine where to get the alarm Id
     NSString *alarmId = nil;
-    if (kSLSystemVersioniOS9 || kSLSystemVersioniOS10 || kSLSystemVersioniOS11) {
+    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS10 || kSLSystemVersioniOS9) {
         alarmId = alarm.alarmID;
     } else {
         alarmId = alarm.alarmId;
@@ -259,7 +259,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 {
     // check the version of iOS that the device is running along with any indication that the alarm is the sleep alarm
     NSString *alarmTitle = nil;
-    if ((kSLSystemVersioniOS10 || kSLSystemVersioniOS11) && [alarm isSleepAlarm]) {
+    if ((kSLSystemVersioniOS11 || kSLSystemVersioniOS10) && [alarm isSleepAlarm]) {
         alarmTitle = kSLSleepAlarmString;
     } else {
         alarmTitle = alarm.uiTitle;
@@ -272,7 +272,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 {
     // check the version of iOS that the device is running to determine which color to pick
     if (!sSLPickerViewBackgroundColor) {
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             if (@available(iOS 13.0, *)) {
                 // use the new system grouped background color if available
                 sSLPickerViewBackgroundColor = [UIColor systemGroupedBackgroundColor];
@@ -280,7 +280,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
                 // fallback to the color that was extracted from the time picker
                 sSLPickerViewBackgroundColor = [UIColor colorWithRed:0.109804 green:0.109804 blue:0.117647 alpha:1.0];
             }
-        } else if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+        } else if (kSLSystemVersioniOS12 || kSLSystemVersioniOS11 || kSLSystemVersioniOS10) {
             sSLPickerViewBackgroundColor = [UIColor blackColor];
         } else {
             sSLPickerViewBackgroundColor = [UIColor whiteColor];
@@ -295,7 +295,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 {
     // check the version of iOS that the device is running to determine which color to pick
     if (!sSLDefaultLabelColor) {
-        if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12 || kSLSystemVersioniOS11 || kSLSystemVersioniOS10) {
             sSLDefaultLabelColor = [UIColor whiteColor];
         } else {
             sSLDefaultLabelColor = [UIColor blackColor];
@@ -334,7 +334,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 + (UIColor *)tableViewCellSelectedBackgroundColor
 {
     if (!sSLTableViewCellSelectedBackgroundColor) {
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             if (@available(iOS 13.0, *)) {
                 sSLTableViewCellSelectedBackgroundColor = [UIColor quaternaryLabelColor];
             } else {
@@ -524,7 +524,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 + (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute
 {
     // updating the alarms will differ depending on which version of iOS we are on
-    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
         // create an instance of the alarm manager that will get us the actual alarm objects
         MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
 

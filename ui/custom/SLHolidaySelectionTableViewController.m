@@ -122,7 +122,7 @@
         holidayCell.detailTextLabel.numberOfLines = 1;
 
         // on newer versions of iOS, we need to set the background views for the cell
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             holidayCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
 

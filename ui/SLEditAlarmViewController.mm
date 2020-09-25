@@ -1,6 +1,6 @@
 //
 //  SLEditAlarmViewController.x
-//  The view controller responsible for editing an iOS alarm.
+//  The view controller responsible for editing an iOS alarm (iOS 8 - 10).
 //
 //  Created by Joshua Seltzer on 2/21/17.
 //
@@ -398,7 +398,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 %ctor {
     // only initialize this file if we are on iOS 8, iOS 9, or iOS 10
-    if (kSLSystemVersioniOS8 || kSLSystemVersioniOS9 || kSLSystemVersioniOS10) {
+    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS9 || kSLSystemVersioniOS8) {
         %init();
     }
 }

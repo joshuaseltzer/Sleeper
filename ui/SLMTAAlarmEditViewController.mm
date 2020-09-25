@@ -1,6 +1,6 @@
 //
 //  SLMTAAlarmEditViewController.x
-//  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12 / iOS 13).
+//  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12 - 14).
 //
 //  Created by Joshua Seltzer on 4/1/18.
 //
@@ -40,7 +40,7 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 @interface MTAAlarmEditView : UIView
 
 // the date picker used to set the alarm's time
-@property(readonly, nonatomic) UIDatePicker *timePicker;
+@property (readonly, nonatomic) UIDatePicker *timePicker;
 
 @end
 
@@ -48,14 +48,18 @@ typedef enum SLMTAAlarmEditViewControllerAttributeSectionRow : NSUInteger {
 // conforms to custom delegates that are used to notify when alarm attributes change.
 @interface MTAAlarmEditViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,
 SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
-    MTAAlarmEditView *_editAlarmView;
+    MTAAlarmEditView *_editAlarmView; // iOS 11 - 13
+    UIDatePicker *_timePicker; // iOS 14
 }
 
-// the edited alarm object for this view controller (iOS 12)
+// the edited alarm object for this view controller (iOS 12 - 14)
 @property (retain, nonatomic) MTMutableAlarm *editedAlarm;
 
 // the alarm object associated with the controller (iOS 11)
 @property (readonly, nonatomic) Alarm *alarm;
+
+// signifies if this controller has been shown for the first time (iOS 14)
+@property (nonatomic, assign) BOOL isShownFirstTime;
 
 @end
 
@@ -85,7 +89,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 {
     // get the alarm Id from the alarm for this controller
     NSString *alarmId = nil;
-    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
         alarmId = [self.editedAlarm alarmIDString];
     } else {
         alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
@@ -109,10 +113,10 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
         }
     }
 
+    %orig;
+
     // update the enabled status of the time picker, which will depend on the auto-set option
     [self SLUpdateTimePickerEnabled];
-
-    %orig;
 }
 
 - (void)dealloc
@@ -123,25 +127,48 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
     %orig;
 }
 
+// override the getter of the time picker
+- (UIDatePicker *)timePicker
+{
+    // if this is the first time we are showing the controller, check to see if the auto-set option is enabled to prevent
+    // the controller from automatically editing the time (iOS 14)
+    if (kSLSystemVersioniOS14 && !self.isShownFirstTime && self.SLAlarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
+        return nil;
+    } else {
+        return %orig;
+    }
+}
+
 // updates the ability for the user to interact with the time picker that is included in this controller
 %new
 - (void)SLUpdateTimePickerEnabled
 {
-    // grab the edit alarm view which contains the timer picker
-    MTAAlarmEditView *editAlarmView = MSHookIvar<MTAAlarmEditView *>(self, "_editAlarmView");
-
-    // the time picker will be disabled if any auto-set option is selected
-    if (self.SLAlarmPrefs.autoSetOption == kSLAutoSetOptionOff) {
-        editAlarmView.timePicker.enabled = YES;
+    if (kSLSystemVersioniOS14) {
+        // On iOS 14, the time picker is simply a property on this view controller.  However, we need to grab the ivar since
+        // we override the getter to disable the time picker from editing immediately when the controller is shown.
+        UIDatePicker *timePicker = MSHookIvar<UIDatePicker *>(self, "_timePicker");
+        if (self.SLAlarmPrefs.autoSetOption == kSLAutoSetOptionOff) {
+            timePicker.enabled = YES;
+        } else {
+            timePicker.enabled = NO;
+        }
     } else {
-        editAlarmView.timePicker.enabled = NO;
+        // grab the edit alarm view which contains the timer picker
+        MTAAlarmEditView *editAlarmView = MSHookIvar<MTAAlarmEditView *>(self, "_editAlarmView");
+
+        // the time picker will be disabled if any auto-set option is selected
+        if (self.SLAlarmPrefs.autoSetOption == kSLAutoSetOptionOff) {
+            editAlarmView.timePicker.enabled = YES;
+        } else {
+            editAlarmView.timePicker.enabled = NO;
+        }
     }
 }
 
 - (void)_doneButtonClicked:(id)doneButton
 {
     // for modern alarms, signify that the alarm was edited so it isn't updated again once it is updated
-    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
         self.editedAlarm.SLWasUpdatedBySleeper = YES;
     }
     
@@ -404,7 +431,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12 || kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12 || kSLSystemVersioniOS11) {
         %init();
     }
 }

@@ -209,7 +209,7 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         autoSetOptionOpenInCell.detailTextLabel.text = nil;
         
         // on newer versions of iOS, we need to set the background views for the cell
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             autoSetOptionOpenInCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
 
@@ -238,7 +238,7 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         autoSetOptionCheckmarkCell.textLabel.numberOfLines = 0;
 
         // on newer versions of iOS, we need to set the background views for the cell
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             autoSetOptionCheckmarkCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
 
@@ -267,7 +267,7 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
         autoSetOptionSelectionCell.textLabel.numberOfLines = 0;
         
         // on newer versions of iOS, we need to set the background views for the cell
-        if (kSLSystemVersioniOS13) {
+        if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
             autoSetOptionSelectionCell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
         }
 

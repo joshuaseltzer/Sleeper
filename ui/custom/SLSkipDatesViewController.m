@@ -102,7 +102,7 @@ static NSString *sSLTomorrowDateString;
     self.title = kSLSkipDatesString;
 
     // update the appearance for all UIAlertControllers which might be shown in this view controller for the necessary versions of iOS
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS11 || kSLSystemVersioniOS10) {
         [SLCompatibilityHelper updateDefaultUIAlertControllerAppearance];
     }
     
@@ -257,7 +257,7 @@ static NSString *sSLTomorrowDateString;
     }
 
     // modify the subviews of the alert controller if necessary
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS11 || kSLSystemVersioniOS10) {
         [SLCompatibilityHelper updateSubviewsForAlertController:selectDateAlertController];
     }
 
@@ -313,7 +313,7 @@ static NSString *sSLTomorrowDateString;
     [confirmationAlertController addAction:noAlertAction];
 
     // modify the subviews of the alert controller if necessary
-    if (kSLSystemVersioniOS10 || kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS11 || kSLSystemVersioniOS10) {
         [SLCompatibilityHelper updateSubviewsForAlertController:confirmationAlertController];
     }
 
@@ -639,7 +639,7 @@ static NSString *sSLTomorrowDateString;
 - (void)setBackgroundColorsForCell:(UITableViewCell *)cell
 {
     // on newer versions of iOS, we need to set the background views for the cell
-    if (kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
         cell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
     }
 

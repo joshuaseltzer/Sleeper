@@ -18,7 +18,7 @@
 
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13 || kSLSystemVersioniOS12) {
         %init();
     }
 }

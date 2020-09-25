@@ -67,7 +67,7 @@
 
 %ctor {
     // check which version we are running to determine which group to initialize
-    if (kSLSystemVersioniOS13) {
+    if (kSLSystemVersioniOS14 || kSLSystemVersioniOS13) {
         %init();
     }
 }
