@@ -47,16 +47,6 @@
 #define kSLSystemVersioniOS9 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 #define kSLSystemVersioniOS8 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
 
-// define some properties that are defined in the iOS 13 SDK for UIColor
-@interface UIColor (iOS13)
-
-+ (UIColor *)systemGroupedBackgroundColor;
-+ (UIColor *)secondarySystemGroupedBackgroundColor;
-+ (UIColor *)quaternaryLabelColor;
-+ (UIColor *)systemGray4Color;
-
-@end
-
 // interface for version compatibility functions throughout the application
 @interface SLCompatibilityHelper : NSObject
 
@@ -125,5 +115,8 @@
 // Updates the given alarms (represented as SLAlarmPref dictionaries) with the base hour and base minute.
 // The implementation of updating the alarms will differ depending on which iOS is currently running.
 + (void)updateAlarms:(NSArray *)alarms withBaseHour:(NSInteger)baseHour withBaseMinute:(NSInteger)baseMinute;
+
+// returns an NSBundle object corresponding to the SleepHealthUI Private Framework
++ (NSBundle *)sleepHealthUIBundle;
 
 @end

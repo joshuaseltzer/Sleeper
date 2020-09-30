@@ -6,6 +6,12 @@
 //
 //
 
+#import <UserNotifications/UNNotificationTrigger.h>
+#import <UserNotifications/UNNotificationServiceExtension.h>
+#import <UserNotifications/UNNotificationRequest.h>
+#import <UserNotifications/UNNotificationContent.h>
+#import <UserNotifications/UNNotification.h>
+
 // iOS 8 / iOS 9: the notification that gets fired when the user decides to snooze an alarm
 @interface UIConcreteLocalNotification : UILocalNotification
 
@@ -14,34 +20,19 @@
 
 @end
 
-// trigger object associated with a UNNotificationRequest
-@interface UNNotificationTrigger : NSObject
-@end
-
 // legacy notification trigger object which is a subclass of a standard notification trigger
 @interface UNLegacyNotificationTrigger : UNNotificationTrigger
 
+// returns a date for a given notification that will happen after a date in a given time zone
 - (NSDate *)_nextTriggerDateAfterDate:(NSDate *)date withRequestedDate:(NSDate *)requestedDate defaultTimeZone:(NSTimeZone *)timeZone;
 
 @end
 
 // additional details/content associated with a notification request
-@interface UNNotificationContent : NSObject
+@interface UNNotificationContent (Private)
 
 // iOS 10: determines whether or not the notification is from a snooze notification
 - (BOOL)isFromSnooze;
-
-@end
-
-// a mutable subclass of the notification content
-@interface UNMutableNotificationContent : UNNotificationContent
-@end
-
-// notification request object introduced with iOS 10
-@interface UNNotificationRequest : NSObject
-
-@property (nonatomic,copy,readonly) UNNotificationTrigger * trigger;
-@property (nonatomic,copy,readonly) UNNotificationContent * content;
 
 @end
 
@@ -59,13 +50,6 @@
 
 // returns whether or not this notification record is from a snooze action
 - (BOOL)isFromSnooze;
-
-@end
-
-// iOS 10 / iOS 11: notification object used for snooze/alarm notifications
-@interface UNNotification : NSObject
-
-@property (nonatomic, copy, readonly) UNNotificationRequest *request;
 
 @end
 

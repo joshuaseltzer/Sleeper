@@ -75,6 +75,9 @@ static UIImage *sSLOpenInImage;
 // define the bundle identifier used for the weather application (required for auto-set)
 static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 
+// define the path for the bundle corresponding to the SleepHealthUI PrivateFramework (introduced with iOS 14)
+static NSString *const kSLSleepHealthUIPrivateFrameworkPath = @"/System/Library/PrivateFrameworks/SleepHealthUI.framework";
+
 @implementation SLCompatibilityHelper
 
 // iOS 8 / iOS 9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
@@ -655,6 +658,12 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
             }
         }
     }
+}
+
+// returns an NSBundle object corresponding to the SleepHealthUI Private Framework
++ (NSBundle *)sleepHealthUIBundle
+{
+    return [NSBundle bundleWithPath:kSLSleepHealthUIPrivateFrameworkPath];
 }
 
 @end

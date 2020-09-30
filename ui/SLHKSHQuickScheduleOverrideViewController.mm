@@ -161,9 +161,11 @@ static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectio
 
                 // Set the selected background color of the cell.  For some reason, this cell is using systemGray4Color
                 // instead of quaternaryLabelColor which is used throughout the rest of the MobileTimer application.
-                UIView *backgroundView = [[UIView alloc] init];
-                backgroundView.backgroundColor = [UIColor systemGray4Color];
-                cell.selectedBackgroundView = backgroundView;
+                if (@available(iOS 13.0, *)) {
+                    UIView *backgroundView = [[UIView alloc] init];
+                    backgroundView.backgroundColor = [UIColor systemGray4Color];
+                    cell.selectedBackgroundView = backgroundView;
+                }
 
                 // set the text color for the title label of the cell
                 cell.textLabel.textColor = [UIColor whiteColor];
@@ -377,6 +379,13 @@ static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectio
 %ctor {
     // only initialize this file for particular versions
     if (kSLSystemVersioniOS14) {
-        %init();
+        // to enable compatibility with older versions of iOS, we need to manually load the new SleepHealthUI framework (introduced with iOS 14)
+        NSBundle *sleepHealthUIBundle = [SLCompatibilityHelper sleepHealthUIBundle];
+        if (sleepHealthUIBundle != nil) {
+            [sleepHealthUIBundle load];
+            if ([sleepHealthUIBundle isLoaded]) {
+                %init();
+            }
+        }
     }
 }
