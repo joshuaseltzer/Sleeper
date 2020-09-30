@@ -45,7 +45,7 @@
             BOOL isAlarmSkippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextFireDate];
             if (isAlarmSkippable) {
                 foundSkippableAlarm = YES;
-                alarmTitle = alarm.displayTitle;
+                alarmTitle = [SLCompatibilityHelper alarmTitleForMTAlarm:alarm];
                 break;
             }
         }

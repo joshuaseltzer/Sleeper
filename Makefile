@@ -1,4 +1,4 @@
-TARGET=iphone:clang:11.2:8.0
+TARGET=iphone:clang:12.4:8.0
 ARCHS=armv7 arm64 arm64e
 
 include theos/makefiles/common.mk
@@ -22,6 +22,7 @@ SleeperCoreLegacy_OBJCFLAGS = -fobjc-arc
 SleeperCoreLegacy_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
 SleeperUI_FILES = $(wildcard ui/*.x) $(wildcard ui/*.xm) $(wildcard ui/custom/*.m)
+SleeperUI_PRIVATE_FRAMEWORKS = SleepHealthUI
 SleeperUI_LIBRARIES = Sleeper
 SleeperUI_OBJCFLAGS = -fobjc-arc
 SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR)

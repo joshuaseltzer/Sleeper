@@ -47,6 +47,16 @@
 #define kSLSystemVersioniOS9 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 #define kSLSystemVersioniOS8 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
 
+// define some properties that are defined in the iOS 13 SDK for UIColor
+@interface UIColor (iOS13)
+
++ (UIColor *)systemGroupedBackgroundColor;
++ (UIColor *)secondarySystemGroupedBackgroundColor;
++ (UIColor *)quaternaryLabelColor;
++ (UIColor *)systemGray4Color;
+
+@end
+
 // interface for version compatibility functions throughout the application
 @interface SLCompatibilityHelper : NSObject
 
@@ -73,8 +83,11 @@
 // returns a valid alarm Id for a given alarm
 + (NSString *)alarmIdForAlarm:(Alarm *)alarm;
 
-// returns the appropriate title string for a given alarm object
+// returns the appropriate title string for a given Alarm object
 + (NSString *)alarmTitleForAlarm:(Alarm *)alarm;
+
+// returns the appropriate title string for a given MTAlarm object
++ (NSString *)alarmTitleForMTAlarm:(MTAlarm *)alarm;
 
 // returns the picker view's background color, which will depend on the iOS version
 + (UIColor *)pickerViewBackgroundColor;

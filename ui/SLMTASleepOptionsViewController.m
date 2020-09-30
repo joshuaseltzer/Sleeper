@@ -124,6 +124,9 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
                                           reuseIdentifier:kSLSleepOptionsViewControllerSleeperSectionCellReuseIdentifier];
 
             // set the background color of the cell
+            cell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
+
+            // set the selected background color of the cell
             UIView *backgroundView = [[UIView alloc] init];
             backgroundView.backgroundColor = [SLCompatibilityHelper tableViewCellSelectedBackgroundColor];
             cell.selectedBackgroundView = backgroundView;
@@ -248,14 +251,6 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
-
-    // force the footer title to update since the explanation to display might have changed
-    [UIView setAnimationsEnabled:NO];
-    [self.tableView beginUpdates];
-    [self.tableView footerViewForSection:kSLSleepOptionsViewControllerSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
-    [[self.tableView footerViewForSection:kSLSleepOptionsViewControllerSectionSleeper].textLabel sizeToFit];
-    [self.tableView endUpdates];
-    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate
@@ -317,7 +312,7 @@ static NSString * const kSLSleepOptionsViewControllerSleeperSectionCellReuseIden
     // reload the cell that contains the skip dates
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLSleepOptionsViewControllerSleeperSectionRowSkipDates
                                                                 inSection:kSLSleepOptionsViewControllerSectionSleeper]]
-                            withRowAnimation:UITableViewRowAnimationNone];
+                          withRowAnimation:UITableViewRowAnimationNone];
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;

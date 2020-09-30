@@ -236,14 +236,6 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
     [self updateDoneButtonEnabled];
-
-    // force the footer title to update since the explanation to display might have changed
-    [UIView setAnimationsEnabled:NO];
-    [self.tableView beginUpdates];
-    [self.tableView footerViewForSection:kSLBedtimeOptionsViewControllerSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
-    [[self.tableView footerViewForSection:kSLBedtimeOptionsViewControllerSectionSleeper].textLabel sizeToFit];
-    [self.tableView endUpdates];
-    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate
@@ -306,7 +298,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
     // reload the cell that contains the skip dates
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLBedtimeOptionsViewControllerSleeperSectionRowSkipDates
                                                                 inSection:kSLBedtimeOptionsViewControllerSectionSleeper]]
-                            withRowAnimation:UITableViewRowAnimationNone];
+                          withRowAnimation:UITableViewRowAnimationNone];
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
@@ -317,7 +309,7 @@ static NSString * const kSLBedtimeOptionsViewControllerSleeperSectionCellReuseId
 
 %ctor {
     // only initialize this file for particular versions
-    if (kSLSystemVersioniOS11 || kSLSystemVersioniOS12) {
+    if (kSLSystemVersioniOS12 || kSLSystemVersioniOS11) {
         %init();
     }
 }

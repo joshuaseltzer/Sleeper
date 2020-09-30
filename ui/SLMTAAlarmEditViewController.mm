@@ -1,5 +1,5 @@
 //
-//  SLMTAAlarmEditViewController.x
+//  SLMTAAlarmEditViewController.xm
 //  The view controller responsible for editing an iOS alarm (introduced in iOS 11, also used in iOS 12 - 14).
 //
 //  Created by Joshua Seltzer on 4/1/18.

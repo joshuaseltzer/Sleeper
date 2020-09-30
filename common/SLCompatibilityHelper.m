@@ -35,15 +35,6 @@
 
 @end
 
-// define some properties that are defined in the iOS 13 SDK for UIColor
-@interface UIColor (iOS13)
-
-+ (UIColor *)systemGroupedBackgroundColor;
-+ (UIColor *)secondarySystemGroupedBackgroundColor;
-+ (UIColor *)quaternaryLabelColor;
-
-@end
-
 // define an extension to UIView to allow for customization of a UIAlertController's background colors using associated objects
 @interface UIView (AssociatedObject)
 
@@ -254,7 +245,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
     return alarmId;
 }
 
-// returns the appropriate title string for a given alarm object
+// returns the appropriate title string for a given Alarm object
 + (NSString *)alarmTitleForAlarm:(Alarm *)alarm
 {
     // check the version of iOS that the device is running along with any indication that the alarm is the sleep alarm
@@ -263,6 +254,19 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
         alarmTitle = kSLSleepAlarmString;
     } else {
         alarmTitle = alarm.uiTitle;
+    }
+    return alarmTitle;
+}
+
+// returns the appropriate title string for a given MTAlarm object
++ (NSString *)alarmTitleForMTAlarm:(MTAlarm *)alarm
+{
+    // check the version of iOS that the device is running along with any indication that the alarm is the sleep alarm
+    NSString *alarmTitle = nil;
+    if ([alarm isSleepAlarm]) {
+        alarmTitle = kSLSleepAlarmString;
+    } else {
+        alarmTitle = alarm.displayTitle;
     }
     return alarmTitle;
 }
@@ -330,7 +334,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
     return sSLTableViewCellBackgroundColor;
 }
 
-// iOS 10, iOS 11, iOS 12, iOS 13: returns the cell selection background color for cells
+// returns the cell selection background color for cells
 + (UIColor *)tableViewCellSelectedBackgroundColor
 {
     if (!sSLTableViewCellSelectedBackgroundColor) {
@@ -338,7 +342,7 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
             if (@available(iOS 13.0, *)) {
                 sSLTableViewCellSelectedBackgroundColor = [UIColor quaternaryLabelColor];
             } else {
-                sSLTableViewCellSelectedBackgroundColor = [UIColor colorWithRed:0.921569 green:0.921569 blue:0.960784 alpha:180000];
+                sSLTableViewCellSelectedBackgroundColor = [UIColor colorWithRed:0.922 green:0.922 blue:0.961 alpha:0.180];
             }
         } else {
             sSLTableViewCellSelectedBackgroundColor = [UIColor colorWithRed:52.0 / 255.0

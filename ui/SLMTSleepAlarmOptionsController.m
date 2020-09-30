@@ -255,14 +255,6 @@ static NSString * const kSLSleepAlarmOptionsSectionSleeperCellReuseIdentifier = 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
     [self updateDoneButtonEnabled];
-
-    // force the footer title to update since the explanation to display might have changed
-    [UIView setAnimationsEnabled:NO];
-    [self.tableView beginUpdates];
-    [self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
-    [[self.tableView footerViewForSection:kSLSleepAlarmOptionsSectionSleeper].textLabel sizeToFit];
-    [self.tableView endUpdates];
-    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - SLPickerSelectionDelegate

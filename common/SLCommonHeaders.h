@@ -157,18 +157,21 @@
 // returns the next fire date for the alarm given a start date
 - (NSDate *)nextFireDateAfterDate:(NSDate *)date includeBedtimeNotification:(BOOL)includeBedtimeNotification;
 
-@end
+// indicates whether or not this is the special Bedtime / sleep alarm
+- (BOOL)isSleepAlarm;
 
-// iOS 12+: an extension to the MTAlarm interface indicating an editable alarm
-@interface MTMutableAlarm : MTAlarm
 @end
 
 // custom interface for added properties
-@interface MTMutableAlarm (Sleeper)
+@interface MTAlarm (Sleeper)
 
 // flag which indicates whether or not the alarm was updated by this tweak or not
 @property (nonatomic, assign) BOOL SLWasUpdatedBySleeper;
 
+@end
+
+// iOS 12+: an extension to the MTAlarm interface indicating an editable alarm
+@interface MTMutableAlarm : MTAlarm
 @end
 
 // iOS 12+: the data source corresponding to a particular alarm
@@ -179,8 +182,11 @@
 
 @end
 
-// manager that governs all alarms on the system (iOS 12 - iOS 13)
+// manager that governs all alarms on the system (iOS 12 - iOS 14)
 @interface MTAlarmManager : NSObject
+
+// returns the sleep alarm that is being used on this device
+- (MTAlarm *)sleepAlarmSync;
 
 // invoked when an alarm is saved
 - (id)updateAlarm:(MTMutableAlarm *)mutableAlarm;
