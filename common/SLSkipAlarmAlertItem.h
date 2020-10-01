@@ -31,6 +31,10 @@
 // activates/displays an alert item to the user
 - (void)activateAlertItem:(SBAlertItem *)alertItem animated:(BOOL)animated;
 
+// Returns whether or not the alert items controller contains an alert of a given class.  We will utilize this method
+// to ensure that only a single SLSkipAlarmAlertItem is being shown at once.
+- (BOOL)hasAlertOfClass:(Class)alertClass;
+
 @end
 
 // system alert for skipping alarms

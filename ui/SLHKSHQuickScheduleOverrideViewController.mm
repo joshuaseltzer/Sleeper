@@ -67,20 +67,12 @@ static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectio
 - (void)viewDidLoad
 {
     // load the preferences for the sleep alarm
-    MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
-    if (alarmManager != nil) {
-        MTAlarm *sleepAlarm = [alarmManager sleepAlarmSync];
-        if (sleepAlarm != nil) {
-            NSString *alarmId = [sleepAlarm alarmIDString];
-            NSLog(@"SELTZER - Sleep Alarm ID: %@", alarmId);
-            self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
-            if (self.SLAlarmPrefs == nil) {
-                self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
-                self.SLAlarmPrefsChanged = YES;
-            } else {
-                self.SLAlarmPrefsChanged = NO;
-            }
-        }
+    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:kSLWakeUpAlarmID];
+    if (self.SLAlarmPrefs == nil) {
+        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:kSLWakeUpAlarmID];
+        self.SLAlarmPrefsChanged = YES;
+    } else {
+        self.SLAlarmPrefsChanged = NO;
     }
 
     %orig;
@@ -244,7 +236,8 @@ static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectio
 
     // handle row selection for the custom cells (if they are being shown)
     if ([dataSource numberOfSectionsInTableView:tableView] == kSLQuickScheduleOverrideViewControllerNumSections &&
-        indexPath.section == kSLQuickScheduleOverrideViewControllerSectionAlarmOptions) {
+        indexPath.section == kSLQuickScheduleOverrideViewControllerSectionAlarmOptions &&
+        indexPath.row > kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeToggle) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         switch (indexPath.row) {
             case kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime: {

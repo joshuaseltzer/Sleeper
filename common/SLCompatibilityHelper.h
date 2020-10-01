@@ -47,6 +47,11 @@
 #define kSLSystemVersioniOS9 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 #define kSLSystemVersioniOS8 (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
 
+// Constant that defines the special "Wake Up" alarm ID (iOS 14).  In some instances, this ID will actually be reported as 00000000-0000-0000-0000-000000000000,
+// but for the purposes of saving the Sleeper preferences, we will use the alternate one listed here.
+static NSString * const kSLWakeUpAlarmID = @"1F1F1F1F-1F1F-1F1F-1F1F-1F1F1F1F1F1F";
+static NSString * const kSLAlternateWakeUpAlarmID = @"00000000-0000-0000-0000-000000000000";
+
 // interface for version compatibility functions throughout the application
 @interface SLCompatibilityHelper : NSObject
 

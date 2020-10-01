@@ -106,7 +106,7 @@ static NSString *const kSLSleepHealthUIPrivateFrameworkPath = @"/System/Library/
     }
 }
 
-// Returns a modified NSDate object with an appropriately modified snooze time for a given alarm Id and original date
+// Returns a modified NSDate object with an appropriately modified snooze time for a given alarm Id and original date.
 // Returns nil if no modified snooze date is available
 + (NSDate *)modifiedSnoozeDateForAlarmId:(NSString *)alarmId withOriginalDate:(NSDate *)originalDate
 {

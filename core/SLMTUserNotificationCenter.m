@@ -40,6 +40,62 @@
 
 @end
 
+
+
+@interface MTSleepModeManager : NSObject
+
+-(id)initWithDelegate:(id)arg1 ;
+
+-(id)initWithDelegate:(id)arg1 isSynchronous:(BOOL)arg2 ;
+
+-(void)setEnabled:(BOOL)arg1 ;
+
+@end
+
+@interface MTSleepModeStateMachine : NSObject
+
+@end
+
+@interface MTSleepModeMonitor : NSObject
+
+-(void)userDisengagedSleepMode;
+
+-(MTSleepModeStateMachine *)stateMachine;
+
+-(BOOL)stateMachine:(id)arg1 disengageSleepModeUserRequested:(BOOL)arg2;
+
+@end
+
+@interface MTSleepCoordinator : NSObject
+
+-(MTSleepModeMonitor *)sleepModeMonitor;
+
+@end
+
+@interface MTSleepSessionManager : NSObject
+
+@end
+
+@interface MTAgent : NSObject
+
++(id)agent;
+
+-(void)_setupSync;
+
+-(MTSleepSessionManager *)sleepSessionManager;
+
+-(MTSleepCoordinator *)sleepCoordinator;
+
+-(MTSleepModeMonitor *)sleepModeMonitor;
+
+@end
+
+@interface HDSPEnvironment : NSObject
+
++(id)standardEnvironment;
+
+@end
+
 %hook MTUserNotificationCenter
 
 // Invoked whenever the content for a scheduled alarm notification is going to be created.  Override this function
@@ -51,18 +107,43 @@
         // get the identifier for the scheduled object, which is in fact the alarm Id
         NSString *alarmId = [scheduledObject.scheduleable identifier];
 
+        // On iOS 14, the alarm ID for the "Wake Up" alarm might be reported as 00000000-0000-0000-0000-000000000000.  The Sleeper preferences
+        // will not use this ID and instead save them with the 1F1F1F1F-1F1F-1F1F-1F1F-1F1F1F1F1F1F ID.
+        NSString *sleeperAlarmId = alarmId;
+        if (kSLSystemVersioniOS14 && [alarmId isEqualToString:kSLAlternateWakeUpAlarmID]) {
+            sleeperAlarmId = kSLWakeUpAlarmID;
+        }
+
         // get the sleeper alarm preferences for this alarm
-        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
+        SLAlarmPrefs *alarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:sleeperAlarmId];
         if (alarmPrefs) {
             // only activate the actual alarm if we should not be skipping this alarm
             if (![alarmPrefs shouldSkipToday]) {
                 %orig;
             }
 
+            /*MTAgent *timerAgent = [objc_getClass("MTAgent") agent];
+            [timerAgent _setupSync];
+            NSLog(@"SELTZER - timerAgent: %@", timerAgent);
+            NSLog(@"SELTZER - sleepSessionManager: %@", [timerAgent sleepSessionManager]);
+            NSLog(@"SELTZER - sleepCoordinator: %@", [timerAgent sleepCoordinator]);
+            NSLog(@"SELTZER - sleepModeMonitor: %@", [timerAgent sleepModeMonitor]);
+            //[sleepModeMonitor stateMachine:[sleepModeMonitor stateMachine] disengageSleepModeUserRequested:YES];
+            */
+
+            /*
+            MTSleepModeManager *sleepModeManager = (MTSleepModeManager *)[[objc_getClass("MTSleepModeManager") alloc] initWithDelegate:nil isSynchronous:YES];
+            NSLog(@"SELTZER - sleepModeManager: %@", sleepModeManager);
+            [sleepModeManager setEnabled:NO];
+            */
+
+            HDSPEnvironment *hdspEnv = [objc_getClass("HDSPEnvironment") standardEnvironment];
+            NSLog(@"SELTZER - HDSPEnvironment: %@", hdspEnv);
+
             // save the alarm's skip activation state to unknown for this alarm
             if (alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
-                [SLPrefsManager setSkipActivatedStatusForAlarmId:alarmId
-                                            skipActivatedStatus:kSLSkipActivatedStatusUnknown];
+                [SLPrefsManager setSkipActivatedStatusForAlarmId:sleeperAlarmId
+                                             skipActivatedStatus:kSLSkipActivatedStatusUnknown];
             }
         } else {
             %orig;
@@ -70,6 +151,44 @@
     } else {
         %orig;
     }
+}
+
+%end
+
+%hook MTSleepModeManager
+
+-(void)setEnabled:(BOOL)arg1
+{
+    NSLog(@"SELTZER - sleepModeManager setEnabled");
+    %orig;
+}
+
+%end
+
+%hook MTSleepModeMonitor
+
+-(void)userDisengagedSleepModeOnDate:(id)arg1
+{
+    NSLog(@"SELTZER - userDisengagedSleepModeOnDate");
+    %orig;
+}
+
+-(BOOL)stateMachine:(id)arg1 disengageSleepModeUserRequested:(BOOL)arg2
+{
+    NSLog(@"SELTZER - stateMachine disengageSleepModeUserRequested");
+    return %orig;
+}
+
+-(void)userDisengagedSleepMode
+{
+    NSLog(@"SELTZER - userDisengagedSleepMode");
+    %orig;
+}
+
+-(void)sleepCoordinator:(id)arg1 userWokeUp:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator userWokeUp");
+    %orig;
 }
 
 %end
