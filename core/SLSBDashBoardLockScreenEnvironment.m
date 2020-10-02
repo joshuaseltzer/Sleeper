@@ -34,6 +34,8 @@
         NSArray *nextAlarms = @[];
         nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsToday];
         nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsTomorrow];
+
+        NSLog(@"SELTZER - nextAlarms: %@", nextAlarms);
         
         // Iterate through the MTAlarm (and MTMutableAlarm) objects to see if any are skippable.  The alarm objects should already be sorted.
         NSString *alarmTitle = nil;
@@ -43,15 +45,16 @@
         for (MTAlarm *alarm in nextAlarms) {
             // check first if this alarm is being snoozed
             if (!alarm.snoozed) {
-                // On iOS 14, the alarm ID for the "Wake Up" alarm might be reported as 00000000-0000-0000-0000-000000000000.  The Sleeper preferences
-                // will not use this ID and instead save them with the 1F1F1F1F-1F1F-1F1F-1F1F-1F1F1F1F1F1F ID.
-                alarmId = [alarm alarmIDString];
-                if (kSLSystemVersioniOS14 && [alarmId isEqualToString:kSLAlternateWakeUpAlarmID]) {
-                    alarmId = kSLWakeUpAlarmID;
+                // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
+                NSString *sleeperAlarmId = alarmId;
+                if (kSLSystemVersioniOS14) {
+                    sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:alarm];
                 }
+                NSLog(@"SELTZER - ID: %@", alarmId);
 
                 // check to see if this alarm is actually skippable
                 nextFireDate = [alarm nextFireDateAfterDate:[NSDate date] includeBedtimeNotification:NO];
+                NSLog(@"SELTZER - next fire date: %@", nextFireDate);
                 BOOL isAlarmSkippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextFireDate];
                 if (isAlarmSkippable) {
                     foundSkippableAlarm = YES;
@@ -66,8 +69,8 @@
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                 // create and display the custom alert item
                 SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
-                                                                                                alarmId:alarmId
-                                                                                            nextFireDate:nextFireDate];
+                                                                                                   alarmId:alarmId
+                                                                                              nextFireDate:nextFireDate];
                 [alertItemsController activateAlertItem:alert animated:YES];
             });
         }

@@ -78,6 +78,10 @@ static NSString *const kSLWeatherAppBundleId = @"com.apple.weather";
 // define the path for the bundle corresponding to the SleepHealthUI PrivateFramework (introduced with iOS 14)
 static NSString *const kSLSleepHealthUIPrivateFrameworkPath = @"/System/Library/PrivateFrameworks/SleepHealthUI.framework";
 
+// Constant that defines the special "Wake Up" alarm ID (iOS 14) used for Sleeper preferences.  This ID does not appear to remain
+// constant when the alarm's preferences are changed.
+static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-000000000000";
+
 @implementation SLCompatibilityHelper
 
 // iOS 8 / iOS 9: modifies a snooze UIConcreteLocalNotification object with the selected snooze time (if applicable)
@@ -664,6 +668,33 @@ static NSString *const kSLSleepHealthUIPrivateFrameworkPath = @"/System/Library/
 + (NSBundle *)sleepHealthUIBundle
 {
     return [NSBundle bundleWithPath:kSLSleepHealthUIPrivateFrameworkPath];
+}
+
+// returns the internally used alarm ID for the new "Wake Up" alarm (iOS 14)
++ (NSString *)wakeUpAlarmId
+{
+    return kSLWakeUpAlarmID;
+}
+
+// Returns the internal Sleeper alarm ID for the given alarm ID.  This is only used to help account for the
+// "Wake Up" alarm on iOS 14.
++ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId
+{
+    // grab the corresponding alarm object from the alarm manager
+    MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
+    MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId];
+    return [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:alarm];
+}
+
+// Returns the internal Sleeper alarm ID for the given alarm ID and corresponding alarm object.  This is only used
+// to help account for the "Wake Up" alarm on iOS 14.
++ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId withAlarm:(MTAlarm *)alarm
+{
+    if (alarm != nil && [alarm isSleepAlarm]) {
+        return kSLWakeUpAlarmID;
+    } else {
+        return alarmId;
+    }
 }
 
 @end

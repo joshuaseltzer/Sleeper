@@ -107,11 +107,10 @@
         // get the identifier for the scheduled object, which is in fact the alarm Id
         NSString *alarmId = [scheduledObject.scheduleable identifier];
 
-        // On iOS 14, the alarm ID for the "Wake Up" alarm might be reported as 00000000-0000-0000-0000-000000000000.  The Sleeper preferences
-        // will not use this ID and instead save them with the 1F1F1F1F-1F1F-1F1F-1F1F-1F1F1F1F1F1F ID.
+        // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
         NSString *sleeperAlarmId = alarmId;
-        if (kSLSystemVersioniOS14 && [alarmId isEqualToString:kSLAlternateWakeUpAlarmID]) {
-            sleeperAlarmId = kSLWakeUpAlarmID;
+        if (kSLSystemVersioniOS14) {
+            sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId];
         }
 
         // get the sleeper alarm preferences for this alarm
@@ -137,8 +136,8 @@
             [sleepModeManager setEnabled:NO];
             */
 
-            HDSPEnvironment *hdspEnv = [objc_getClass("HDSPEnvironment") standardEnvironment];
-            NSLog(@"SELTZER - HDSPEnvironment: %@", hdspEnv);
+            /*HDSPEnvironment *hdspEnv = [objc_getClass("HDSPEnvironment") standardEnvironment];
+            NSLog(@"SELTZER - HDSPEnvironment: %@", hdspEnv);*/
 
             // save the alarm's skip activation state to unknown for this alarm
             if (alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {

@@ -13,11 +13,10 @@
 // invoked when an alarm is snoozed
 - (void)snoozeAlarmWithIdentifier:(NSString *)alarmId snoozeDate:(NSDate *)snoozeDate snoozeAction:(int)snoozeAction withCompletion:(id)completionHandler source:(id)source
 {
-    // On iOS 14, the alarm ID for the "Wake Up" alarm might be reported as 00000000-0000-0000-0000-000000000000.  The Sleeper preferences
-    // will not use this ID and instead save them with the 1F1F1F1F-1F1F-1F1F-1F1F-1F1F1F1F1F1F ID.
+    // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
     NSString *sleeperAlarmId = alarmId;
-    if (kSLSystemVersioniOS14 && [alarmId isEqualToString:kSLAlternateWakeUpAlarmID]) {
-        sleeperAlarmId = kSLWakeUpAlarmID;
+    if (kSLSystemVersioniOS14) {
+        sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId];
     }
 
     // check to see if a modified snooze date is available for this alarm

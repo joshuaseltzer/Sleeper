@@ -169,9 +169,6 @@
 // manager that governs all alarms on the system (iOS 12 - iOS 14)
 @interface MTAlarmManager : NSObject
 
-// returns the sleep alarm that is being used on this device
-- (MTAlarm *)sleepAlarmSync;
-
 // invoked when an alarm is saved
 - (id)updateAlarm:(MTMutableAlarm *)mutableAlarm;
 

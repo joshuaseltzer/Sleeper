@@ -67,9 +67,10 @@ static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectio
 - (void)viewDidLoad
 {
     // load the preferences for the sleep alarm
-    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:kSLWakeUpAlarmID];
+    NSString *alarmId = [SLCompatibilityHelper wakeUpAlarmId];
+    self.SLAlarmPrefs = [SLPrefsManager alarmPrefsForAlarmId:alarmId];
     if (self.SLAlarmPrefs == nil) {
-        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:kSLWakeUpAlarmID];
+        self.SLAlarmPrefs = [[SLAlarmPrefs alloc] initWithAlarmId:alarmId];
         self.SLAlarmPrefsChanged = YES;
     } else {
         self.SLAlarmPrefsChanged = NO;
