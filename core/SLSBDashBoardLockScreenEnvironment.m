@@ -43,8 +43,8 @@
             if (!alarm.snoozed) {
                 // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
                 sleeperAlarmId = [alarm alarmIDString];
-                if (kSLSystemVersioniOS14) {
-                    sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:sleeperAlarmId withAlarm:alarm];
+                if (kSLSystemVersioniOS14 && [alarm isSleepAlarm]) {
+                    sleeperAlarmId = [SLCompatibilityHelper wakeUpAlarmId];
                 }
 
                 // check to see if this alarm is actually skippable

@@ -122,12 +122,4 @@
 // returns the internally used alarm ID for the new "Wake Up" alarm (iOS 14)
 + (NSString *)wakeUpAlarmId;
 
-// Returns the internal Sleeper alarm ID for the given alarm ID.  This is only used to help account for the
-// "Wake Up" alarm on iOS 14.
-+ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId;
-
-// Returns the internal Sleeper alarm ID for the given alarm ID and corresponding alarm object.  This is only used
-// to help account for the "Wake Up" alarm on iOS 14.
-+ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId withAlarm:(MTAlarm *)alarm;
-
 @end

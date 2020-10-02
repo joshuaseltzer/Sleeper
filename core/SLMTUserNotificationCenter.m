@@ -109,8 +109,8 @@
 
         // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
         NSString *sleeperAlarmId = alarmId;
-        if (kSLSystemVersioniOS14) {
-            sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:(MTAlarm *)scheduledObject.scheduleable];
+        if (kSLSystemVersioniOS14 && [(MTAlarm *)scheduledObject.scheduleable isSleepAlarm]) {
+            sleeperAlarmId = [SLCompatibilityHelper wakeUpAlarmId];
         }
 
         // get the sleeper alarm preferences for this alarm

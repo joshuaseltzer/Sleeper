@@ -8,6 +8,13 @@
 
 #import "../common/SLCompatibilityHelper.h"
 
+@interface MTAlarmStorage : NSObject
+
+// returns the currently active Sleep (i.e. "Wake Up") alarm (iOS 14)
+- (MTAlarm *)activeSleepAlarm;
+
+@end
+
 %hook MTAlarmStorage
 
 // invoked when an alarm is snoozed
@@ -15,8 +22,8 @@
 {
     // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
     NSString *sleeperAlarmId = alarmId;
-    if (kSLSystemVersioniOS14) {
-        sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId];
+    if (kSLSystemVersioniOS14 && [[[self activeSleepAlarm] alarmIDString] isEqualToString:alarmId]) {
+        sleeperAlarmId = [SLCompatibilityHelper wakeUpAlarmId];
     }
 
     // check to see if a modified snooze date is available for this alarm

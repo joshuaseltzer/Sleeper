@@ -676,29 +676,4 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
     return kSLWakeUpAlarmID;
 }
 
-// Returns the internal Sleeper alarm ID for the given alarm ID.  This is only used to help account for the
-// "Wake Up" alarm on iOS 14.
-+ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId
-{
-    // grab the corresponding alarm object from the alarm manager
-    MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
-    NSLog(@"SELTZER - alarmManager: %@", alarmManager);
-    MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId includeSleep:YES];
-    NSLog(@"SELTZER - alarm: %@", alarm);
-    return [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:alarm];
-}
-
-// Returns the internal Sleeper alarm ID for the given alarm ID and corresponding alarm object.  This is only used
-// to help account for the "Wake Up" alarm on iOS 14.
-+ (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId withAlarm:(MTAlarm *)alarm
-{
-    if (alarm != nil && [alarm isSleepAlarm]) {
-        NSLog(@"SELTZER - Sleep alarm found");
-        return kSLWakeUpAlarmID;
-    } else {
-        NSLog(@"SELTZER - Not the sleep alarm");
-        return alarmId;
-    }
-}
-
 @end
