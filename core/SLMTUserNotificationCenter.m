@@ -24,7 +24,7 @@
 // protocol defining a schedulable object
 @protocol MTScheduleable
 
-// the identifier for the scheduleable object, which is the alarm Id
+// the identifier for the scheduleable object, which is the alarm Id in this case
 - (NSString *)identifier;
 
 @end
@@ -35,7 +35,7 @@
 // the trigger that invoked this scheduled object
 @property (copy, nonatomic) MTTrigger *trigger;
 
-// the schedulable object, in this case an MTAlarm
+// the schedulable object, which in this case is an MTAlarm object
 @property (copy, nonatomic) id <MTScheduleable> scheduleable;
 
 @end
@@ -103,14 +103,14 @@
 + (void)_setSpecificContent:(UNMutableNotificationContent *)notificationContent forScheduledAlarm:(MTScheduledObject *)scheduledObject
 {
     // check to see if the alarm's trigger is an alert (as opposed to a snooze alert or snooze countdown)
-    if (scheduledObject.trigger.isForAlert && !scheduledObject.trigger.isForSnooze) {
+    if (scheduledObject.trigger.isForAlert && !scheduledObject.trigger.isForSnooze && scheduledObject.scheduleable != nil) {
         // get the identifier for the scheduled object, which is in fact the alarm Id
         NSString *alarmId = [scheduledObject.scheduleable identifier];
 
         // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
         NSString *sleeperAlarmId = alarmId;
         if (kSLSystemVersioniOS14) {
-            sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId];
+            sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:(MTAlarm *)scheduledObject.scheduleable];
         }
 
         // get the sleeper alarm preferences for this alarm

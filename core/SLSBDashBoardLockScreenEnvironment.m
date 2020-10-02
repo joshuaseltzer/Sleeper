@@ -31,31 +31,25 @@
         MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
         NSArray *nextAlarmsToday = [alarmManager nextAlarmsForDateSync:today maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
         NSArray *nextAlarmsTomorrow = [alarmManager nextAlarmsForDateSync:tomorrow maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
-        NSArray *nextAlarms = @[];
-        nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsToday];
-        nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsTomorrow];
-
-        NSLog(@"SELTZER - nextAlarms: %@", nextAlarms);
+        NSArray *nextAlarms = [[NSOrderedSet orderedSetWithArray:[nextAlarmsToday arrayByAddingObjectsFromArray:nextAlarmsTomorrow]] array];
         
         // Iterate through the MTAlarm (and MTMutableAlarm) objects to see if any are skippable.  The alarm objects should already be sorted.
         NSString *alarmTitle = nil;
-        NSString *alarmId = nil;
+        NSString *sleeperAlarmId = nil;
         NSDate *nextFireDate = nil;
         BOOL foundSkippableAlarm = NO;
         for (MTAlarm *alarm in nextAlarms) {
             // check first if this alarm is being snoozed
             if (!alarm.snoozed) {
                 // on iOS 14, the alarm ID for the "Wake Up" alarm might not be the same
-                NSString *sleeperAlarmId = alarmId;
+                sleeperAlarmId = [alarm alarmIDString];
                 if (kSLSystemVersioniOS14) {
-                    sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:alarm];
+                    sleeperAlarmId = [SLCompatibilityHelper sleeperAlarmIdForAlarmId:sleeperAlarmId withAlarm:alarm];
                 }
-                NSLog(@"SELTZER - ID: %@", alarmId);
 
                 // check to see if this alarm is actually skippable
-                nextFireDate = [alarm nextFireDateAfterDate:[NSDate date] includeBedtimeNotification:NO];
-                NSLog(@"SELTZER - next fire date: %@", nextFireDate);
-                BOOL isAlarmSkippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextFireDate];
+                nextFireDate = [alarm nextFireDateAfterDate:today includeBedtimeNotification:NO];
+                BOOL isAlarmSkippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:sleeperAlarmId withNextFireDate:nextFireDate];
                 if (isAlarmSkippable) {
                     foundSkippableAlarm = YES;
                     alarmTitle = [SLCompatibilityHelper alarmTitleForMTAlarm:alarm];
@@ -69,7 +63,7 @@
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                 // create and display the custom alert item
                 SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
-                                                                                                   alarmId:alarmId
+                                                                                                   alarmId:sleeperAlarmId
                                                                                               nextFireDate:nextFireDate];
                 [alertItemsController activateAlertItem:alert animated:YES];
             });

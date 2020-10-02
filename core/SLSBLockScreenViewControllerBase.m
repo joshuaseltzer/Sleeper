@@ -30,9 +30,7 @@
         MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
         NSArray *nextAlarmsToday = [alarmManager nextAlarmsForDateSync:today maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
         NSArray *nextAlarmsTomorrow = [alarmManager nextAlarmsForDateSync:tomorrow maxCount:500 includeSleepAlarm:YES includeBedtimeNotification:NO];
-        NSArray *nextAlarms = @[];
-        nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsToday];
-        nextAlarms = [nextAlarms arrayByAddingObjectsFromArray:nextAlarmsTomorrow];
+        NSArray *nextAlarms = [[NSOrderedSet orderedSetWithArray:[nextAlarmsToday arrayByAddingObjectsFromArray:nextAlarmsTomorrow]] array];
         
         // Iterate through the MTAlarm (and MTMutableAlarm) objects to see if any are skippable.  The alarm objects should already be sorted.
         NSString *alarmTitle = nil;
@@ -43,7 +41,7 @@
             // check first if this alarm is being snoozed
             if (!alarm.snoozed) {
                 alarmId = [alarm alarmIDString];
-                nextFireDate = [alarm nextFireDateAfterDate:[NSDate date] includeBedtimeNotification:NO];
+                nextFireDate = [alarm nextFireDateAfterDate:today includeBedtimeNotification:NO];
                 BOOL isAlarmSkippable = [SLCompatibilityHelper isAlarmSkippableForAlarmId:alarmId withNextFireDate:nextFireDate];
                 if (isAlarmSkippable) {
                     foundSkippableAlarm = YES;
@@ -58,8 +56,8 @@
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                 // create and display the custom alert item
                 SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:alarmTitle
-                                                                                                alarmId:alarmId
-                                                                                            nextFireDate:nextFireDate];
+                                                                                                   alarmId:alarmId
+                                                                                              nextFireDate:nextFireDate];
                 [alertItemsController activateAlertItem:alert animated:YES];
             });
         }

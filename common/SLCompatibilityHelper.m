@@ -682,7 +682,9 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
 {
     // grab the corresponding alarm object from the alarm manager
     MTAlarmManager *alarmManager = [[objc_getClass("MTAlarmManager") alloc] init];
-    MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId];
+    NSLog(@"SELTZER - alarmManager: %@", alarmManager);
+    MTAlarm *alarm = [alarmManager alarmWithIDString:alarmId includeSleep:YES];
+    NSLog(@"SELTZER - alarm: %@", alarm);
     return [SLCompatibilityHelper sleeperAlarmIdForAlarmId:alarmId withAlarm:alarm];
 }
 
@@ -691,8 +693,10 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
 + (NSString *)sleeperAlarmIdForAlarmId:(NSString *)alarmId withAlarm:(MTAlarm *)alarm
 {
     if (alarm != nil && [alarm isSleepAlarm]) {
+        NSLog(@"SELTZER - Sleep alarm found");
         return kSLWakeUpAlarmID;
     } else {
+        NSLog(@"SELTZER - Not the sleep alarm");
         return alarmId;
     }
 }

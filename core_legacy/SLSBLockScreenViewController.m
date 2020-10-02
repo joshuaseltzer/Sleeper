@@ -40,12 +40,12 @@
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                 // get the fire date of the alarm we are going to display
                 NSDate *alarmFireDate = [nextAlarmNotification nextFireDateAfterDate:[NSDate date]
-                                                                    localTimeZone:[NSTimeZone localTimeZone]];
+                                                                       localTimeZone:[NSTimeZone localTimeZone]];
                 
                 // create and display the custom alert item
                 SLSkipAlarmAlertItem *alert = [[objc_getClass("SLSkipAlarmAlertItem") alloc] initWithTitle:[SLCompatibilityHelper alarmTitleForAlarm:alarm]
-                                                                                                alarmId:alarmId
-                                                                                            nextFireDate:alarmFireDate];
+                                                                                                   alarmId:alarmId
+                                                                                              nextFireDate:alarmFireDate];
                 [alertItemsController activateAlertItem:alert animated:YES];
             });
         }
