@@ -40,6 +40,17 @@
 
 @end
 
+@interface MTUserNotificationCenter
+
+-(void)dismissNotificationsForAlarm:(id)arg1;
+
+-(void)dismissNotificationsForAlarm:(id)arg1 includeSnooze:(BOOL)arg2;
+
+-(void)dismissNotificationsForAlarm:(id)arg1 includeMainIdentifier:(BOOL)arg2;
+
+-(void)dismissNotificationsForAlarm:(id)arg1 includeMainIdentifier:(BOOL)arg2 includeSnooze:(BOOL)arg3;
+
+@end
 
 
 @interface MTSleepModeManager : NSObject
@@ -49,6 +60,12 @@
 -(id)initWithDelegate:(id)arg1 isSynchronous:(BOOL)arg2 ;
 
 -(void)setEnabled:(BOOL)arg1 ;
+
+-(BOOL)isEnabled;
+
+- (void)checkIn;
+
+- (void)reconnect;
 
 @end
 
@@ -70,10 +87,22 @@
 
 -(MTSleepModeMonitor *)sleepModeMonitor;
 
+- (id)initWithAlarmStorage:(id)arg1;
+
+-(BOOL)isUserAsleep;
+
+-(BOOL)isSleepModeOn;
+
 @end
 
 @interface MTSleepSessionManager : NSObject
 
+@end
+
+@protocol MTNotificationCenter <NSObject>
+@end
+
+@interface MTAlarmStorage : NSObject
 @end
 
 @interface MTAgent : NSObject
@@ -88,11 +117,9 @@
 
 -(MTSleepModeMonitor *)sleepModeMonitor;
 
-@end
+-(id<MTNotificationCenter>)notificationCenter;
 
-@interface HDSPEnvironment : NSObject
-
-+(id)standardEnvironment;
+-(MTAlarmStorage *)alarmStorage;
 
 @end
 
@@ -121,23 +148,36 @@
                 %orig;
             }
 
-            /*MTAgent *timerAgent = [objc_getClass("MTAgent") agent];
-            [timerAgent _setupSync];
+            MTAgent *timerAgent = [objc_getClass("MTAgent") agent];
+            //[timerAgent _setupSync];
             NSLog(@"SELTZER - timerAgent: %@", timerAgent);
-            NSLog(@"SELTZER - sleepSessionManager: %@", [timerAgent sleepSessionManager]);
-            NSLog(@"SELTZER - sleepCoordinator: %@", [timerAgent sleepCoordinator]);
-            NSLog(@"SELTZER - sleepModeMonitor: %@", [timerAgent sleepModeMonitor]);
+            NSLog(@"\tSELTZER - sleepSessionManager: %@", [timerAgent sleepSessionManager]);
+            NSLog(@"\tSELTZER - sleepCoordinator: %@", [timerAgent sleepCoordinator]);
+            NSLog(@"\tSELTZER - sleepModeMonitor: %@", [timerAgent sleepModeMonitor]);
+            NSLog(@"\tSELTZER - notificationCenter: %@", [timerAgent notificationCenter]);
+            NSLog(@"\tSELTZER - alarmStorage: %@", [timerAgent alarmStorage]);
             //[sleepModeMonitor stateMachine:[sleepModeMonitor stateMachine] disengageSleepModeUserRequested:YES];
-            */
+
+            NSLog(@"SELTZER - notificationContent: %@", notificationContent);
+
+            MTAlarmStorage *alarmStorage = [timerAgent alarmStorage];
+            MTSleepCoordinator *sleepCoordinator = [[objc_getClass("MTSleepCoordinator") alloc] initWithAlarmStorage:alarmStorage];
+            NSLog(@"SELTZER - sleepCoordinator: %@", sleepCoordinator);
+            NSLog(@"\tSELTZER - sleepModeMonitor: %@", [sleepCoordinator sleepModeMonitor]);
 
             /*
             MTSleepModeManager *sleepModeManager = (MTSleepModeManager *)[[objc_getClass("MTSleepModeManager") alloc] initWithDelegate:nil isSynchronous:YES];
+            [sleepModeManager checkIn];
+            [sleepModeManager reconnect];
             NSLog(@"SELTZER - sleepModeManager: %@", sleepModeManager);
-            [sleepModeManager setEnabled:NO];
+            NSLog(@"SELTZER - sleepModeManager isEnabled: %d", [sleepModeManager isEnabled]);
+            //[sleepModeManager setEnabled:NO];
             */
+            
+            //MTUserNotificationCenter *notificationCenter = (MTUserNotificationCenter *)[timerAgent notificationCenter];
+            //[notificationCenter dismissNotificationsForAlarm:(MTAlarm *)scheduledObject.scheduleable];
 
-            /*HDSPEnvironment *hdspEnv = [objc_getClass("HDSPEnvironment") standardEnvironment];
-            NSLog(@"SELTZER - HDSPEnvironment: %@", hdspEnv);*/
+            %orig;
 
             // save the alarm's skip activation state to unknown for this alarm
             if (alarmPrefs.skipActivationStatus != kSLSkipActivatedStatusUnknown) {
@@ -150,6 +190,66 @@
     } else {
         %orig;
     }
+}
+
+- (void)postNotificationForScheduledAlarm:(id)arg1 content:(id)arg2 completionBlock:(id)arg3
+{
+    NSLog(@"SELTZER - postNotificationForScheduledAlarm");
+    NSLog(@"\tSELTZER - content: %@", arg2);
+    %orig;
+
+    //[self dismissNotificationsForAlarm:arg1 includeMainIdentifier:NO includeSnooze:YES];
+}
+
+%end
+
+%hook MTSleepCoordinator
+
+-(void)handleSleepSessionEndedForAlarm:(id)arg1 date:(id)arg2 reason:(unsigned long long)arg3
+{
+    NSLog(@"SELTZER - MTSleepCoordinator handleSleepSessionEndedForAlarm");
+    %orig;
+}
+
+-(void)updateSleepStateWithSleepAlarm:(id)arg1
+{
+    NSLog(@"SELTZER - MTSleepCoordinator updateSleepStateWithSleepAlarm");
+    %orig;
+}
+-(void)notifyObserversForSleepAlarmChange:(id)arg1
+{
+    NSLog(@"SELTZER - MTSleepCoordinator notifyObserversForSleepAlarmChange");
+    %orig;
+}
+-(void)notifyObserversForSleepAlarmChangeIfNecessary:(id)arg1
+{
+    NSLog(@"SELTZER - MTSleepCoordinator notifyObserversForSleepAlarmChangeIfNecessary");
+    %orig;
+}
+-(void)_notifyObserversForSleepAlarmChange:(id)arg1
+{
+    NSLog(@"SELTZER - MTSleepCoordinator _notifyObserversForSleepAlarmChange");
+    %orig;
+}
+-(void)handleBedtimeForAlarm:(id)arg1 date:(id)arg2
+{
+    NSLog(@"SELTZER - MTSleepCoordinator handleBedtimeForAlarm");
+    %orig;
+}
+-(void)handleBedtimeReminderForAlarm:(id)arg1 date:(id)arg2
+{
+    NSLog(@"SELTZER - MTSleepCoordinator handleBedtimeReminderForAlarm");
+    %orig;
+}
+-(void)handleWakeUpAlarmForAlarm:(id)arg1 date:(id)arg2
+{
+    NSLog(@"SELTZER - MTSleepCoordinator handleWakeUpAlarmForAlarm");
+    %orig;
+}
+-(void)handleWakeUpTimeForAlarm:(id)arg1 date:(id)arg2
+{
+    NSLog(@"SELTZER - MTSleepCoordinator handleWakeUpTimeForAlarm");
+    %orig;
 }
 
 %end
@@ -171,22 +271,54 @@
     NSLog(@"SELTZER - userDisengagedSleepModeOnDate");
     %orig;
 }
-
 -(BOOL)stateMachine:(id)arg1 disengageSleepModeUserRequested:(BOOL)arg2
 {
     NSLog(@"SELTZER - stateMachine disengageSleepModeUserRequested");
     return %orig;
 }
-
 -(void)userDisengagedSleepMode
 {
     NSLog(@"SELTZER - userDisengagedSleepMode");
     %orig;
 }
-
 -(void)sleepCoordinator:(id)arg1 userWokeUp:(id)arg2 sleepAlarm:(id)arg3
 {
     NSLog(@"SELTZER - sleepCoordinator userWokeUp");
+    %orig;
+}
+-(void)stateMachine:(id)arg1 scheduleUpdateForSecondsFromNow:(double)arg2
+{
+    NSLog(@"SELTZER - sleepCoordinator scheduleUpdateForSecondsFromNow");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 userWentToBed:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator userWentToBed");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 bedtimeReminderDidFire:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator bedtimeReminderDidFire");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 bedtimeReminderWasConfirmed:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator userWokeUp");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 bedtimeWasReached:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator bedtimeWasReached");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 wakeUpAlarmDidFire:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator wakeUpAlarmDidFire");
+    %orig;
+}
+-(void)sleepCoordinator:(id)arg1 wakeUpAlarmWasSnoozed:(id)arg2 sleepAlarm:(id)arg3
+{
+    NSLog(@"SELTZER - sleepCoordinator wakeUpAlarmWasSnoozed");
     %orig;
 }
 
