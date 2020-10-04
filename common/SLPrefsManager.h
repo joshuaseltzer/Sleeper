@@ -52,6 +52,9 @@ static NSString *const kSLUpdatedAutoSetAlarmNotificationKey = @"updatedAutoSetA
 // Return an SLAlarmPrefs object with alarm information for a given alarm Id.  Return nil if no alarm is found.
 + (SLAlarmPrefs *)alarmPrefsForAlarmId:(NSString *)alarmId;
 
+// returns whether or not the preferences file contains preferences for an alarm with the given alarm Id
++ (BOOL)prefsContainAlarmWithAlarmId:(NSString *)alarmId;
+
 // save the specific alarm preferences object
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs;
 

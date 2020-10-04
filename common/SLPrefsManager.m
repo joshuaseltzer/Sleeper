@@ -119,6 +119,27 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     return nil;
 }
 
+// returns whether or not the preferences file contains preferences for an alarm with the given alarm Id
++ (BOOL)prefsContainAlarmWithAlarmId:(NSString *)alarmId
+{
+    // grab the preferences plist
+    NSDictionary *prefs = [[NSDictionary alloc] initWithContentsOfFile:kSLSettingsFile];
+    
+    // if the alarm preferences exist, attempt to get the alarms
+    if (prefs) {
+        // get the array of dictionaries of all of the alarms
+        NSArray *alarms = [prefs objectForKey:kSLAlarmsKey];
+        
+        // iterate through the alarms until we the find the one with a matching id
+        for (NSDictionary *alarm in alarms) {
+            if ([[alarm objectForKey:kSLAlarmIdKey] isEqualToString:alarmId]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
 // save the specific alarm preferences object
 + (void)saveAlarmPrefs:(SLAlarmPrefs *)alarmPrefs
 {

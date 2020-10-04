@@ -106,6 +106,9 @@
 // returns the "open in" image
 + (UIImage *)openInImage;
 
+// returns whether or not the device is even capable of using the auto-set feature (requires iOS 10 and iPhone device)
++ (BOOL)canHaveAutoSet;
+
 // returns whether or not the device is in a state that can use the auto-set feature
 + (BOOL)canEnableAutoSet;
 

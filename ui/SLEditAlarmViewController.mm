@@ -59,6 +59,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 @property (nonatomic, retain) SLAlarmPrefs *SLAlarmPrefs;
 @property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
+@property (nonatomic, assign) BOOL SLCanHaveAutoSet;
 @property (nonatomic, assign) BOOL SLCanEnableAutoSet;
 
 - (void)SLUpdateTimePickerEnabled;
@@ -73,6 +74,9 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 // boolean property to signify whether or not changes were made to the Sleeper preferences
 %property (nonatomic, assign) BOOL SLAlarmPrefsChanged;
 
+// boolean that indicates whether or not auto-set can be used on this device
+%property (nonatomic, assign) BOOL SLCanHaveAutoSet;
+
 // boolean that indicates whether or not auto-set can be enabled for this alarm
 %property (nonatomic, assign) BOOL SLCanEnableAutoSet;
 
@@ -81,7 +85,8 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
     // get the alarm Id from the alarm for this controller
     NSString *alarmId = [SLCompatibilityHelper alarmIdForAlarm:self.alarm];
 
-    // check whether or not we can enable auto-set
+    // check whether or not we can enable auto-set for this device and alarm
+    self.SLCanHaveAutoSet = [SLCompatibilityHelper canHaveAutoSet];
     self.SLCanEnableAutoSet = [SLCompatibilityHelper canEnableAutoSet];
 
     // load the preferences for the alarm
@@ -141,13 +146,11 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    // add a section for the auto-set options if this device is capable of enabling it
     NSInteger numSections = %orig;
-
-    // add a section for the sunrise/sunset option if we are on iOS 10
-    if (kSLSystemVersioniOS10) {
+    if (self.SLCanHaveAutoSet) {
         ++numSections;
     }
-
     return numSections;
 }
 
@@ -218,14 +221,14 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             // customize the detail text label depending on whether or not we have skip dates enabled
             cell.detailTextLabel.text = [self.SLAlarmPrefs totalSelectedDatesString];
         }
-    } else if (kSLSystemVersioniOS10 && indexPath.section == kSLEditAlarmViewSectionAutoSet) {
+    } else if (self.SLCanHaveAutoSet && indexPath.section == kSLEditAlarmViewSectionAutoSet) {
         // grab a cell from the attribute section to customize
         cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLEditAlarmViewSectionAttribute]);
 
         // customize the cell that will be used to allow the user to customize the sun options
         cell.textLabel.text = kSLAutoSetString;
         cell.detailTextLabel.text = [SLPrefsManager friendlyNameForAutoSetOption:self.SLAlarmPrefs.autoSetOption];
-    } else if (kSLSystemVersioniOS10 && indexPath.section == kSLEditAlarmViewSectionDelete) {
+    } else if (self.SLCanHaveAutoSet && indexPath.section == kSLEditAlarmViewSectionDelete) {
         // grab the cell that would originally be returned for the delete section
         cell = %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLEditAlarmViewSectionAutoSet]);
     } else {
@@ -261,7 +264,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
         } else if (indexPath.row != kSLEditAlarmViewAttributeSectionRowSkipToggle) {
             %orig;
         }
-    } else if (kSLSystemVersioniOS10 && indexPath.section == kSLEditAlarmViewSectionAutoSet) {
+    } else if (self.SLCanHaveAutoSet && indexPath.section == kSLEditAlarmViewSectionAutoSet) {
         // check to see if the user can enable auto-set before proceeding
         if (self.SLCanEnableAutoSet) {
             // create a custom view controller which will display the auto-set options
@@ -291,7 +294,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
             // present the alert
             [self presentViewController:autoSetDisabledAlertController animated:YES completion:nil];
         }
-    } else if (kSLSystemVersioniOS10 && indexPath.section == kSLEditAlarmViewSectionDelete) {
+    } else if (self.SLCanHaveAutoSet && indexPath.section == kSLEditAlarmViewSectionDelete) {
         // perform the logic that was originally for the delete section
         %orig(tableView, [NSIndexPath indexPathForRow:0 inSection:kSLEditAlarmViewSectionAutoSet]);
     } else {
@@ -306,7 +309,7 @@ SLPickerSelectionDelegate, SLSkipDatesDelegate, SLAutoSetOptionsDelegate> {
     NSString *footerTitle = nil;
     if (section == kSLEditAlarmViewSectionAttribute) {
         footerTitle = [self.SLAlarmPrefs skipReasonExplanation];
-    } else if (kSLSystemVersioniOS10 && section == kSLEditAlarmViewSectionAutoSet) {
+    } else if (self.SLCanHaveAutoSet && section == kSLEditAlarmViewSectionAutoSet) {
         footerTitle = [self.SLAlarmPrefs autoSetExplanation];
     }
     return footerTitle;

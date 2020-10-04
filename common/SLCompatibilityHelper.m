@@ -509,13 +509,23 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
     return sSLOpenInImage;
 }
 
+// returns whether or not the device is even capable of using the auto-set feature (requires iOS 10 and iPhone device)
++ (BOOL)canHaveAutoSet
+{
+    return (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0) && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
+}
+
 // returns whether or not the device is in a state that can use the auto-set feature
 + (BOOL)canEnableAutoSet
 {
-    // attempt to get the application proxy for the weather application
-    LSApplicationProxy *weatherAppProxy = [objc_getClass("LSApplicationProxy") applicationProxyForIdentifier:kSLWeatherAppBundleId];
-    if (weatherAppProxy != nil && [weatherAppProxy respondsToSelector:@selector(isInstalled)] && [weatherAppProxy isInstalled]) {
-        return YES;
+    if ([SLCompatibilityHelper canHaveAutoSet]) {
+        // attempt to get the application proxy for the weather application
+        LSApplicationProxy *weatherAppProxy = [objc_getClass("LSApplicationProxy") applicationProxyForIdentifier:kSLWeatherAppBundleId];
+        if (weatherAppProxy != nil && [weatherAppProxy respondsToSelector:@selector(isInstalled)] && [weatherAppProxy isInstalled]) {
+            return YES;
+        } else {
+            return NO;
+        }
     } else {
         return NO;
     }
@@ -583,13 +593,16 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
                     // modify the alarm after a small delay since this could happen right after an alarm was just saved
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1 + alarmCount) * NSEC_PER_SEC));
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-                        // update the alarm's hour and minute with the appropriate, adjusted time
-                        [mutableAlarm setHour:updatedHour];
-                        [mutableAlarm setMinute:updatedMinute];
-                        mutableAlarm.SLWasUpdatedBySleeper = YES;
+                        // check first to ensure that the Alarm hasn't been deleted since before the delay
+                        if ([SLPrefsManager prefsContainAlarmWithAlarmId:alarmId]) {
+                            // update the alarm's hour and minute with the appropriate, adjusted time
+                            [mutableAlarm setHour:updatedHour];
+                            [mutableAlarm setMinute:updatedMinute];
+                            mutableAlarm.SLWasUpdatedBySleeper = YES;
 
-                        // persist the changes to the system
-                        [alarmManager updateAlarm:mutableAlarm];
+                            // persist the changes to the system
+                            [alarmManager updateAlarm:mutableAlarm];
+                        }
                     });
                 }
             } else {
@@ -647,13 +660,16 @@ static NSString * const kSLWakeUpAlarmID = @"00000000-0000-0000-0000-00000000000
                     // modify the alarm after a small delay since this could happen right after an alarm was just saved
                     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)((5 + alarmCount) * NSEC_PER_SEC));
                     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-                        // update the alarm's hour and minute with the appropriate, adjusted time
-                        [editingProxy setHour:updatedHour];
-                        [editingProxy setMinute:updatedMinute];
-                        [alarm applyChangesFromEditingProxy];
+                        // check first to ensure that the Alarm hasn't been deleted since before the delay
+                        if ([SLPrefsManager prefsContainAlarmWithAlarmId:alarmId]) {
+                            // update the alarm's hour and minute with the appropriate, adjusted time
+                            [editingProxy setHour:updatedHour];
+                            [editingProxy setMinute:updatedMinute];
+                            [alarm applyChangesFromEditingProxy];
 
-                        // persist changes to the system
-                        [alarmManager updateAlarm:alarm active:[alarm isActive]];
+                            // persist changes to the system
+                            [alarmManager updateAlarm:alarm active:[alarm isActive]];
+                        }
                     });
                 }
             } else {
