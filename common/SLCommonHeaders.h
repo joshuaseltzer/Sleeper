@@ -6,6 +6,7 @@
 //
 //
 
+#import <UIKit/UIKit.h>
 #import <UserNotifications/UNNotificationTrigger.h>
 #import <UserNotifications/UNNotificationServiceExtension.h>
 #import <UserNotifications/UNNotificationRequest.h>

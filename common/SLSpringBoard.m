@@ -6,6 +6,7 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <Foundation/NSDistributedNotificationCenter.h>
 #import "../common/SLCompatibilityHelper.h"
 #import "../common/SLAutoSetManager.h"

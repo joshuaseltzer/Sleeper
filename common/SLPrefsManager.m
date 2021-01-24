@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Joshua Seltzer. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <Foundation/NSDistributedNotificationCenter.h>
 #import "SLPrefsManager.h"
 #import "SLLocalizedStrings.h"
