@@ -335,7 +335,6 @@
 			<string>Þjóðhátíðardagurinn</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-17</string>
 				<string>2021-06-17</string>
 				<string>2022-06-17</string>
 				<string>2023-06-17</string>
@@ -372,7 +371,6 @@
 			<string>Frídagur verslunarmanna</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-03</string>
 				<string>2021-08-02</string>
 				<string>2022-08-01</string>
 				<string>2023-08-07</string>
@@ -409,7 +407,6 @@
 			<string>Aðfangadagur</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-24</string>
 				<string>2021-12-24</string>
 				<string>2022-12-24</string>
 				<string>2023-12-24</string>
@@ -446,7 +443,6 @@
 			<string>Jóladagur</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -483,7 +479,6 @@
 			<string>Annar í jólum</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>
@@ -520,7 +515,6 @@
 			<string>Gamlársdagur</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-31</string>
 				<string>2021-12-31</string>
 				<string>2022-12-31</string>
 				<string>2023-12-31</string>

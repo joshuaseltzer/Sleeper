@@ -606,7 +606,6 @@
 			<string>Rosh Hashanah - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-18</string>
 				<string>2021-09-06</string>
 				<string>2022-09-25</string>
 				<string>2023-09-15</string>
@@ -643,8 +642,6 @@
 			<string>Rosh Hashanah</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-19</string>
-				<string>2020-09-20</string>
 				<string>2021-09-07</string>
 				<string>2021-09-08</string>
 				<string>2022-09-26</string>
@@ -710,7 +707,6 @@
 			<string>Yom Kippur - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-27</string>
 				<string>2021-09-15</string>
 				<string>2022-10-04</string>
 				<string>2023-09-24</string>
@@ -747,7 +743,6 @@
 			<string>Yom Kippur</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-28</string>
 				<string>2021-09-16</string>
 				<string>2022-10-05</string>
 				<string>2023-09-25</string>
@@ -784,7 +779,6 @@
 			<string>Sukkot I - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-02</string>
 				<string>2021-09-20</string>
 				<string>2022-10-09</string>
 				<string>2023-09-29</string>
@@ -821,7 +815,6 @@
 			<string>Sukkot I</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-03</string>
 				<string>2021-09-21</string>
 				<string>2022-10-10</string>
 				<string>2023-09-30</string>
@@ -858,11 +851,6 @@
 			<string>Sukkot - Chol HaMoed</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-04</string>
-				<string>2020-10-05</string>
-				<string>2020-10-06</string>
-				<string>2020-10-07</string>
-				<string>2020-10-08</string>
 				<string>2021-09-22</string>
 				<string>2021-09-23</string>
 				<string>2021-09-24</string>
@@ -1015,7 +1003,6 @@
 			<string>Sukkot VII - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-09</string>
 				<string>2021-09-27</string>
 				<string>2022-10-16</string>
 				<string>2023-10-06</string>
@@ -1052,7 +1039,6 @@
 			<string>Sukkot VII</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-10</string>
 				<string>2021-09-28</string>
 				<string>2022-10-17</string>
 				<string>2023-10-07</string>
@@ -1089,14 +1075,6 @@
 			<string>Hanukkah</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-11</string>
-				<string>2020-12-12</string>
-				<string>2020-12-13</string>
-				<string>2020-12-14</string>
-				<string>2020-12-15</string>
-				<string>2020-12-16</string>
-				<string>2020-12-17</string>
-				<string>2020-12-18</string>
 				<string>2021-11-29</string>
 				<string>2021-11-30</string>
 				<string>2021-12-01</string>

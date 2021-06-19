@@ -263,7 +263,6 @@
 			<string>Battle of the Boyne</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-12</string>
 				<string>2021-07-12</string>
 				<string>2022-07-12</string>
 				<string>2023-07-12</string>
@@ -300,7 +299,6 @@
 			<string>Summer Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-03</string>
 				<string>2021-08-02</string>
 				<string>2022-08-01</string>
 				<string>2023-08-07</string>
@@ -337,7 +335,6 @@
 			<string>Late Summer Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-31</string>
 				<string>2021-08-30</string>
 				<string>2022-08-29</string>
 				<string>2023-08-28</string>
@@ -374,7 +371,6 @@
 			<string>St. Andrew's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-30</string>
 				<string>2021-11-30</string>
 				<string>2022-11-30</string>
 				<string>2023-11-30</string>
@@ -411,7 +407,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -448,7 +443,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

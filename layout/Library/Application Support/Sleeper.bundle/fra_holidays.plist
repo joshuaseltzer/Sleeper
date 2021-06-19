@@ -227,7 +227,6 @@
 			<string>Fête nationale</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-14</string>
 				<string>2021-07-14</string>
 				<string>2022-07-14</string>
 				<string>2023-07-14</string>
@@ -264,7 +263,6 @@
 			<string>Assomption</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -301,7 +299,6 @@
 			<string>Toussaint</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -338,7 +335,6 @@
 			<string>Armistice 1918</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-11</string>
 				<string>2021-11-11</string>
 				<string>2022-11-11</string>
 				<string>2023-11-11</string>
@@ -375,7 +371,6 @@
 			<string>Noël</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

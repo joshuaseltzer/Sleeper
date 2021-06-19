@@ -299,7 +299,6 @@
 			<string>Az államalapítás ünnepe</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-20</string>
 				<string>2021-08-20</string>
 				<string>2022-08-20</string>
 				<string>2023-08-20</string>
@@ -336,7 +335,6 @@
 			<string>2. Nemzeti ünnep</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-23</string>
 				<string>2021-10-23</string>
 				<string>2022-10-23</string>
 				<string>2023-10-23</string>
@@ -373,7 +371,6 @@
 			<string>Mindenszentek</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -410,7 +407,6 @@
 			<string>Karácsony</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -447,7 +443,6 @@
 			<string>Karácsony másnapja</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

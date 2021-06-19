@@ -191,7 +191,6 @@
 			<string>Tijelovo</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-11</string>
 				<string>2021-06-03</string>
 				<string>2022-06-16</string>
 				<string>2023-06-08</string>
@@ -228,7 +227,6 @@
 			<string>Dan antifašističke borbe</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-22</string>
 				<string>2021-06-22</string>
 				<string>2022-06-22</string>
 				<string>2023-06-22</string>
@@ -265,7 +263,6 @@
 			<string>Dan državnosti</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-25</string>
 				<string>2021-06-25</string>
 				<string>2022-06-25</string>
 				<string>2023-06-25</string>
@@ -302,7 +299,6 @@
 			<string>Dan pobjede i domovinske zahvalnosti</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-05</string>
 				<string>2021-08-05</string>
 				<string>2022-08-05</string>
 				<string>2023-08-05</string>
@@ -339,7 +335,6 @@
 			<string>Velika Gospa</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -376,7 +371,6 @@
 			<string>Dan neovisnosti</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-08</string>
 				<string>2021-10-08</string>
 				<string>2022-10-08</string>
 				<string>2023-10-08</string>
@@ -413,7 +407,6 @@
 			<string>Svi sveti</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -450,7 +443,6 @@
 			<string>Božić</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -487,7 +479,6 @@
 			<string>Sveti Stjepan</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

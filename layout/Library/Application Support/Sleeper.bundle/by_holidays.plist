@@ -227,7 +227,6 @@
 			<string>День Независимости Республики Беларусь (День Республики)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-03</string>
 				<string>2021-07-03</string>
 				<string>2022-07-03</string>
 				<string>2023-07-03</string>
@@ -264,7 +263,6 @@
 			<string>День Октябрьской революции</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-07</string>
 				<string>2021-11-07</string>
 				<string>2022-11-07</string>
 				<string>2023-11-07</string>
@@ -301,7 +299,6 @@
 			<string>Рождество Христово (католическое Рождество)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

@@ -299,7 +299,6 @@
 			<string>Juhannusaatto</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-19</string>
 				<string>2021-06-25</string>
 				<string>2022-06-24</string>
 				<string>2023-06-23</string>
@@ -336,7 +335,6 @@
 			<string>Juhannuspäivä</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-20</string>
 				<string>2021-06-26</string>
 				<string>2022-06-25</string>
 				<string>2023-06-24</string>
@@ -373,7 +371,6 @@
 			<string>Pyhäinpäivä</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-31</string>
 				<string>2021-11-06</string>
 				<string>2022-11-05</string>
 				<string>2023-11-04</string>
@@ -410,7 +407,6 @@
 			<string>Itsenäisyyspäivä</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-06</string>
 				<string>2021-12-06</string>
 				<string>2022-12-06</string>
 				<string>2023-12-06</string>
@@ -447,7 +443,6 @@
 			<string>Jouluaatto</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-24</string>
 				<string>2021-12-24</string>
 				<string>2022-12-24</string>
 				<string>2023-12-24</string>
@@ -484,7 +479,6 @@
 			<string>Joulupäivä</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -521,7 +515,6 @@
 			<string>Tapaninpäivä</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

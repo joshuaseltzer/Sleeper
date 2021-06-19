@@ -227,7 +227,6 @@
 			<string>Sviatok svätého Cyrila a svätého Metoda</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-05</string>
 				<string>2021-07-05</string>
 				<string>2022-07-05</string>
 				<string>2023-07-05</string>
@@ -264,7 +263,6 @@
 			<string>Výročie Slovenského národného povstania</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-29</string>
 				<string>2021-08-29</string>
 				<string>2022-08-29</string>
 				<string>2023-08-29</string>
@@ -301,7 +299,6 @@
 			<string>Deň Ústavy Slovenskej republiky</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-01</string>
 				<string>2021-09-01</string>
 				<string>2022-09-01</string>
 				<string>2023-09-01</string>
@@ -338,7 +335,6 @@
 			<string>Sedembolestná Panna Mária</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-15</string>
 				<string>2021-09-15</string>
 				<string>2022-09-15</string>
 				<string>2023-09-15</string>
@@ -375,7 +371,6 @@
 			<string>Sviatok Všetkých svätých</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -412,7 +407,6 @@
 			<string>Deň boja za slobodu a demokraciu</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-17</string>
 				<string>2021-11-17</string>
 				<string>2022-11-17</string>
 				<string>2023-11-17</string>
@@ -449,7 +443,6 @@
 			<string>Štedrý deň</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-24</string>
 				<string>2021-12-24</string>
 				<string>2022-12-24</string>
 				<string>2023-12-24</string>
@@ -486,7 +479,6 @@
 			<string>Prvý sviatok vianočný</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -523,7 +515,6 @@
 			<string>Druhý sviatok vianočný</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

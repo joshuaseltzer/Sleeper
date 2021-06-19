@@ -263,7 +263,6 @@
 			<string>Assunção de Nossa Senhora</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -300,7 +299,6 @@
 			<string>Implantação da República</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-05</string>
 				<string>2021-10-05</string>
 				<string>2022-10-05</string>
 				<string>2023-10-05</string>
@@ -337,7 +335,6 @@
 			<string>Dia de Todos os Santos</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -374,7 +371,6 @@
 			<string>Restauração da Independência</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-01</string>
 				<string>2021-12-01</string>
 				<string>2022-12-01</string>
 				<string>2023-12-01</string>
@@ -411,7 +407,6 @@
 			<string>Imaculada Conceição</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-08</string>
 				<string>2021-12-08</string>
 				<string>2022-12-08</string>
 				<string>2023-12-08</string>
@@ -448,7 +443,6 @@
 			<string>Dia de Natal</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

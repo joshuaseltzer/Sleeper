@@ -335,7 +335,6 @@
 			<string>Liberation Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -372,7 +371,6 @@
 			<string>The day preceding of Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-30</string>
 				<string>2021-09-20</string>
 				<string>2022-09-09</string>
 				<string>2023-09-28</string>
@@ -409,7 +407,6 @@
 			<string>Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-01</string>
 				<string>2021-09-21</string>
 				<string>2022-09-10</string>
 				<string>2023-09-29</string>
@@ -446,7 +443,6 @@
 			<string>The second day of Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-02</string>
 				<string>2021-09-22</string>
 				<string>2022-09-11</string>
 				<string>2023-09-30</string>
@@ -483,7 +479,6 @@
 			<string>National Foundation Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-03</string>
 				<string>2021-10-03</string>
 				<string>2022-10-03</string>
 				<string>2023-10-03</string>
@@ -520,7 +515,6 @@
 			<string>Hangeul Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-09</string>
 				<string>2021-10-09</string>
 				<string>2022-10-09</string>
 				<string>2023-10-09</string>
@@ -557,7 +551,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

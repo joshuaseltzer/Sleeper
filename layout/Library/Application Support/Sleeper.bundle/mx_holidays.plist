@@ -155,7 +155,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-16</string>
 				<string>2021-09-16</string>
 				<string>2022-09-16</string>
 				<string>2023-09-15</string>
@@ -192,7 +191,6 @@
 			<string>Día de la Revolución</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-16</string>
 				<string>2021-11-15</string>
 				<string>2022-11-21</string>
 				<string>2023-11-20</string>
@@ -229,7 +227,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

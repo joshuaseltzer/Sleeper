@@ -227,7 +227,6 @@
 			<string>Трійця</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-07</string>
 				<string>2021-06-20</string>
 				<string>2022-06-12</string>
 				<string>2023-06-04</string>
@@ -264,7 +263,6 @@
 			<string>День Конституції України</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-28</string>
 				<string>2021-06-28</string>
 				<string>2022-06-28</string>
 				<string>2023-06-28</string>
@@ -301,7 +299,6 @@
 			<string>День незалежності України</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-24</string>
 				<string>2021-08-24</string>
 				<string>2022-08-24</string>
 				<string>2023-08-24</string>
@@ -338,7 +335,6 @@
 			<string>День захисника України</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-14</string>
 				<string>2021-10-14</string>
 				<string>2022-10-14</string>
 				<string>2023-10-14</string>
@@ -375,7 +371,6 @@
 			<string>Різдво Христове (католицьке)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

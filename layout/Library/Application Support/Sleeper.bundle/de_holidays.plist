@@ -227,7 +227,6 @@
 			<string>Tag der Deutschen Einheit</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-03</string>
 				<string>2021-10-03</string>
 				<string>2022-10-03</string>
 				<string>2023-10-03</string>
@@ -264,7 +263,6 @@
 			<string>Reformationstag</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-31</string>
 				<string>2021-10-31</string>
 				<string>2022-10-31</string>
 				<string>2023-10-31</string>
@@ -301,7 +299,6 @@
 			<string>Erster Weihnachtstag</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -338,7 +335,6 @@
 			<string>Zweiter Weihnachtstag</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

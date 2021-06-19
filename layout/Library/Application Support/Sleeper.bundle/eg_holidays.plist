@@ -263,7 +263,6 @@
 			<string>Revolution Day (June 30)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-30</string>
 				<string>2021-06-30</string>
 				<string>2022-06-30</string>
 				<string>2023-06-30</string>
@@ -300,7 +299,6 @@
 			<string>Revolution Day (July 23)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-23</string>
 				<string>2021-07-23</string>
 				<string>2022-07-23</string>
 				<string>2023-07-23</string>
@@ -337,7 +335,6 @@
 			<string>Armed Forces Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-06</string>
 				<string>2021-10-06</string>
 				<string>2022-10-06</string>
 				<string>2023-10-06</string>

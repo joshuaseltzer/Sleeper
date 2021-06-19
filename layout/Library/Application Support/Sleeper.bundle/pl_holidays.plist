@@ -263,7 +263,6 @@
 			<string>Dzień Bożego Ciała</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-11</string>
 				<string>2021-06-03</string>
 				<string>2022-06-16</string>
 				<string>2023-06-08</string>
@@ -300,7 +299,6 @@
 			<string>Wniebowzięcie Najświętszej Marii Panny</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -337,7 +335,6 @@
 			<string>Uroczystość Wszystkich świętych</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -374,7 +371,6 @@
 			<string>Narodowe Święto Niepodległości</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-11</string>
 				<string>2021-11-11</string>
 				<string>2022-11-11</string>
 				<string>2023-11-11</string>
@@ -411,7 +407,6 @@
 			<string>Boże Narodzenie (pierwszy dzień)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -448,7 +443,6 @@
 			<string>Boże Narodzenie (drugi dzień)</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

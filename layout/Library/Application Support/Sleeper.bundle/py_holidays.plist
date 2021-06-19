@@ -299,7 +299,6 @@
 			<string>Día de la Fundación de Asunción</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-15</string>
 				<string>2021-08-15</string>
 				<string>2022-08-15</string>
 				<string>2023-08-15</string>
@@ -336,7 +335,6 @@
 			<string>Batalla de Boquerón</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-29</string>
 				<string>2021-09-29</string>
 				<string>2022-09-29</string>
 				<string>2023-09-29</string>
@@ -373,7 +371,6 @@
 			<string>Día de la Virgen de Caacupé</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-08</string>
 				<string>2021-12-08</string>
 				<string>2022-12-08</string>
 				<string>2023-12-08</string>
@@ -410,7 +407,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

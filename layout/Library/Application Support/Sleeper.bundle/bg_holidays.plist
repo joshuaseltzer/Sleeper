@@ -335,7 +335,6 @@
 			<string>Ден на Съединението</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-06</string>
 				<string>2021-09-06</string>
 				<string>2022-09-06</string>
 				<string>2023-09-06</string>
@@ -372,7 +371,6 @@
 			<string>Ден на Независимостта на България</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-22</string>
 				<string>2021-09-22</string>
 				<string>2022-09-22</string>
 				<string>2023-09-22</string>
@@ -409,7 +407,6 @@
 			<string>Ден на народните будители</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-01</string>
 				<string>2021-11-01</string>
 				<string>2022-11-01</string>
 				<string>2023-11-01</string>
@@ -446,7 +443,6 @@
 			<string>Бъдни вечер</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-24</string>
 				<string>2021-12-24</string>
 				<string>2022-12-24</string>
 				<string>2023-12-24</string>
@@ -483,7 +479,6 @@
 			<string>1. Рождество Христово</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
@@ -520,7 +515,6 @@
 			<string>2. Рождество Христово</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-26</string>
 				<string>2021-12-26</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

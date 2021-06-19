@@ -401,7 +401,6 @@
 			<string>День России</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-12</string>
 				<string>2021-06-12</string>
 				<string>2022-06-12</string>
 				<string>2023-06-12</string>
@@ -438,7 +437,6 @@
 			<string>День народного единства</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-04</string>
 				<string>2021-11-04</string>
 				<string>2022-11-04</string>
 				<string>2023-11-04</string>

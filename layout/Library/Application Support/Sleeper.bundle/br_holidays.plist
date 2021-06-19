@@ -263,7 +263,6 @@
 			<string>Corpus Christi</string>
 			<key>dates</key>
 			<array>
-				<string>2020-06-11</string>
 				<string>2021-06-03</string>
 				<string>2022-06-16</string>
 				<string>2023-06-08</string>
@@ -300,7 +299,6 @@
 			<string>Independência do Brasil</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-07</string>
 				<string>2021-09-07</string>
 				<string>2022-09-07</string>
 				<string>2023-09-07</string>
@@ -337,7 +335,6 @@
 			<string>Nossa Senhora Aparecida</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-12</string>
 				<string>2021-10-12</string>
 				<string>2022-10-12</string>
 				<string>2023-10-12</string>
@@ -374,7 +371,6 @@
 			<string>Finados</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-02</string>
 				<string>2021-11-02</string>
 				<string>2022-11-02</string>
 				<string>2023-11-02</string>
@@ -411,7 +407,6 @@
 			<string>Proclamação da República</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-15</string>
 				<string>2021-11-15</string>
 				<string>2022-11-15</string>
 				<string>2023-11-15</string>
@@ -448,7 +443,6 @@
 			<string>Natal</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

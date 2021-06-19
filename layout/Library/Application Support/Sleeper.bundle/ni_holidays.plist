@@ -155,7 +155,6 @@
 			<string>Día de la Revolución</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-19</string>
 				<string>2021-07-19</string>
 				<string>2022-07-19</string>
 				<string>2023-07-19</string>
@@ -192,7 +191,6 @@
 			<string>Bajada de Santo Domingo</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-01</string>
 				<string>2021-08-01</string>
 				<string>2022-08-01</string>
 				<string>2023-08-01</string>
@@ -229,7 +227,6 @@
 			<string>Subida de Santo Domingo</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-10</string>
 				<string>2021-08-10</string>
 				<string>2022-08-10</string>
 				<string>2023-08-10</string>
@@ -266,7 +263,6 @@
 			<string>Batalla de San Jacinto</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-14</string>
 				<string>2021-09-14</string>
 				<string>2022-09-14</string>
 				<string>2023-09-14</string>
@@ -303,7 +299,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-15</string>
 				<string>2021-09-15</string>
 				<string>2022-09-15</string>
 				<string>2023-09-15</string>
@@ -340,7 +335,6 @@
 			<string>Concepción de María</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-08</string>
 				<string>2021-12-08</string>
 				<string>2022-12-08</string>
 				<string>2023-12-08</string>
@@ -377,7 +371,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>

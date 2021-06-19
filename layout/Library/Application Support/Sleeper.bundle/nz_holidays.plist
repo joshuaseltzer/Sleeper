@@ -263,7 +263,6 @@
 			<string>Labour Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-26</string>
 				<string>2021-10-25</string>
 				<string>2022-10-24</string>
 				<string>2023-10-23</string>
@@ -300,7 +299,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-27</string>
 				<string>2022-12-27</string>
 				<string>2023-12-25</string>
@@ -337,7 +335,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-28</string>
 				<string>2021-12-28</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

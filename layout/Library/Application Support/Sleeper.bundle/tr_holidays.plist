@@ -259,7 +259,6 @@
 			<string>Democracy and National Unity Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-15</string>
 				<string>2021-07-15</string>
 				<string>2022-07-15</string>
 				<string>2023-07-15</string>
@@ -296,7 +295,6 @@
 			<string>Sacrifice Feast</string>
 			<key>dates</key>
 			<array>
-				<string>2020-07-31</string>
 				<string>2021-07-20</string>
 				<string>2022-07-09</string>
 				<string>2023-06-28</string>
@@ -334,9 +332,6 @@
 			<string>Sacrifice Feast Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-01</string>
-				<string>2020-08-02</string>
-				<string>2020-08-03</string>
 				<string>2021-07-21</string>
 				<string>2021-07-22</string>
 				<string>2021-07-23</string>
@@ -434,7 +429,6 @@
 			<string>Victory Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-30</string>
 				<string>2021-08-30</string>
 				<string>2022-08-30</string>
 				<string>2023-08-30</string>
@@ -471,7 +465,6 @@
 			<string>Republic Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-10-29</string>
 				<string>2021-10-29</string>
 				<string>2022-10-29</string>
 				<string>2023-10-29</string>

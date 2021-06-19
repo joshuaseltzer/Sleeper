@@ -191,7 +191,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-27</string>
 				<string>2022-12-27</string>
 				<string>2023-12-25</string>
@@ -228,7 +227,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-28</string>
 				<string>2021-12-28</string>
 				<string>2022-12-26</string>
 				<string>2023-12-26</string>

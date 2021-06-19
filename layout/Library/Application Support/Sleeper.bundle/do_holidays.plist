@@ -299,7 +299,6 @@
 			<string>Día de la Restauración</string>
 			<key>dates</key>
 			<array>
-				<string>2020-08-16</string>
 				<string>2021-08-16</string>
 				<string>2022-08-15</string>
 				<string>2023-08-14</string>
@@ -336,7 +335,6 @@
 			<string>Día de las Mercedes</string>
 			<key>dates</key>
 			<array>
-				<string>2020-09-24</string>
 				<string>2021-09-24</string>
 				<string>2022-09-24</string>
 				<string>2023-09-24</string>
@@ -373,7 +371,6 @@
 			<string>Día de la Constitución</string>
 			<key>dates</key>
 			<array>
-				<string>2020-11-09</string>
 				<string>2021-11-06</string>
 				<string>2022-11-06</string>
 				<string>2023-11-06</string>
@@ -410,7 +407,6 @@
 			<string>Día de Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2020-12-25</string>
 				<string>2021-12-25</string>
 				<string>2022-12-25</string>
 				<string>2023-12-25</string>
