@@ -11,8 +11,6 @@
 			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-03</string>
 				<string>2023-01-02</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>St. Patrick's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-03-17</string>
-				<string>2022-03-17</string>
 				<string>2023-03-17</string>
 				<string>2024-03-18</string>
 				<string>2025-03-17</string>
@@ -83,8 +79,6 @@
 			<string>Easter Monday</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-05</string>
-				<string>2022-04-18</string>
 				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
@@ -119,8 +113,6 @@
 			<string>May Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-03</string>
-				<string>2022-05-02</string>
 				<string>2023-05-01</string>
 				<string>2024-05-06</string>
 				<string>2025-05-05</string>
@@ -155,8 +147,6 @@
 			<string>June Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-07</string>
-				<string>2022-06-06</string>
 				<string>2023-06-05</string>
 				<string>2024-06-03</string>
 				<string>2025-06-02</string>
@@ -191,8 +181,6 @@
 			<string>Summer Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2021-08-02</string>
-				<string>2022-08-01</string>
 				<string>2023-08-07</string>
 				<string>2024-08-05</string>
 				<string>2025-08-04</string>
@@ -227,8 +215,6 @@
 			<string>October Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-25</string>
-				<string>2022-10-31</string>
 				<string>2023-10-30</string>
 				<string>2024-10-28</string>
 				<string>2025-10-27</string>
@@ -263,8 +249,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-27</string>
-				<string>2022-12-27</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
@@ -299,8 +283,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-28</string>
-				<string>2022-12-26</string>
 				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>

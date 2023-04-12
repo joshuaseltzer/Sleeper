@@ -11,8 +11,6 @@
 			<string>Nieuwjaarsdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Eerste paasdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-04</string>
-				<string>2022-04-17</string>
 				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
@@ -83,8 +79,6 @@
 			<string>Tweede paasdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-05</string>
-				<string>2022-04-18</string>
 				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
@@ -119,8 +113,6 @@
 			<string>Koningsdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-27</string>
-				<string>2022-04-27</string>
 				<string>2023-04-27</string>
 				<string>2024-04-27</string>
 				<string>2025-04-26</string>
@@ -167,8 +159,6 @@
 			<string>Hemelvaart</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-13</string>
-				<string>2022-05-26</string>
 				<string>2023-05-18</string>
 				<string>2024-05-09</string>
 				<string>2025-05-29</string>
@@ -203,8 +193,6 @@
 			<string>Eerste Pinksterdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-23</string>
-				<string>2022-06-05</string>
 				<string>2023-05-28</string>
 				<string>2024-05-19</string>
 				<string>2025-06-08</string>
@@ -239,8 +227,6 @@
 			<string>Tweede Pinksterdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-24</string>
-				<string>2022-06-06</string>
 				<string>2023-05-29</string>
 				<string>2024-05-20</string>
 				<string>2025-06-09</string>
@@ -275,8 +261,6 @@
 			<string>Eerste Kerstdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
@@ -311,8 +295,6 @@
 			<string>Tweede Kerstdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-26</string>
-				<string>2022-12-26</string>
 				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>

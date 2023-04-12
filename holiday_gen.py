@@ -8,7 +8,7 @@ import holidays
 import plistlib
 
 # years which will be generated for any given country
-START_YEAR = 2020
+START_YEAR = 2023
 END_YEAR = 2050
 
 # constants used to modify holidays upon generation
@@ -23,9 +23,6 @@ NEW_YEARS_EVE_TEXT = "New Year's Eve"
 
 # path to the Sleeper bundle which is used to store the holidays and localized strings
 SLEEPER_BUNDLE_PATH = "layout/Library/Application Support/Sleeper.bundle"
-
-# name of the localized string files included in the Sleeper bundle
-LOCALIZED_STRINGS_FILE = "Localizable.strings"
 
 # names of the keys that will be used when creating the plist
 DATE_CREATED_KEY = "dateCreated"
@@ -146,4 +143,4 @@ if __name__== "__main__":
         # generate the plist 
         gen_country_holidays(sys.argv[1])
     else:
-        print("Incorrect usage!  Please supply a valid country code.")
+        print("Incorrect usage! Please supply a valid country code.")

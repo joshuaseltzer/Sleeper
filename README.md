@@ -4,7 +4,7 @@ Sleeper is a tweak designed to give you more functionality around your stock iOS
   - Using a system prompt upon unlocking the device, optionally skip an alarm within a particular set time
   - Skip an alarm completely by specifying a specific date or holiday
   - Supports both standalone alarms as well as the Bedtime Alarm introduced with iOS 10
-  - Compatible with iOS 8 - iOS 13 (including A12+ devices)
+  - Compatible with iOS 8 - iOS 14 (including A12+ devices)
   - Compatible with iPhones, iPads, and iPod Touches
 
 ## Snooze Time

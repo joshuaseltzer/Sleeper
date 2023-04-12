@@ -11,8 +11,6 @@
 			<string>Ano novo</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Carnaval</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-16</string>
-				<string>2022-03-01</string>
 				<string>2023-02-21</string>
 				<string>2024-02-13</string>
 				<string>2025-03-04</string>
@@ -83,8 +79,6 @@
 			<string>Quarta-feira de cinzas (Início da Quaresma)</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-17</string>
-				<string>2022-03-02</string>
 				<string>2023-02-22</string>
 				<string>2024-02-14</string>
 				<string>2025-03-05</string>
@@ -119,8 +113,6 @@
 			<string>Sexta-feira Santa</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-02</string>
-				<string>2022-04-15</string>
 				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
@@ -155,8 +147,6 @@
 			<string>Páscoa</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-04</string>
-				<string>2022-04-17</string>
 				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
@@ -191,8 +181,6 @@
 			<string>Tiradentes</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-21</string>
-				<string>2022-04-21</string>
 				<string>2023-04-21</string>
 				<string>2024-04-21</string>
 				<string>2025-04-21</string>
@@ -227,8 +215,6 @@
 			<string>Dia Mundial do Trabalho</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-01</string>
-				<string>2022-05-01</string>
 				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
@@ -263,8 +249,6 @@
 			<string>Corpus Christi</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-03</string>
-				<string>2022-06-16</string>
 				<string>2023-06-08</string>
 				<string>2024-05-30</string>
 				<string>2025-06-19</string>
@@ -299,8 +283,6 @@
 			<string>Independência do Brasil</string>
 			<key>dates</key>
 			<array>
-				<string>2021-09-07</string>
-				<string>2022-09-07</string>
 				<string>2023-09-07</string>
 				<string>2024-09-07</string>
 				<string>2025-09-07</string>
@@ -335,8 +317,6 @@
 			<string>Nossa Senhora Aparecida</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-12</string>
-				<string>2022-10-12</string>
 				<string>2023-10-12</string>
 				<string>2024-10-12</string>
 				<string>2025-10-12</string>
@@ -371,8 +351,6 @@
 			<string>Finados</string>
 			<key>dates</key>
 			<array>
-				<string>2021-11-02</string>
-				<string>2022-11-02</string>
 				<string>2023-11-02</string>
 				<string>2024-11-02</string>
 				<string>2025-11-02</string>
@@ -407,8 +385,6 @@
 			<string>Proclamação da República</string>
 			<key>dates</key>
 			<array>
-				<string>2021-11-15</string>
-				<string>2022-11-15</string>
 				<string>2023-11-15</string>
 				<string>2024-11-15</string>
 				<string>2025-11-15</string>
@@ -443,8 +419,6 @@
 			<string>Natal</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>

@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Día de los Santos Reyes</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-04</string>
-				<string>2022-01-10</string>
 				<string>2023-01-09</string>
 				<string>2024-01-06</string>
 				<string>2025-01-06</string>
@@ -83,8 +79,6 @@
 			<string>Día de la Altagracia</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-21</string>
-				<string>2022-01-21</string>
 				<string>2023-01-21</string>
 				<string>2024-01-21</string>
 				<string>2025-01-21</string>
@@ -119,8 +113,6 @@
 			<string>Día de Duarte</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-25</string>
-				<string>2022-01-24</string>
 				<string>2023-01-30</string>
 				<string>2024-01-29</string>
 				<string>2025-01-26</string>
@@ -155,8 +147,6 @@
 			<string>Día de Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-27</string>
-				<string>2022-02-27</string>
 				<string>2023-02-27</string>
 				<string>2024-02-27</string>
 				<string>2025-02-27</string>
@@ -191,8 +181,6 @@
 			<string>Viernes Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-02</string>
-				<string>2022-04-15</string>
 				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
@@ -227,8 +215,6 @@
 			<string>Día del Trabajo</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-01</string>
-				<string>2022-05-02</string>
 				<string>2023-05-01</string>
 				<string>2024-04-29</string>
 				<string>2025-05-05</string>
@@ -263,8 +249,6 @@
 			<string>Corpus Christi</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-11</string>
-				<string>2022-06-11</string>
 				<string>2023-06-11</string>
 				<string>2024-06-11</string>
 				<string>2025-06-11</string>
@@ -299,8 +283,6 @@
 			<string>Día de la Restauración</string>
 			<key>dates</key>
 			<array>
-				<string>2021-08-16</string>
-				<string>2022-08-15</string>
 				<string>2023-08-14</string>
 				<string>2024-08-19</string>
 				<string>2025-08-16</string>
@@ -335,8 +317,6 @@
 			<string>Día de las Mercedes</string>
 			<key>dates</key>
 			<array>
-				<string>2021-09-24</string>
-				<string>2022-09-24</string>
 				<string>2023-09-24</string>
 				<string>2024-09-24</string>
 				<string>2025-09-24</string>
@@ -371,8 +351,6 @@
 			<string>Día de la Constitución</string>
 			<key>dates</key>
 			<array>
-				<string>2021-11-06</string>
-				<string>2022-11-06</string>
 				<string>2023-11-06</string>
 				<string>2024-11-04</string>
 				<string>2025-11-10</string>
@@ -407,8 +385,6 @@
 			<string>Día de Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>

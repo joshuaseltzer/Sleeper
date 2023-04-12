@@ -11,8 +11,6 @@
 			<string>Neujahr</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Karfreitag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-02</string>
-				<string>2022-04-15</string>
 				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
@@ -83,8 +79,6 @@
 			<string>Ostermontag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-05</string>
-				<string>2022-04-18</string>
 				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
@@ -119,8 +113,6 @@
 			<string>Erster Mai</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-01</string>
-				<string>2022-05-01</string>
 				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
@@ -155,8 +147,6 @@
 			<string>Christi Himmelfahrt</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-13</string>
-				<string>2022-05-26</string>
 				<string>2023-05-18</string>
 				<string>2024-05-09</string>
 				<string>2025-05-29</string>
@@ -191,8 +181,6 @@
 			<string>Pfingstmontag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-24</string>
-				<string>2022-06-06</string>
 				<string>2023-05-29</string>
 				<string>2024-05-20</string>
 				<string>2025-06-09</string>
@@ -227,8 +215,6 @@
 			<string>Tag der Deutschen Einheit</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-03</string>
-				<string>2022-10-03</string>
 				<string>2023-10-03</string>
 				<string>2024-10-03</string>
 				<string>2025-10-03</string>
@@ -263,8 +249,6 @@
 			<string>Reformationstag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-31</string>
-				<string>2022-10-31</string>
 				<string>2023-10-31</string>
 				<string>2024-10-31</string>
 				<string>2025-10-31</string>
@@ -299,8 +283,6 @@
 			<string>Erster Weihnachtstag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
@@ -335,8 +317,6 @@
 			<string>Zweiter Weihnachtstag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-26</string>
-				<string>2022-12-26</string>
 				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>

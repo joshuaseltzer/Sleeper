@@ -1,7 +1,7 @@
-TARGET=iphone:clang:14.4:8.0
+TARGET=iphone:clang:14.5:8.0
 ARCHS=armv7 arm64 arm64e
 
-include theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = libSleeper
 TWEAK_NAME = SleeperCore SleeperCoreLegacy SleeperUI
@@ -26,8 +26,8 @@ SleeperUI_LIBRARIES = Sleeper
 SleeperUI_OBJCFLAGS = -fobjc-arc
 SleeperUI_LDFLAGS = -L$(THEOS_OBJ_DIR)
 
-THEOS_PACKAGE_BASE_VERSION = 7.0.1
-_THEOS_INTERNAL_PACKAGE_VERSION = 7.0.1
+THEOS_PACKAGE_BASE_VERSION = 7.0.2
+_THEOS_INTERNAL_PACKAGE_VERSION = 7.0.2
 
 include $(THEOS_MAKE_PATH)/library.mk
 include $(THEOS_MAKE_PATH)/tweak.mk

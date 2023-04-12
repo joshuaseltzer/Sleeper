@@ -11,8 +11,6 @@
 			<string>Nytårsdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Palmesøndag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-03-28</string>
-				<string>2022-04-10</string>
 				<string>2023-04-02</string>
 				<string>2024-03-24</string>
 				<string>2025-04-13</string>
@@ -83,8 +79,6 @@
 			<string>Skærtorsdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-01</string>
-				<string>2022-04-14</string>
 				<string>2023-04-06</string>
 				<string>2024-03-28</string>
 				<string>2025-04-17</string>
@@ -119,8 +113,6 @@
 			<string>Langfredag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-02</string>
-				<string>2022-04-15</string>
 				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
@@ -155,8 +147,6 @@
 			<string>Påskedag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-04</string>
-				<string>2022-04-17</string>
 				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
@@ -191,8 +181,6 @@
 			<string>Anden påskedag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-05</string>
-				<string>2022-04-18</string>
 				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
@@ -227,8 +215,6 @@
 			<string>Store bededag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-30</string>
-				<string>2022-05-13</string>
 				<string>2023-05-05</string>
 				<string>2024-04-26</string>
 				<string>2025-05-16</string>
@@ -263,8 +249,6 @@
 			<string>Kristi himmelfartsdag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-13</string>
-				<string>2022-05-26</string>
 				<string>2023-05-18</string>
 				<string>2024-05-09</string>
 				<string>2025-05-29</string>
@@ -299,8 +283,6 @@
 			<string>Pinsedag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-23</string>
-				<string>2022-06-05</string>
 				<string>2023-05-28</string>
 				<string>2024-05-19</string>
 				<string>2025-06-08</string>
@@ -335,8 +317,6 @@
 			<string>Anden pinsedag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-24</string>
-				<string>2022-06-06</string>
 				<string>2023-05-29</string>
 				<string>2024-05-20</string>
 				<string>2025-06-09</string>
@@ -371,8 +351,6 @@
 			<string>Juledag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
@@ -407,8 +385,6 @@
 			<string>Anden juledag</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-26</string>
-				<string>2022-12-26</string>
 				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>

@@ -11,8 +11,6 @@
 			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>The day preceding of Lunar New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-11</string>
-				<string>2022-01-31</string>
 				<string>2023-01-21</string>
 				<string>2024-02-09</string>
 				<string>2025-01-28</string>
@@ -83,8 +79,6 @@
 			<string>Lunar New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-12</string>
-				<string>2022-02-01</string>
 				<string>2023-01-22</string>
 				<string>2024-02-10</string>
 				<string>2025-01-29</string>
@@ -119,8 +113,6 @@
 			<string>The second day of Lunar New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-13</string>
-				<string>2022-02-02</string>
 				<string>2023-01-23</string>
 				<string>2024-02-11</string>
 				<string>2025-01-30</string>
@@ -155,8 +147,6 @@
 			<string>Independence Movement Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-03-01</string>
-				<string>2022-03-01</string>
 				<string>2023-03-01</string>
 				<string>2024-03-01</string>
 				<string>2025-03-01</string>
@@ -191,8 +181,6 @@
 			<string>Birthday of the Buddha</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-19</string>
-				<string>2022-05-08</string>
 				<string>2023-05-27</string>
 				<string>2024-05-15</string>
 				<string>2025-05-05</string>
@@ -227,8 +215,6 @@
 			<string>Labour Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-01</string>
-				<string>2022-05-01</string>
 				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
@@ -263,8 +249,6 @@
 			<string>Children's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-05</string>
-				<string>2022-05-05</string>
 				<string>2023-05-05</string>
 				<string>2024-05-05</string>
 				<string>2025-05-05</string>
@@ -299,8 +283,6 @@
 			<string>Memorial Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-06</string>
-				<string>2022-06-06</string>
 				<string>2023-06-06</string>
 				<string>2024-06-06</string>
 				<string>2025-06-06</string>
@@ -335,8 +317,6 @@
 			<string>Liberation Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-08-15</string>
-				<string>2022-08-15</string>
 				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
@@ -371,8 +351,6 @@
 			<string>The day preceding of Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2021-09-20</string>
-				<string>2022-09-09</string>
 				<string>2023-09-28</string>
 				<string>2024-09-16</string>
 				<string>2025-10-05</string>
@@ -407,8 +385,6 @@
 			<string>Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2021-09-21</string>
-				<string>2022-09-10</string>
 				<string>2023-09-29</string>
 				<string>2024-09-17</string>
 				<string>2025-10-06</string>
@@ -443,8 +419,6 @@
 			<string>The second day of Chuseok</string>
 			<key>dates</key>
 			<array>
-				<string>2021-09-22</string>
-				<string>2022-09-11</string>
 				<string>2023-09-30</string>
 				<string>2024-09-18</string>
 				<string>2025-10-07</string>
@@ -479,8 +453,6 @@
 			<string>National Foundation Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-03</string>
-				<string>2022-10-03</string>
 				<string>2023-10-03</string>
 				<string>2024-10-03</string>
 				<string>2025-10-03</string>
@@ -515,8 +487,6 @@
 			<string>Hangeul Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-10-09</string>
-				<string>2022-10-09</string>
 				<string>2023-10-09</string>
 				<string>2024-10-09</string>
 				<string>2025-10-09</string>
@@ -551,8 +521,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>

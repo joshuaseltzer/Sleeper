@@ -485,6 +485,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountryGermany:
             countryCode = @"de";
             break;
+        case kSLHolidayCountryHongKong:
+            countryCode = @"hk";
+            break;
         case kSLHolidayCountryHungary:
             countryCode = @"hu";
             break;
@@ -577,6 +580,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
             break;
         case kSLHolidayCountrySwitzerland:
             countryCode = @"ch";
+            break;
+        case kSLHolidayCountryTaiwan:
+            countryCode = @"tw";
             break;
         case kSLHolidayCountryTurkey:
             countryCode = @"tr";

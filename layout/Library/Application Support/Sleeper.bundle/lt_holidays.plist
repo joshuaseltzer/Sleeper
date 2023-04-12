@@ -11,8 +11,6 @@
 			<string>Naujieji metai</string>
 			<key>dates</key>
 			<array>
-				<string>2021-01-01</string>
-				<string>2022-01-01</string>
 				<string>2023-01-01</string>
 				<string>2024-01-01</string>
 				<string>2025-01-01</string>
@@ -47,8 +45,6 @@
 			<string>Lietuvos valstybės atkūrimo diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-02-16</string>
-				<string>2022-02-16</string>
 				<string>2023-02-16</string>
 				<string>2024-02-16</string>
 				<string>2025-02-16</string>
@@ -83,8 +79,6 @@
 			<string>Lietuvos nepriklausomybės atkūrimo diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-03-11</string>
-				<string>2022-03-11</string>
 				<string>2023-03-11</string>
 				<string>2024-03-11</string>
 				<string>2025-03-11</string>
@@ -119,8 +113,6 @@
 			<string>Velykos</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-04</string>
-				<string>2022-04-17</string>
 				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
@@ -155,8 +147,6 @@
 			<string>Velykų antroji diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-04-05</string>
-				<string>2022-04-18</string>
 				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
@@ -191,8 +181,6 @@
 			<string>Tarptautinė darbo diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-01</string>
-				<string>2022-05-01</string>
 				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
@@ -227,8 +215,6 @@
 			<string>Motinos diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-05-02</string>
-				<string>2022-05-01</string>
 				<string>2023-05-07</string>
 				<string>2024-05-05</string>
 				<string>2025-05-04</string>
@@ -263,8 +249,6 @@
 			<string>Tėvo diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-06</string>
-				<string>2022-06-05</string>
 				<string>2023-06-04</string>
 				<string>2024-06-02</string>
 				<string>2025-06-01</string>
@@ -299,8 +283,6 @@
 			<string>Joninės / Rasos</string>
 			<key>dates</key>
 			<array>
-				<string>2021-06-24</string>
-				<string>2022-06-24</string>
 				<string>2023-06-24</string>
 				<string>2024-06-24</string>
 				<string>2025-06-24</string>
@@ -335,8 +317,6 @@
 			<string>Valstybės (Lietuvos karaliaus Mindaugo karūnavimo) diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-07-06</string>
-				<string>2022-07-06</string>
 				<string>2023-07-06</string>
 				<string>2024-07-06</string>
 				<string>2025-07-06</string>
@@ -371,8 +351,6 @@
 			<string>Žolinė (Švč. Mergelės Marijos ėmimo į dangų diena)</string>
 			<key>dates</key>
 			<array>
-				<string>2021-08-15</string>
-				<string>2022-08-15</string>
 				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
@@ -407,8 +385,6 @@
 			<string>Visų šventųjų diena (Vėlinės)</string>
 			<key>dates</key>
 			<array>
-				<string>2021-11-01</string>
-				<string>2022-11-01</string>
 				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
@@ -443,8 +419,6 @@
 			<string>Šv. Kūčios</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-24</string>
-				<string>2022-12-24</string>
 				<string>2023-12-24</string>
 				<string>2024-12-24</string>
 				<string>2025-12-24</string>
@@ -479,8 +453,6 @@
 			<string>Šv. Kalėdų pirma diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-25</string>
-				<string>2022-12-25</string>
 				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
@@ -515,8 +487,6 @@
 			<string>Šv. Kalėdų antra diena</string>
 			<key>dates</key>
 			<array>
-				<string>2021-12-26</string>
-				<string>2022-12-26</string>
 				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
