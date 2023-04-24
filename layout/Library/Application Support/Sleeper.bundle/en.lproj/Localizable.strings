@@ -32,10 +32,10 @@
 "DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Remove all skip dates, including any holiday selections, for this alarm.";
 "CONFIRM_DEFAULT_SKIP_DATES_AND_HOLIDAYS" = "Are you sure you want to remove all of the skip dates and holiday selections for this alarm?";
 "SKIP_DATE_EXPLANATION" = "This alarm will be skipped on the dates selected.";
-"HOLIDAY_EXPLANATION" = "If this country recognizes observed holidays and the holiday falls on a weekend, the observed date is used.  Once a holiday is selected, it will continue to be skipped every year.";
+"HOLIDAY_EXPLANATION" = "If this country recognizes observed holidays and the holiday falls on a weekend, the observed date is used. Once a holiday is selected, it will continue to be skipped every year. The next date that will be skipped is displayed underneath each holiday name.";
 "ADD_NEW_DATE" = "Add New Date...";
 "NUMBER_SELECTED" = "%ld Selected";
-"SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire.  This decision will be reset if you save the alarm.";
+"SKIP_REASON_POPUP" = "You have decided to skip this alarm the next time it is set to fire. This decision will be reset if you save the alarm.";
 "SKIP_REASON_DATE" = "The next skip date you've selected for this alarm is %@.";
 "SKIP_REASON_HOLIDAY" = "The next holiday you've selected for this alarm is %@ (%@).";
 "ALL_HOLIDAYS" = "All Holidays";
@@ -43,8 +43,9 @@
 "SINGLE_DATE" = "Single Date";
 "DATE_RANGE" = "Date Range";
 "SKIP_EXPLANATION" = "Use the skip feature to temporarily disable alarms based on selected away dates/holidays or by setting a time in which the system will prompt you upon unlocking the device to skip the alarm before it fires.";
+"NO_FUTURE_DATES" = "No Future Dates Available";
 "AUTO_SET" = "Auto-Set";
-"AUTO_SET_DISABLED_EXPLANATION" = "The auto-set feature cannot be enabled on this device because the Weather application is not installed.  Please install and configure the Weather application from the App Store and try again.";
+"AUTO_SET_DISABLED_EXPLANATION" = "The auto-set feature cannot be enabled on this device because the Weather application is not installed. Please install and configure the Weather application from the App Store and try again.";
 "AUTO_SET_WEATHER_EXPLANATION" = "The auto-set times will be determined by the first location set in the Weather application.\n\nIf the first location is determined using your device's location, then the Weather app will need to be opened any time the device is rebooted or SpringBoard is restarted to refresh the first location.\n\nTo ensure the auto-set feature is always functioning properly, please also set a secondary location manually in the Weather application.";
 "AUTO_SET_OPEN_WEATHER_APP" = "Open Weather App";
 "AUTO_SET_EXPLANATION" = "Choose an auto-set option to have this alarm automatically update its fire time.";

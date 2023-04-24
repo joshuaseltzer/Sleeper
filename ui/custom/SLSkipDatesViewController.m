@@ -27,10 +27,6 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     kSLSkipDatesViewControllerSectionNumSections
 } SLSkipDatesViewControllerSection;
 
-// define the strings that represent the dates for today and tomorrow
-static NSString *sSLTodayDateString;
-static NSString *sSLTomorrowDateString;
-
 @interface SLSkipDatesViewController ()
 
 // the array that contains the custom dates that will be skipped
@@ -181,38 +177,35 @@ static NSString *sSLTomorrowDateString;
                                                                                        message:nil
                                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
 
-    // create the strings used to determine today and tomorrow's dates only once
-    if (sSLTodayDateString == nil || sSLTomorrowDateString == nil) {
-        NSDate *today = [NSDate date];
-        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-        dateComponents.day = 1;
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDate *tomorrow = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:today] options:0];
-
-        sSLTodayDateString = [[SLPrefsManager plistDateFormatter] stringFromDate:today];
-        sSLTomorrowDateString = [[SLPrefsManager plistDateFormatter] stringFromDate:tomorrow];
-    }
+    // create the strings used to determine today and tomorrow's dates
+    NSDate *today = [NSDate date];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.day = 1;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *tomorrow = [calendar dateByAddingComponents:dateComponents toDate:[calendar startOfDayForDate:today] options:0];
+    NSString *todayDateString = [[SLPrefsManager plistDateFormatter] stringFromDate:today];
+    NSString *tomorrowDateString = [[SLPrefsManager plistDateFormatter] stringFromDate:tomorrow];
     
     // check if the date representing today is already included in the custom skip dates
-    if (![self.customSkipDates containsObject:sSLTodayDateString]) {
+    if (![self.customSkipDates containsObject:todayDateString]) {
         // create an action that will let the user quickly add today as a skip date
         UIAlertAction *skipTodayAlertAction = [UIAlertAction actionWithTitle:kSLTodayString
                                                                        style:UIAlertActionStyleDefault
                                                                      handler:^(UIAlertAction * _Nonnull action) {
                                                                          // add the today string to the list of custom skip dates
-                                                                         [self updateCustomSkipDatesWithSkipDateString:sSLTodayDateString];
+                                                                         [self updateCustomSkipDatesWithSkipDateString:todayDateString];
                                                                     }];
         [selectDateAlertController addAction:skipTodayAlertAction];
     }
 
     // check if the date representing tomorrow is already included in the custom skip dates
-    if (![self.customSkipDates containsObject:sSLTomorrowDateString]) {
+    if (![self.customSkipDates containsObject:tomorrowDateString]) {
         // create an action that will let the user quickly add tomorrow as a skip date
         UIAlertAction *skipTomorrowAlertAction = [UIAlertAction actionWithTitle:kSLTomorrowString
                                                                           style:UIAlertActionStyleDefault
                                                                         handler:^(UIAlertAction * _Nonnull action) {
                                                                             // add the tomorrow string to the list of custom skip dates
-                                                                            [self updateCustomSkipDatesWithSkipDateString:sSLTomorrowDateString];
+                                                                            [self updateCustomSkipDatesWithSkipDateString:tomorrowDateString];
                                                                         }];
         [selectDateAlertController addAction:skipTomorrowAlertAction];
     }
