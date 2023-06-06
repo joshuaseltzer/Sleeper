@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# use the Xcode 11 toolchain to ensure arm64e compatibility on iOS 12 and iOS 13 for rootful builds
+# use the Xcode 11 toolchain to ensure arm64e compatibility on iOS 12 and iOS 13
 export PREFIX=$THEOS/toolchain/Xcode11.xctoolchain/usr/bin/
 
 # move the default development and Havoc control files temporarily
@@ -15,7 +15,7 @@ make package FINALPACKAGE=1
 mv -n control control_Havoc
 mv -n control_BigBoss control
 
-# build the BigBoss package (this should produce an error when trying to build arm64e)
+# build the BigBoss package
 make clean
 make package FINALPACKAGE=1
 
