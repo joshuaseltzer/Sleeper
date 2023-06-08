@@ -15,17 +15,17 @@
 #import "../common/SLCompatibilityHelper.h"
 #import "../common/SLLocalizedStrings.h"
 
-// define an enum to define the rows in the kSLQuickScheduleOverrideViewControllerSectionAlarmOptions section
-typedef enum SLQuickScheduleOverrideViewControllerAlarmOptionsSectionRow : NSUInteger {
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSounds,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowVolume,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeToggle,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime, // custom cells start here
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipToggle,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipTime,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipDates,
-    kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionNumRows
-} SLQuickScheduleOverrideViewControllerAlarmOptionsSectionRow;
+// define an enum to define the rows in the alarm options section
+typedef enum SLAlarmOptionsSectionRow : NSUInteger {
+    kSLAlarmOptionsSectionRowSounds,
+    kSLAlarmOptionsSectionRowVolume,
+    kSLAlarmOptionsSectionRowSnoozeToggle,
+    kSLAlarmOptionsSectionRowSnoozeTime, // custom cells start here
+    kSLAlarmOptionsSectionRowSkipToggle,
+    kSLAlarmOptionsSectionRowSkipTime,
+    kSLAlarmOptionsSectionRowSkipDates,
+    kSLAlarmOptionsSectionNumRows
+} SLAlarmOptionsSectionRow;
 
 @interface HKSHQuickScheduleOverrideViewController : UITableViewController {
     // The data source object is an instance of a UITableViewDiffableDataSource, which implements all of the table view's
@@ -45,9 +45,10 @@ typedef enum SLQuickScheduleOverrideViewControllerAlarmOptionsSectionRow : NSUIn
 @end
 
 // define a constant for the reuse identifier for the custom cell we will create
-static NSString * const kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionCellReuseIdentifier = @"SLQuickScheduleOverrideViewControllerAlarmOptionsSectionCellReuseIdentifier";
+static NSString * const kSLAlarmOptionsSectionCellReuseIdentifier = @"SLAlarmOptionsSectionCellReuseIdentifier";
 
-// define the constant that signifies the original number of rows in the section that contain the alarm options
+// constants that signifies how many sections/rows should be originally shown for different parts of this table
+static NSInteger const kSLMaxNumSections = 4;
 static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 %hook HKSHQuickScheduleOverrideViewController
@@ -111,16 +112,21 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // grab the original number of rows that were to be returned for a given section from the data source object
     id dataSource = MSHookIvar<id>(self, "dataSource");
+    
+    // grab the original number of rows that were to be returned for a given section from the data source object
     NSInteger numRows = [dataSource tableView:tableView numberOfRowsInSection:section];
 
     // Potentially add some extra custom rows for the additional Sleeper options to the Alarm options. If the wake up
     // alarm has been disabled by the user, the alarm options section will be removed completely, in which case we will
     // not be adding any additional rows.
-    if (numRows == kSLAlarmOptionsOriginalNumRows) {
-        self.SLAlarmOptionsSection = section;
-        numRows = kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionNumRows;
+    if ([dataSource numberOfSectionsInTableView:tableView] == kSLMaxNumSections) {
+        if (numRows == kSLAlarmOptionsOriginalNumRows) {
+            self.SLAlarmOptionsSection = section;
+            numRows = kSLAlarmOptionsSectionNumRows;
+        }
+    } else {
+        self.SLAlarmOptionsSection = -1;
     }
     
     return numRows;
@@ -128,21 +134,23 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+    
     // forward declare the cell that is to be returned
     UITableViewCell *cell = nil;
 
     // If the cell being asked for is a custom Sleeper cell, define those here.  Otherwise ask the data source
     // object for the original cell that was created.
-    if (indexPath.section == self.SLAlarmOptionsSection) {
-        if (indexPath.row < kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime) {
+    if ([dataSource numberOfSectionsInTableView:tableView] == kSLMaxNumSections && indexPath.section == self.SLAlarmOptionsSection) {
+        if (indexPath.row < kSLAlarmOptionsSectionRowSnoozeTime) {
             // return the original cell from the data source
             cell = [dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
         } else {
             // Dequeue the custom cell from the table.  Create a new one if it does not yet exist.
-            cell = [tableView dequeueReusableCellWithIdentifier:kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionCellReuseIdentifier];
+            cell = [tableView dequeueReusableCellWithIdentifier:kSLAlarmOptionsSectionCellReuseIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
-                                              reuseIdentifier:kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionCellReuseIdentifier];
+                                              reuseIdentifier:kSLAlarmOptionsSectionCellReuseIdentifier];
 
                 // set the background color of the cell
                 cell.backgroundColor = [SLCompatibilityHelper tableViewCellBackgroundColor];
@@ -159,7 +167,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 cell.textLabel.textColor = [UIColor whiteColor];
             }
 
-            if (indexPath.row == kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime) {
+            if (indexPath.row == kSLAlarmOptionsSectionRowSnoozeTime) {
                 cell.textLabel.text = kSLSnoozeTimeString;
                 cell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -168,7 +176,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 // format the cell of the text with the snooze time values
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.snoozeTimeHour,
                                             (long)self.SLAlarmPrefs.snoozeTimeMinute, (long)self.SLAlarmPrefs.snoozeTimeSecond];
-            } else if (indexPath.row == kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipToggle) {
+            } else if (indexPath.row == kSLAlarmOptionsSectionRowSkipToggle) {
                 cell.textLabel.text = kSLSkipString;
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.detailTextLabel.text = nil;
@@ -182,7 +190,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 
                 // set the switch to the custom view in the cell
                 cell.accessoryView = skipControl;
-            } else if (indexPath.row == kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipTime) {
+            } else if (indexPath.row == kSLAlarmOptionsSectionRowSkipTime) {
                 cell.textLabel.text = kSLSkipTimeString;
                 cell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -191,7 +199,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 // format the cell of the text with the skip time values
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)self.SLAlarmPrefs.skipTimeHour,
                                             (long)self.SLAlarmPrefs.skipTimeMinute, (long)self.SLAlarmPrefs.skipTimeSecond];
-            } else if (indexPath.row == kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipDates) {
+            } else if (indexPath.row == kSLAlarmOptionsSectionRowSkipDates) {
                 cell.textLabel.text = kSLSkipDatesString;
                 cell.selectionStyle = UITableViewCellSelectionStyleDefault;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -203,7 +211,6 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
         }
     } else {
         // return the original cell from the data source
-        id dataSource = MSHookIvar<id>(self, "dataSource");
         cell = [dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
     }
 
@@ -214,10 +221,13 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+    
     // override to indicate that the custom cells can be highlighted if custom cells are being shown
-    if (indexPath.section == self.SLAlarmOptionsSection &&
-        indexPath.row > kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeToggle &&
-        indexPath.row != kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipToggle) {
+    if ([dataSource numberOfSectionsInTableView:tableView] == kSLMaxNumSections &&
+        indexPath.section == self.SLAlarmOptionsSection &&
+        indexPath.row > kSLAlarmOptionsSectionRowSnoozeToggle &&
+        indexPath.row != kSLAlarmOptionsSectionRowSkipToggle) {
         return YES;
     } else {
         return %orig;
@@ -226,12 +236,15 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+    
     // handle row selection for the custom cells (if they are being shown)
-    if (indexPath.section == self.SLAlarmOptionsSection &&
-        indexPath.row > kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeToggle) {
+    if ([dataSource numberOfSectionsInTableView:tableView] == kSLMaxNumSections &&
+        indexPath.section == self.SLAlarmOptionsSection &&
+        indexPath.row > kSLAlarmOptionsSectionRowSnoozeToggle) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         switch (indexPath.row) {
-            case kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime: {
+            case kSLAlarmOptionsSectionRowSnoozeTime: {
                 // create a custom view controller which will decide the snooze time
                 SLSnoozeTimeViewController *snoozeController = [[SLSnoozeTimeViewController alloc] initWithHours:self.SLAlarmPrefs.snoozeTimeHour
                                                                                                          minutes:self.SLAlarmPrefs.snoozeTimeMinute
@@ -240,7 +253,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 [self.navigationController pushViewController:snoozeController animated:YES];
                 break;
             }
-            case kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipTime: {
+            case kSLAlarmOptionsSectionRowSkipTime: {
                 // create a custom view controller which will decide the skip time
                 SLSkipTimeViewController *skipController = [[SLSkipTimeViewController alloc] initWithHours:self.SLAlarmPrefs.skipTimeHour
                                                                                                    minutes:self.SLAlarmPrefs.skipTimeMinute
@@ -249,7 +262,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
                 [self.navigationController pushViewController:skipController animated:YES];
                 break;
             }
-            case kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipDates: {
+            case kSLAlarmOptionsSectionRowSkipDates: {
                 // create a custom view controller which will display the skip dates for this alarm
                 SLSkipDatesViewController *skipDatesController = [[SLSkipDatesViewController alloc] initWithAlarmPrefs:self.SLAlarmPrefs];
                 skipDatesController.delegate = self;
@@ -264,11 +277,12 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+    
     // potentially customize the footer text depending on whether or not the alarm is going to be skipped
-    if (section == self.SLAlarmOptionsSection) {
+    if ([dataSource numberOfSectionsInTableView:tableView] == kSLMaxNumSections && section == self.SLAlarmOptionsSection) {
         return [self.SLAlarmPrefs skipReasonExplanation];
     } else {
-        id dataSource = MSHookIvar<id>(self, "dataSource");
         return [dataSource tableView:tableView titleForFooterInSection:section];
     }
 }
@@ -304,7 +318,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSnoozeTime
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSnoozeTime
                                                                     inSection:self.SLAlarmOptionsSection]]
                               withRowAnimation:UITableViewRowAnimationNone];
     } else if ([pickerTableViewController isMemberOfClass:[SLSkipTimeViewController class]]) {
@@ -321,7 +335,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipTime
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipTime
                                                                     inSection:self.SLAlarmOptionsSection]]
                               withRowAnimation:UITableViewRowAnimationNone];
     }
@@ -340,7 +354,7 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
     self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
 
     // reload the cell that contains the skip dates
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLQuickScheduleOverrideViewControllerAlarmOptionsSectionRowSkipDates
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipDates
                                                                 inSection:self.SLAlarmOptionsSection]]
                           withRowAnimation:UITableViewRowAnimationNone];
 
