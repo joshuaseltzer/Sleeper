@@ -303,6 +303,8 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 %new
 - (void)SLPickerTableViewController:(SLPickerTableViewController *)pickerTableViewController didUpdateWithHours:(NSInteger)hours minutes:(NSInteger)minutes seconds:(NSInteger)seconds
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+    
     // check to see if we are updating the snooze time or the skip time
     if ([pickerTableViewController isMemberOfClass:[SLSnoozeTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
@@ -318,9 +320,11 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSnoozeTime
-                                                                    inSection:self.SLAlarmOptionsSection]]
-                              withRowAnimation:UITableViewRowAnimationNone];
+        if ([dataSource numberOfSectionsInTableView:self.tableView] == kSLMaxNumSections && self.SLAlarmOptionsSection != -1) {
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSnoozeTime
+                                                                        inSection:self.SLAlarmOptionsSection]]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        }
     } else if ([pickerTableViewController isMemberOfClass:[SLSkipTimeViewController class]]) {
         if (hours == 0 && minutes == 0 && seconds == 0) {
             // if all values returned are 0, then reset them to the default
@@ -335,9 +339,11 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
         }
 
         // reload the cell that contains the snooze time
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipTime
-                                                                    inSection:self.SLAlarmOptionsSection]]
-                              withRowAnimation:UITableViewRowAnimationNone];
+        if ([dataSource numberOfSectionsInTableView:self.tableView] == kSLMaxNumSections && self.SLAlarmOptionsSection != -1) {
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipTime
+                                                                        inSection:self.SLAlarmOptionsSection]]
+                                  withRowAnimation:UITableViewRowAnimationNone];
+        }
     }
 
     // signify that changes were made to the Sleeper preferences
@@ -350,21 +356,25 @@ static NSInteger const kSLAlarmOptionsOriginalNumRows = 3;
 %new
 - (void)SLSkipDatesViewController:(SLSkipDatesViewController *)skipDatesViewController didUpdateCustomSkipDates:(NSArray *)customSkipDates holidaySkipDates:(NSDictionary *)holidaySkipDates
 {
+    id dataSource = MSHookIvar<id>(self, "dataSource");
+
     self.SLAlarmPrefs.customSkipDates = customSkipDates;
     self.SLAlarmPrefs.holidaySkipDates = holidaySkipDates;
 
     // reload the cell that contains the skip dates
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipDates
-                                                                inSection:self.SLAlarmOptionsSection]]
-                          withRowAnimation:UITableViewRowAnimationNone];
+    if ([dataSource numberOfSectionsInTableView:self.tableView] == kSLMaxNumSections && self.SLAlarmOptionsSection != -1) {
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSLAlarmOptionsSectionRowSkipDates
+                                                                    inSection:self.SLAlarmOptionsSection]]
+                              withRowAnimation:UITableViewRowAnimationNone];
 
-    // force the footer title to update since the explanation to display might have changed
-    [UIView setAnimationsEnabled:NO];
-    [self.tableView beginUpdates];
-    [self.tableView footerViewForSection:self.SLAlarmOptionsSection].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
-    [[self.tableView footerViewForSection:self.SLAlarmOptionsSection].textLabel sizeToFit];
-    [self.tableView endUpdates];
-    [UIView setAnimationsEnabled:YES];
+        // force the footer title to update since the explanation to display might have changed
+        [UIView setAnimationsEnabled:NO];
+        [self.tableView beginUpdates];
+        [self.tableView footerViewForSection:self.SLAlarmOptionsSection].textLabel.text = [self.SLAlarmPrefs skipReasonExplanation];
+        [[self.tableView footerViewForSection:self.SLAlarmOptionsSection].textLabel sizeToFit];
+        [self.tableView endUpdates];
+        [UIView setAnimationsEnabled:YES];
+    }
 
     // signify that changes were made to the Sleeper preferences
     self.SLAlarmPrefsChanged = YES;
