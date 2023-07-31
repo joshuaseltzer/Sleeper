@@ -455,6 +455,9 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
         case kSLHolidayCountryCanada:
             countryCode = @"ca";
             break;
+        case kSLHolidayCountryChina:
+            countryCode = @"cn";
+            break;
         case kSLHolidayCountryColombia:
             countryCode = @"co";
             break;

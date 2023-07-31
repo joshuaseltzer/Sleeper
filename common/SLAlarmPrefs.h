@@ -19,6 +19,7 @@ typedef enum SLHolidayCountry : NSInteger {
     kSLHolidayCountryBrazil,
     kSLHolidayCountryBulgaria,
     kSLHolidayCountryCanada,
+    kSLHolidayCountryChina,
     kSLHolidayCountryColombia,
     kSLHolidayCountryCroatia,
     kSLHolidayCountryCzechia,

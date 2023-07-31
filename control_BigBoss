@@ -1,7 +1,7 @@
 Package: org.thebigboss.sleeper
 Name: Sleeper (Legacy) (iOS 8-14)
 Depends: mobilesubstrate, firmware (>=8.0), firmware (<<15.0)
-Version: 7.0.3
+Version: 7.0.4
 Architecture: iphoneos-arm
 Conflicts: org.packix.sleeper
 Description: Set custom snooze times and skip alarms with the Clock app using Sleeper!
