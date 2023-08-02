@@ -229,6 +229,7 @@
 			<key>dates</key>
 			<array>
 				<string>2023-09-29</string>
+				<string>2023-09-30</string>
 				<string>2024-09-17</string>
 				<string>2025-10-06</string>
 				<string>2026-09-25</string>
@@ -265,6 +266,9 @@
 				<string>2023-10-01</string>
 				<string>2023-10-02</string>
 				<string>2023-10-03</string>
+				<string>2023-10-04</string>
+				<string>2023-10-05</string>
+				<string>2023-10-06</string>
 				<string>2024-10-01</string>
 				<string>2024-10-02</string>
 				<string>2024-10-03</string>
