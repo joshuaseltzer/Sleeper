@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Sleeper (postrm): Killing mobiletimerd"
+killall -9 mobiletimerd
+exit 0
