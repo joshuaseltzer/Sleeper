@@ -11,8 +11,6 @@
 			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Worker's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -79,7 +76,6 @@
 			<string>Children's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-27</string>
 				<string>2024-05-27</string>
 				<string>2025-05-27</string>
 				<string>2026-05-27</string>
@@ -113,7 +109,6 @@
 			<string>Democracy Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-12</string>
 				<string>2024-06-12</string>
 				<string>2025-06-12</string>
 				<string>2026-06-12</string>
@@ -147,7 +142,6 @@
 			<string>Independence Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-01</string>
 				<string>2024-10-01</string>
 				<string>2025-10-01</string>
 				<string>2026-10-01</string>
@@ -181,7 +175,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -215,7 +208,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-26</string>

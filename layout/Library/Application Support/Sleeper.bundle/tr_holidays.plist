@@ -11,8 +11,6 @@
 			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>National Sovereignty and Children's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-23</string>
 				<string>2024-04-23</string>
 				<string>2025-04-23</string>
 				<string>2026-04-23</string>
@@ -79,7 +76,6 @@
 			<string>Labour Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -113,7 +109,6 @@
 			<string>Commemoration of Ataturk</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-19</string>
 				<string>2024-05-19</string>
 				<string>2025-05-19</string>
 				<string>2026-05-19</string>
@@ -147,7 +142,6 @@
 			<string>Ramadan Feast</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-21</string>
 				<string>2024-04-10</string>
 				<string>2025-03-30</string>
 				<string>2026-03-20</string>
@@ -182,8 +176,6 @@
 			<string>Ramadan Feast Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-22</string>
-				<string>2023-04-23</string>
 				<string>2024-04-11</string>
 				<string>2024-04-12</string>
 				<string>2025-03-31</string>
@@ -245,7 +237,6 @@
 			<string>Democracy and National Unity Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-15</string>
 				<string>2024-07-15</string>
 				<string>2025-07-15</string>
 				<string>2026-07-15</string>
@@ -279,7 +270,6 @@
 			<string>Sacrifice Feast</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-28</string>
 				<string>2024-06-16</string>
 				<string>2025-06-06</string>
 				<string>2026-05-27</string>
@@ -314,9 +304,6 @@
 			<string>Sacrifice Feast Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-29</string>
-				<string>2023-06-30</string>
-				<string>2023-07-01</string>
 				<string>2024-06-17</string>
 				<string>2024-06-18</string>
 				<string>2024-06-19</string>
@@ -405,7 +392,6 @@
 			<string>Victory Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-30</string>
 				<string>2024-08-30</string>
 				<string>2025-08-30</string>
 				<string>2026-08-30</string>
@@ -439,7 +425,6 @@
 			<string>Republic Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-29</string>
 				<string>2024-10-29</string>
 				<string>2025-10-29</string>
 				<string>2026-10-29</string>

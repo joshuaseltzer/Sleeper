@@ -11,8 +11,6 @@
 			<string>Capodanno</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Epifania del Signore</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-06</string>
-				<string>2024-01-06</string>
 				<string>2025-01-06</string>
 				<string>2026-01-06</string>
 				<string>2027-01-06</string>
@@ -79,7 +75,6 @@
 			<string>Pasqua di Resurrezione</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
 				<string>2026-04-05</string>
@@ -113,7 +108,6 @@
 			<string>Lunedì dell'Angelo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -147,7 +141,6 @@
 			<string>Festa della Liberazione</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-25</string>
 				<string>2024-04-25</string>
 				<string>2025-04-25</string>
 				<string>2026-04-25</string>
@@ -181,7 +174,6 @@
 			<string>Festa dei Lavoratori</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -215,7 +207,6 @@
 			<string>Festa della Repubblica</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-02</string>
 				<string>2024-06-02</string>
 				<string>2025-06-02</string>
 				<string>2026-06-02</string>
@@ -249,7 +240,6 @@
 			<string>Assunzione della Vergine</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
 				<string>2026-08-15</string>
@@ -283,7 +273,6 @@
 			<string>Tutti i Santi</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
 				<string>2026-11-01</string>
@@ -317,7 +306,6 @@
 			<string>Immacolata Concezione</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -351,7 +339,6 @@
 			<string>Natale</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -385,7 +372,6 @@
 			<string>Santo Stefano</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-26</string>

@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Jueves Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-06</string>
 				<string>2024-03-28</string>
 				<string>2025-04-17</string>
 				<string>2026-04-02</string>
@@ -79,7 +76,6 @@
 			<string>Viernes Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -113,7 +109,6 @@
 			<string>Día del Trabajo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -147,7 +142,6 @@
 			<string>Día de la Revolución</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-19</string>
 				<string>2024-07-19</string>
 				<string>2025-07-19</string>
 				<string>2026-07-19</string>
@@ -181,7 +175,6 @@
 			<string>Bajada de Santo Domingo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-01</string>
 				<string>2024-08-01</string>
 				<string>2025-08-01</string>
 				<string>2026-08-01</string>
@@ -215,7 +208,6 @@
 			<string>Subida de Santo Domingo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-10</string>
 				<string>2024-08-10</string>
 				<string>2025-08-10</string>
 				<string>2026-08-10</string>
@@ -249,7 +241,6 @@
 			<string>Batalla de San Jacinto</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-14</string>
 				<string>2024-09-14</string>
 				<string>2025-09-14</string>
 				<string>2026-09-14</string>
@@ -283,7 +274,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-15</string>
 				<string>2024-09-15</string>
 				<string>2025-09-15</string>
 				<string>2026-09-15</string>
@@ -317,7 +307,6 @@
 			<string>Concepción de María</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -351,7 +340,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

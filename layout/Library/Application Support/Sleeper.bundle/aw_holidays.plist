@@ -11,8 +11,6 @@
 			<string>Aña Nobo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Dia Di Betico</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-25</string>
-				<string>2024-01-25</string>
 				<string>2025-01-25</string>
 				<string>2026-01-25</string>
 				<string>2027-01-25</string>
@@ -79,8 +75,6 @@
 			<string>Dialuna di Carnaval</string>
 			<key>dates</key>
 			<array>
-				<string>2023-02-20</string>
-				<string>2024-02-12</string>
 				<string>2025-03-03</string>
 				<string>2026-02-16</string>
 				<string>2027-02-08</string>
@@ -113,7 +107,6 @@
 			<string>Dia di Himno y Bandera</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-18</string>
 				<string>2024-03-18</string>
 				<string>2025-03-18</string>
 				<string>2026-03-18</string>
@@ -147,7 +140,6 @@
 			<string>Bierna Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -181,7 +173,6 @@
 			<string>Di Dos Dia di Pasco di Resureccion</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -215,7 +206,6 @@
 			<string>Aña di Rey</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-27</string>
 				<string>2024-04-27</string>
 				<string>2025-04-26</string>
 				<string>2026-04-27</string>
@@ -249,7 +239,6 @@
 			<string>Dia di Obrero</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -283,7 +272,6 @@
 			<string>Dia di Asuncion</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-18</string>
 				<string>2024-05-09</string>
 				<string>2025-05-29</string>
 				<string>2026-05-14</string>
@@ -317,7 +305,6 @@
 			<string>Pasco di Nacemento</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -351,7 +338,6 @@
 			<string>Di Dos Dia di Pasco di Nacemento</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-26</string>

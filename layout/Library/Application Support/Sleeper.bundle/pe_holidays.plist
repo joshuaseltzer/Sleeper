@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Jueves Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-06</string>
 				<string>2024-03-28</string>
 				<string>2025-04-17</string>
 				<string>2026-04-02</string>
@@ -79,7 +76,6 @@
 			<string>Viernes Santo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -113,7 +109,6 @@
 			<string>Sábado de Gloria</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-08</string>
 				<string>2024-03-30</string>
 				<string>2025-04-19</string>
 				<string>2026-04-04</string>
@@ -147,7 +142,6 @@
 			<string>Domingo de Resurrección</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
 				<string>2026-04-05</string>
@@ -181,7 +175,6 @@
 			<string>Día del Trabajo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -215,7 +208,6 @@
 			<string>San Pedro y San Pablo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-29</string>
 				<string>2024-06-29</string>
 				<string>2025-06-29</string>
 				<string>2026-06-29</string>
@@ -249,7 +241,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-28</string>
 				<string>2024-07-28</string>
 				<string>2025-07-28</string>
 				<string>2026-07-28</string>
@@ -283,7 +274,6 @@
 			<string>Día de las Fuerzas Armadas y la Policía del Perú</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-29</string>
 				<string>2024-07-29</string>
 				<string>2025-07-29</string>
 				<string>2026-07-29</string>
@@ -317,7 +307,6 @@
 			<string>Día de Santa Rosa de Lima</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-30</string>
 				<string>2024-08-30</string>
 				<string>2025-08-30</string>
 				<string>2026-08-30</string>
@@ -351,7 +340,6 @@
 			<string>Combate Naval de Angamos</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-08</string>
 				<string>2024-10-08</string>
 				<string>2025-10-08</string>
 				<string>2026-10-08</string>
@@ -385,7 +373,6 @@
 			<string>Día de Todos Los Santos</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
 				<string>2026-11-01</string>
@@ -419,7 +406,6 @@
 			<string>Inmaculada Concepción</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -453,7 +439,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

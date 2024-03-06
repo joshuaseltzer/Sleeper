@@ -3,7 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>dateCreated</key>
-	<date>2023-07-31T00:43:58Z</date>
 	<key>holidays</key>
 	<array>
 		<dict>
@@ -11,7 +10,6 @@
 			<string>New Year&apos;s Day</string>
 			<key>dates</key>
 			<array>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -44,9 +42,6 @@
 			<string>Chinese New Year (Spring Festival)</string>
 			<key>dates</key>
 			<array>
-				<string>2024-02-10</string>
-				<string>2024-02-11</string>
-				<string>2024-02-12</string>
 				<string>2025-01-29</string>
 				<string>2025-01-30</string>
 				<string>2025-01-31</string>
@@ -228,8 +223,6 @@
 			<string>Mid-Autumn Festival</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-29</string>
-				<string>2023-09-30</string>
 				<string>2024-09-17</string>
 				<string>2025-10-06</string>
 				<string>2026-09-25</string>
@@ -263,12 +256,6 @@
 			<string>National Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-01</string>
-				<string>2023-10-02</string>
-				<string>2023-10-03</string>
-				<string>2023-10-04</string>
-				<string>2023-10-05</string>
-				<string>2023-10-06</string>
 				<string>2024-10-01</string>
 				<string>2024-10-02</string>
 				<string>2024-10-03</string>

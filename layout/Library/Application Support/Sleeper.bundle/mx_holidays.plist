@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-02</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Día de la Constitución</string>
 			<key>dates</key>
 			<array>
-				<string>2023-02-06</string>
-				<string>2024-02-05</string>
 				<string>2025-02-03</string>
 				<string>2026-02-02</string>
 				<string>2027-02-01</string>
@@ -79,7 +75,6 @@
 			<string>Natalicio de Benito Juárez</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-20</string>
 				<string>2024-03-18</string>
 				<string>2025-03-17</string>
 				<string>2026-03-16</string>
@@ -113,7 +108,6 @@
 			<string>Día del Trabajo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -147,7 +141,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-15</string>
 				<string>2024-09-16</string>
 				<string>2025-09-16</string>
 				<string>2026-09-16</string>
@@ -181,7 +174,6 @@
 			<string>Día de la Revolución</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-20</string>
 				<string>2024-11-18</string>
 				<string>2025-11-17</string>
 				<string>2026-11-16</string>
@@ -215,7 +207,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

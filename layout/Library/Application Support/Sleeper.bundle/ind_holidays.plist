@@ -11,8 +11,6 @@
 			<string>New Year</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Makar Sankranti / Pongal</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-14</string>
-				<string>2024-01-14</string>
 				<string>2025-01-14</string>
 				<string>2026-01-14</string>
 				<string>2027-01-14</string>
@@ -79,8 +75,6 @@
 			<string>Republic Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-26</string>
-				<string>2024-01-26</string>
 				<string>2025-01-26</string>
 				<string>2026-01-26</string>
 				<string>2027-01-26</string>
@@ -113,7 +107,6 @@
 			<string>Labour Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -147,7 +140,6 @@
 			<string>Independence Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
 				<string>2026-08-15</string>
@@ -181,7 +173,6 @@
 			<string>Gandhi Jayanti</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-02</string>
 				<string>2024-10-02</string>
 				<string>2025-10-02</string>
 				<string>2026-10-02</string>
@@ -215,7 +206,6 @@
 			<string>Christmas</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

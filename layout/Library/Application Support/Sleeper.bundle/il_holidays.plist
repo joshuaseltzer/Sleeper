@@ -11,7 +11,6 @@
 			<string>Purim - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-06</string>
 				<string>2024-03-23</string>
 				<string>2025-03-13</string>
 				<string>2026-03-02</string>
@@ -45,7 +44,6 @@
 			<string>Purim</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-07</string>
 				<string>2024-03-24</string>
 				<string>2025-03-14</string>
 				<string>2026-03-03</string>
@@ -79,7 +77,6 @@
 			<string>Shushan Purim</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-08</string>
 				<string>2024-03-25</string>
 				<string>2025-03-15</string>
 				<string>2026-03-04</string>
@@ -113,7 +110,6 @@
 			<string>Passover I - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-05</string>
 				<string>2024-04-22</string>
 				<string>2025-04-12</string>
 				<string>2026-04-01</string>
@@ -147,7 +143,6 @@
 			<string>Passover I</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-06</string>
 				<string>2024-04-23</string>
 				<string>2025-04-13</string>
 				<string>2026-04-02</string>
@@ -181,10 +176,6 @@
 			<string>Passover - Chol HaMoed</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
-				<string>2023-04-08</string>
-				<string>2023-04-09</string>
-				<string>2023-04-10</string>
 				<string>2024-04-24</string>
 				<string>2024-04-25</string>
 				<string>2024-04-26</string>
@@ -296,7 +287,6 @@
 			<string>Passover VII - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-11</string>
 				<string>2024-04-28</string>
 				<string>2025-04-18</string>
 				<string>2026-04-07</string>
@@ -330,7 +320,6 @@
 			<string>Passover VII</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-12</string>
 				<string>2024-04-29</string>
 				<string>2025-04-19</string>
 				<string>2026-04-08</string>
@@ -364,7 +353,6 @@
 			<string>Memorial Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-25</string>
 				<string>2024-05-12</string>
 				<string>2024-05-13</string>
 				<string>2025-04-30</string>
@@ -418,7 +406,6 @@
 			<string>Independence Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-26</string>
 				<string>2024-05-13</string>
 				<string>2024-05-14</string>
 				<string>2025-05-01</string>
@@ -469,7 +456,6 @@
 			<string>Lag B'Omer</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-09</string>
 				<string>2024-05-26</string>
 				<string>2025-05-16</string>
 				<string>2026-05-05</string>
@@ -503,7 +489,6 @@
 			<string>Shavuot - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-25</string>
 				<string>2024-06-11</string>
 				<string>2025-06-01</string>
 				<string>2026-05-21</string>
@@ -537,7 +522,6 @@
 			<string>Shavuot</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-26</string>
 				<string>2024-06-12</string>
 				<string>2025-06-02</string>
 				<string>2026-05-22</string>
@@ -571,7 +555,6 @@
 			<string>Rosh Hashanah - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-15</string>
 				<string>2024-10-02</string>
 				<string>2025-09-22</string>
 				<string>2026-09-11</string>
@@ -605,8 +588,6 @@
 			<string>Rosh Hashanah</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-16</string>
-				<string>2023-09-17</string>
 				<string>2024-10-03</string>
 				<string>2024-10-04</string>
 				<string>2025-09-23</string>
@@ -666,7 +647,6 @@
 			<string>Yom Kippur - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-24</string>
 				<string>2024-10-11</string>
 				<string>2025-10-01</string>
 				<string>2026-09-20</string>
@@ -700,7 +680,6 @@
 			<string>Yom Kippur</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-25</string>
 				<string>2024-10-12</string>
 				<string>2025-10-02</string>
 				<string>2026-09-21</string>
@@ -734,7 +713,6 @@
 			<string>Sukkot I - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-29</string>
 				<string>2024-10-16</string>
 				<string>2025-10-06</string>
 				<string>2026-09-25</string>
@@ -768,7 +746,6 @@
 			<string>Sukkot I</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-30</string>
 				<string>2024-10-17</string>
 				<string>2025-10-07</string>
 				<string>2026-09-26</string>
@@ -802,11 +779,6 @@
 			<string>Sukkot - Chol HaMoed</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-01</string>
-				<string>2023-10-02</string>
-				<string>2023-10-03</string>
-				<string>2023-10-04</string>
-				<string>2023-10-05</string>
 				<string>2024-10-18</string>
 				<string>2024-10-19</string>
 				<string>2024-10-20</string>
@@ -944,7 +916,6 @@
 			<string>Sukkot VII - Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-06</string>
 				<string>2024-10-23</string>
 				<string>2025-10-13</string>
 				<string>2026-10-02</string>
@@ -978,7 +949,6 @@
 			<string>Sukkot VII</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-07</string>
 				<string>2024-10-24</string>
 				<string>2025-10-14</string>
 				<string>2026-10-03</string>
@@ -1012,14 +982,6 @@
 			<string>Hanukkah</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
-				<string>2023-12-09</string>
-				<string>2023-12-10</string>
-				<string>2023-12-11</string>
-				<string>2023-12-12</string>
-				<string>2023-12-13</string>
-				<string>2023-12-14</string>
-				<string>2023-12-15</string>
 				<string>2024-12-26</string>
 				<string>2024-12-27</string>
 				<string>2024-12-28</string>

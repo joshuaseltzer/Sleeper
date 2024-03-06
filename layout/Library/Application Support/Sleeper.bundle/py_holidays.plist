@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Día de los Héroes de la Patria</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-06</string>
-				<string>2024-03-04</string>
 				<string>2025-03-03</string>
 				<string>2026-03-02</string>
 				<string>2027-03-01</string>
@@ -79,7 +75,6 @@
 			<string>Semana Santa (Jueves Santo)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-06</string>
 				<string>2024-03-28</string>
 				<string>2025-04-17</string>
 				<string>2026-04-02</string>
@@ -113,7 +108,6 @@
 			<string>Semana Santa (Viernes Santo)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -147,7 +141,6 @@
 			<string>Día de Pascuas</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
 				<string>2026-04-05</string>
@@ -181,7 +174,6 @@
 			<string>Día de los Trabajadores</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -215,7 +207,6 @@
 			<string>Día de la Independencia Nacional</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-15</string>
 				<string>2024-05-15</string>
 				<string>2025-05-15</string>
 				<string>2026-05-15</string>
@@ -249,7 +240,6 @@
 			<string>Día de la Paz del Chaco</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-12</string>
 				<string>2024-06-17</string>
 				<string>2025-06-16</string>
 				<string>2026-06-15</string>
@@ -283,7 +273,6 @@
 			<string>Día de la Fundación de Asunción</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
 				<string>2026-08-15</string>
@@ -317,7 +306,6 @@
 			<string>Batalla de Boquerón</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-29</string>
 				<string>2024-09-29</string>
 				<string>2025-09-29</string>
 				<string>2026-09-29</string>
@@ -351,7 +339,6 @@
 			<string>Día de la Virgen de Caacupé</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -385,7 +372,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

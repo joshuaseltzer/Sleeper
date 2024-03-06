@@ -11,8 +11,6 @@
 			<string>New Year's Day - Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Coptic Christmas</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-07</string>
-				<string>2024-01-07</string>
 				<string>2025-01-07</string>
 				<string>2026-01-07</string>
 				<string>2027-01-07</string>
@@ -79,8 +75,6 @@
 			<string>Revolution Day (January 25)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-25</string>
-				<string>2024-01-25</string>
 				<string>2025-01-25</string>
 				<string>2026-01-25</string>
 				<string>2027-01-25</string>
@@ -113,7 +107,6 @@
 			<string>Coptic Easter Sunday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-16</string>
 				<string>2024-05-05</string>
 				<string>2025-04-20</string>
 				<string>2026-04-12</string>
@@ -147,7 +140,6 @@
 			<string>Sham El Nessim</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-17</string>
 				<string>2024-05-06</string>
 				<string>2025-04-21</string>
 				<string>2026-04-13</string>
@@ -181,7 +173,6 @@
 			<string>Sinai Liberation Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-25</string>
 				<string>2024-04-25</string>
 				<string>2025-04-25</string>
 				<string>2026-04-25</string>
@@ -215,7 +206,6 @@
 			<string>Labour Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -249,7 +239,6 @@
 			<string>Revolution Day (June 30)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-30</string>
 				<string>2024-06-30</string>
 				<string>2025-06-30</string>
 				<string>2026-06-30</string>
@@ -283,7 +272,6 @@
 			<string>Revolution Day (July 23)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-23</string>
 				<string>2024-07-23</string>
 				<string>2025-07-23</string>
 				<string>2026-07-23</string>
@@ -317,7 +305,6 @@
 			<string>Armed Forces Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-06</string>
 				<string>2024-10-06</string>
 				<string>2025-10-06</string>
 				<string>2026-10-06</string>

@@ -11,8 +11,6 @@
 			<string>Jour de l'an</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Lundi de Pâques</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -79,7 +76,6 @@
 			<string>Fête du Travail</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -113,7 +109,6 @@
 			<string>Armistice 1945</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-08</string>
 				<string>2024-05-08</string>
 				<string>2025-05-08</string>
 				<string>2026-05-08</string>
@@ -147,7 +142,6 @@
 			<string>Ascension</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-18</string>
 				<string>2024-05-09</string>
 				<string>2025-05-29</string>
 				<string>2026-05-14</string>
@@ -181,7 +175,6 @@
 			<string>Lundi de Pentecôte</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-29</string>
 				<string>2024-05-20</string>
 				<string>2025-06-09</string>
 				<string>2026-05-25</string>
@@ -215,7 +208,6 @@
 			<string>Fête nationale</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-14</string>
 				<string>2024-07-14</string>
 				<string>2025-07-14</string>
 				<string>2026-07-14</string>
@@ -249,7 +241,6 @@
 			<string>Assomption</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
 				<string>2026-08-15</string>
@@ -283,7 +274,6 @@
 			<string>Toussaint</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
 				<string>2026-11-01</string>
@@ -317,7 +307,6 @@
 			<string>Armistice 1918</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-11</string>
 				<string>2024-11-11</string>
 				<string>2025-11-11</string>
 				<string>2026-11-11</string>
@@ -351,7 +340,6 @@
 			<string>Noël</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

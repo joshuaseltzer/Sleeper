@@ -11,8 +11,6 @@
 			<string>Nouvel an - Premier janvier</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Commémoration de la présentation du manifeste de l'indépendance</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-11</string>
-				<string>2024-01-11</string>
 				<string>2025-01-11</string>
 				<string>2026-01-11</string>
 				<string>2027-01-11</string>
@@ -79,7 +75,6 @@
 			<string>Fête du Travail</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -113,8 +108,6 @@
 			<string>Eid al-Fitr</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-21</string>
-				<string>2023-04-22</string>
 				<string>2024-04-10</string>
 				<string>2024-04-11</string>
 				<string>2025-03-30</string>
@@ -176,7 +169,6 @@
 			<string>Fête du Trône</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-30</string>
 				<string>2024-07-30</string>
 				<string>2025-07-30</string>
 				<string>2026-07-30</string>
@@ -210,8 +202,6 @@
 			<string>Eid al-Adha</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-28</string>
-				<string>2023-06-29</string>
 				<string>2024-06-16</string>
 				<string>2024-06-17</string>
 				<string>2025-06-06</string>
@@ -273,7 +263,6 @@
 			<string>Journée de Oued Ed-Dahab</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-14</string>
 				<string>2024-08-14</string>
 				<string>2025-08-14</string>
 				<string>2026-08-14</string>
@@ -307,7 +296,6 @@
 			<string>1er Moharram</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-19</string>
 				<string>2024-07-07</string>
 				<string>2025-06-26</string>
 				<string>2026-06-16</string>
@@ -341,7 +329,6 @@
 			<string>Commémoration de la révolution du Roi et du peuple</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-20</string>
 				<string>2024-08-20</string>
 				<string>2025-08-20</string>
 				<string>2026-08-20</string>
@@ -375,7 +362,6 @@
 			<string>Fête de la jeunesse</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-21</string>
 				<string>2024-08-21</string>
 				<string>2025-08-21</string>
 				<string>2026-08-21</string>
@@ -409,8 +395,6 @@
 			<string>Aid al Mawlid Annabawi</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-27</string>
-				<string>2023-09-28</string>
 				<string>2024-09-15</string>
 				<string>2024-09-16</string>
 				<string>2025-09-04</string>
@@ -472,7 +456,6 @@
 			<string>Marche verte</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-06</string>
 				<string>2024-11-06</string>
 				<string>2025-11-06</string>
 				<string>2026-11-06</string>
@@ -506,7 +489,6 @@
 			<string>Fête de l'indépendance</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-18</string>
 				<string>2024-11-18</string>
 				<string>2025-11-18</string>
 				<string>2026-11-18</string>

@@ -11,8 +11,6 @@
 			<string>Deň vzniku Slovenskej republiky</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Zjavenie Pána (Traja králi a vianočnýsviatok pravoslávnych kresťanov)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-06</string>
-				<string>2024-01-06</string>
 				<string>2025-01-06</string>
 				<string>2026-01-06</string>
 				<string>2027-01-06</string>
@@ -79,7 +75,6 @@
 			<string>Veľký piatok</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -113,7 +108,6 @@
 			<string>Veľkonočný pondelok</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -147,7 +141,6 @@
 			<string>Sviatok práce</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -181,7 +174,6 @@
 			<string>Deň víťazstva nad fašizmom</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-08</string>
 				<string>2024-05-08</string>
 				<string>2025-05-08</string>
 				<string>2026-05-08</string>
@@ -215,7 +207,6 @@
 			<string>Sviatok svätého Cyrila a svätého Metoda</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-05</string>
 				<string>2024-07-05</string>
 				<string>2025-07-05</string>
 				<string>2026-07-05</string>
@@ -249,7 +240,6 @@
 			<string>Výročie Slovenského národného povstania</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-29</string>
 				<string>2024-08-29</string>
 				<string>2025-08-29</string>
 				<string>2026-08-29</string>
@@ -283,7 +273,6 @@
 			<string>Deň Ústavy Slovenskej republiky</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-01</string>
 				<string>2024-09-01</string>
 				<string>2025-09-01</string>
 				<string>2026-09-01</string>
@@ -317,7 +306,6 @@
 			<string>Sedembolestná Panna Mária</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-15</string>
 				<string>2024-09-15</string>
 				<string>2025-09-15</string>
 				<string>2026-09-15</string>
@@ -351,7 +339,6 @@
 			<string>Sviatok Všetkých svätých</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
 				<string>2026-11-01</string>
@@ -385,7 +372,6 @@
 			<string>Deň boja za slobodu a demokraciu</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-17</string>
 				<string>2024-11-17</string>
 				<string>2025-11-17</string>
 				<string>2026-11-17</string>
@@ -419,7 +405,6 @@
 			<string>Štedrý deň</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-24</string>
 				<string>2024-12-24</string>
 				<string>2025-12-24</string>
 				<string>2026-12-24</string>
@@ -453,7 +438,6 @@
 			<string>Prvý sviatok vianočný</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -487,7 +471,6 @@
 			<string>Druhý sviatok vianočný</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-26</string>

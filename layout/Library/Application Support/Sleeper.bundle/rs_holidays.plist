@@ -11,10 +11,6 @@
 			<string>Нова година</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-02</string>
-				<string>2023-01-03</string>
-				<string>2024-01-01</string>
-				<string>2024-01-02</string>
 				<string>2025-01-01</string>
 				<string>2025-01-02</string>
 				<string>2026-01-01</string>
@@ -69,8 +65,6 @@
 			<string>Божић</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-07</string>
-				<string>2024-01-07</string>
 				<string>2025-01-07</string>
 				<string>2026-01-07</string>
 				<string>2027-01-07</string>
@@ -103,10 +97,6 @@
 			<string>Дан државности Србије</string>
 			<key>dates</key>
 			<array>
-				<string>2023-02-15</string>
-				<string>2023-02-16</string>
-				<string>2024-02-15</string>
-				<string>2024-02-16</string>
 				<string>2025-02-17</string>
 				<string>2026-02-16</string>
 				<string>2026-02-17</string>
@@ -160,7 +150,6 @@
 			<string>Велики петак</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-14</string>
 				<string>2024-05-03</string>
 				<string>2025-04-18</string>
 				<string>2026-04-10</string>
@@ -194,7 +183,6 @@
 			<string>Велика субота</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-15</string>
 				<string>2024-05-04</string>
 				<string>2025-04-19</string>
 				<string>2026-04-11</string>
@@ -228,7 +216,6 @@
 			<string>Васкрс</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-16</string>
 				<string>2024-05-05</string>
 				<string>2025-04-20</string>
 				<string>2026-04-12</string>
@@ -262,7 +249,6 @@
 			<string>Други дан Васкрса</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-17</string>
 				<string>2024-05-06</string>
 				<string>2025-04-21</string>
 				<string>2026-04-13</string>
@@ -296,8 +282,6 @@
 			<string>Празник рада</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
-				<string>2023-05-02</string>
 				<string>2024-05-01</string>
 				<string>2024-05-02</string>
 				<string>2025-05-01</string>
@@ -357,7 +341,6 @@
 			<string>Дан примирја у Првом светском рату</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-11</string>
 				<string>2024-11-11</string>
 				<string>2025-11-11</string>
 				<string>2026-11-11</string>

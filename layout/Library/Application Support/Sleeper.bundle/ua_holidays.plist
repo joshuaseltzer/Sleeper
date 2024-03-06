@@ -11,8 +11,6 @@
 			<string>Новий рік</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Різдво Христове (православне)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-07</string>
-				<string>2024-01-07</string>
 				<string>2025-01-07</string>
 				<string>2026-01-07</string>
 				<string>2027-01-07</string>
@@ -79,7 +75,6 @@
 			<string>Міжнародний жіночий день</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-08</string>
 				<string>2024-03-08</string>
 				<string>2025-03-08</string>
 				<string>2026-03-08</string>
@@ -113,7 +108,6 @@
 			<string>Пасха (Великдень)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-16</string>
 				<string>2024-05-05</string>
 				<string>2025-04-20</string>
 				<string>2026-04-12</string>
@@ -147,7 +141,6 @@
 			<string>День праці</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -181,7 +174,6 @@
 			<string>День перемоги</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-09</string>
 				<string>2024-05-09</string>
 				<string>2025-05-09</string>
 				<string>2026-05-09</string>
@@ -215,7 +207,6 @@
 			<string>Трійця</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-04</string>
 				<string>2024-06-23</string>
 				<string>2025-06-08</string>
 				<string>2026-05-31</string>
@@ -249,7 +240,6 @@
 			<string>День Конституції України</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-28</string>
 				<string>2024-06-28</string>
 				<string>2025-06-28</string>
 				<string>2026-06-28</string>
@@ -283,7 +273,6 @@
 			<string>День незалежності України</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-24</string>
 				<string>2024-08-24</string>
 				<string>2025-08-24</string>
 				<string>2026-08-24</string>
@@ -317,7 +306,6 @@
 			<string>День захисника України</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-14</string>
 				<string>2024-10-14</string>
 				<string>2025-10-14</string>
 				<string>2026-10-14</string>
@@ -351,7 +339,6 @@
 			<string>Різдво Христове (католицьке)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

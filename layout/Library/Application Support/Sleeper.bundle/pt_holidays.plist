@@ -11,8 +11,6 @@
 			<string>Ano Novo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Sexta-feira Santa</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -79,7 +76,6 @@
 			<string>Páscoa</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
 				<string>2026-04-05</string>
@@ -113,7 +109,6 @@
 			<string>Dia da Liberdade</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-25</string>
 				<string>2024-04-25</string>
 				<string>2025-04-25</string>
 				<string>2026-04-25</string>
@@ -147,7 +142,6 @@
 			<string>Dia do Trabalhador</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -181,7 +175,6 @@
 			<string>Dia de Portugal</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-10</string>
 				<string>2024-06-10</string>
 				<string>2025-06-10</string>
 				<string>2026-06-10</string>
@@ -215,7 +208,6 @@
 			<string>Corpo de Deus</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-08</string>
 				<string>2024-05-30</string>
 				<string>2025-06-19</string>
 				<string>2026-06-04</string>
@@ -249,7 +241,6 @@
 			<string>Assunção de Nossa Senhora</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-15</string>
 				<string>2024-08-15</string>
 				<string>2025-08-15</string>
 				<string>2026-08-15</string>
@@ -283,7 +274,6 @@
 			<string>Implantação da República</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-05</string>
 				<string>2024-10-05</string>
 				<string>2025-10-05</string>
 				<string>2026-10-05</string>
@@ -317,7 +307,6 @@
 			<string>Dia de Todos os Santos</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-01</string>
 				<string>2024-11-01</string>
 				<string>2025-11-01</string>
 				<string>2026-11-01</string>
@@ -351,7 +340,6 @@
 			<string>Restauração da Independência</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-01</string>
 				<string>2024-12-01</string>
 				<string>2025-12-01</string>
 				<string>2026-12-01</string>
@@ -385,7 +373,6 @@
 			<string>Imaculada Conceição</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -419,7 +406,6 @@
 			<string>Dia de Natal</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

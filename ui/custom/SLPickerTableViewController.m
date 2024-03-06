@@ -432,6 +432,12 @@ static NSInteger const kSLSecondComponent = 4;
     [self.timePickerView selectRow:seconds inComponent:kSLSecondComponent animated:animated];
 }
 
+// allow this view controller to be shown even when the device is in secure mode
+- (BOOL)_canShowWhileLocked
+{
+    return YES;
+}
+
 #pragma mark - UIPickerViewDataSource
 
 // return the number of components in the picker view

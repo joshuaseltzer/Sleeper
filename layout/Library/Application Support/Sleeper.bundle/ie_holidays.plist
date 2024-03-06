@@ -11,8 +11,6 @@
 			<string>New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-02</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>St. Patrick's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-17</string>
 				<string>2024-03-18</string>
 				<string>2025-03-17</string>
 				<string>2026-03-17</string>
@@ -79,7 +76,6 @@
 			<string>Easter Monday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -113,7 +109,6 @@
 			<string>May Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-06</string>
 				<string>2025-05-05</string>
 				<string>2026-05-04</string>
@@ -147,7 +142,6 @@
 			<string>June Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-05</string>
 				<string>2024-06-03</string>
 				<string>2025-06-02</string>
 				<string>2026-06-01</string>
@@ -181,7 +175,6 @@
 			<string>Summer Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-07</string>
 				<string>2024-08-05</string>
 				<string>2025-08-04</string>
 				<string>2026-08-03</string>
@@ -215,7 +208,6 @@
 			<string>October Bank Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-30</string>
 				<string>2024-10-28</string>
 				<string>2025-10-27</string>
 				<string>2026-10-26</string>
@@ -249,7 +241,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -283,7 +274,6 @@
 			<string>Boxing Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-28</string>

@@ -11,8 +11,6 @@
 			<string>New Year&apos;s Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-02</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,7 +43,6 @@
 			<string>Human Rights Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-21</string>
 				<string>2024-03-21</string>
 				<string>2025-03-21</string>
 				<string>2026-03-21</string>
@@ -79,7 +76,6 @@
 			<string>Good Friday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -113,7 +109,6 @@
 			<string>Family Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-10</string>
 				<string>2024-04-01</string>
 				<string>2025-04-21</string>
 				<string>2026-04-06</string>
@@ -147,7 +142,6 @@
 			<string>Freedom Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-27</string>
 				<string>2024-04-27</string>
 				<string>2025-04-28</string>
 				<string>2026-04-27</string>
@@ -181,7 +175,6 @@
 			<string>Workers&apos; Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -215,7 +208,6 @@
 			<string>Youth Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-16</string>
 				<string>2024-06-17</string>
 				<string>2025-06-16</string>
 				<string>2026-06-16</string>
@@ -249,7 +241,6 @@
 			<string>National Women&apos;s Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-09</string>
 				<string>2024-08-09</string>
 				<string>2025-08-09</string>
 				<string>2026-08-10</string>
@@ -283,7 +274,6 @@
 			<string>Heritage Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-25</string>
 				<string>2024-09-24</string>
 				<string>2025-09-24</string>
 				<string>2026-09-24</string>
@@ -317,7 +307,6 @@
 			<string>Day of Reconciliation</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-16</string>
 				<string>2024-12-16</string>
 				<string>2025-12-16</string>
 				<string>2026-12-16</string>
@@ -351,7 +340,6 @@
 			<string>Christmas Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>
@@ -385,7 +373,6 @@
 			<string>Day of Goodwill</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-26</string>
 				<string>2024-12-26</string>
 				<string>2025-12-26</string>
 				<string>2026-12-26</string>

@@ -11,8 +11,6 @@
 			<string>International New Year's Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Vietnamese New Year's Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-21</string>
-				<string>2024-02-09</string>
 				<string>2025-01-28</string>
 				<string>2026-02-16</string>
 				<string>2027-02-06</string>
@@ -79,8 +75,6 @@
 			<string>Vietnamese New Year</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-22</string>
-				<string>2024-02-10</string>
 				<string>2025-01-29</string>
 				<string>2026-02-17</string>
 				<string>2027-02-07</string>
@@ -113,8 +107,6 @@
 			<string>The second day of Tet Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-23</string>
-				<string>2024-02-11</string>
 				<string>2025-01-30</string>
 				<string>2026-02-18</string>
 				<string>2027-02-08</string>
@@ -147,8 +139,6 @@
 			<string>The third day of Tet Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-24</string>
-				<string>2024-02-12</string>
 				<string>2025-01-31</string>
 				<string>2026-02-19</string>
 				<string>2027-02-09</string>
@@ -181,8 +171,6 @@
 			<string>The forth day of Tet Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-25</string>
-				<string>2024-02-13</string>
 				<string>2025-02-01</string>
 				<string>2026-02-20</string>
 				<string>2027-02-10</string>
@@ -215,8 +203,6 @@
 			<string>The fifth day of Tet Holiday</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-26</string>
-				<string>2024-02-14</string>
 				<string>2025-02-02</string>
 				<string>2026-02-21</string>
 				<string>2027-02-11</string>
@@ -249,7 +235,6 @@
 			<string>Hung Kings Commemoration Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-29</string>
 				<string>2024-04-18</string>
 				<string>2025-04-07</string>
 				<string>2026-04-26</string>
@@ -283,7 +268,6 @@
 			<string>Liberation Day/Reunification Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-30</string>
 				<string>2024-04-30</string>
 				<string>2025-04-30</string>
 				<string>2026-04-30</string>
@@ -317,7 +301,6 @@
 			<string>International Labor Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -351,7 +334,6 @@
 			<string>Independence Day</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-02</string>
 				<string>2024-09-02</string>
 				<string>2025-09-02</string>
 				<string>2026-09-02</string>

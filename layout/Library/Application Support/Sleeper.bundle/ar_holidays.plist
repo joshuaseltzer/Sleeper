@@ -11,8 +11,6 @@
 			<string>Año Nuevo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,10 +43,6 @@
 			<string>Día de Carnaval</string>
 			<key>dates</key>
 			<array>
-				<string>2023-02-20</string>
-				<string>2023-02-21</string>
-				<string>2024-02-12</string>
-				<string>2024-02-13</string>
 				<string>2025-03-03</string>
 				<string>2025-03-04</string>
 				<string>2026-02-16</string>
@@ -106,7 +100,6 @@
 			<string>Día Nacional de la Memoria por la Verdad y la Justicia</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-24</string>
 				<string>2024-03-24</string>
 				<string>2025-03-24</string>
 				<string>2026-03-24</string>
@@ -140,7 +133,6 @@
 			<string>Día del Veterano y de los Caidos en la Guerra de Malvinas</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-02</string>
 				<string>2024-04-02</string>
 				<string>2025-04-02</string>
 				<string>2026-04-02</string>
@@ -174,7 +166,6 @@
 			<string>Semana Santa (Jueves Santo)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-06</string>
 				<string>2024-03-28</string>
 				<string>2025-04-17</string>
 				<string>2026-04-02</string>
@@ -208,7 +199,6 @@
 			<string>Semana Santa (Viernes Santo)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-07</string>
 				<string>2024-03-29</string>
 				<string>2025-04-18</string>
 				<string>2026-04-03</string>
@@ -242,7 +232,6 @@
 			<string>Día de Pascuas</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-09</string>
 				<string>2024-03-31</string>
 				<string>2025-04-20</string>
 				<string>2026-04-05</string>
@@ -276,7 +265,6 @@
 			<string>Día del Trabajo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -310,7 +298,6 @@
 			<string>Día de la Revolucion de Mayo</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-25</string>
 				<string>2024-05-25</string>
 				<string>2025-05-25</string>
 				<string>2026-05-25</string>
@@ -344,7 +331,6 @@
 			<string>Día Pase a la Inmortalidad del General Martín Miguel de Güemes</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-17</string>
 				<string>2024-06-17</string>
 				<string>2025-06-17</string>
 				<string>2026-06-17</string>
@@ -378,7 +364,6 @@
 			<string>Día Pase a la Inmortalidad del General D. Manuel Belgrano</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-20</string>
 				<string>2024-06-20</string>
 				<string>2025-06-20</string>
 				<string>2026-06-20</string>
@@ -412,7 +397,6 @@
 			<string>Día de la Independencia</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-09</string>
 				<string>2024-07-09</string>
 				<string>2025-07-09</string>
 				<string>2026-07-09</string>
@@ -446,7 +430,6 @@
 			<string>Día Pase a la Inmortalidad del General D. José de San Martin</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-17</string>
 				<string>2024-08-17</string>
 				<string>2025-08-17</string>
 				<string>2026-08-17</string>
@@ -480,7 +463,6 @@
 			<string>Día del Respeto a la Diversidad Cultural</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-12</string>
 				<string>2024-10-12</string>
 				<string>2025-10-12</string>
 				<string>2026-10-12</string>
@@ -514,7 +496,6 @@
 			<string>Día Nacional de la Soberanía</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-20</string>
 				<string>2024-11-20</string>
 				<string>2025-11-20</string>
 				<string>2026-11-20</string>
@@ -548,7 +529,6 @@
 			<string>La Inmaculada Concepción</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-08</string>
 				<string>2024-12-08</string>
 				<string>2025-12-08</string>
 				<string>2026-12-08</string>
@@ -582,7 +562,6 @@
 			<string>Navidad</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

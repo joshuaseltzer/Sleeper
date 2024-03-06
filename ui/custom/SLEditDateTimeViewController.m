@@ -149,11 +149,6 @@
     self.navigationItem.rightBarButtonItem = saveButton;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 // invoked when the user presses the cancel button
 - (void)cancelButtonPressed:(UIBarButtonItem *)cancelButton
 {
@@ -181,6 +176,12 @@
             }
         }
     }];
+}
+
+// allow this view controller to be shown even when the device is in secure mode
+- (BOOL)_canShowWhileLocked
+{
+    return YES;
 }
 
 #pragma mark - UIPickerViewDataSource

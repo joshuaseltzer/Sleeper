@@ -85,7 +85,11 @@ typedef enum SLAutoSetOptionsTableViewControllerSection : NSUInteger {
     }
 }
 
-// updates a given cell's accessory view visibility based on the selected aut
+// allow this view controller to be shown even when the device is in secure mode
+- (BOOL)_canShowWhileLocked
+{
+    return YES;
+}
 
 #pragma mark - UITableViewDataSource
 

@@ -11,8 +11,6 @@
 			<string>Новый год</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>Рождество Христово (православное Рождество)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-07</string>
-				<string>2024-01-07</string>
 				<string>2025-01-07</string>
 				<string>2026-01-07</string>
 				<string>2027-01-07</string>
@@ -79,7 +75,6 @@
 			<string>День женщин</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-08</string>
 				<string>2024-03-08</string>
 				<string>2025-03-08</string>
 				<string>2026-03-08</string>
@@ -113,7 +108,6 @@
 			<string>Праздник труда</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-01</string>
 				<string>2024-05-01</string>
 				<string>2025-05-01</string>
 				<string>2026-05-01</string>
@@ -147,7 +141,6 @@
 			<string>Радуница</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-25</string>
 				<string>2024-05-14</string>
 				<string>2025-04-29</string>
 				<string>2026-04-21</string>
@@ -181,7 +174,6 @@
 			<string>День Победы</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-09</string>
 				<string>2024-05-09</string>
 				<string>2025-05-09</string>
 				<string>2026-05-09</string>
@@ -215,7 +207,6 @@
 			<string>День Независимости Республики Беларусь (День Республики)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-03</string>
 				<string>2024-07-03</string>
 				<string>2025-07-03</string>
 				<string>2026-07-03</string>
@@ -249,7 +240,6 @@
 			<string>День Октябрьской революции</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-07</string>
 				<string>2024-11-07</string>
 				<string>2025-11-07</string>
 				<string>2026-11-07</string>
@@ -283,7 +273,6 @@
 			<string>Рождество Христово (католическое Рождество)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-12-25</string>
 				<string>2024-12-25</string>
 				<string>2025-12-25</string>
 				<string>2026-12-25</string>

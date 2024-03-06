@@ -3,7 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>dateCreated</key>
-	<date>2023-04-09T13:01:55Z</date>
 	<key>holidays</key>
 	<array>
 		<dict>
@@ -11,7 +10,6 @@
 			<string>Founding of the Republic of China (New Year's Day)</string>
 			<key>dates</key>
 			<array>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -44,7 +42,6 @@
 			<string>Chinese New Year's Eve</string>
 			<key>dates</key>
 			<array>
-				<string>2024-02-09</string>
 				<string>2025-01-28</string>
 				<string>2026-02-16</string>
 				<string>2027-02-05</string>
@@ -77,9 +74,6 @@
 			<string>Spring Festival (Chinese New Year)</string>
 			<key>dates</key>
 			<array>
-				<string>2024-02-10</string>
-				<string>2024-02-11</string>
-				<string>2024-02-12</string>
 				<string>2025-01-29</string>
 				<string>2025-01-30</string>
 				<string>2025-01-31</string>
@@ -162,7 +156,6 @@
 			<string>Peace Memorial Day</string>
 			<key>dates</key>
 			<array>
-				<string>2024-02-28</string>
 				<string>2025-02-28</string>
 				<string>2026-02-28</string>
 				<string>2027-02-28</string>
@@ -261,7 +254,6 @@
 			<string>Dragon Boat Festival</string>
 			<key>dates</key>
 			<array>
-				<string>2023-06-22</string>
 				<string>2024-06-10</string>
 				<string>2025-05-31</string>
 				<string>2026-06-19</string>
@@ -295,7 +287,6 @@
 			<string>Mid-Autumn Festival</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-29</string>
 				<string>2024-09-17</string>
 				<string>2025-10-06</string>
 				<string>2026-09-25</string>
@@ -329,7 +320,6 @@
 			<string>National Day (Double Tenth Day)</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-10</string>
 				<string>2024-10-10</string>
 				<string>2025-10-10</string>
 				<string>2026-10-10</string>

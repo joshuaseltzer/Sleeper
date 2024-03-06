@@ -11,8 +11,6 @@
 			<string>元日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-01</string>
-				<string>2024-01-01</string>
 				<string>2025-01-01</string>
 				<string>2026-01-01</string>
 				<string>2027-01-01</string>
@@ -45,8 +43,6 @@
 			<string>成人の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-01-09</string>
-				<string>2024-01-08</string>
 				<string>2025-01-13</string>
 				<string>2026-01-12</string>
 				<string>2027-01-11</string>
@@ -79,8 +75,6 @@
 			<string>建国記念の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-02-11</string>
-				<string>2024-02-11</string>
 				<string>2025-02-11</string>
 				<string>2026-02-11</string>
 				<string>2027-02-11</string>
@@ -113,7 +107,6 @@
 			<string>春分の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-03-21</string>
 				<string>2024-03-20</string>
 				<string>2025-03-20</string>
 				<string>2026-03-20</string>
@@ -147,7 +140,6 @@
 			<string>昭和の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-04-29</string>
 				<string>2024-04-29</string>
 				<string>2025-04-29</string>
 				<string>2026-04-29</string>
@@ -181,7 +173,6 @@
 			<string>憲法記念日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-03</string>
 				<string>2024-05-03</string>
 				<string>2025-05-03</string>
 				<string>2026-05-03</string>
@@ -215,7 +206,6 @@
 			<string>みどりの日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-04</string>
 				<string>2024-05-04</string>
 				<string>2025-05-04</string>
 				<string>2026-05-04</string>
@@ -249,7 +239,6 @@
 			<string>こどもの日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-05-05</string>
 				<string>2024-05-05</string>
 				<string>2025-05-05</string>
 				<string>2026-05-05</string>
@@ -283,7 +272,6 @@
 			<string>海の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-07-17</string>
 				<string>2024-07-15</string>
 				<string>2025-07-21</string>
 				<string>2026-07-20</string>
@@ -317,7 +305,6 @@
 			<string>山の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-08-11</string>
 				<string>2024-08-12</string>
 				<string>2025-08-11</string>
 				<string>2026-08-11</string>
@@ -351,7 +338,6 @@
 			<string>敬老の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-18</string>
 				<string>2024-09-16</string>
 				<string>2025-09-15</string>
 				<string>2026-09-21</string>
@@ -385,7 +371,6 @@
 			<string>秋分の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-09-23</string>
 				<string>2024-09-22</string>
 				<string>2025-09-23</string>
 				<string>2026-09-23</string>
@@ -419,7 +404,6 @@
 			<string>体育の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-10-09</string>
 				<string>2024-10-14</string>
 				<string>2025-10-13</string>
 				<string>2026-10-12</string>
@@ -453,7 +437,6 @@
 			<string>文化の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-03</string>
 				<string>2024-11-04</string>
 				<string>2025-11-03</string>
 				<string>2026-11-03</string>
@@ -487,7 +470,6 @@
 			<string>勤労感謝の日</string>
 			<key>dates</key>
 			<array>
-				<string>2023-11-23</string>
 				<string>2024-11-23</string>
 				<string>2025-11-23</string>
 				<string>2026-11-23</string>

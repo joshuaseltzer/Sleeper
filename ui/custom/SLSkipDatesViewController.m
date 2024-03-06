@@ -155,6 +155,12 @@ typedef enum SLSkipDatesViewControllerSection : NSInteger {
     }
 }
 
+// allow this view controller to be shown even when the device is in secure mode
+- (BOOL)_canShowWhileLocked
+{
+    return YES;
+}
+
 // returns a modified index that corresponds to a holiday country
 - (SLHolidayCountry)offsetHolidayCountryIndexForIndex:(NSInteger)index increase:(BOOL)increase
 {

@@ -94,6 +94,12 @@
     }
 }
 
+// allow this view controller to be shown even when the device is in secure mode
+- (BOOL)_canShowWhileLocked
+{
+    return YES;
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
