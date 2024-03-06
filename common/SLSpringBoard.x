@@ -17,15 +17,15 @@
 %new
 - (void)SLAutoSetOptionsUpdated:(NSNotification *)notification
 {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // notify the auto-set manager that an alarm has updated auto-set options
-		[[SLAutoSetManager sharedInstance] updateAutoSetAlarm:[notification userInfo]];
-	});
+        [[SLAutoSetManager sharedInstance] updateAutoSetAlarm:[notification userInfo]];
+    });
 }
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
-	%orig;
+    %orig;
 
     // create the auto-set manager instance to potentially monitor changes to alarms
     [SLAutoSetManager sharedInstance];
