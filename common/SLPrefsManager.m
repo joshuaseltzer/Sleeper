@@ -226,7 +226,10 @@ static NSDateFormatter *sSLSkipDatesPlistDateFormatter;
     // write the updated preferences
     if ([prefs writeToFile:kSLSettingsFile atomically:YES] && alarmPrefs.autoSetOption != kSLAutoSetOptionOff) {
         // if the alarm has an auto-set option enabled, notify the auto-set manager upon saving the alarm
-        [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kSLAutoSetOptionsUpdatedNotification object:nil userInfo:alarmToSave];
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kSLAutoSetOptionsUpdatedNotification object:nil userInfo:alarmToSave];
+        });
     }
 }
 
