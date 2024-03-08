@@ -32,4 +32,4 @@ include $(THEOS_MAKE_PATH)/library.mk
 include $(THEOS_MAKE_PATH)/tweak.mk
 
 after-install::
-    install.exec "killall -9 MobileTimer; killall -9 mobiletimerd; killall -9 SpringBoard;"
+	install.exec "killall -9 MobileTimer; killall -9 mobiletimerd; killall -9 SpringBoard;"
